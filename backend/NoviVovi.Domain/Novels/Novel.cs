@@ -6,8 +6,8 @@ namespace NoviVovi.Domain.Novels;
 public class Novel : Entity
 {
     private readonly List<Slide> _slides = new();
-
     public string Title { get; private set; }
+
     public IReadOnlyList<Slide> Slides => _slides.AsReadOnly();
 
     private Novel(Guid id, string title) : base(id)
@@ -22,7 +22,7 @@ public class Novel : Entity
 
         return new Novel(Guid.NewGuid(), title);
     }
-    
+
     public static Novel Rehydrate(Guid id, string title, IEnumerable<Slide> slides)
     {
         var novel = new Novel(id, title); // приватный конструктор доступен внутри класса
@@ -45,7 +45,7 @@ public class Novel : Entity
             throw new DomainException($"Slide {number} does not exist");
         _slides.Remove(slide);
     }
-    
+
     public void UpdateTitle(string title)
     {
         if (string.IsNullOrWhiteSpace(title))
