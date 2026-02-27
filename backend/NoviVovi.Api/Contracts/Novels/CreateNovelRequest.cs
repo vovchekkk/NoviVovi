@@ -2,5 +2,6 @@
 
 public class CreateNovelRequest
 {
-    
+    public string Title { get; set; } = null!; 
+    public List<string>? Slides { get; set; }
 }
