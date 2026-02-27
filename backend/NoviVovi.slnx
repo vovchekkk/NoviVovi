@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="NoviVovi.Api/NoviVovi.Api.csproj" />
+  <Project Path="NoviVovi.Application/NoviVovi.Application.csproj" />
+  <Project Path="NoviVovi.Domain/NoviVovi.Domain.csproj" />
+  <Project Path="NoviVovi.Infrastructure/NoviVovi.Infrastructure.csproj" />
+</Solution>
