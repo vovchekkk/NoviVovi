@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/NoviVovi.Api/NoviVovi.Api.csproj" />
+    <Project Path="backend/NoviVovi.Application/NoviVovi.Application.csproj" />
+    <Project Path="backend/NoviVovi.Domain/NoviVovi.Domain.csproj" />
+    <Project Path="backend/NoviVovi.Infrastructure/NoviVovi.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NoviVovi.Api.Tests/NoviVovi.Api.Tests.csproj" />
+    <Project Path="tests/NoviVovi.Application.Tests/NoviVovi.Application.Tests.csproj" />
+    <Project Path="tests/NoviVovi.Domain.Tests/NoviVovi.Domain.Tests.csproj" />
+    <Project Path="tests/NoviVovi.Infrastructure.Tests/NoviVovi.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>
