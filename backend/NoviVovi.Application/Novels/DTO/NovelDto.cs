@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Application.Novels;
+﻿namespace NoviVovi.Application.Novels.DTO;
 
 public class NovelDto
 {

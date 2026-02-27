@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NoviVovi.Infrastructure.Novels;
+
+namespace NoviVovi.Infrastructure.Novels;
 
 public class NovelMap : IEntityTypeConfiguration<NovelDbModel>
 {

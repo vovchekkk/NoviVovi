@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Api.Contracts;
+﻿namespace NoviVovi.Api.Contracts.Novels.Responses;
 
 public class SlideResponse
 {

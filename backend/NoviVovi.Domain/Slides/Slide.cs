@@ -1,7 +1,9 @@
-﻿namespace NoviVovi.Domain.Slides;
+﻿using NoviVovi.Domain.Common;
 
-public class Slide
+namespace NoviVovi.Domain.Slides;
+
+public class Slide(int number, string text)
 {
-    public int Number { get; set; }
-    public string Text { get; set; } = null!;
+    public int Number { get; set; } = number;
+    public string Text { get; set; } = text;
 }

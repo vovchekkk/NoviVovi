@@ -1,6 +1,15 @@
-﻿namespace NoviVovi.Application.Novels.Get;
+﻿using NoviVovi.Application.Abstractions;
+using NoviVovi.Application.Novels.DTO;
+using NoviVovi.Domain.Novels;
 
-public class GetNovelHandler
+namespace NoviVovi.Application.Novels.Get;
+
+public class GetNovelHandler(INovelRepository repo)
 {
-    
+    public async Task<NovelDto?> Handle(GetNovelQuery query)
+    {
+        var novel = await repo.GetById(query.Id);
+        
+        return novel?.ToDto();
+    }
 }

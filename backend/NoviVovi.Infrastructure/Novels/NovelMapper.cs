@@ -23,9 +23,7 @@ public static class NovelMapper
 
     public static Novel ToDomain(this NovelDbModel db)
     {
-        var novel = new Novel(db.Id, db.Title);
-        foreach (var s in db.Slides)
-            novel.AddSlide(new Slide(s.Number, s.Text));
-        return novel;
+        var slides = db.Slides.Select(s => new Slide(s.Number, s.Text));
+        return Novel.Rehydrate(db.Id, db.Title, slides);
     }
 }
