@@ -1,4 +1,4 @@
-﻿using NoviVovi.Domain.Replicas;
+﻿using NoviVovi.Domain.Dialogue;
 
 namespace NoviVovi.Application.Novels.DTO;
 
