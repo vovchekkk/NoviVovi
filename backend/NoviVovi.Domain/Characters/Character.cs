@@ -5,7 +5,6 @@ namespace NoviVovi.Domain.Characters;
 
 public class Character : Entity
 {
-    public Guid Id { get; set; }
     public string Name { get; set; }
     public string? Description { get; set; }
     private readonly List<CharacterState> _characterStates = new();

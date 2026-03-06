@@ -1,15 +1,16 @@
 ﻿using NoviVovi.Domain.Common;
 using NoviVovi.Domain.Images;
 using NoviVovi.Domain.Scene;
+using NoviVovi.Domain.Steps;
 
 namespace NoviVovi.Domain.Labels;
 
 public class Label : Entity
 {
     public string Name { get; private set; }
-    private readonly List<SceneStep> _steps = new();
+    private readonly List<Step> _steps = new();
 
-    public IReadOnlyList<SceneStep> Steps => _steps;
+    public IReadOnlyList<Step> Steps => _steps;
 
     private Label(Guid id, string name) : base(id)
     {
@@ -24,7 +25,7 @@ public class Label : Entity
         return new Label(Guid.NewGuid(), name);
     }
 
-    public static Label Rehydrate(Guid id, string name, IEnumerable<SceneStep> steps)
+    public static Label Rehydrate(Guid id, string name, IEnumerable<Step> steps)
     {
         var label = new Label(id, name);
         foreach (var step in steps)
@@ -32,7 +33,7 @@ public class Label : Entity
         return label;
     }
 
-    public void AddStep(SceneStep step)
+    public void AddStep(Step step)
     {
         if (_steps.Any(item => item.Id == step.Id))
             throw new DomainException($"Step {step.Id} already exists");

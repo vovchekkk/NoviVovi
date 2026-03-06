@@ -1,7 +1,7 @@
 ﻿namespace NoviVovi.Domain.Scene;
 
-public class Position(int x, int y)
+public class Position(double x, double y)
 {
-    public float X { get; set; } = x;
-    public float Y { get; set; } = y;
+    public double X { get; set; } = x;
+    public double Y { get; set; } = y;
 }

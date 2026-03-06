@@ -1,4 +1,5 @@
-﻿using NoviVovi.Domain.Characters;
+﻿using System.Drawing;
+using NoviVovi.Domain.Characters;
 using NoviVovi.Domain.Common;
 using NoviVovi.Domain.Images;
 

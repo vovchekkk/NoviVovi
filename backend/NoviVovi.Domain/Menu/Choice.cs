@@ -1,6 +1,6 @@
 ﻿using NoviVovi.Domain.Common;
 using NoviVovi.Domain.Labels;
-using NoviVovi.Domain.StoryFlow;
+using NoviVovi.Domain.Steps.Transitions;
 
 namespace NoviVovi.Domain.Menu;
 
@@ -9,9 +9,9 @@ public class Choice : Entity
     public string? Name { get; }
     public string? Description { get; }
     public string? Text { get; }
-    public Transition Transition { get; }
+    public StepTransition Transition { get; private set; }
     
-    private Choice(Guid id, string? name, string? description, string? text, Transition transition) : base(id)
+    private Choice(Guid id, string? name, string? description, string? text, StepTransition transition) : base(id)
     {
         Name = name;
         Description = description;
@@ -20,7 +20,7 @@ public class Choice : Entity
     }
 
     public static Choice Create(
-        Transition transition,
+        StepTransition transition,
         string? name = null,
         string? description = null,
         string? text = null)
@@ -31,6 +31,6 @@ public class Choice : Entity
         return new Choice(Guid.NewGuid(), name, description, text, transition);
     }
 
-    public static Choice Rehydrate(Guid id, string? name, string? description, string? text, Transition transition)
+    public static Choice Rehydrate(Guid id, string? name, string? description, string? text, StepTransition transition)
         => new Choice(id, name, description, text, transition);
 }

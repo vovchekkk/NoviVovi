@@ -6,7 +6,6 @@ namespace NoviVovi.Domain.Scene;
 public class CharacterObject : SceneObject
 {
     public Character Character { get; }
-
     public CharacterState State { get; private set; }
 
     private CharacterObject(

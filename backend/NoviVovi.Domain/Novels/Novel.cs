@@ -7,27 +7,32 @@ namespace NoviVovi.Domain.Novels;
 
 public class Novel : Entity
 {
-    private readonly List<Label> _labels = new();
     public string Title { get; private set; }
+    public Label StartLabel { get; private set; }
+    private readonly Dictionary<Guid, Label> _labels = new();
 
-    public IReadOnlyList<Label> Labels => _labels.AsReadOnly();
+    public IReadOnlyDictionary<Guid, Label> Labels => _labels.AsReadOnly();
     
-    private Novel(Guid id, string title) : base(id)
+    private Novel(Guid id, string title, Label startLabel) : base(id)
     {
         Title = title;
+        StartLabel = startLabel;
     }
 
-    public static Novel Create(string? title)
+    public static Novel Create(string? title, Label startLabel)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new DomainException("Title cannot be empty");
+        
+        if (startLabel == null)
+            throw new DomainException("StartLabel cannot be null");
 
-        return new Novel(Guid.NewGuid(), title);
+        return new Novel(Guid.NewGuid(), title, startLabel);
     }
 
-    public static Novel Rehydrate(Guid id, string title, IEnumerable<Label> labels)
+    public static Novel Rehydrate(Guid id, string title, Label startLabel, IEnumerable<Label> labels)
     {
-        var novel = new Novel(id, title);
+        var novel = new Novel(id, title, startLabel);
         foreach (var label in labels)
             novel.AddLabel(label);
         return novel;
@@ -35,17 +40,17 @@ public class Novel : Entity
 
     public void AddLabel(Label label)
     {
-        if (_labels.Any(item => item.Id == label.Id))
+        if (_labels.Any(item => item.Key == label.Id))
             throw new DomainException($"Label {label.Id} already exists");
-        _labels.Add(label);
+        _labels[label.Id] = label;
     }
 
     public void RemoveLabel(Guid id)
     {
-        var slide = _labels.FirstOrDefault(item => item.Id == id);
-        if (slide == null)
+        var label = _labels.FirstOrDefault(item => item.Key == id).Value;
+        if (label == null)
             throw new DomainException($"Label {id} does not exist");
-        _labels.Remove(slide);
+        _labels.Remove(id);
     }
 
     public void UpdateTitle(string title)
