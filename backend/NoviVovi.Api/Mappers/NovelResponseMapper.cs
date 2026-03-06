@@ -1,24 +1,16 @@
 ﻿using NoviVovi.Api.Contracts.Novels.Responses;
-using NoviVovi.Application.Novels;
-using NoviVovi.Application.Novels.DTO;
+using NoviVovi.Application.Contracts.Novels;
 
 namespace NoviVovi.Api.Mappers;
 
 public static class NovelResponseMapper
 {
-    public static NovelResponse ToResponse(this NovelDto dto)
+    public static NovelResponse ToResponse(this NovelSnapshot snapshot)
     {
         return new NovelResponse
         {
-            Id = dto.Id,
-            Title = dto.Title,
-            Slides = dto.Slides
-                .Select(s => new SlideResponse
-                {
-                    Number = s.Number,
-                    Text = s.Text
-                })
-                .ToList()
+            Id = snapshot.Id,
+            Title = snapshot.Title
         };
     }
 }

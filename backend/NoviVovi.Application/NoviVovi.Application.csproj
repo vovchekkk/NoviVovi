@@ -10,4 +10,18 @@
     <ProjectReference Include="..\NoviVovi.Domain\NoviVovi.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\Characters\" />
+    <Folder Include="Contracts\Images\" />
+    <Folder Include="Contracts\Labels\" />
+    <Folder Include="Contracts\Menu\" />
+    <Folder Include="Contracts\Scene\" />
+    <Folder Include="Features\Characters\" />
+    <Folder Include="Features\Images\" />
+    <Folder Include="Features\Labels\" />
+    <Folder Include="Features\Menu\" />
+    <Folder Include="Features\Preview\" />
+    <Folder Include="Features\Scene\" />
+  </ItemGroup>
+
 </Project>
