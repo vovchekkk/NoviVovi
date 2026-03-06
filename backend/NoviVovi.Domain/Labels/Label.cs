@@ -35,7 +35,7 @@ public class Label : Entity
     public void AddStep(SceneStep step)
     {
         if (_steps.Any(item => item.Id == step.Id))
-            throw new DomainException($"Slide {step.Id} already exists");
+            throw new DomainException($"Step {step.Id} already exists");
         _steps.Add(step);
     }
 }

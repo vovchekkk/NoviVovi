@@ -49,7 +49,7 @@ public class SceneStep : Entity
     public void AddCharacter(CharacterObject characterObject)
     {
         if (_characters.Any(item => item.Id == characterObject.Id))
-            throw new DomainException($"Slide {characterObject.Id} already exists");
+            throw new DomainException($"Character {characterObject.Id} already exists");
         _characters.Add(characterObject);
     }
 

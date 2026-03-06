@@ -39,7 +39,7 @@ public class Menu : Entity
     public void AddChoice(Choice choice)
     {
         if (_choices.Any(item => item.Id == choice.Id))
-            throw new DomainException($"Slide {choice.Id} already exists");
+            throw new DomainException($"Choice {choice.Id} already exists");
         _choices.Add(choice);
     }
 }

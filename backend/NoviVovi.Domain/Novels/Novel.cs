@@ -36,7 +36,7 @@ public class Novel : Entity
     public void AddLabel(Label label)
     {
         if (_labels.Any(item => item.Id == label.Id))
-            throw new DomainException($"Slide {label.Id} already exists");
+            throw new DomainException($"Label {label.Id} already exists");
         _labels.Add(label);
     }
 
@@ -44,14 +44,14 @@ public class Novel : Entity
     {
         var slide = _labels.FirstOrDefault(item => item.Id == id);
         if (slide == null)
-            throw new DomainException($"Slide {id} does not exist");
+            throw new DomainException($"Label {id} does not exist");
         _labels.Remove(slide);
     }
 
     public void UpdateTitle(string title)
     {
         if (string.IsNullOrWhiteSpace(title))
-            throw new DomainException("Title cannot be empty");
+            throw new DomainException("Label cannot be empty");
         Title = title;
     }
 }

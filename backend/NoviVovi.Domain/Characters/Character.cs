@@ -38,7 +38,7 @@ public class Character : Entity
     public void AddState(CharacterState states)
     {
         if (_characterStates.Any(item => item.Id == states.Id))
-            throw new DomainException($"Slide {states.Id} already exists");
+            throw new DomainException($"State {states.Id} already exists");
         _characterStates.Add(states);
     }
 }
