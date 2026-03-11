@@ -1,9 +1,9 @@
 ﻿using NoviVovi.Application.Abstractions;
-using NoviVovi.Application.Preview.Contracts;
+using NoviVovi.Application.Preview.Services;
 using NoviVovi.Domain.Steps;
 using NoviVovi.Domain.Steps.Transitions;
 
-namespace NoviVovi.Application.Preview.Services;
+namespace NoviVovi.Application.Preview.Models;
 
 public class ScenePlayer(SceneState state)
 {

@@ -1,4 +1,4 @@
-﻿using NoviVovi.Application.Transitions.Contracts;
+﻿using NoviVovi.Application.Common.Contracts;
 using NoviVovi.Domain.Steps.Transitions;
 
 namespace NoviVovi.Application.Menu.Contracts;

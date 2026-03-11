@@ -4,7 +4,7 @@ using NoviVovi.Application.Preview.Features.Choose;
 using NoviVovi.Application.Preview.Features.Next;
 using NoviVovi.Application.Preview.Features.Start;
 
-namespace NoviVovi.Api.Controllers;
+namespace NoviVovi.Api.Preview.Controllers;
 
 [ApiController]
 [Route("api/preview")]

@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Api.Mappers;
+﻿namespace NoviVovi.Api.Dialogue.Mappers;
 
 public class ReplicaResponseMapper
 {

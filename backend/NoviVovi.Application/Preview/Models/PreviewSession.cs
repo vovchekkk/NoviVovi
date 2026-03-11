@@ -1,7 +1,7 @@
-﻿using NoviVovi.Application.Preview.Contracts;
+﻿using NoviVovi.Application.Preview.Services;
 using NoviVovi.Domain.Novels;
 
-namespace NoviVovi.Application.Preview.Services;
+namespace NoviVovi.Application.Preview.Models;
 
 public class PreviewSession
 {

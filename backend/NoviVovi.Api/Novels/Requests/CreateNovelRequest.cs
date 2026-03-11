@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Api.Contracts.Novels.Requests;
+﻿namespace NoviVovi.Api.Novels.Requests;
 
 public class CreateNovelRequest
 {

@@ -1,7 +1,7 @@
-﻿using NoviVovi.Api.Contracts.Novels.Responses;
+﻿using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Application.Novels.Contracts;
 
-namespace NoviVovi.Api.Mappers;
+namespace NoviVovi.Api.Novels.Mappers;
 
 public static class NovelResponseMapper
 {

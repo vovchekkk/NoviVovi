@@ -17,26 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\Characters\Requests\" />
-    <Folder Include="Contracts\Characters\Responses\" />
-    <Folder Include="Contracts\Characters\Validators\" />
-    <Folder Include="Contracts\Dialogue\Validators\" />
-    <Folder Include="Contracts\Images\Requests\" />
-    <Folder Include="Contracts\Images\Responses\" />
-    <Folder Include="Contracts\Images\Validators\" />
-    <Folder Include="Contracts\Labels\Requests\" />
-    <Folder Include="Contracts\Labels\Responses\" />
-    <Folder Include="Contracts\Labels\Validators\" />
-    <Folder Include="Contracts\Menu\Requests\" />
-    <Folder Include="Contracts\Menu\Responses\" />
-    <Folder Include="Contracts\Menu\Validators\" />
-    <Folder Include="Contracts\Novels\Validators\" />
-    <Folder Include="Contracts\Preview\Requests\" />
-    <Folder Include="Contracts\Preview\Responses\" />
-    <Folder Include="Contracts\Preview\Validators\" />
-    <Folder Include="Contracts\Scene\Requests\" />
-    <Folder Include="Contracts\Scene\Responses\" />
-    <Folder Include="Contracts\Scene\Validators\" />
+    <Folder Include="Characters\Controllers\" />
+    <Folder Include="Characters\Mappers\" />
+    <Folder Include="Images\Controllers\" />
+    <Folder Include="Images\Mappers\" />
+    <Folder Include="Labels\Controllers\" />
+    <Folder Include="Labels\Mappers\" />
+    <Folder Include="Menu\Controllers\" />
+    <Folder Include="Menu\Mappers\" />
+    <Folder Include="Preview\Mappers\" />
+    <Folder Include="Scene\Controllers\" />
+    <Folder Include="Scene\Mappers\" />
   </ItemGroup>
 
 </Project>

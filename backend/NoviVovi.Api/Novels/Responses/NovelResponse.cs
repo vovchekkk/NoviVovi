@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Api.Contracts.Novels.Responses;
+﻿namespace NoviVovi.Api.Novels.Responses;
 
 public class NovelResponse
 {

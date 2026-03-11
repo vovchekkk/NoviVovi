@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using NoviVovi.Application.Preview.Models;
 using NoviVovi.Domain.Novels;
 
 namespace NoviVovi.Application.Preview.Services;

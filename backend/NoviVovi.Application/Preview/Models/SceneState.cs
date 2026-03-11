@@ -2,7 +2,7 @@
 using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Steps;
 
-namespace NoviVovi.Application.Preview.Services;
+namespace NoviVovi.Application.Preview.Models;
 
 public class SceneState
 {

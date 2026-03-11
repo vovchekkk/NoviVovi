@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NoviVovi.Api.Contracts.Novels.Requests;
-using NoviVovi.Api.Contracts.Novels.Responses;
-using NoviVovi.Api.Mappers;
+using NoviVovi.Api.Novels.Mappers;
+using NoviVovi.Api.Novels.Requests;
+using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Application.Novels.Features.Create;
 using NoviVovi.Application.Novels.Features.Get;
 
-namespace NoviVovi.Api.Controllers;
+namespace NoviVovi.Api.Novels.Controllers;
 
 [ApiController]
 [Route("api/novels")]
