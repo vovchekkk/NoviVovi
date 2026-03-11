@@ -11,17 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\Characters\" />
-    <Folder Include="Contracts\Images\" />
-    <Folder Include="Contracts\Labels\" />
-    <Folder Include="Contracts\Menu\" />
-    <Folder Include="Contracts\Scene\" />
-    <Folder Include="Features\Characters\" />
-    <Folder Include="Features\Images\" />
-    <Folder Include="Features\Labels\" />
-    <Folder Include="Features\Menu\" />
-    <Folder Include="Features\Preview\" />
-    <Folder Include="Features\Scene\" />
+    <Folder Include="Characters\Features\" />
+    <Folder Include="Dialogue\Features\" />
+    <Folder Include="Images\Features\" />
+    <Folder Include="Labels\Features\" />
+    <Folder Include="Menu\Features\" />
+    <Folder Include="Preview\Features\" />
+    <Folder Include="Scene\Features\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.2" />
   </ItemGroup>
 
 </Project>

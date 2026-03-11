@@ -9,9 +9,9 @@ public class Choice : Entity
     public string? Name { get; }
     public string? Description { get; }
     public string? Text { get; }
-    public StepTransition Transition { get; private set; }
+    public ChoiceTransition Transition { get; private set; }
     
-    private Choice(Guid id, string? name, string? description, string? text, StepTransition transition) : base(id)
+    private Choice(Guid id, string? name, string? description, string? text, ChoiceTransition transition) : base(id)
     {
         Name = name;
         Description = description;
@@ -20,7 +20,7 @@ public class Choice : Entity
     }
 
     public static Choice Create(
-        StepTransition transition,
+        ChoiceTransition transition,
         string? name = null,
         string? description = null,
         string? text = null)
@@ -31,6 +31,6 @@ public class Choice : Entity
         return new Choice(Guid.NewGuid(), name, description, text, transition);
     }
 
-    public static Choice Rehydrate(Guid id, string? name, string? description, string? text, StepTransition transition)
+    public static Choice Rehydrate(Guid id, string? name, string? description, string? text, ChoiceTransition transition)
         => new Choice(id, name, description, text, transition);
 }

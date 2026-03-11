@@ -1,5 +1,5 @@
 ﻿using NoviVovi.Api.Contracts.Novels.Responses;
-using NoviVovi.Application.Contracts.Novels;
+using NoviVovi.Application.Novels.Contracts;
 
 namespace NoviVovi.Api.Mappers;
 

@@ -4,7 +4,7 @@ namespace NoviVovi.Application.Abstractions;
 
 public interface INovelRepository
 {
-    public Task<Novel?> GetById(Guid id);
-    public Task Save(Novel novel);
-    public Task Delete(Novel novel);
+    public Task<Novel?> GetByIdAsync(Guid id);
+    public Task SaveAsync(Novel novel);
+    public Task DeleteAsync(Novel novel);
 }

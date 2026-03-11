@@ -2,8 +2,8 @@
 using NoviVovi.Api.Contracts.Novels.Requests;
 using NoviVovi.Api.Contracts.Novels.Responses;
 using NoviVovi.Api.Mappers;
-using NoviVovi.Application.Features.Novels.Create;
-using NoviVovi.Application.Features.Novels.Get;
+using NoviVovi.Application.Novels.Features.Create;
+using NoviVovi.Application.Novels.Features.Get;
 
 namespace NoviVovi.Api.Controllers;
 

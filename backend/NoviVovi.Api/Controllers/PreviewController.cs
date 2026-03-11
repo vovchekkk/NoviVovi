@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NoviVovi.Application.Contracts.Preview;
-using NoviVovi.Application.Features.Preview.Choose;
-using NoviVovi.Application.Features.Preview.Next;
-using NoviVovi.Application.Features.Preview.Start;
+using NoviVovi.Application.Preview.Contracts;
+using NoviVovi.Application.Preview.Features.Choose;
+using NoviVovi.Application.Preview.Features.Next;
+using NoviVovi.Application.Preview.Features.Start;
 
 namespace NoviVovi.Api.Controllers;
 
