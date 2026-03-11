@@ -1,24 +1,27 @@
-﻿using NoviVovi.Application.Preview.Contracts;
+﻿using NoviVovi.Application.Abstractions;
+using NoviVovi.Application.Preview.Contracts;
+using NoviVovi.Application.Preview.Mappers;
+using NoviVovi.Application.Preview.Services;
 
 namespace NoviVovi.Application.Preview.Features.Choose;
 
-public class ChooseChoiceHandler
+public class ChooseChoiceHandler(
+    PreviewSessionStore sessions,
+    ILabelRepository labelRepository,
+    SceneMapper mapper)
 {
-    private readonly PreviewSessionStore _sessions;
-
-    public ChooseChoiceHandler(PreviewSessionStore sessions)
+    public async Task<SceneSnapshot> Handle(ChooseChoiceCommand command)
     {
-        _sessions = sessions;
-    }
+        var session = await sessions.GetByIdAsync(command.SessionId);
+        if (session == null)
+        {
+            throw new Exception($"Session with id {command.SessionId} not found.");
+        }
 
-    public async Task Handle(ChooseChoiceCommand command)
-    {
-        var session = await _sessions.GetByIDAsync(command.SessionId);
+        session.Player.SelectChoice(command.ChoiceId);
 
-        session.Player.SelectChoice(command.Choice);
+        await session.Player.ExecuteNextAsync(labelRepository);
 
-        session.Player.ExecuteNext();
-
-        return await SceneSnapshot.From(session.Player, command.SessionId);
+        return mapper.ToSnapshot(session.State);
     }
 }

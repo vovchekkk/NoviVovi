@@ -1,24 +1,28 @@
-﻿using NoviVovi.Application.Preview.Contracts;
+﻿using NoviVovi.Application.Abstractions;
+using NoviVovi.Application.Preview.Contracts;
+using NoviVovi.Application.Preview.Mappers;
+using NoviVovi.Application.Preview.Services;
 
 namespace NoviVovi.Application.Preview.Features.Next;
 
-public class NextStepHandler
+public class NextStepHandler(
+    PreviewSessionStore sessions,
+    ILabelRepository labelRepository,
+    SceneMapper mapper
+)
 {
-    private readonly PreviewSessionStore _sessions;
-
-    public NextStepHandler(PreviewSessionStore sessions)
+    public async Task<SceneSnapshot> Handle(NextStepCommand command)
     {
-        _sessions = sessions;
-    }
+        var session = await sessions.GetByIdAsync(command.SessionId);
+        if (session == null)
+        {
+            throw new Exception($"Session with id {command.SessionId} not found.");
+        }
 
-    public Task<SceneSnapshot> Handle(NextStepCommand command)
-    {
-        var session = _sessions.GetByIDAsync(command.SessionId);
+        await session.Player.ExecuteNextAsync(labelRepository);
+        
+        await sessions.SaveAsync(session);
 
-        session.Player.ExecuteNext();
-
-        return Task.FromResult(
-            SceneSnapshot.From(session.Player, command.SessionId)
-        );
+        return mapper.ToSnapshot(session.State);
     }
 }

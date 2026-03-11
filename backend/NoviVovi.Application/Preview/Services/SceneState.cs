@@ -1,15 +1,14 @@
 ﻿using NoviVovi.Domain.Dialogue;
-using NoviVovi.Domain.Menu;
 using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Steps;
 
-namespace NoviVovi.Application.Preview.Contracts;
+namespace NoviVovi.Application.Preview.Services;
 
 public class SceneState
 {
     public BackgroundObject? Background { get; set; }
     public Replica? Replica { get; set; }
-    public Menu? Menu { get; set; }
+    public Domain.Menu.Menu? Menu { get; set; }
     private readonly Dictionary<Guid, CharacterObject> _characters = new();
 
     public IReadOnlyDictionary<Guid, CharacterObject> Characters => _characters;

@@ -1,3 +1,5 @@
 ﻿namespace NoviVovi.Application.Novels.Features.Get;
 
-public record GetNovelQuery(Guid Id);
+public record GetNovelQuery(
+    Guid Id
+);

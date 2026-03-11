@@ -7,17 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Characters\" />
-    <Folder Include="Dialogue\" />
-    <Folder Include="Images\" />
-    <Folder Include="Labels\" />
-    <Folder Include="Menu\" />
     <Folder Include="Persistence\Migrations\" />
-    <Folder Include="Scene\" />
+    <Folder Include="Scene\Mappers\" />
+    <Folder Include="Scene\Persistence\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="11.0.0-preview.2.26159.112" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>

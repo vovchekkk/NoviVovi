@@ -7,6 +7,7 @@ namespace NoviVovi.Domain.Labels;
 
 public class Label : Entity
 {
+    public Guid NovelId { get; private set; }
     public string Name { get; private set; }
     private readonly List<Step> _steps = new();
 

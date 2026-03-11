@@ -1,31 +1,31 @@
 ﻿using NoviVovi.Application.Abstractions;
-using NoviVovi.Application.Mappers;
 using NoviVovi.Application.Preview.Contracts;
-using NovelMapper = NoviVovi.Application.Novels.Mappers.NovelMapper;
+using NoviVovi.Application.Preview.Mappers;
+using NoviVovi.Application.Preview.Services;
 
 namespace NoviVovi.Application.Preview.Features.Start;
 
-public class StartPreviewHandler(INovelRepository repository, NovelMapper mapper)
+public class StartPreviewHandler(
+    PreviewSessionStore sessions,
+    INovelRepository novelRepository,
+    ILabelRepository labelRepository,
+    SceneMapper mapper
+)
 {
-    private readonly INovelRepository _novels;
-    private readonly PreviewSessionStore _sessions;
-
-    public StartPreviewHandler(
-        INovelRepository novels,
-        PreviewSessionStore sessions)
-    {
-        _novels = novels;
-        _sessions = sessions;
-    }
-
     public async Task<SceneSnapshot> Handle(StartPreviewCommand command)
     {
-        var novel = await repository.GetByIdAsync(command.NovelId);
-        
-        var session = await _sessions.AddAsync(novel);
+        var novel = await novelRepository.GetByIdAsync(command.NovelId);
+        if (novel == null)
+        {
+            throw new Exception($"Session with id {command.NovelId} not found.");
+        }
 
-        session.Player.ExecuteNext();
+        var session = await sessions.CreateAsync(novel);
 
-        return SceneSnapshot.From(player, sessionId);
+        await session.Player.ExecuteNextAsync(labelRepository);
+
+        await sessions.SaveAsync(session);
+
+        return mapper.ToSnapshot(session.State);
     }
 }

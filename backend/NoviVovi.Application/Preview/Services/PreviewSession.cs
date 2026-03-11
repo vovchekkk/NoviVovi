@@ -1,6 +1,7 @@
-﻿using NoviVovi.Domain.Novels;
+﻿using NoviVovi.Application.Preview.Contracts;
+using NoviVovi.Domain.Novels;
 
-namespace NoviVovi.Application.Preview.Contracts;
+namespace NoviVovi.Application.Preview.Services;
 
 public class PreviewSession
 {
@@ -14,6 +15,8 @@ public class PreviewSession
     {
         Id = Guid.NewGuid();
         State = new SceneState();
-        Player = new ScenePlayer(novel, State);
+        Player = new ScenePlayer(State);
+
+        Player.Initialize(novel.StartLabelId);
     }
 }

@@ -2,12 +2,9 @@
 
 namespace NoviVovi.Domain.Steps.Transitions;
 
-public sealed class ChoiceTransition : StepTransition
+public sealed class ChoiceTransition(Guid targetLabelId) : StepTransition
 {
-    public Label TargetLabel { get; }
-
-    public ChoiceTransition(Label targetLabel)
-    {
-        TargetLabel = targetLabel ?? throw new ArgumentNullException(nameof(targetLabel));
-    }
+    public Guid TargetLabelId { get; } = targetLabelId == Guid.Empty
+        ? throw new ArgumentNullException(nameof(targetLabelId))
+        : targetLabelId;
 }

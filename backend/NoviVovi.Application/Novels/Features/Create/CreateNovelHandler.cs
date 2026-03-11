@@ -1,17 +1,27 @@
 ﻿using NoviVovi.Application.Abstractions;
 using NoviVovi.Application.Novels.Contracts;
+using NoviVovi.Application.Novels.Mappers;
+using NoviVovi.Domain.Labels;
 using NoviVovi.Domain.Novels;
 
 namespace NoviVovi.Application.Novels.Features.Create;
 
-public class CreateNovelHandler(INovelRepository repo)
+public class CreateNovelHandler(
+    INovelRepository novelRepository,
+    ILabelRepository labelRepository,
+    NovelMapper mapper
+)
 {
-    public async Task<NovelSnapshot> Handle(CreateNovelCommand cmd)
+    public async Task<NovelSnapshot> Handle(CreateNovelCommand command)
     {
-        var novel = Novel.Create(cmd.Title);
+        var startLabel = Label.Create("Start");
+
+        var novel = Novel.Create(command.Title, startLabel.Id);
         
-        await repo.Save(novel);
-        
-        return novel.ToDto();
+        await labelRepository.AddAsync(startLabel);
+
+        await novelRepository.AddAsync(novel);
+
+        return mapper.ToSnapshot(novel);
     }
 }
