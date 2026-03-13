@@ -1,5 +1,5 @@
 ﻿namespace NoviVovi.Application.Transitions.Contracts;
 
-public abstract record TransitionSnapshot(
+public record TransitionSnapshot(
     Guid Id
 );

@@ -6,5 +6,5 @@ namespace NoviVovi.Application.Steps.Contracts;
 public record ShowReplicaStepSnapshot(
     Guid Id,
     ReplicaSnapshot Replica,
-    NextStepTransitionSnapshot Transition
-) : StepSnapshot<NextStepTransitionSnapshot>(Id, Transition);
+    TransitionSnapshot Transition
+) : StepSnapshot(Id, Transition);

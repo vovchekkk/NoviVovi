@@ -2,7 +2,7 @@
 
 namespace NoviVovi.Api.Steps.Responses;
 
-public abstract record StepResponse(
+public record StepResponse(
     Guid Id,
     TransitionResponse Transition
 );

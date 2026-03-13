@@ -9,5 +9,5 @@ public record ShowCharacterStepSnapshot(
     CharacterSnapshot Character,
     CharacterStateSnapshot State,
     TransformSnapshot Transform,
-    NextStepTransitionSnapshot Transition
-) : StepSnapshot<NextStepTransitionSnapshot>(Id, Transition);
+    TransitionSnapshot Transition
+) : StepSnapshot(Id, Transition);

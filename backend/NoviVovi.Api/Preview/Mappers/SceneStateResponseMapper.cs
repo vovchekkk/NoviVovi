@@ -12,10 +12,4 @@ public partial class SceneStateResponseMapper
     public partial SceneStateResponse ToSnapshot(SceneStateSnapshot novel);
 
     public partial IEnumerable<SceneStateResponse> ToSnapshots(IEnumerable<SceneStateSnapshot> novels);
-
-    public partial NextStepTransitionResponse ToSnapshot(NextStepTransitionSnapshot novel);
-    
-    public partial JumpTransitionResponse ToSnapshot(JumpTransitionSnapshot novel);
-    
-    public partial ChoiceTransitionResponse ToSnapshot(ChoiceTransitionSnapshot novel);
 }

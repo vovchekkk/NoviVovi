@@ -1,26 +1,13 @@
-﻿using NoviVovi.Application.Characters.Mappers;
-using NoviVovi.Application.Dialogue.Mappers;
-using NoviVovi.Application.Scene.Mappers;
-using NoviVovi.Application.Steps.Contracts;
-using NoviVovi.Application.Transitions.Mappers;
+﻿using NoviVovi.Application.Steps.Contracts;
 using NoviVovi.Domain.Steps;
+using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Application.Steps.Mappers;
 
-public partial class ShowCharacterStepMapper(
-    CharacterMapper characterMapper,
-    CharacterStateMapper characterStateMapper,
-    TransformMapper transformMapper,
-    TransitionMapper transitionMapper)
+[Mapper]
+public partial class ShowCharacterStepMapper
 {
-    public ShowCharacterStepSnapshot ToSnapshot(ShowCharacterStep step)
-    {
-        return new ShowCharacterStepSnapshot(
-            step.Id,
-            characterMapper.ToSnapshot(step.Character),
-            characterStateMapper.ToSnapshot(step.State),
-            transformMapper.ToSnapshot(step.Transform),
-            transitionMapper.ToSnapshot(step.Transition)
-        );
-    }
+    public partial ShowCharacterStepSnapshot ToSnapshot(ShowCharacterStep novel);
+    
+    public partial IEnumerable<ShowCharacterStepSnapshot> ToSnapshots(IEnumerable<ShowCharacterStep> novels);
 }

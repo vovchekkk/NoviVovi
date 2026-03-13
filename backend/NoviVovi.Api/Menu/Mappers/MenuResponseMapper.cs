@@ -1,7 +1,7 @@
 ﻿using NoviVovi.Application.Menu.Contracts;
 using Riok.Mapperly.Abstractions;
 
-namespace NoviVovi.Application.Menu.Mappers;
+namespace NoviVovi.Api.Menu.Mappers;
 
 [Mapper]
 public partial class MenuResponseMapper

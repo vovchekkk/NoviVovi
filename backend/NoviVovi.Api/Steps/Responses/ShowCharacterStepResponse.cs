@@ -10,4 +10,4 @@ public record ShowCharacterStepResponse(
     CharacterStateResponse State,
     TransformResponse Transform,
     TransitionResponse Transition
-) : StepResponse (Id, Transition);
+) : StepResponse(Id, Transition);

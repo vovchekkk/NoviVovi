@@ -1,4 +1,4 @@
-﻿using NoviVovi.Application.Steps.Contracts;
+using NoviVovi.Application.Steps.Contracts;
 using NoviVovi.Domain.Steps;
 using Riok.Mapperly.Abstractions;
 

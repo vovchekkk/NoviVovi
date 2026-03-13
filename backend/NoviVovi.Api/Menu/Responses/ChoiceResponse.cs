@@ -7,5 +7,5 @@ public record ChoiceResponse(
     string? Name,
     string? Description,
     string? Text,
-    TransitionResponse Transition
+    ChoiceTransitionResponse Transition
 );

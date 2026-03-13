@@ -1,3 +1,5 @@
 ﻿namespace NoviVovi.Api.Transitions.Responses;
 
-public abstract record TransitionResponse;
+public record TransitionResponse(
+    Guid Id
+);

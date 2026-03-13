@@ -1,9 +1,11 @@
-﻿using NoviVovi.Domain.Steps;
+﻿using NoviVovi.Application.Steps.Contracts;
+using NoviVovi.Domain.Steps;
 
 namespace NoviVovi.Application.Labels.Contracts;
 
 public record LabelSnapshot(
     Guid Id,
+    Guid NovelId,
     string Name,
-    List<Step> Steps
+    List<StepSnapshot> Steps
 );
