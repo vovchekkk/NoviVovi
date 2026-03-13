@@ -1,6 +1,6 @@
 ﻿using NoviVovi.Domain.Images;
 using NoviVovi.Domain.Scene;
-using NoviVovi.Domain.Steps.Transitions;
+using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
 

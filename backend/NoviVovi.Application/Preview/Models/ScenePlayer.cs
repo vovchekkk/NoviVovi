@@ -1,7 +1,7 @@
 ﻿using NoviVovi.Application.Abstractions;
 using NoviVovi.Application.Preview.Services;
 using NoviVovi.Domain.Steps;
-using NoviVovi.Domain.Steps.Transitions;
+using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Application.Preview.Models;
 
@@ -84,7 +84,7 @@ public class ScenePlayer(SceneState state)
         ApplyTransition(choice.Transition);
     }
 
-    private void ApplyTransition(StepTransition transition)
+    private void ApplyTransition(Transition transition)
     {
         switch (transition)
         {

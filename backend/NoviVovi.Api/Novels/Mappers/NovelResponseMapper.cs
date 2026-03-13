@@ -1,16 +1,13 @@
 ﻿using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Application.Novels.Contracts;
+using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Novels.Mappers;
 
-public static class NovelResponseMapper
+[Mapper]
+public partial class NovelResponseMapper
 {
-    public static NovelResponse ToResponse(this NovelSnapshot snapshot)
-    {
-        return new NovelResponse
-        {
-            Id = snapshot.Id,
-            Title = snapshot.Title
-        };
-    }
+    public partial NovelResponse ToSnapshot(NovelSnapshot novel);
+    
+    public partial IEnumerable<NovelResponse> ToSnapshots(IEnumerable<NovelSnapshot> novels);
 }

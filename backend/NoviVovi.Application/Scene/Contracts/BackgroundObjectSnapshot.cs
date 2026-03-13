@@ -3,5 +3,7 @@
 namespace NoviVovi.Application.Scene.Contracts;
 
 public record BackgroundObjectSnapshot(
-    ImageSnapshot Image
-);
+    Guid Id,
+    ImageSnapshot Image,
+    TransformSnapshot Transform
+) : SceneObjectSnapshot(Id, Transform);

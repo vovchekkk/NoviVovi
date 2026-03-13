@@ -1,6 +1,7 @@
 ﻿namespace NoviVovi.Application.Novels.Contracts;
 
 public record NovelSnapshot(
-    Guid Id,
-    string Title
+    string Title,
+    Guid StartLabelId,
+    List<Guid> LabelIds
 );

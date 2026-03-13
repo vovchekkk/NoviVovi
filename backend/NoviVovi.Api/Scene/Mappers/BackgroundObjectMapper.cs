@@ -1,0 +1,13 @@
+﻿using NoviVovi.Api.Scene.Responses;
+using NoviVovi.Application.Scene.Contracts;
+using Riok.Mapperly.Abstractions;
+
+namespace NoviVovi.Api.Scene.Mappers;
+
+[Mapper]
+public partial class BackgroundObjectMapper
+{
+    public partial BackgroundObjectResponse ToSnapshot(BackgroundObjectSnapshot novel);
+    
+    public partial IEnumerable<BackgroundObjectResponse> ToSnapshots(IEnumerable<BackgroundObjectSnapshot> novels);
+}

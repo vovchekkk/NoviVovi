@@ -1,6 +1,6 @@
 ﻿using NoviVovi.Domain.Common;
 using NoviVovi.Domain.Labels;
-using NoviVovi.Domain.Steps.Transitions;
+using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Menu;
 

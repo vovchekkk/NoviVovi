@@ -18,16 +18,14 @@
 
   <ItemGroup>
     <Folder Include="Characters\Controllers\" />
-    <Folder Include="Characters\Mappers\" />
+    <Folder Include="Transitions\Controllers\" />
     <Folder Include="Images\Controllers\" />
-    <Folder Include="Images\Mappers\" />
     <Folder Include="Labels\Controllers\" />
-    <Folder Include="Labels\Mappers\" />
     <Folder Include="Menu\Controllers\" />
-    <Folder Include="Menu\Mappers\" />
-    <Folder Include="Preview\Mappers\" />
     <Folder Include="Scene\Controllers\" />
-    <Folder Include="Scene\Mappers\" />
+    <Folder Include="Steps\Controllers\" />
+    <Folder Include="Steps\Requests\" />
+    <Folder Include="Transitions\Requests\" />
   </ItemGroup>
 
 </Project>

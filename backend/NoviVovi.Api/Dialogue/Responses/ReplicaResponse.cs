@@ -1,6 +1,9 @@
-﻿namespace NoviVovi.Api.Dialogue.Responses;
+﻿using NoviVovi.Api.Characters.Responses;
 
-public class ReplicaResponse
-{
-    
-}
+namespace NoviVovi.Api.Dialogue.Responses;
+
+public record ReplicaResponse(
+    Guid Id,
+    CharacterResponse? Speaker,
+    string Text
+);

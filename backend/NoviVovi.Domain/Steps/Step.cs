@@ -1,15 +1,9 @@
 ﻿using NoviVovi.Domain.Common;
-using NoviVovi.Domain.Scene;
-using NoviVovi.Domain.Steps.Transitions;
+using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
 
-public abstract class Step : Entity
+public abstract class Step(Guid id, Transition transition) : Entity(id)
 {
-    public StepTransition Transition { get; }
-
-    protected Step(Guid id, StepTransition transition) : base(id)
-    {
-        Transition = transition;
-    }
+    public Transition Transition { get; } = transition;
 }

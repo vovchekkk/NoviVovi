@@ -12,13 +12,14 @@
 
   <ItemGroup>
     <Folder Include="Characters\Features\" />
-    <Folder Include="Common\" />
+    <Folder Include="Transitions\Features\" />
     <Folder Include="Dialogue\Features\" />
     <Folder Include="Images\Features\" />
     <Folder Include="Labels\Features\" />
     <Folder Include="Menu\Features\" />
     <Folder Include="Preview\Features\" />
     <Folder Include="Scene\Features\" />
+    <Folder Include="Steps\Features\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,5 @@
-﻿using NoviVovi.Domain.Characters;
-using NoviVovi.Domain.Dialogue;
-using NoviVovi.Domain.Scene;
-using NoviVovi.Domain.Steps.Transitions;
+﻿using NoviVovi.Domain.Dialogue;
+using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
 

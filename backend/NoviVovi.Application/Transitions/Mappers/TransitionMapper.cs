@@ -1,0 +1,20 @@
+﻿using NoviVovi.Application.Transitions.Contracts;
+using NoviVovi.Domain.Transitions;
+using Riok.Mapperly.Abstractions;
+
+namespace NoviVovi.Application.Transitions.Mappers;
+
+[Mapper]
+public partial class TransitionMapper
+{
+    [MapDerivedType(typeof(NextStepTransition), typeof(NextStepTransitionSnapshot))]
+    [MapDerivedType(typeof(JumpTransition), typeof(JumpTransitionSnapshot))]
+    [MapDerivedType(typeof(ChoiceTransition), typeof(ChoiceTransitionSnapshot))]
+    public partial TransitionSnapshot ToSnapshot(Transition novel);
+
+    public partial NextStepTransitionSnapshot ToSnapshot(NextStepTransition novel);
+    
+    public partial JumpTransitionSnapshot ToSnapshot(JumpTransition novel);
+    
+    public partial ChoiceTransitionSnapshot ToSnapshot(ChoiceTransition novel);
+}

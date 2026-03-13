@@ -14,21 +14,21 @@ public class PreviewController(
     ChooseChoiceHandler choose) : ControllerBase
 {
     [HttpPost("start/{novelId}")]
-    public async Task<ActionResult<SceneSnapshot>> Start(Guid novelId)
+    public async Task<ActionResult<SceneStateSnapshot>> Start(Guid novelId)
     {
         var result = await start.Handle(new StartPreviewCommand(novelId));
         return Ok(result);
     }
 
     [HttpPost("{sessionId}/next")]
-    public async Task<ActionResult<SceneSnapshot>> Next(Guid sessionId)
+    public async Task<ActionResult<SceneStateSnapshot>> Next(Guid sessionId)
     {
         var result = await next.Handle(new NextStepCommand(sessionId));
         return Ok(result);
     }
 
     [HttpPost("{sessionId}/choice/{choiceId}")]
-    public async Task<ActionResult<SceneSnapshot>> Choose(Guid sessionId, Guid choiceId)
+    public async Task<ActionResult<SceneStateSnapshot>> Choose(Guid sessionId, Guid choiceId)
     {
         var result = await choose.Handle(
             new ChooseChoiceCommand(sessionId, choiceId)

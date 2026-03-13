@@ -8,10 +8,10 @@ namespace NoviVovi.Application.Preview.Features.Next;
 public class NextStepHandler(
     PreviewSessionStore sessions,
     ILabelRepository labelRepository,
-    SceneMapper mapper
+    SceneStateMapper stateMapper
 )
 {
-    public async Task<SceneSnapshot> Handle(NextStepCommand command)
+    public async Task<SceneStateSnapshot> Handle(NextStepCommand command)
     {
         var session = await sessions.GetByIdAsync(command.SessionId);
         if (session == null)
@@ -23,6 +23,6 @@ public class NextStepHandler(
         
         await sessions.SaveAsync(session);
 
-        return mapper.ToSnapshot(session.State);
+        return stateMapper.ToSnapshot(session.State);
     }
 }

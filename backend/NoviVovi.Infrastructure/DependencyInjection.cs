@@ -2,7 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NoviVovi.Application.Abstractions;
+using NoviVovi.Application.Dialogue.Mappers;
 using NoviVovi.Application.Preview.Services;
+using NoviVovi.Application.Steps.Mappers;
+using NoviVovi.Application.Transitions.Mappers;
 using NoviVovi.Infrastructure.Novels;
 using NoviVovi.Infrastructure.Labels;
 using NoviVovi.Infrastructure.Persistence;
@@ -14,6 +17,10 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSingleton<PreviewSessionStore>();
+
+        services.AddSingleton<ReplicaMapper>();
+        services.AddSingleton<StepMapper>();
+        services.AddSingleton<TransitionMapper>();
         
         return services;
     }
