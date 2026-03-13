@@ -8,5 +8,5 @@ public record ShowBackgroundStepSnapshot(
     Guid Id,
     ImageSnapshot Background,
     TransformSnapshot Transform,
-    TransitionSnapshot Transition
-) : StepSnapshot(Id, Transition);
+    NextStepTransitionSnapshot Transition
+) : StepSnapshot<NextStepTransitionSnapshot>(Id, Transition);

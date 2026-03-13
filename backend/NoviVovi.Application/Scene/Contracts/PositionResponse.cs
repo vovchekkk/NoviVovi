@@ -1,6 +1,6 @@
 ﻿namespace NoviVovi.Application.Scene.Contracts;
 
-public class PositionSnapshot(
+public record PositionSnapshot(
     double X,
     double Y
 );

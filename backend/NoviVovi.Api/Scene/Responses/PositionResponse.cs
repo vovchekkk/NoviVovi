@@ -1,6 +1,6 @@
 ﻿namespace NoviVovi.Api.Scene.Responses;
 
-public class PositionResponse(
+public record PositionResponse(
     double X,
     double Y
 );

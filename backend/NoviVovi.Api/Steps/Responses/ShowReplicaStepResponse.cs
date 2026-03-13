@@ -6,5 +6,5 @@ namespace NoviVovi.Api.Steps.Responses;
 public record ShowReplicaStepResponse(
     Guid Id,
     ReplicaResponse Replica,
-    TransitionResponse Transition
+    NextStepTransitionResponse Transition
 ) : StepResponse(Id, Transition);

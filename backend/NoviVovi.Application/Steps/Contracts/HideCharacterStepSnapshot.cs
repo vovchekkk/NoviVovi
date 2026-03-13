@@ -6,5 +6,5 @@ namespace NoviVovi.Application.Steps.Contracts;
 public record HideCharacterStepSnapshot(
     Guid Id,
     CharacterSnapshot Character,
-    TransitionSnapshot Transition
-) : StepSnapshot(Id, Transition);
+    NextStepTransitionSnapshot Transition
+) : StepSnapshot<NextStepTransitionSnapshot>(Id, Transition);

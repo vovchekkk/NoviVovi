@@ -1,18 +1,13 @@
-﻿using NoviVovi.Application.Dialogue.Mappers;
-using NoviVovi.Application.Steps.Contracts;
-using NoviVovi.Application.Transitions.Mappers;
+﻿using NoviVovi.Application.Steps.Contracts;
 using NoviVovi.Domain.Steps;
+using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Application.Steps.Mappers;
 
-public partial class ShowReplicaStepMapper(ReplicaMapper replicaMapper, TransitionMapper transitionMapper)
+[Mapper]
+public partial class ShowReplicaStepMapper
 {
-    public ShowReplicaStepSnapshot ToSnapshot(ShowReplicaStep step)
-    {
-        return new ShowReplicaStepSnapshot(
-            step.Id,
-            replicaMapper.ToSnapshot(step.Replica),
-            transitionMapper.ToSnapshot(step.Transition)
-        );
-    }
+    public partial ShowReplicaStepSnapshot ToSnapshot(ShowReplicaStep novel);
+    
+    public partial IEnumerable<ShowReplicaStepSnapshot> ToSnapshots(IEnumerable<ShowReplicaStep> novels);
 }

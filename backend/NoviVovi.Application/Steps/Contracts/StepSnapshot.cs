@@ -2,7 +2,7 @@
 
 namespace NoviVovi.Application.Steps.Contracts;
 
-public abstract record StepSnapshot(
+public abstract record StepSnapshot<TTransition>(
     Guid Id,
-    TransitionSnapshot Transition
-);
+    TTransition Transition
+) where TTransition : TransitionSnapshot;

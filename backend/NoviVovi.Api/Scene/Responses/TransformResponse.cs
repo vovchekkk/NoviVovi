@@ -2,7 +2,7 @@
 
 namespace NoviVovi.Api.Scene.Responses;
 
-public class TransformResponse
+public record TransformResponse
 (
     PositionResponse Position,
     Size Size,

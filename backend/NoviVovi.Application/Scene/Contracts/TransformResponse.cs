@@ -2,7 +2,7 @@
 
 namespace NoviVovi.Application.Scene.Contracts;
 
-public class TransformSnapshot
+public record TransformSnapshot
 (
     PositionSnapshot Position,
     Size Size,

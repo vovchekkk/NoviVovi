@@ -5,7 +5,7 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Api.Scene.Mappers;
 
 [Mapper]
-public partial class BackgroundObjectMapper
+public partial class BackgroundObjectResponseMapper
 {
     public partial BackgroundObjectResponse ToSnapshot(BackgroundObjectSnapshot novel);
     

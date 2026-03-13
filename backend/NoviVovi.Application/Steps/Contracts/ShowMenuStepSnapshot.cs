@@ -6,5 +6,5 @@ namespace NoviVovi.Application.Steps.Contracts;
 public record ShowMenuStepSnapshot(
     Guid Id,
     MenuSnapshot Menu,
-    TransitionSnapshot Transition
-) : StepSnapshot(Id, Transition);
+    ChoiceTransitionSnapshot Transition
+) : StepSnapshot<ChoiceTransitionSnapshot>(Id, Transition);
