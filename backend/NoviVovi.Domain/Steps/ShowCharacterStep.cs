@@ -1,45 +1,34 @@
-﻿using NoviVovi.Domain.Characters;
-using NoviVovi.Domain.Scene;
+﻿using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
 
 public class ShowCharacterStep : Step
 {
-    public Character Character { get; }
-    public CharacterState State { get; }
-    public Transform Transform { get; }
+    public CharacterObject CharacterObject { get; }
 
     private ShowCharacterStep(
         Guid id,
-        Character character,
-        CharacterState state,
-        Transform transform,
+        CharacterObject characterObject,
         Transition transition
     ) : base(id, transition)
     {
-        Character = character;
-        State = state;
-        Transform = transform;
+        CharacterObject = characterObject;
     }
 
     public static ShowCharacterStep Create(
-        Character character,
-        CharacterState state,
-        Transform transform
+        CharacterObject characterObject
     )
     {
-        return new ShowCharacterStep(Guid.NewGuid(), character, state, transform, NextStepTransition.Create());
+        return new ShowCharacterStep(Guid.NewGuid(), characterObject, NextStepTransition.Create());
     }
 
     public static ShowCharacterStep Rehydrate(
         Guid id,
-        Character character,
-        CharacterState state,
-        Transform transform,
+        CharacterObject characterObject,
         Transition transition
     )
     {
-        return new ShowCharacterStep(id, character, state, transform, transition);
+        return new ShowCharacterStep(id, characterObject, transition);
     }
 }

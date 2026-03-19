@@ -23,7 +23,7 @@ public class SceneState
 
     public void ShowBackground(ShowBackgroundStep step)
     {
-        Background = step.Background;
+        Background = step.BackgroundObject;
     }
     
     public void HideBackground()
@@ -33,8 +33,7 @@ public class SceneState
 
     public void ShowCharacter(ShowCharacterStep step)
     {
-        var obj = CharacterObject.Create(step.Character, step.State, step.Transform);
-        _characters[step.Character.Id] = obj;
+        _characters[step.CharacterObject.Character.Id] = step.CharacterObject;
     }
 
     public void HideCharacter(HideCharacterStep step)

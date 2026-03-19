@@ -1,40 +1,34 @@
-﻿using NoviVovi.Domain.Images;
-using NoviVovi.Domain.Scene;
+﻿using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
 
 public class ShowBackgroundStep : Step
 {
-    public BackgroundObject Background { get; }
-    public Transform Transform { get; }
+    public BackgroundObject BackgroundObject { get; }
 
     private ShowBackgroundStep(
         Guid id,
-        BackgroundObject background,
-        Transform transform,
+        BackgroundObject backgroundObject,
         Transition transition
     ) : base(id, transition)
     {
-        Background = background;
-        Transform = transform;
+        BackgroundObject = backgroundObject;
     }
 
     public static ShowBackgroundStep Create(
-        BackgroundObject background,
-        Transform transform
+        BackgroundObject backgroundObject
     )
     {
-        return new ShowBackgroundStep(Guid.NewGuid(), background, transform, NextStepTransition.Create());
+        return new ShowBackgroundStep(Guid.NewGuid(), backgroundObject, NextStepTransition.Create());
     }
 
     public static ShowBackgroundStep Rehydrate(
         Guid id,
-        BackgroundObject background,
-        Transform transform,
+        BackgroundObject backgroundObject,
         Transition transition
     )
     {
-        return new ShowBackgroundStep(id, background, transform, transition);
+        return new ShowBackgroundStep(id, backgroundObject, transition);
     }
 }
