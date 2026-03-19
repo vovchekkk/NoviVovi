@@ -1,6 +1,4 @@
 ﻿using NoviVovi.Domain.Common;
-using NoviVovi.Domain.Images;
-using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Steps;
 
 namespace NoviVovi.Domain.Labels;

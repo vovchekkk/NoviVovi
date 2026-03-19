@@ -9,24 +9,24 @@ namespace NoviVovi.Api.Novels.Controllers;
 
 [ApiController]
 [Route("api/novels")]
-public class NovelsController(CreateNovelHandler create, GetNovelHandler get) : ControllerBase
+public class NovelsController(NovelResponseMapper novelMapper, CreateNovelHandler create, GetNovelHandler get) : ControllerBase
 {
     [HttpPost]
     public async Task<ActionResult<NovelResponse>> Create(CreateNovelRequest request)
     {
         var novel = await create.Handle(
-            new CreateNovelCommand(request.Title)
+            new CreateNovelCommand(request.Title, request.StartLabelId)
         );
 
-        return Ok(novel.ToResponse()); // маппинг Domain/DTO → NovelResponse
+        return Ok(novelMapper.ToResponse(novel));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<NovelResponse>> Get(Guid id)
+    public async Task<ActionResult<NovelResponse>> Get(GetNovelRequest request)
     {
-        var novel = await get.Handle(new GetNovelQuery(id));
+        var novel = await get.Handle(new GetNovelQuery(request.Id));
         if (novel == null) return NotFound();
 
-        return Ok(novel.ToResponse());
+        return Ok(novelMapper.ToResponse(novel));
     }
 }

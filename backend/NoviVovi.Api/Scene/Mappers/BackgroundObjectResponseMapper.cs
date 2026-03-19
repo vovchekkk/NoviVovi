@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Scene.Mappers;
 [Mapper]
 public partial class BackgroundObjectResponseMapper
 {
-    public partial BackgroundObjectResponse ToSnapshot(BackgroundObjectSnapshot novel);
+    public partial BackgroundObjectResponse ToResponse(BackgroundObjectSnapshot novel);
     
-    public partial IEnumerable<BackgroundObjectResponse> ToSnapshots(IEnumerable<BackgroundObjectSnapshot> novels);
+    public partial IEnumerable<BackgroundObjectResponse> ToResponses(IEnumerable<BackgroundObjectSnapshot> novels);
 }

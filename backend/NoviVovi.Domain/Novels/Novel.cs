@@ -9,10 +9,13 @@ public class Novel : Entity
 {
     public string Title { get; private set; }
     public Guid StartLabelId { get; private set; }
+
     private readonly List<Guid> _labelIds = new();
+    private readonly List<Character> _characters = new();
 
     public IReadOnlyList<Guid> LabelIds => _labelIds.AsReadOnly();
-    
+    public IReadOnlyCollection<Character> Characters => _characters.AsReadOnly();
+
     private Novel(Guid id, string title, Guid startLabelId) : base(id)
     {
         Title = title;
@@ -24,7 +27,7 @@ public class Novel : Entity
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new DomainException("Title cannot be empty");
-        
+
         if (startLabelId == Guid.Empty)
             throw new DomainException($"LabelId {startLabelId} cannot be empty");
 
@@ -41,23 +44,44 @@ public class Novel : Entity
 
     public void AddLabel(Guid labelId)
     {
+        if (labelId == Guid.Empty)
+            throw new DomainException($"LabelId {labelId} cannot be empty");
+
         if (_labelIds.Any(item => item == labelId))
             throw new DomainException($"Label {labelId} already exists");
+
         _labelIds.Add(labelId);
     }
 
-    public void RemoveLabel(Guid id)
+    public void RemoveLabel(Guid labelId)
     {
-        var label = _labelIds.FirstOrDefault(item => item == id);
+        if (labelId == Guid.Empty)
+            throw new DomainException($"LabelId {labelId} cannot be empty");
+
+        var label = _labelIds.FirstOrDefault(item => item == labelId);
         if (label == Guid.Empty)
-            throw new DomainException($"LabelId {id} cannot be empty");
-        _labelIds.Remove(id);
+            throw new DomainException($"Label {labelId} doesn't exists");
+
+        _labelIds.Remove(labelId);
     }
 
-    public void UpdateTitle(string title)
+    public void AddCharacter(Character character)
     {
-        if (string.IsNullOrWhiteSpace(title))
-            throw new DomainException("Label cannot be empty");
-        Title = title;
+        if (_characters.Any(item => Equals(item, character)))
+            throw new DomainException($"Character {character.Id} already exists");
+
+        _characters.Add(character);
+    }
+
+    public void RemoveCharacter(Guid characterId)
+    {
+        if (characterId == Guid.Empty)
+            throw new DomainException($"CharacterId {characterId} cannot be empty");
+
+        var character = _characters.FirstOrDefault(item => item.Id == characterId);
+        if (character is null)
+            throw new DomainException($"Character {characterId} doesn't exists");
+
+        _characters.Remove(character);
     }
 }

@@ -23,8 +23,7 @@ public class SceneState
 
     public void ShowBackground(ShowBackgroundStep step)
     {
-        var obj = BackgroundObject.Create(step.Background, step.Transform);
-        Background = obj;
+        Background = step.Background;
     }
     
     public void HideBackground()

@@ -1,6 +1,5 @@
 ﻿namespace NoviVovi.Api.Novels.Requests;
 
-public class GetNovelRequest
-{
-    
-}
+public record GetNovelRequest(
+    Guid Id
+);

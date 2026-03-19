@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Menu.Mappers;
 [Mapper]
 public partial class ChoiceResponseMapper
 {
-    public partial ChoiceResponse ToSnapshot(ChoiceSnapshot novel);
+    public partial ChoiceResponse ToResponse(ChoiceSnapshot novel);
 
-    public partial IEnumerable<ChoiceResponse> ToSnapshots(IEnumerable<ChoiceSnapshot> novels);
+    public partial IEnumerable<ChoiceResponse> ToResponses(IEnumerable<ChoiceSnapshot> novels);
 }

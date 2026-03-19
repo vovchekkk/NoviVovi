@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Images.Mappers;
 [Mapper]
 public partial class ImageResponseMapper
 {
-    public partial ImageResponse ToSnapshot(ImageSnapshot novel);
+    public partial ImageResponse ToResponse(ImageSnapshot novel);
 
-    public partial IEnumerable<ImageResponse> ToSnapshots(IEnumerable<ImageSnapshot> novels);
+    public partial IEnumerable<ImageResponse> ToResponses(IEnumerable<ImageSnapshot> novels);
 }

@@ -1,5 +1,5 @@
 ﻿using NoviVovi.Application.Abstractions;
-using NoviVovi.Application.Preview.Services;
+using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Domain.Steps;
 using NoviVovi.Domain.Transitions;
 
@@ -26,7 +26,7 @@ public class ScenePlayer(SceneState state)
     {
         var label = await repository.GetByIdAsync(_currentLabelId);
         if (label == null)
-            throw new InvalidOperationException("Label not found");
+            throw new NotFoundException("Label not found");
 
         while (_stepIndex < label.Steps.Count)
         {

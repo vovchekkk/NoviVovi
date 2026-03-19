@@ -6,7 +6,7 @@ namespace NoviVovi.Api.Menu.Mappers;
 [Mapper]
 public partial class MenuResponseMapper
 {
-    public partial MenuSnapshot ToSnapshot(Domain.Menu.Menu novel);
+    public partial MenuSnapshot ToResponse(Domain.Menu.Menu novel);
 
-    public partial IEnumerable<MenuSnapshot> ToSnapshots(IEnumerable<Domain.Menu.Menu> novels);
+    public partial IEnumerable<MenuSnapshot> ToResponses(IEnumerable<Domain.Menu.Menu> novels);
 }

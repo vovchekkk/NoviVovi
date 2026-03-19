@@ -1,5 +1,18 @@
 ﻿namespace NoviVovi.Domain.Transitions;
 
-public sealed class NextStepTransition(Guid id) : Transition(id)
+public sealed class NextStepTransition : Transition
 {
+    private NextStepTransition(Guid id) : base(id)
+    {
+    }
+
+    public static NextStepTransition Create()
+    {
+        return new NextStepTransition(Guid.NewGuid());
+    }
+
+    public static NextStepTransition Rehydrate(Guid id)
+    {
+        return new NextStepTransition(id);
+    }
 }

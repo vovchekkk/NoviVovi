@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="Characters\Features\" />
     <Folder Include="Transitions\Features\" />
-    <Folder Include="Dialogue\Features\" />
     <Folder Include="Images\Features\" />
     <Folder Include="Labels\Features\" />
     <Folder Include="Menu\Features\" />

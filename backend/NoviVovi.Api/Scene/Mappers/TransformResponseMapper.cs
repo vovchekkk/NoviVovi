@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Scene.Mappers;
 [Mapper]
 public partial class TransformResponseMapper
 {
-    public partial TransformResponse ToSnapshot(TransformSnapshot novel);
+    public partial TransformResponse ToResponse(TransformSnapshot novel);
     
-    public partial IEnumerable<TransformResponse> ToSnapshots(IEnumerable<TransformSnapshot> novels);
+    public partial IEnumerable<TransformResponse> ToResponses(IEnumerable<TransformSnapshot> novels);
 }
