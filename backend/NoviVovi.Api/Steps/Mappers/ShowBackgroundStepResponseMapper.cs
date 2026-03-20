@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Steps.Mappers;
 [Mapper]
 public partial class ShowBackgroundStepMapper
 {
-    public partial ShowBackgroundStepResponse ToResponse(ShowBackgroundStepSnapshot novel);
+    public partial ShowBackgroundStepResponse ToResponse(ShowBackgroundStepSnapshot subject);
     
-    public partial IEnumerable<ShowBackgroundStepResponse> ToResponses(IEnumerable<ShowBackgroundStepSnapshot> novels);
+    public partial IEnumerable<ShowBackgroundStepResponse> ToResponses(IEnumerable<ShowBackgroundStepSnapshot> subjects);
 }

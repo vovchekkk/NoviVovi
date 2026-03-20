@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Images.Mappers;
 [Mapper]
 public partial class ImageMapper
 {
-    public partial ImageSnapshot ToSnapshot(Image novel);
+    public partial ImageSnapshot ToSnapshot(Image subject);
 
-    public partial IEnumerable<ImageSnapshot> ToSnapshots(IEnumerable<Image> novels);
+    public partial IEnumerable<ImageSnapshot> ToSnapshots(IEnumerable<Image> subjects);
 }

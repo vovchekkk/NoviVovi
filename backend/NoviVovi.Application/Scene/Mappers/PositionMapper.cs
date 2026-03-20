@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Scene.Mappers;
 [Mapper]
 public partial class PositionMapper
 {
-    public partial PositionSnapshot ToSnapshot(Position novel);
+    public partial PositionSnapshot ToSnapshot(Position subject);
     
-    public partial IEnumerable<PositionSnapshot> ToSnapshots(IEnumerable<Position> novels);
+    public partial IEnumerable<PositionSnapshot> ToSnapshots(IEnumerable<Position> subjects);
 }

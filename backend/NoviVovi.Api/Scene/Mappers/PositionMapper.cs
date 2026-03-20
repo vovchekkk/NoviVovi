@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Scene.Mappers;
 [Mapper]
 public partial class PositionResponseMapper
 {
-    public partial PositionResponse ToResponse(PositionSnapshot novel);
+    public partial PositionResponse ToResponse(PositionSnapshot subject);
     
-    public partial IEnumerable<PositionResponse> ToResponses(IEnumerable<PositionSnapshot> novels);
+    public partial IEnumerable<PositionResponse> ToResponses(IEnumerable<PositionSnapshot> subjects);
 }

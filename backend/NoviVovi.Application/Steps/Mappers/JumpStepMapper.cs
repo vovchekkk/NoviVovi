@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Steps.Mappers;
 [Mapper]
 public partial class JumpStepMapper
 {
-    public partial JumpStepSnapshot ToSnapshot(JumpStep novel);
+    public partial JumpStepSnapshot ToSnapshot(JumpStep subject);
     
-    public partial IEnumerable<JumpStepSnapshot> ToSnapshots(IEnumerable<JumpStep> novels);
+    public partial IEnumerable<JumpStepSnapshot> ToSnapshots(IEnumerable<JumpStep> subjects);
 }

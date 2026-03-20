@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Transitions.Mappers;
 [Mapper]
 public partial class JumpTransitionResponseMapper
 {
-    public partial JumpTransitionResponse ToResponse(JumpTransitionSnapshot novel);
+    public partial JumpTransitionResponse ToResponse(JumpTransitionSnapshot subject);
     
-    public partial IEnumerable<JumpTransitionResponse> ToResponses(IEnumerable<JumpTransitionSnapshot> novels);
+    public partial IEnumerable<JumpTransitionResponse> ToResponses(IEnumerable<JumpTransitionSnapshot> subjects);
 }

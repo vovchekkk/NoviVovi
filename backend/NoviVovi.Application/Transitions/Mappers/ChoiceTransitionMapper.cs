@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Transitions.Mappers;
 [Mapper]
 public partial class ChoiceTransitionMapper
 {
-    public partial ChoiceTransitionSnapshot ToSnapshot(ChoiceTransition? novel);
+    public partial ChoiceTransitionSnapshot ToSnapshot(ChoiceTransition? subject);
     
-    public partial IEnumerable<ChoiceTransitionSnapshot> ToSnapshots(IEnumerable<ChoiceTransition> novels);
+    public partial IEnumerable<ChoiceTransitionSnapshot> ToSnapshots(IEnumerable<ChoiceTransition> subjects);
 }

@@ -8,7 +8,7 @@ namespace NoviVovi.Api.Characters.Mappers;
 [Mapper]
 public partial class CharacterResponseMapper
 {
-    public partial CharacterResponse ToResponse(CharacterSnapshot novel);
+    public partial CharacterResponse ToResponse(CharacterSnapshot subject);
     
-    public partial IEnumerable<CharacterResponse> ToResponses(IEnumerable<CharacterSnapshot> novels);
+    public partial IEnumerable<CharacterResponse> ToResponses(IEnumerable<CharacterSnapshot> subjects);
 }

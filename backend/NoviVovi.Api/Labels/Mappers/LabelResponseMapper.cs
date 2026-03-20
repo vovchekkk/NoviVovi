@@ -8,7 +8,7 @@ namespace NoviVovi.Api.Labels.Mappers;
 [Mapper]
 public partial class LabelResponseMapper
 {
-    public partial LabelResponse ToResponse(LabelSnapshot novel);
+    public partial LabelResponse ToResponse(LabelSnapshot subject);
 
-    public partial IEnumerable<LabelResponse> ToResponses(IEnumerable<LabelSnapshot> novels);
+    public partial IEnumerable<LabelResponse> ToResponses(IEnumerable<LabelSnapshot> subjects);
 }

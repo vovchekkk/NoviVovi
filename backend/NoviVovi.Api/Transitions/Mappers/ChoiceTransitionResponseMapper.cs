@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Transitions.Mappers;
 [Mapper]
 public partial class ChoiceTransitionResponseMapper
 {
-    public partial ChoiceTransitionResponse ToResponse(ChoiceTransitionSnapshot novel);
+    public partial ChoiceTransitionResponse ToResponse(ChoiceTransitionSnapshot subject);
     
-    public partial IEnumerable<ChoiceTransitionResponse> ToResponses(IEnumerable<ChoiceTransitionSnapshot> novels);
+    public partial IEnumerable<ChoiceTransitionResponse> ToResponses(IEnumerable<ChoiceTransitionSnapshot> subjects);
 }

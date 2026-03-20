@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Dialogue.Mappers;
 [Mapper]
 public partial class ReplicaMapper
 {
-    public partial ReplicaSnapshot ToSnapshot(Replica novel);
+    public partial ReplicaSnapshot ToSnapshot(Replica subject);
 
-    public partial IEnumerable<ReplicaSnapshot> ToSnapshots(IEnumerable<Replica> novels);
+    public partial IEnumerable<ReplicaSnapshot> ToSnapshots(IEnumerable<Replica> subjects);
 }

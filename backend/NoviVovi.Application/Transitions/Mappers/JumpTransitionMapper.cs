@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Transitions.Mappers;
 [Mapper]
 public partial class JumpTransitionMapper
 {
-    public partial JumpTransitionSnapshot ToSnapshot(JumpTransition? novel);
+    public partial JumpTransitionSnapshot ToSnapshot(JumpTransition? subject);
     
-    public partial IEnumerable<JumpTransitionSnapshot> ToSnapshots(IEnumerable<JumpTransition> novels);
+    public partial IEnumerable<JumpTransitionSnapshot> ToSnapshots(IEnumerable<JumpTransition> subjects);
 }

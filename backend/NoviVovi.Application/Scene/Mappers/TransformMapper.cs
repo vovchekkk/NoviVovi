@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Scene.Mappers;
 [Mapper]
 public partial class TransformMapper
 {
-    public partial TransformSnapshot ToSnapshot(Transform novel);
+    public partial TransformSnapshot ToSnapshot(Transform subject);
     
-    public partial IEnumerable<TransformSnapshot> ToSnapshots(IEnumerable<Transform> novels);
+    public partial IEnumerable<TransformSnapshot> ToSnapshots(IEnumerable<Transform> subjects);
 }

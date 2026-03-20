@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Characters.Mappers;
 [Mapper]
 public partial class CharacterStateMapper
 {
-    public partial CharacterStateSnapshot ToSnapshot(CharacterState novel);
+    public partial CharacterStateSnapshot ToSnapshot(CharacterState subject);
 
-    public partial IEnumerable<CharacterStateSnapshot> ToSnapshots(IEnumerable<CharacterState> novels);
+    public partial IEnumerable<CharacterStateSnapshot> ToSnapshots(IEnumerable<CharacterState> subjects);
 }

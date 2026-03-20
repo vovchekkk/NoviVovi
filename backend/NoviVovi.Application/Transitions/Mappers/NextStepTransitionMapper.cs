@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Transitions.Mappers;
 [Mapper]
 public partial class NextStepTransitionMapper
 {
-    public partial NextStepTransitionSnapshot ToSnapshot(NextStepTransition? novel);
+    public partial NextStepTransitionSnapshot ToSnapshot(NextStepTransition? subject);
     
-    public partial IEnumerable<NextStepTransitionSnapshot> ToSnapshots(IEnumerable<NextStepTransition> novels);
+    public partial IEnumerable<NextStepTransitionSnapshot> ToSnapshots(IEnumerable<NextStepTransition> subjects);
 }

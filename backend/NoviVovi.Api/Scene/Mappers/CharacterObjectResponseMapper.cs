@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Scene.Mappers;
 [Mapper]
 public partial class CharacterObjectResponseMapper
 {
-    public partial CharacterObjectSnapshot ToResponse(CharacterObject novel);
+    public partial CharacterObjectSnapshot ToResponse(CharacterObject subject);
     
-    public partial IEnumerable<CharacterObjectSnapshot> ToResponses(IEnumerable<CharacterObject> novels);
+    public partial IEnumerable<CharacterObjectSnapshot> ToResponses(IEnumerable<CharacterObject> subjects);
 }

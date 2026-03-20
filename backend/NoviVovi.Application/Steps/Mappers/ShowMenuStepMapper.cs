@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Steps.Mappers;
 [Mapper]
 public partial class ShowMenuStepMapper
 {
-    public partial ShowMenuStepSnapshot ToSnapshot(ShowMenuStep novel);
+    public partial ShowMenuStepSnapshot ToSnapshot(ShowMenuStep subject);
     
-    public partial IEnumerable<ShowMenuStepSnapshot> ToSnapshots(IEnumerable<ShowMenuStep> novels);
+    public partial IEnumerable<ShowMenuStepSnapshot> ToSnapshots(IEnumerable<ShowMenuStep> subjects);
 }

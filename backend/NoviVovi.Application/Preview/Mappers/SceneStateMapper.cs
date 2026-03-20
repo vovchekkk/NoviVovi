@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Preview.Mappers;
 [Mapper]
 public partial class SceneStateMapper
 {
-    public partial SceneStateSnapshot ToSnapshot(SceneState novel);
+    public partial SceneStateSnapshot ToSnapshot(SceneState subject);
 
-    public partial IEnumerable<SceneStateSnapshot> ToSnapshots(IEnumerable<SceneState> novels);
+    public partial IEnumerable<SceneStateSnapshot> ToSnapshots(IEnumerable<SceneState> subjects);
 }

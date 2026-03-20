@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Steps.Mappers;
 [Mapper]
 public partial class HideCharacterStepMapper
 {
-    public partial HideCharacterStepSnapshot ToSnapshot(HideCharacterStep novel);
+    public partial HideCharacterStepSnapshot ToSnapshot(HideCharacterStep subject);
     
-    public partial IEnumerable<HideCharacterStepSnapshot> ToSnapshots(IEnumerable<HideCharacterStep> novels);
+    public partial IEnumerable<HideCharacterStepSnapshot> ToSnapshots(IEnumerable<HideCharacterStep> subjects);
 }

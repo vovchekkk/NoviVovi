@@ -8,7 +8,7 @@ namespace NoviVovi.Application.Labels.Mappers;
 [Mapper]
 public partial class LabelMapper
 {
-    public partial LabelSnapshot ToSnapshot(Label novel);
+    public partial LabelSnapshot ToSnapshot(Label subject);
 
-    public partial IEnumerable<LabelSnapshot> ToSnapshots(IEnumerable<Label> novels);
+    public partial IEnumerable<LabelSnapshot> ToSnapshots(IEnumerable<Label> subjects);
 }

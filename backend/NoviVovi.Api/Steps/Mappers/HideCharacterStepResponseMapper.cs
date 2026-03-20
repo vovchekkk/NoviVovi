@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Steps.Mappers;
 [Mapper]
 public partial class HideCharacterStepMapper
 {
-    public partial HideCharacterStepResponse ToResponse(HideCharacterStepSnapshot novel);
+    public partial HideCharacterStepResponse ToResponse(HideCharacterStepSnapshot subject);
     
-    public partial IEnumerable<HideCharacterStepResponse> ToResponses(IEnumerable<HideCharacterStepSnapshot> novels);
+    public partial IEnumerable<HideCharacterStepResponse> ToResponses(IEnumerable<HideCharacterStepSnapshot> subjects);
 }
