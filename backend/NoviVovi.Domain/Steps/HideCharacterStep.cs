@@ -8,7 +8,7 @@ public class HideCharacterStep : Step
 {
     public Character Character { get; }
     
-    private HideCharacterStep(Guid id, Character character, Transition transition) : base(id, transition)
+    private HideCharacterStep(Guid id, Character character, NextStepTransition transition) : base(id, transition)
     {
         Character = character;
     }

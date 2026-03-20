@@ -8,7 +8,7 @@ public class ShowReplicaStep : Step
 {
     public Replica Replica { get; }
     
-    private ShowReplicaStep(Guid id, Replica replica, Transition transition) : base(id, transition)
+    private ShowReplicaStep(Guid id, Replica replica, NextStepTransition transition) : base(id, transition)
     {
         Replica = replica;
     }

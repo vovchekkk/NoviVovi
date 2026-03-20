@@ -19,7 +19,6 @@ public static class DependencyInjection
         services.AddSingleton<PreviewSessionStore>();
 
         services.AddSingleton<ReplicaMapper>();
-        services.AddSingleton<TransitionMapper>();
         
         return services;
     }
