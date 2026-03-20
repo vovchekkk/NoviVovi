@@ -1,4 +1,5 @@
-﻿using NoviVovi.Domain.Scene;
+﻿using NoviVovi.Domain.Common;
+using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
@@ -10,25 +11,19 @@ public class ShowCharacterStep : Step
     private ShowCharacterStep(
         Guid id,
         CharacterObject characterObject,
-        Transition transition
+        NextStepTransition transition
     ) : base(id, transition)
     {
         CharacterObject = characterObject;
     }
 
     public static ShowCharacterStep Create(
-        CharacterObject characterObject
+        CharacterObject? characterObject
     )
     {
+        if (characterObject is null)
+            throw new DomainException($"CharacterObject cannot be null");
+        
         return new ShowCharacterStep(Guid.NewGuid(), characterObject, NextStepTransition.Create());
-    }
-
-    public static ShowCharacterStep Rehydrate(
-        Guid id,
-        CharacterObject characterObject,
-        Transition transition
-    )
-    {
-        return new ShowCharacterStep(id, characterObject, transition);
     }
 }

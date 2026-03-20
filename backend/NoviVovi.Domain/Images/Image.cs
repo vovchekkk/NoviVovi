@@ -7,7 +7,7 @@ public class Image
     public string Url { get; set; }
     public string? Description { get; set; }
     
-    public Image(Guid id, string name, string url, string? description = null)
+    private Image(Guid id, string name, string url, string? description = null)
     {
         Id = id;
         Name = name;

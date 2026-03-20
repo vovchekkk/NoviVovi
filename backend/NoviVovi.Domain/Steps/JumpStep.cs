@@ -1,24 +1,20 @@
 ﻿using NoviVovi.Domain.Common;
+using NoviVovi.Domain.Labels;
 using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
 
 public class JumpStep : Step
 {
-    private JumpStep(Guid id, Transition transition) : base(id, transition)
+    private JumpStep(Guid id, JumpTransition transition) : base(id, transition)
     {
     }
 
-    public static JumpStep Create(Guid targetLabelId)
+    public static JumpStep Create(Label? targetLabel)
     {
-        if (targetLabelId == Guid.Empty)
-            throw new DomainException($"TargetLabelId {targetLabelId} cannot be empty");
+        if (targetLabel is null)
+            throw new DomainException($"TargetLabel cannot be null");
 
-        return new JumpStep(Guid.NewGuid(), JumpTransition.Create(targetLabelId));
-    }
-
-    public static JumpStep Rehydrate(Guid id, Transition transition)
-    {
-        return new JumpStep(id, transition);
+        return new JumpStep(Guid.NewGuid(), JumpTransition.Create(targetLabel));
     }
 }

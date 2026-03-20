@@ -10,9 +10,4 @@ public sealed class NextStepTransition : Transition
     {
         return new NextStepTransition(Guid.NewGuid());
     }
-
-    public static NextStepTransition Rehydrate(Guid id)
-    {
-        return new NextStepTransition(id);
-    }
 }

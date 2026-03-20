@@ -1,26 +1,22 @@
 ﻿using NoviVovi.Domain.Common;
+using NoviVovi.Domain.Labels;
 
 namespace NoviVovi.Domain.Transitions;
 
 public sealed class ChoiceTransition : Transition
 {
-    public Guid TargetLabelId { get; }
+    public Label TargetLabel { get; }
     
-    private ChoiceTransition(Guid id, Guid targetLabelId) : base(id)
+    private ChoiceTransition(Guid id, Label targetLabel) : base(id)
     {
-        TargetLabelId = targetLabelId;
+        TargetLabel = targetLabel;
     }
 
-    public static ChoiceTransition Create(Guid targetLabelId)
+    public static ChoiceTransition Create(Label? targetLabel)
     {
-        if (targetLabelId == Guid.Empty)
-            throw new DomainException($"TargetLabelId {targetLabelId} cannot be empty");
+        if (targetLabel is null)
+            throw new DomainException($"TargetLabel cannot be null");
 
-        return new ChoiceTransition(Guid.NewGuid(), targetLabelId);
-    }
-
-    public static ChoiceTransition Rehydrate(Guid id, Guid targetLabelId)
-    {
-        return new ChoiceTransition(id, targetLabelId);
+        return new ChoiceTransition(Guid.NewGuid(), targetLabel);
     }
 }

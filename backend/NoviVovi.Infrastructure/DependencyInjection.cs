@@ -19,7 +19,6 @@ public static class DependencyInjection
         services.AddSingleton<PreviewSessionStore>();
 
         services.AddSingleton<ReplicaMapper>();
-        services.AddSingleton<StepMapper>();
         services.AddSingleton<TransitionMapper>();
         
         return services;
@@ -33,7 +32,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString)); // Или UseSqlServer
         
-        services.AddScoped<INovelRepository, NovelRepository>();
+        // services.AddScoped<INovelRepository, NovelRepository>();
         services.AddScoped<ILabelRepository, LabelRepository>();
         
         services.AddSingleton<Novels.Mappers.NovelDbMapper>();

@@ -1,4 +1,5 @@
-﻿using NoviVovi.Domain.Scene;
+﻿using NoviVovi.Domain.Common;
+using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
@@ -10,25 +11,19 @@ public class ShowBackgroundStep : Step
     private ShowBackgroundStep(
         Guid id,
         BackgroundObject backgroundObject,
-        Transition transition
+        NextStepTransition transition
     ) : base(id, transition)
     {
         BackgroundObject = backgroundObject;
     }
 
     public static ShowBackgroundStep Create(
-        BackgroundObject backgroundObject
+        BackgroundObject? backgroundObject
     )
     {
+        if (backgroundObject is null)
+            throw new DomainException($"BackgroundObject cannot be null");
+        
         return new ShowBackgroundStep(Guid.NewGuid(), backgroundObject, NextStepTransition.Create());
-    }
-
-    public static ShowBackgroundStep Rehydrate(
-        Guid id,
-        BackgroundObject backgroundObject,
-        Transition transition
-    )
-    {
-        return new ShowBackgroundStep(id, backgroundObject, transition);
     }
 }

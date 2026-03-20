@@ -23,23 +23,14 @@ public class Menu : Entity
         return new Menu(Guid.NewGuid(), name, description, text);
     }
 
-    public static Menu Rehydrate(
-        Guid id,
-        string? name,
-        string? description,
-        string? text,
-        IEnumerable<Choice> choices)
-    {
-        var menu = new Menu(id, name, description, text);
-        foreach (var choice in choices)
-            menu.AddChoice(choice);
-        return menu;
-    }
-
     public void AddChoice(Choice choice)
     {
-        if (_choices.Any(item => item.Id == choice.Id))
+        if (choice is null)
+            throw new DomainException($"Choice cannot be null");
+        
+        if (_choices.Any(item => Equals(item, choice)))
             throw new DomainException($"Choice {choice.Id} already exists");
+        
         _choices.Add(choice);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NoviVovi.Domain.Characters;
+using NoviVovi.Domain.Common;
 using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Domain.Steps;
@@ -7,18 +8,16 @@ public class HideCharacterStep : Step
 {
     public Character Character { get; }
     
-    private HideCharacterStep(Guid id, Character character, Transition transition) : base(id, transition)
+    private HideCharacterStep(Guid id, Character character, NextStepTransition transition) : base(id, transition)
     {
         Character = character;
     }
 
-    public static HideCharacterStep Create(Character character)
+    public static HideCharacterStep Create(Character? character)
     {
+        if (character is null)
+            throw new DomainException($"Character cannot be null");
+        
         return new HideCharacterStep(Guid.NewGuid(), character, NextStepTransition.Create());
-    }
-
-    public static HideCharacterStep Rehydrate(Guid id, Character character, Transition transition)
-    {
-        return new HideCharacterStep(id, character, transition);
     }
 }

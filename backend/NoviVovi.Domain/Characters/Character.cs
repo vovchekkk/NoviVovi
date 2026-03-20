@@ -20,24 +20,19 @@ public class Character : Entity
     public static Character Create(string name, string? description = null)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Name cannot be empty");
+            throw new DomainException($"Name cannot be empty");
 
         return new Character(Guid.NewGuid(), name, description);
     }
 
-    public static Character Rehydrate(Guid id, string name, IEnumerable<CharacterState> states,
-        string? description = null)
+    public void AddState(CharacterState characterState)
     {
-        var character = new Character(id, name, description);
-        foreach (var state in states)
-            character.AddState(state);
-        return character;
-    }
-
-    public void AddState(CharacterState states)
-    {
-        if (_characterStates.Any(item => item.Id == states.Id))
-            throw new DomainException($"State {states.Id} already exists");
-        _characterStates.Add(states);
+        if (characterState is null)
+            throw new DomainException($"CharacterState cannot be null");
+        
+        if (_characterStates.Any(item => Equals(item, characterState)))
+            throw new DomainException($"State {characterState.Name} already exists");
+        
+        _characterStates.Add(characterState);
     }
 }

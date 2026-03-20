@@ -8,49 +8,41 @@ namespace NoviVovi.Domain.Novels;
 public class Novel : Entity
 {
     public string Title { get; private set; }
-    public Guid StartLabelId { get; private set; }
+    public Label StartLabel { get; private set; }
 
-    private readonly List<Guid> _labelIds = new();
+    private readonly List<Label> _labels = new();
     private readonly List<Character> _characters = new();
 
-    public IReadOnlyList<Guid> LabelIds => _labelIds.AsReadOnly();
+    public IReadOnlyList<Label> Labels => _labels.AsReadOnly();
     public IReadOnlyCollection<Character> Characters => _characters.AsReadOnly();
 
-    private Novel(Guid id, string title, Guid startLabelId) : base(id)
+    private Novel(Guid id, string title, Label startLabel) : base(id)
     {
         Title = title;
-        StartLabelId = startLabelId;
-        _labelIds.Add(startLabelId);
+        StartLabel = startLabel;
+        _labels.Add(startLabel);
     }
 
-    public static Novel Create(string? title, Guid startLabelId)
+    public static Novel Create(string? title, Label startLabel)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new DomainException("Title cannot be empty");
 
-        if (startLabelId == Guid.Empty)
-            throw new DomainException($"LabelId {startLabelId} cannot be empty");
+        if (startLabel is null)
+            throw new DomainException($"Label cannot be null");
 
-        return new Novel(Guid.NewGuid(), title, startLabelId);
+        return new Novel(Guid.NewGuid(), title, startLabel);
     }
 
-    public static Novel Rehydrate(Guid id, string title, Guid startLabelId, IEnumerable<Guid> labelIds)
+    public void AddLabel(Label label)
     {
-        var novel = new Novel(id, title, startLabelId);
-        foreach (var label in labelIds)
-            novel.AddLabel(label);
-        return novel;
-    }
+        if (label is null)
+            throw new DomainException($"Label cannot be null");
 
-    public void AddLabel(Guid labelId)
-    {
-        if (labelId == Guid.Empty)
-            throw new DomainException($"LabelId {labelId} cannot be empty");
+        if (_labels.Any(item => Equals(item, label)))
+            throw new DomainException($"Label {label.Name} already exists");
 
-        if (_labelIds.Any(item => item == labelId))
-            throw new DomainException($"Label {labelId} already exists");
-
-        _labelIds.Add(labelId);
+        _labels.Add(label);
     }
 
     public void RemoveLabel(Guid labelId)
@@ -58,17 +50,20 @@ public class Novel : Entity
         if (labelId == Guid.Empty)
             throw new DomainException($"LabelId {labelId} cannot be empty");
 
-        var label = _labelIds.FirstOrDefault(item => item == labelId);
-        if (label == Guid.Empty)
+        var label = _labels.FirstOrDefault(item => item.Id == labelId);
+        if (label is null)
             throw new DomainException($"Label {labelId} doesn't exists");
 
-        _labelIds.Remove(labelId);
+        _labels.Remove(label);
     }
 
     public void AddCharacter(Character character)
     {
+        if (character is null)
+            throw new DomainException($"Character cannot be null");
+        
         if (_characters.Any(item => Equals(item, character)))
-            throw new DomainException($"Character {character.Id} already exists");
+            throw new DomainException($"Character {character.Name} already exists");
 
         _characters.Add(character);
     }

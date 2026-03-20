@@ -5,7 +5,6 @@ namespace NoviVovi.Domain.Labels;
 
 public class Label : Entity
 {
-    public Guid NovelId { get; private set; }
     public string Name { get; private set; }
     private readonly List<Step> _steps = new();
 
@@ -19,23 +18,19 @@ public class Label : Entity
     public static Label Create(string? name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Name cannot be empty");
+            throw new DomainException($"Name cannot be empty");
 
         return new Label(Guid.NewGuid(), name);
     }
 
-    public static Label Rehydrate(Guid id, string name, IEnumerable<Step> steps)
-    {
-        var label = new Label(id, name);
-        foreach (var step in steps)
-            label.AddStep(step);
-        return label;
-    }
-
     public void AddStep(Step step)
     {
-        if (_steps.Any(item => item.Id == step.Id))
+        if (step is null)
+            throw new DomainException($"Step cannot be null");
+        
+        if (_steps.Any(item => Equals(item, step)))
             throw new DomainException($"Step {step.Id} already exists");
+        
         _steps.Add(step);
     }
 }

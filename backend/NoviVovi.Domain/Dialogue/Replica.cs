@@ -18,14 +18,11 @@ public class Replica : Entity
     public static Replica Create(Character? speaker, string? text)
     {
         if (speaker is null)
-            throw new DomainException("Speaker cannot be null");
+            throw new DomainException($"Speaker cannot be null");
         
         if (string.IsNullOrWhiteSpace(text))
-            throw new DomainException("Text cannot be empty");
+            throw new DomainException($"Text cannot be empty");
 
         return new Replica(Guid.NewGuid(), speaker, text);
     }
-
-    public static Replica Rehydrate(Guid id, Character speaker, string text)
-        => new Replica(id, speaker, text);
 }

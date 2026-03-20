@@ -5,6 +5,6 @@ namespace NoviVovi.Application.Steps.Contracts;
 
 public record JumpStepSnapshot(
     Guid Id,
-    LabelSnapshot Label,
+    LabelSnapshot TargetLabel,
     TransitionSnapshot Transition
 ) : StepSnapshot(Id, Transition);

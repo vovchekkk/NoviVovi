@@ -22,14 +22,11 @@ public class CharacterState : Entity
         string? description = null)
     {
         if (image is null)
-            throw new DomainException("NextAction cannot be null");
+            throw new DomainException($"NextAction cannot be null");
         
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Name cannot be empty");
+            throw new DomainException($"Name cannot be empty");
 
         return new CharacterState(Guid.NewGuid(), name, image, description);
     }
-
-    public static CharacterState Rehydrate(Guid id, string name, Image image, string? description)
-        => new CharacterState(id, name, image, description);
 }
