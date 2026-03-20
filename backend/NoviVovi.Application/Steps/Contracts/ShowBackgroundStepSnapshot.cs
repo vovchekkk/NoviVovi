@@ -6,7 +6,6 @@ namespace NoviVovi.Application.Steps.Contracts;
 
 public record ShowBackgroundStepSnapshot(
     Guid Id,
-    ImageSnapshot Background,
-    TransformSnapshot Transform,
+    BackgroundObjectSnapshot BackgroundObject,
     TransitionSnapshot Transition
 ) : StepSnapshot(Id, Transition);

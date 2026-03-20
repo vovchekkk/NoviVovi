@@ -16,7 +16,7 @@ public class CreateNovelHandler(
     {
         var startLabel = Label.Create("Start");
 
-        var novel = Novel.Create(command.Title, startLabel.Id);
+        var novel = Novel.Create(command.Title, startLabel);
         
         await labelRepository.AddAsync(startLabel);
 

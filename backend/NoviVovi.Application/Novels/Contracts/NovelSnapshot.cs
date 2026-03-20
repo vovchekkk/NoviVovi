@@ -1,7 +1,11 @@
-﻿namespace NoviVovi.Application.Novels.Contracts;
+﻿using NoviVovi.Application.Characters.Contracts;
+using NoviVovi.Application.Labels.Contracts;
+
+namespace NoviVovi.Application.Novels.Contracts;
 
 public record NovelSnapshot(
     string Title,
-    Guid StartLabelId,
-    List<Guid> LabelIds
+    LabelSnapshot StartLabel,
+    List<LabelSnapshot> Labels,
+    List<CharacterSnapshot> Characters
 );

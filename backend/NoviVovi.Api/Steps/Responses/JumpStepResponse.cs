@@ -5,6 +5,5 @@ namespace NoviVovi.Api.Steps.Responses;
 
 public record JumpStepResponse(
     Guid Id,
-    LabelResponse TargetLabel,
     TransitionResponse Transition
 ) : StepResponse(Id, Transition);

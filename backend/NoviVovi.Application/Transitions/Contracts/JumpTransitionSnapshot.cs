@@ -1,6 +1,8 @@
-﻿namespace NoviVovi.Application.Transitions.Contracts;
+﻿using NoviVovi.Application.Labels.Contracts;
+
+namespace NoviVovi.Application.Transitions.Contracts;
 
 public record JumpTransitionSnapshot(
     Guid Id,
-    Guid TargetLabelId
+    LabelSnapshot TargetLabel
 ) : TransitionSnapshot(Id);

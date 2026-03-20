@@ -1,7 +1,9 @@
-﻿namespace NoviVovi.Api.Novels.Responses;
+﻿using NoviVovi.Api.Labels.Responses;
+
+namespace NoviVovi.Api.Novels.Responses;
 
 public record NovelResponse(
     string Title,
-    Guid StartLabelId,
-    List<Guid> LabelIds
+    LabelResponse StartLabel,
+    List<LabelResponse> Labels
 );

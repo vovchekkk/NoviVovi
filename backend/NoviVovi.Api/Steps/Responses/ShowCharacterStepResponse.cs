@@ -6,8 +6,6 @@ namespace NoviVovi.Api.Steps.Responses;
 
 public record ShowCharacterStepResponse(
     Guid Id,
-    CharacterResponse Character,
-    CharacterStateResponse State,
-    TransformResponse Transform,
+    CharacterObjectResponse CharacterObject,
     TransitionResponse Transition
 ) : StepResponse(Id, Transition);

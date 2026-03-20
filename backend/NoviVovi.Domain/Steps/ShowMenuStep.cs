@@ -7,7 +7,7 @@ public class ShowMenuStep : Step
 {
     public Menu.Menu Menu { get; }
     
-    private ShowMenuStep(Guid id, Menu.Menu menu, NextStepTransition transition) : base(id, transition)
+    private ShowMenuStep(Guid id, Menu.Menu menu, Transition transition) : base(id, transition)
     {
         Menu = menu;
     }

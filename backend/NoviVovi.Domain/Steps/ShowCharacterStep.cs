@@ -11,7 +11,7 @@ public class ShowCharacterStep : Step
     private ShowCharacterStep(
         Guid id,
         CharacterObject characterObject,
-        NextStepTransition transition
+        Transition transition
     ) : base(id, transition)
     {
         CharacterObject = characterObject;

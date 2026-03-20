@@ -1,36 +1,30 @@
 ﻿using NoviVovi.Application.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Domain.Labels;
 using NoviVovi.Domain.Steps;
 using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Application.Preview.Models;
 
-public class ScenePlayer(SceneState state)
+public class ScenePlayer(SceneState state, Label startLabel)
 {
-    private Guid _currentLabelId;
-    private int _stepIndex;
+    private Label? CurrentLabel { get; set; } = startLabel;
+    private int StepIndex { get; set; }
 
-    public void Initialize(Guid startLabelId)
+    public void RestoreState(Label label, int stepIndex)
     {
-        _currentLabelId = startLabelId;
-        _stepIndex = 0;
-    }
-
-    public void RestoreState(Guid labelId, int stepIndex)
-    {
-        _currentLabelId = labelId;
-        _stepIndex = stepIndex;
+        CurrentLabel = label;
+        StepIndex = stepIndex;
     }
 
     public async Task ExecuteNextAsync(ILabelRepository repository)
     {
-        var label = await repository.GetByIdAsync(_currentLabelId);
-        if (label == null)
+        if (CurrentLabel == null)
             throw new NotFoundException("Label not found");
 
-        while (_stepIndex < label.Steps.Count)
+        while (StepIndex < CurrentLabel.Steps.Count)
         {
-            var step = label.Steps[_stepIndex];
+            var step = CurrentLabel.Steps[StepIndex];
             var isBlocking = false;
 
             switch (step)
@@ -65,9 +59,6 @@ public class ScenePlayer(SceneState state)
 
             if (isBlocking)
                 break;
-
-            if (_currentLabelId != label.Id)
-                break;
         }
     }
 
@@ -89,18 +80,18 @@ public class ScenePlayer(SceneState state)
         switch (transition)
         {
             case NextStepTransition:
-                _stepIndex++;
+                StepIndex++;
                 break;
 
             case JumpTransition jump:
-                _currentLabelId = jump.TargetLabelId;
-                _stepIndex = 0;
+                CurrentLabel = jump.TargetLabel;
+                StepIndex = 0;
                 state.Reset();
                 break;
 
             case ChoiceTransition choice:
-                _currentLabelId = choice.TargetLabelId;
-                _stepIndex = 0;
+                CurrentLabel = choice.TargetLabel;
+                StepIndex = 0;
                 state.Reset();
                 break;
 

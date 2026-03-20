@@ -1,9 +1,8 @@
-﻿using NoviVovi.Domain.Steps;
-using Riok.Mapperly.Abstractions;
+﻿using NoviVovi.Application.Labels.Contracts;
 
 namespace NoviVovi.Application.Transitions.Contracts;
 
 public record ChoiceTransitionSnapshot(
     Guid Id,
-    Guid TargetLabelId
+    LabelSnapshot TargetLabel
 ) : TransitionSnapshot(Id);

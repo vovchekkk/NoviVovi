@@ -11,7 +11,7 @@ public class ShowBackgroundStep : Step
     private ShowBackgroundStep(
         Guid id,
         BackgroundObject backgroundObject,
-        NextStepTransition transition
+        Transition transition
     ) : base(id, transition)
     {
         BackgroundObject = backgroundObject;

@@ -6,7 +6,6 @@ namespace NoviVovi.Api.Steps.Responses;
 
 public record ShowBackgroundStepResponse(
     Guid Id,
-    ImageResponse Background,
-    TransformResponse Transform,
+    BackgroundObjectResponse BackgroundObject,
     TransitionResponse Transition
 ) : StepResponse(Id, Transition);
