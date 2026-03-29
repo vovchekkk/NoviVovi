@@ -1,6 +1,5 @@
 ﻿using NoviVovi.Api.Characters.Responses;
 using NoviVovi.Application.Characters.Contracts;
-using NoviVovi.Domain.Characters;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Characters.Mappers;

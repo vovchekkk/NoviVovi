@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NoviVovi.Api.Novels.Mappers;
-using NoviVovi.Api.Novels.Requests;
+using NoviVovi.Api.Novels.Requests.Create;
+using NoviVovi.Api.Novels.Requests.Get;
 using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Application.Novels.Features.Create;
 using NoviVovi.Application.Novels.Features.Get;
@@ -24,7 +25,7 @@ public class NovelsController(NovelResponseMapper novelMapper, CreateNovelHandle
     [HttpGet("{id}")]
     public async Task<ActionResult<NovelResponse>> Get(GetNovelRequest request)
     {
-        var novel = await get.Handle(new GetNovelQuery(request.Id));
+        var novel = await get.Handle(new GetNovelQuery(request.NovelId));
         if (novel == null) return NotFound();
 
         return Ok(novelMapper.ToResponse(novel));

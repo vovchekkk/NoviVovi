@@ -18,15 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Characters\Controllers\" />
-    <Folder Include="Transitions\Controllers\" />
-    <Folder Include="Images\Controllers\" />
-    <Folder Include="Labels\Controllers\" />
-    <Folder Include="Menu\Controllers\" />
-    <Folder Include="Scene\Controllers\" />
-    <Folder Include="Steps\Controllers\" />
-    <Folder Include="Steps\Requests\" />
-    <Folder Include="Transitions\Requests\" />
+    <Folder Include="Scene\Requests\" />
   </ItemGroup>
 
 </Project>

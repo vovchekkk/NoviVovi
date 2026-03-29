@@ -10,7 +10,7 @@ public class StartPreviewHandler(
     PreviewSessionStore sessions,
     INovelRepository novelRepository,
     ILabelRepository labelRepository,
-    SceneStateMapper stateMapper
+    SceneStateSnapshotMapper stateSnapshotMapper
 )
 {
     public async Task<SceneStateSnapshot> Handle(StartPreviewCommand command)
@@ -27,6 +27,6 @@ public class StartPreviewHandler(
 
         await sessions.SaveAsync(session);
 
-        return stateMapper.ToSnapshot(session.State);
+        return stateSnapshotMapper.ToSnapshot(session.State);
     }
 }

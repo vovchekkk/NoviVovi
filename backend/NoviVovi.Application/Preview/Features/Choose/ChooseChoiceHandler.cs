@@ -8,7 +8,7 @@ namespace NoviVovi.Application.Preview.Features.Choose;
 public class ChooseChoiceHandler(
     PreviewSessionStore sessions,
     ILabelRepository labelRepository,
-    SceneStateMapper stateMapper)
+    SceneStateSnapshotMapper stateSnapshotMapper)
 {
     public async Task<SceneStateSnapshot> Handle(ChooseChoiceCommand command)
     {
@@ -22,6 +22,6 @@ public class ChooseChoiceHandler(
 
         await session.Player.ExecuteNextAsync(labelRepository);
 
-        return stateMapper.ToSnapshot(session.State);
+        return stateSnapshotMapper.ToSnapshot(session.State);
     }
 }

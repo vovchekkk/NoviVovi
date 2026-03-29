@@ -11,17 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Characters\Features\" />
-    <Folder Include="Transitions\Features\" />
-    <Folder Include="Images\Features\" />
-    <Folder Include="Labels\Features\" />
-    <Folder Include="Menu\Features\" />
     <Folder Include="Preview\Features\" />
-    <Folder Include="Scene\Features\" />
-    <Folder Include="Steps\Features\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.2" />
   </ItemGroup>
 
