@@ -1,5 +1,4 @@
-﻿using NoviVovi.Application.Abstractions;
-using NoviVovi.Application.Common.Exceptions;
+﻿using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels.Contracts;
 using NoviVovi.Application.Novels.Mappers;
 

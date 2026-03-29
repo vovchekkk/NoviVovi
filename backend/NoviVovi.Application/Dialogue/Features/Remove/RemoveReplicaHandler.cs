@@ -1,5 +1,5 @@
-﻿using NoviVovi.Application.Abstractions;
-using NoviVovi.Application.Dialogue.Contracts;
+﻿using NoviVovi.Application.Dialogue.Contracts;
+using NoviVovi.Application.Labels;
 using NoviVovi.Application.Novels.Mappers;
 
 namespace NoviVovi.Application.Dialogue.Features.Remove;

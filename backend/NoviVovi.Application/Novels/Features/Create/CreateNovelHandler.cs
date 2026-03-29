@@ -1,4 +1,4 @@
-﻿using NoviVovi.Application.Abstractions;
+﻿using NoviVovi.Application.Labels;
 using NoviVovi.Application.Novels.Contracts;
 using NoviVovi.Application.Novels.Mappers;
 using NoviVovi.Domain.Labels;

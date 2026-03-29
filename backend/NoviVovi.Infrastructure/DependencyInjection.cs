@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NoviVovi.Application.Abstractions;
 using NoviVovi.Application.Dialogue.Mappers;
+using NoviVovi.Application.Labels;
 using NoviVovi.Application.Preview.Services;
-using NoviVovi.Application.Steps.Mappers;
-using NoviVovi.Application.Transitions.Mappers;
-using NoviVovi.Infrastructure.Novels;
 using NoviVovi.Infrastructure.Labels;
 using NoviVovi.Infrastructure.Persistence;
 
@@ -14,6 +11,11 @@ namespace NoviVovi.Infrastructure;
 
 public static class DependencyInjection
 {
+    public static IServiceCollection AddApi(this IServiceCollection services)
+    {
+        return services;
+    }
+    
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSingleton<PreviewSessionStore>();

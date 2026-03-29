@@ -1,6 +1,6 @@
 ﻿using NoviVovi.Domain.Novels;
 
-namespace NoviVovi.Application.Abstractions;
+namespace NoviVovi.Application.Novels;
 
 public interface INovelRepository
 {
