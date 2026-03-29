@@ -7,7 +7,10 @@ public record DeleteNovelCommand : IRequest
     
 }
 
-public class DeleteNovelHandler
+public class DeleteNovelHandler : IRequestHandler<DeleteNovelCommand>
 {
-    
+    public async Task Handle(DeleteNovelCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

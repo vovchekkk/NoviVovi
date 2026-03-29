@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NoviVovi.Application.Preview.Contracts;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using NoviVovi.Api.Preview.Mappers;
+using NoviVovi.Api.Preview.Responses;
 using NoviVovi.Application.Preview.Features.Choose;
 using NoviVovi.Application.Preview.Features.Next;
 using NoviVovi.Application.Preview.Features.Start;
@@ -9,31 +11,28 @@ namespace NoviVovi.Api.Preview.Controllers;
 [ApiController]
 [Route("api/preview")]
 public class PreviewController(
-    StartPreviewHandler start,
-    NextStepHandler next,
-    ChooseChoiceHandler choose) : ControllerBase
+    IMediator mediator,
+    SceneStateResponseMapper sceneStateMapper
+) : ControllerBase
 {
-    [HttpPost("start/{novelId}")]
-    public async Task<ActionResult<SceneStateSnapshot>> Start(Guid novelId)
+    [HttpPost("start/{novelId:guid}")]
+    public async Task<ActionResult<SceneStateResponse>> Start([FromRoute] Guid novelId)
     {
-        var result = await start.Handle(new StartPreviewCommand(novelId));
-        return Ok(result);
+        var result = await mediator.Send(new StartPreviewCommand(novelId));
+        return Ok(sceneStateMapper.ToResponse(result));
     }
 
-    [HttpPost("{sessionId}/next")]
-    public async Task<ActionResult<SceneStateSnapshot>> Next(Guid sessionId)
+    [HttpPost("{sessionId:guid}/next")]
+    public async Task<ActionResult<SceneStateResponse>> Next([FromRoute] Guid sessionId)
     {
-        var result = await next.Handle(new NextStepCommand(sessionId));
-        return Ok(result);
+        var result = await mediator.Send(new NextStepCommand(sessionId));
+        return Ok(sceneStateMapper.ToResponse(result));
     }
 
-    [HttpPost("{sessionId}/choice/{choiceId}")]
-    public async Task<ActionResult<SceneStateSnapshot>> Choose(Guid sessionId, Guid choiceId)
+    [HttpPost("{sessionId:guid}/choice/{choiceId:guid}")]
+    public async Task<ActionResult<SceneStateResponse>> Choose([FromRoute] Guid sessionId, [FromRoute] Guid choiceId)
     {
-        var result = await choose.Handle(
-            new ChooseChoiceCommand(sessionId, choiceId)
-        );
-
-        return Ok(result);
+        var result = await mediator.Send(new ChooseChoiceCommand(sessionId, choiceId));
+        return Ok(sceneStateMapper.ToResponse(result));
     }
 }

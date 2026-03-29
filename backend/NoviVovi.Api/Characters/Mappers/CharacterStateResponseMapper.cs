@@ -1,5 +1,5 @@
 ﻿using NoviVovi.Api.Characters.Responses;
-using NoviVovi.Application.Characters.Contracts;
+using NoviVovi.Application.Characters.Dtos;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Characters.Mappers;
@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Characters.Mappers;
 [Mapper]
 public partial class CharacterStateResponseMapper
 {
-    public partial CharacterStateResponse ToResponse(CharacterStateSnapshot subject);
+    public partial CharacterStateResponse ToResponse(CharacterStateDto subject);
 
-    public partial IEnumerable<CharacterStateResponse> ToResponses(IEnumerable<CharacterStateSnapshot> subjects);
+    public partial IEnumerable<CharacterStateResponse> ToResponses(IEnumerable<CharacterStateDto> subjects);
 }

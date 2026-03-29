@@ -1,5 +1,5 @@
 ﻿using NoviVovi.Api.Transitions.Responses;
-using NoviVovi.Application.Transitions.Contracts;
+using NoviVovi.Application.Transitions.Dtos;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Transitions.Mappers;
@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Transitions.Mappers;
 [Mapper]
 public partial class NextStepTransitionResponseMapper
 {
-    public partial NextStepTransitionResponse ToResponse(NextStepTransitionSnapshot subject);
+    public partial NextStepTransitionResponse ToResponse(NextStepTransitionDto subject);
     
-    public partial IEnumerable<NextStepTransitionResponse> ToResponses(IEnumerable<NextStepTransitionSnapshot> subjects);
+    public partial IEnumerable<NextStepTransitionResponse> ToResponses(IEnumerable<NextStepTransitionDto> subjects);
 }

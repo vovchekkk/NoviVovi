@@ -1,5 +1,5 @@
 ﻿using NoviVovi.Api.Steps.Responses;
-using NoviVovi.Application.Steps.Contracts;
+using NoviVovi.Application.Steps.Dtos;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Steps.Mappers;
@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Steps.Mappers;
 [Mapper]
 public partial class ShowCharacterStepMapper
 {
-    public partial ShowCharacterStepResponse ToResponse(ShowCharacterStepSnapshot subject);
+    public partial ShowCharacterStepResponse ToResponse(ShowCharacterStepDto subject);
     
-    public partial IEnumerable<ShowCharacterStepResponse> ToResponses(IEnumerable<ShowCharacterStepSnapshot> subjects);
+    public partial IEnumerable<ShowCharacterStepResponse> ToResponses(IEnumerable<ShowCharacterStepDto> subjects);
 }
