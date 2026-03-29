@@ -1,11 +1,9 @@
-﻿using System.Drawing;
-
-namespace NoviVovi.Api.Scene.Responses;
+﻿namespace NoviVovi.Api.Scene.Responses;
 
 public record TransformResponse
 (
     PositionResponse Position,
-    Size Size,
+    SizeResponse Size,
     double Scale,
     double Rotation,
     int ZIndex

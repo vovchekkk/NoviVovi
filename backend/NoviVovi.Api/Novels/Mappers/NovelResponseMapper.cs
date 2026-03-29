@@ -1,5 +1,5 @@
 ﻿using NoviVovi.Api.Novels.Responses;
-using NoviVovi.Application.Novels.Contracts;
+using NoviVovi.Application.Novels.Dtos;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Novels.Mappers;
@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Novels.Mappers;
 [Mapper]
 public partial class NovelResponseMapper
 {
-    public partial NovelResponse ToResponse(NovelSnapshot subject);
+    public partial NovelResponse ToResponse(NovelDto subject);
     
-    public partial IEnumerable<NovelResponse> ToResponses(IEnumerable<NovelSnapshot> subjects);
+    public partial IEnumerable<NovelResponse> ToResponses(IEnumerable<NovelDto> subjects);
 }

@@ -20,7 +20,7 @@ public static class DependencyInjection
     {
         services.AddSingleton<PreviewSessionStore>();
 
-        services.AddSingleton<ReplicaMapper>();
+        services.AddSingleton<ReplicaDtoMapper>();
         
         return services;
     }

@@ -1,5 +1,5 @@
 ﻿using NoviVovi.Api.Scene.Responses;
-using NoviVovi.Application.Scene.Contracts;
+using NoviVovi.Application.Scene.Dtos;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Scene.Mappers;
@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Scene.Mappers;
 [Mapper]
 public partial class TransformResponseMapper
 {
-    public partial TransformResponse ToResponse(TransformSnapshot subject);
+    public partial TransformResponse ToResponse(TransformDto subject);
     
-    public partial IEnumerable<TransformResponse> ToResponses(IEnumerable<TransformSnapshot> subjects);
+    public partial IEnumerable<TransformResponse> ToResponses(IEnumerable<TransformDto> subjects);
 }

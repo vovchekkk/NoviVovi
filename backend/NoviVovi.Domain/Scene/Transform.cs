@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using NoviVovi.Domain.Common;
+﻿using NoviVovi.Domain.Common;
 
 namespace NoviVovi.Domain.Scene;
 
