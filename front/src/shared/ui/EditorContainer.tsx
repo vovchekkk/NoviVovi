@@ -1,8 +1,5 @@
 import {css} from '../../../styled-system/css'
 import EditorHeader from "./EditorHeader.tsx";
-import Preview from "./Preview.tsx";
-import BlockPanel from "./BlockPanel.tsx";
-import BlockMenu from "./BlockMenu.tsx";
 
 export default function EditorContainer() {
     return (
@@ -32,17 +29,21 @@ export default function EditorContainer() {
                         backgroundColor: 'white',
                         color: 'black',
                         width: '100%',
-                        padding: '20px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '20px',
                         flex: 4,
                     })}>
-                        <Preview image="src\assets\img.png"></Preview>
-                        <BlockPanel></BlockPanel>
+                        Редактор
                     </div>
                 </div>
-                <BlockMenu title={'Фон'}></BlockMenu>
+                <div className={css({
+                    backgroundColor: '#DFC6D1',
+                    color: 'black',
+                    width: '20%',
+                    flex: 1,
+                    minWidth: '280px',
+                    borderRadius:'12px',
+                })}>
+                    Боковое меню
+                </div>
             </div>
         </div>
     )
