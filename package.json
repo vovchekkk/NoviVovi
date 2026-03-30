@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@tanstack/react-query": "^5.91.2",
+    "@xyflow/react": "^12.10.1",
+    "axios": "^1.13.6",
+    "react-router-dom": "^7.13.1"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "^1.9.1",
+    "@types/node": "^25.5.0"
+  }
+}
