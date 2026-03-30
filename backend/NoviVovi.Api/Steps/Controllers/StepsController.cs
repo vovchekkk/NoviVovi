@@ -1,6 +1,81 @@
-﻿namespace NoviVovi.Api.Steps.Controllers;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using NoviVovi.Api.Steps.CommandMappers;
+using NoviVovi.Api.Novels.Responses;
+using NoviVovi.Api.Steps.Mappers;
+using NoviVovi.Api.Steps.Requests.Add;
+using NoviVovi.Api.Steps.Requests.Patch;
+using NoviVovi.Api.Steps.Responses;
+using NoviVovi.Application.Steps.Features.Delete;
+using NoviVovi.Application.Steps.Features.Get;
 
-public class StepsController
+namespace NoviVovi.Api.Steps.Controllers;
+
+[ApiController]
+[Tags("Steps")]
+[Route("api/novels/{novelId:guid}/labels/{labelId:guid}/steps")]
+public class StepsController(
+    IMediator mediator,
+    AddStepCommandMapper addCommandMapper,
+    PatchStepCommandMapper patchCommandMapper,
+    StepResponseMapper responseMapper
+) : ControllerBase
 {
-    
+    [HttpPost]
+    public async Task<ActionResult<NovelResponse>> Create(
+        [FromRoute] Guid novelId,
+        [FromRoute] Guid labelId,
+        AddStepRequest request
+    )
+    {
+        var command = addCommandMapper.ToCommand((dynamic)request, novelId, labelId);
+        
+        var step = await mediator.Send((dynamic) command);
+
+        return Ok(responseMapper.ToResponse(step));
+    }
+
+    [HttpGet("{stepid:guid}")]
+    public async Task<ActionResult<NovelResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId,
+        [FromRoute] Guid stepId)
+    {
+        var step = await mediator.Send(new GetStepQuery(novelId, labelId, stepId));
+
+        return Ok(responseMapper.ToResponse(step));
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<NovelResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId)
+    {
+        var step = await mediator.Send(new GetStepsQuery(novelId, labelId));
+
+        return Ok(responseMapper.ToResponse(step));
+    }
+
+    [HttpPatch("{stepid:guid}")]
+    public async Task<ActionResult<StepResponse>> Patch(
+        [FromRoute] Guid novelId,
+        [FromRoute] Guid labelId,
+        [FromRoute] Guid stepId,
+        [FromBody] PatchStepRequest request
+    )
+    {
+        var command = patchCommandMapper.ToCommand((dynamic)request, novelId, labelId, stepId);
+
+        var step = await mediator.Send((dynamic)command);
+
+        return Ok(responseMapper.ToResponse(step));
+    }
+
+    [HttpDelete("{stepid:guid}")]
+    public async Task<IActionResult> Delete(
+        [FromRoute] Guid novelId,
+        [FromRoute] Guid labelId,
+        [FromRoute] Guid stepId
+    )
+    {
+        await mediator.Send(new DeleteStepCommand(novelId, labelId, stepId));
+
+        return NoContent();
+    }
 }

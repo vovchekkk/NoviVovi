@@ -7,15 +7,15 @@ using NoviVovi.Domain.Novels;
 
 namespace NoviVovi.Application.Novels.Features.Create;
 
-public record CreateNovelCommand(
-    string Title,
-    Guid StartLabel
-) : IRequest<NovelDto>;
+public record CreateNovelCommand : IRequest<NovelDto>
+{
+    public required string Title { get; init; }
+}
 
 public class CreateNovelHandler(
     INovelRepository novelRepository,
     ILabelRepository labelRepository,
-    NovelDtoMapper dtoMapper
+    NovelDtoMapper mapper
 ) : IRequestHandler<CreateNovelCommand, NovelDto>
 {
     public async Task<NovelDto> Handle(CreateNovelCommand request, CancellationToken cancellationToken)
@@ -28,6 +28,6 @@ public class CreateNovelHandler(
 
         await novelRepository.AddAsync(novel);
 
-        return dtoMapper.ToDto(novel);
+        return mapper.ToDto(novel);
     }
 }

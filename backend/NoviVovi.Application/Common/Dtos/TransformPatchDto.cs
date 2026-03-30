@@ -1,6 +1,6 @@
 ﻿namespace NoviVovi.Application.Common.Dtos;
 
-public record TransformUpdateDto(
+public record TransformPatchDto(
     double X,
     double Y,
     int Width,

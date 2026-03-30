@@ -2,10 +2,9 @@
 
 namespace NoviVovi.Application.Novels.Features.Delete;
 
-public record DeleteNovelCommand : IRequest
-{
-    
-}
+public record DeleteNovelCommand(
+    Guid NovelId
+) : IRequest;
 
 public class DeleteNovelHandler : IRequestHandler<DeleteNovelCommand>
 {

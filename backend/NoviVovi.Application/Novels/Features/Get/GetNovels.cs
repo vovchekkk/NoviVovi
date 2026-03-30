@@ -5,7 +5,6 @@ namespace NoviVovi.Application.Novels.Features.Get;
 
 public record GetNovelsQuery : IRequest<IEnumerable<NovelDto>>
 {
-    
 }
 
 public class GetNovelsHandler : IRequestHandler<GetNovelsQuery, IEnumerable<NovelDto>>

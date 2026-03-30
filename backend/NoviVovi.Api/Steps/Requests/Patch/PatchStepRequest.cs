@@ -8,58 +8,36 @@ namespace NoviVovi.Api.Steps.Requests.Patch;
 [JsonDerivedType(typeof(PatchJumpStepRequest), typeDiscriminator: "jump")]
 [JsonDerivedType(typeof(PatchShowBackgroundStepRequest), typeDiscriminator: "show_background")]
 [JsonDerivedType(typeof(PatchShowCharacterStepRequest), typeDiscriminator: "show_character")]
-[JsonDerivedType(typeof(PatchMenuStepRequest), typeDiscriminator: "menu")]
-[JsonDerivedType(typeof(PatchReplicaStepRequest), typeDiscriminator: "replica")]
-public abstract record PatchStepRequest(
-    Guid NovelId,
-    Guid LabelId,
-    Guid StepId
-);
+[JsonDerivedType(typeof(PatchShowMenuStepRequest), typeDiscriminator: "menu")]
+[JsonDerivedType(typeof(PatchShowReplicaStepRequest), typeDiscriminator: "replica")]
+public abstract record PatchStepRequest;
 
 public record PatchHideCharacterStepRequest(
-    Guid NovelId,
-    Guid LabelId,
-    Guid StepId,
     Guid? CharacterId = null
-) : PatchStepRequest(NovelId, LabelId, StepId);
+) : PatchStepRequest;
 
 public record PatchJumpStepRequest(
-    Guid NovelId,
-    Guid LabelId,
-    Guid StepId,
     Guid? TargetLabelId = null
-) : PatchStepRequest(NovelId, LabelId, StepId);
+) : PatchStepRequest;
 
 public record PatchShowBackgroundStepRequest(
-    Guid NovelId,
-    Guid LabelId,
-    Guid StepId,
     Guid? ImageId = null,
     TransformPatchRequest? Transform = null
-) : PatchStepRequest(NovelId, LabelId, StepId);
+) : PatchStepRequest;
 
 public record PatchShowCharacterStepRequest(
-    Guid NovelId,
-    Guid LabelId,
-    Guid StepId,
     Guid? CharacterId = null,
     Guid? CharacterStateId = null,
     TransformPatchRequest? Transform = null
-) : PatchStepRequest(NovelId, LabelId, StepId);
+) : PatchStepRequest;
 
-public record PatchMenuStepRequest(
-    Guid NovelId,
-    Guid LabelId,
-    Guid StepId,
+public record PatchShowMenuStepRequest(
     string? Name = null,
     string? Description = null,
     string? Text = null
-) : PatchStepRequest(NovelId, LabelId, StepId);
+) : PatchStepRequest;
 
-public record PatchReplicaStepRequest(
-    Guid NovelId,
-    Guid LabelId,
-    Guid StepId,
+public record PatchShowReplicaStepRequest(
     Guid? CharacterId = null,
     string? Text = null
-) : PatchStepRequest(NovelId, LabelId, StepId);
+) : PatchStepRequest;

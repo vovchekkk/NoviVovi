@@ -5,7 +5,9 @@ namespace NoviVovi.Application.Novels.Features.Patch;
 
 public record PatchNovelCommand : IRequest<NovelDto>
 {
-    
+    public required Guid NovelId { get; init; }
+    public string? Title { get; init; }
+    public Guid? StartLabelId { get; init; }
 }
 
 public class PatchNovelHandler : IRequestHandler<PatchNovelCommand, NovelDto>

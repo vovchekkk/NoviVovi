@@ -13,12 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\tests\NoviVovi.Infrastructure.Tests\NoviVovi.Infrastructure.Tests.csproj" />
     <ProjectReference Include="..\NoviVovi.Application\NoviVovi.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Scene\Requests\" />
+    <ProjectReference Include="..\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

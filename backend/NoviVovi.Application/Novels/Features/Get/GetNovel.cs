@@ -11,15 +11,15 @@ public record GetNovelQuery(
 
 public class GetNovelHandler(
     INovelRepository novelRepository,
-    NovelDtoMapper dtoMapper
+    NovelDtoMapper mapper
 ) : IRequestHandler<GetNovelQuery, NovelDto>
 {
     public async Task<NovelDto> Handle(GetNovelQuery request, CancellationToken cancellationToken)
     {
         var novel = await novelRepository.GetByIdAsync(request.NovelId);
         if (novel == null)
-            throw new NotFoundException($"Новелла с ID '{request.NovelId}' не найдена");
+            throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 
-        return dtoMapper.ToDto(novel);
+        return mapper.ToDto(novel);
     }
 }

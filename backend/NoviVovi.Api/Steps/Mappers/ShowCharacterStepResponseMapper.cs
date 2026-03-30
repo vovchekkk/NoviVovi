@@ -5,7 +5,7 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Api.Steps.Mappers;
 
 [Mapper]
-public partial class ShowCharacterStepMapper
+public partial class ShowCharacterStepResponseMapper
 {
     public partial ShowCharacterStepResponse ToResponse(ShowCharacterStepDto subject);
     

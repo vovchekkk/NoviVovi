@@ -1,11 +1,17 @@
-﻿namespace NoviVovi.Application.Steps.Features.Get;
+﻿using MediatR;
+using NoviVovi.Application.Steps.Dtos;
 
-public class GetStepsQuery
-{
-    
-}
+namespace NoviVovi.Application.Steps.Features.Get;
 
-public class GetStepsHandler
+public record GetStepsQuery(
+    Guid NovelId,
+    Guid LabelId
+) : IRequest<IEnumerable<StepDto>>;
+
+public class GetStepsHandler : IRequestHandler<GetStepsQuery, IEnumerable<StepDto>>
 {
-    
+    public Task<IEnumerable<StepDto>> Handle(GetStepsQuery request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

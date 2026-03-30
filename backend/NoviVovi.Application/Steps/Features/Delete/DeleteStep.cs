@@ -1,11 +1,18 @@
-﻿namespace NoviVovi.Application.Steps.Features.Delete;
+﻿using MediatR;
+using NoviVovi.Application.Steps.Dtos;
 
-public class DeleteStepCommand
-{
-    
-}
+namespace NoviVovi.Application.Steps.Features.Delete;
 
-public class DeleteStepHandler
+public record DeleteStepCommand(
+    Guid NovelId,
+    Guid LabelId,
+    Guid StepId
+) : IRequest<StepDto>, IRequest;
+
+public class DeleteStepHandler : IRequestHandler<DeleteStepCommand>
 {
-    
+    public Task Handle(DeleteStepCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

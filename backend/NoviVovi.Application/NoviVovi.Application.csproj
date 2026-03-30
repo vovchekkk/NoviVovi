@@ -5,18 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\NoviVovi.Domain\NoviVovi.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Preview\Features\" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\NoviVovi.Domain\NoviVovi.Domain.csproj" />
   </ItemGroup>
 
 </Project>
