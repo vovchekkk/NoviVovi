@@ -26,19 +26,19 @@ export default function Novels() {
                 })}>
 
                     <NovelCard
-                        image="https://picsum.photos/id/1015/800/450"
+                        image="https://i.pinimg.com/736x/95/f0/19/95f019ebb6017310ffea17d8c3f4cdf9.jpg"
                         title="Название супер крутой новеллы"
                         description="Суперское описание супер крутой новеллы"
                     />
 
                     <NovelCard
-                        image="https://picsum.photos/id/1015/800/450"
+                        image="https://i.pinimg.com/736x/95/f0/19/95f019ebb6017310ffea17d8c3f4cdf9.jpg"
                         title="Название супер крутой новеллы"
                         description="Суперское описание супер крутой новеллы"
                     />
 
                     <NovelCard
-                        image="https://picsum.photos/id/1015/800/450"
+                        image="https://i.pinimg.com/736x/95/f0/19/95f019ebb6017310ffea17d8c3f4cdf9.jpg"
                         title="Название супер крутой новеллы"
                         description="Суперское описание супер крутой новеллы"
                     />
