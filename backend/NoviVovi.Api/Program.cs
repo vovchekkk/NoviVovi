@@ -10,7 +10,6 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
-
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -31,18 +30,23 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
+await RunDatabaseTest();
+
 // Запускаем приложение
 await app.RunAsync();
 
-async Task RunDatabaseTest(string connectionString)
+async Task RunDatabaseTest()
 {
     Console.WriteLine("=== НАЧАЛО ТЕСТИРОВАНИЯ БД ===\n");
     
     try
     {
-        var test = new Test(connectionString);
-        await test.TestDb();
-        Console.WriteLine("\n=== ТЕСТИРОВАНИЕ ЗАВЕРШЕНО УСПЕШНО ===");
+        using (var serviceScope = app.Services.CreateScope())
+        {
+            var test = new Test(serviceScope.ServiceProvider.GetService<NovelDatabaseService>());
+            await test.TestDb();
+            Console.WriteLine("\n=== ТЕСТИРОВАНИЕ ЗАВЕРШЕНО УСПЕШНО ===");
+        }
     }
     catch (Exception ex)
     {

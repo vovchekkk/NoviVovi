@@ -7,46 +7,19 @@ using System.Threading.Tasks;
 
 public class Test
 {
-    private readonly string _connectionString;
     private readonly NovelDatabaseService _dbService;
 
-    public Test(string connectionString)
+    public Test(NovelDatabaseService dbService)
     {
-        _connectionString = connectionString;
-        _dbService = new NovelDatabaseService(_connectionString);
+        _dbService = dbService;
     }
 
     public async Task TestDb()
     {
-        await CheckConnectionAsync();
         await GetAllPublicNovelsExample();
         await GetNovelByIdExample(Guid.Parse("2a66792c-aa2a-45cd-86fb-dae3c621a6a5"));
         await GetFullNovelExample(Guid.Parse("2a66792c-aa2a-45cd-86fb-dae3c621a6a5"));
         await GetLabelStepsExample(Guid.Parse("2a66792c-aa2a-45cd-86fb-dae3c621a6a5"));
-    }
-
-    private async Task CheckConnectionAsync()
-    {
-        try
-        {
-            await using var conn = new NpgsqlConnection(_connectionString);
-            await conn.OpenAsync();
-            Console.WriteLine("✅ Подключение к БД успешно!");
-
-            // Проверяем версию для дополнительной информации
-            await using var cmd = new NpgsqlCommand("SELECT version();", conn);
-            var version = await cmd.ExecuteScalarAsync();
-            Console.WriteLine($"   Версия PostgreSQL: {version}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Ошибка подключения: {ex.Message}");
-            throw; // Пробрасываем исключение дальше, чтобы остановить выполнение
-        }
-        finally
-        {
-            Console.WriteLine("нихуя");
-        }
     }
 
     private async Task GetAllPublicNovelsExample()
@@ -200,27 +173,5 @@ public class Test
     public void Dispose()
     {
         _dbService?.Dispose();
-    }
-}
-
-// Класс для запуска тестов
-public static class TestRunner
-{
-    public static async Task RunTests(string connectionString)
-    {
-        var test = new Test(connectionString);
-        try
-        {
-            await test.TestDb();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"\n❌ Критическая ошибка: {ex.Message}");
-            Console.WriteLine($"Stack trace: {ex.StackTrace}");
-        }
-        finally
-        {
-            test.Dispose();
-        }
     }
 }

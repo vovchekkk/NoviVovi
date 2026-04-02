@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
 
+/*EntityFramework боль в дырка задница из-за циклических ссылок*/
+
 public class NovelDatabaseService : IDisposable
 {
     private readonly string _connectionString;
@@ -367,7 +369,7 @@ public class NovelDatabaseService : IDisposable
                 id AS Id,
                 novel_id AS NovelId,
                 name AS Name,
-                url AS Url,
+                ""URL"" AS Url,
                 format AS Format,
                 img_type AS ImgType,
                 height AS Height,
