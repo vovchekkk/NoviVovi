@@ -38,7 +38,7 @@ export default function EditorContainer() {
                         gap: '20px',
                         flex: 4,
                     })}>
-                        <Preview image="https://picsum.photos/id/1015/800/450"></Preview>
+                        <Preview image="src\assets\img.png"></Preview>
                         <BlockPanel></BlockPanel>
                     </div>
                 </div>
