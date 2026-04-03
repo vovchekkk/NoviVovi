@@ -10,5 +10,9 @@ public class CharacterStateDbO
     public string StateName { get; set; } = string.Empty;
     public string? Description { get; set; }
     
+    public Guid? TransformId { get; set; }
+    
+    public TransformDbO? Transform { get; set; }
+    
     public ImageDbO? Image { get; set; }
 }

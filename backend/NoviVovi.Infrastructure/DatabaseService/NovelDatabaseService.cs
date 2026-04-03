@@ -43,7 +43,6 @@ public class NovelDatabaseService : IDisposable
         const string sql = @"
             SELECT 
                 id AS Id,
-                user_id AS UserId,
                 title AS Title,
                 description AS Description,
                 start_label_id AS StartLabelId,
@@ -64,7 +63,6 @@ public class NovelDatabaseService : IDisposable
         const string sql = @"
             SELECT 
                 id AS Id,
-                user_id AS UserId,
                 title AS Title,
                 description AS Description,
                 start_label_id AS StartLabelId,
@@ -215,34 +213,7 @@ public class NovelDatabaseService : IDisposable
 
         return await conn.QueryAsync<ImageDbO>(sql, new { NovelId = novelId });
     }
-
-    public async Task<UserDbO?> GetUserByIdAsync(Guid userId)
-    {
-        await using var conn = await GetConnectionAsync();
-        
-        const string sql = @"
-            SELECT 
-                id AS Id,
-                private_code AS PrivateCode
-            FROM ""Users""
-            WHERE id = @UserId";
-
-        return await conn.QueryFirstOrDefaultAsync<UserDbO>(sql, new { UserId = userId });
-    }
-
-    public async Task<UserDbO?> GetUserByPrivateCodeAsync(string privateCode)
-    {
-        await using var conn = await GetConnectionAsync();
-        
-        const string sql = @"
-            SELECT 
-                id AS Id,
-                private_code AS PrivateCode
-            FROM ""Users""
-            WHERE private_code = @PrivateCode";
-
-        return await conn.QueryFirstOrDefaultAsync<UserDbO>(sql, new { PrivateCode = privateCode });
-    }
+    
 
     public async Task<TransformDbO?> GetTransformByIdAsync(Guid transformId)
     {
@@ -341,38 +312,45 @@ public class NovelDatabaseService : IDisposable
     public async Task<CharacterStateDbO?> GetFullCharacterStateByIdAsync(Guid stateId)
     {
         await using var conn = await GetConnectionAsync();
-        
+    
         const string sql = @"
-            SELECT 
-                id AS Id,
-                character_id AS CharacterId,
-                image_id AS ImageId,
-                state_name AS StateName,
-                description AS Description
-            FROM ""CharacterStates""
-            WHERE id = @StateId";
+        SELECT 
+            id AS Id,
+            character_id AS CharacterId,
+            image_id AS ImageId,
+            state_name AS StateName,
+            description AS Description,
+            transform_id AS TransformId
+        FROM ""CharacterStates""
+        WHERE id = @StateId";
 
         var state = await conn.QueryFirstOrDefaultAsync<CharacterStateDbO>(sql, new { StateId = stateId });
-        
+    
         if (state == null)
             return null;
 
         // Загружаем изображение
         const string imageSql = @"
-            SELECT 
-                id AS Id,
-                novel_id AS NovelId,
-                name AS Name,
-                ""URL"" AS Url,
-                format AS Format,
-                img_type AS ImgType,
-                height AS Height,
-                width AS Width,
-                size AS Size
-            FROM ""Images""
-            WHERE id = @ImageId";
+        SELECT 
+            id AS Id,
+            novel_id AS NovelId,
+            name AS Name,
+            ""URL"" AS Url,
+            format AS Format,
+            img_type AS ImgType,
+            height AS Height,
+            width AS Width,
+            size AS Size
+        FROM ""Images""
+        WHERE id = @ImageId";
 
         state.Image = await conn.QueryFirstOrDefaultAsync<ImageDbO>(imageSql, new { ImageId = state.ImageId });
+    
+        // Загружаем трансформацию (если есть)
+        if (state.TransformId.HasValue)
+        {
+            state.Transform = await GetTransformByIdAsync(state.TransformId.Value);
+        }
 
         return state;
     }
@@ -573,11 +551,11 @@ public class NovelDatabaseService : IDisposable
         
         const string sql = @"
             INSERT INTO ""Novels"" (
-                id, user_id, title, description, 
+                id, title, description, 
                 start_label_id, cover_image_id, is_public, 
                 created_at, edited_at
             ) VALUES (
-                @Id, @UserId, @Title, @Description, 
+                @Id, @Title, @Description, 
                 @StartLabelId, @CoverImageId, @IsPublic, 
                 @CreatedAt, @EditedAt
             )";
@@ -592,7 +570,6 @@ public class NovelDatabaseService : IDisposable
         
         const string sql = @"
             UPDATE ""Novels"" SET
-                user_id = @UserId,
                 title = @Title,
                 description = @Description,
                 start_label_id = @StartLabelId,
@@ -759,10 +736,10 @@ public class NovelDatabaseService : IDisposable
     public async Task<Guid> CreateCharacterStateAsync(CharacterStateDbO state)
     {
         await using var conn = await GetConnectionAsync();
-        
+    
         const string sql = @"
-            INSERT INTO ""CharacterStates"" (id, character_id, image_id, state_name, description)
-            VALUES (@Id, @CharacterId, @ImageId, @StateName, @Description)";
+        INSERT INTO ""CharacterStates"" (id, character_id, image_id, state_name, description, transform_id)
+        VALUES (@Id, @CharacterId, @ImageId, @StateName, @Description, @TransformId)";
 
         await conn.ExecuteAsync(sql, state);
         return state.Id;
@@ -771,14 +748,15 @@ public class NovelDatabaseService : IDisposable
     public async Task UpdateCharacterStateAsync(CharacterStateDbO state)
     {
         await using var conn = await GetConnectionAsync();
-        
+    
         const string sql = @"
-            UPDATE ""CharacterStates"" SET
-                character_id = @CharacterId,
-                image_id = @ImageId,
-                state_name = @StateName,
-                description = @Description
-            WHERE id = @Id";
+        UPDATE ""CharacterStates"" SET
+            character_id = @CharacterId,
+            image_id = @ImageId,
+            state_name = @StateName,
+            description = @Description,
+            transform_id = @TransformId
+        WHERE id = @Id";
 
         await conn.ExecuteAsync(sql, state);
     }
@@ -897,16 +875,5 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, transform);
         return transform.Id;
     }
-
-    public async Task<Guid> CreateUserAsync(UserDbO user)
-    {
-        await using var conn = await GetConnectionAsync();
-        
-        const string sql = @"
-            INSERT INTO ""Users"" (id, private_code)
-            VALUES (@Id, @PrivateCode)";
-
-        await conn.ExecuteAsync(sql, user);
-        return user.Id;
-    }
+    
 }

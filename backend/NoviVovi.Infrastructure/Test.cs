@@ -67,7 +67,6 @@ public class Test
             {
                 Console.WriteLine($"\n📖 Новелла (плоская): {novel.Title}");
                 Console.WriteLine($"  ID: {novel.Id}");
-                Console.WriteLine($"  Автор: {novel.UserId}");
                 Console.WriteLine($"  Публичная: {novel.IsPublic}");
                 Console.WriteLine($"  Описание: {novel.Description ?? "Нет описания"}");
                 Console.WriteLine($"  Создана: {novel.CreatedAt:dd.MM.yyyy HH:mm}");
