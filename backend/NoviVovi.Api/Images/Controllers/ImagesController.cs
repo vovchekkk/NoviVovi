@@ -36,7 +36,7 @@ public class ImagesController(
         [FromRoute] Guid imageId
     )
     {
-        var image = await mediator.Send(new GetImageCommand(imageId));
+        var image = await mediator.Send(new GetImageQuery(imageId));
 
         return Ok(mapper.ToResponse(image));
     }

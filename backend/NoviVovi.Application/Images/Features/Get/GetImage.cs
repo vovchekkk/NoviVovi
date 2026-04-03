@@ -5,15 +5,15 @@ using NoviVovi.Application.Images.Mappers;
 
 namespace NoviVovi.Application.Images.Features.Get;
 
-public record GetImageCommand(
+public record GetImageQuery(
     Guid ImageId
 ) : IRequest<ImageDto>;
 
 public class GetImageHandler(
     ImageDtoMapper mapper
-) : IRequestHandler<GetImageCommand, ImageDto>
+) : IRequestHandler<GetImageQuery, ImageDto>
 {
-    public Task<ImageDto> Handle(GetImageCommand request, CancellationToken cancellationToken)
+    public Task<ImageDto> Handle(GetImageQuery request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

@@ -7,6 +7,7 @@ using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Application.Novels.Features.Create;
 using NoviVovi.Application.Novels.Features.Delete;
 using NoviVovi.Application.Novels.Features.Get;
+using NoviVovi.Application.Novels.Features.GetGraph;
 using NoviVovi.Application.Novels.Features.Patch;
 
 namespace NoviVovi.Api.Novels.Controllers;
@@ -18,7 +19,8 @@ public class NovelsController(
     IMediator mediator,
     CreateNovelCommandMapper createNovelCommandMapper,
     PatchNovelCommandMapper patchNovelCommandMapper,
-    NovelResponseMapper mapper
+    NovelResponseMapper novelMapper,
+    NovelGraphResponseMapper novelGraphMapper
 ) : ControllerBase
 {
     [HttpPost]
@@ -30,7 +32,7 @@ public class NovelsController(
         
         var novel = await mediator.Send(command);
 
-        return Ok(mapper.ToResponse(novel));
+        return Ok(novelMapper.ToResponse(novel));
     }
 
     [HttpGet("{novelId:guid}")]
@@ -40,7 +42,7 @@ public class NovelsController(
     {
         var novel = await mediator.Send(new GetNovelQuery(novelId));
 
-        return Ok(mapper.ToResponse(novel));
+        return Ok(novelMapper.ToResponse(novel));
     }
 
     [HttpGet]
@@ -48,7 +50,7 @@ public class NovelsController(
     {
         var novel = await mediator.Send(new GetNovelsQuery());
 
-        return Ok(mapper.ToResponses(novel));
+        return Ok(novelMapper.ToResponses(novel));
     }
 
     [HttpPatch("{novelId:guid}")]
@@ -61,7 +63,7 @@ public class NovelsController(
         
         var novel = await mediator.Send(command);
 
-        return Ok(mapper.ToResponse(novel));
+        return Ok(novelMapper.ToResponse(novel));
     }
 
     [HttpDelete("{novelId:guid}")]
@@ -72,5 +74,15 @@ public class NovelsController(
         await mediator.Send(new DeleteNovelCommand(novelId));
 
         return NoContent();
+    }
+    
+    [HttpGet("{novelId:guid}/graph")]
+    public async Task<ActionResult<NovelGraphResponseMapper>> GetGraph(
+        [FromRoute] Guid novelId
+    )
+    {
+        var graph = await mediator.Send(new GetNovelGraphQuery(novelId));
+
+        return Ok(novelGraphMapper.ToResponse(graph));
     }
 }
