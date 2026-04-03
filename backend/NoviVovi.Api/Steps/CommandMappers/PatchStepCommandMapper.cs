@@ -1,5 +1,4 @@
-﻿using NoviVovi.Api.Steps.Requests.Add;
-using NoviVovi.Api.Steps.Requests.Patch;
+﻿using NoviVovi.Api.Steps.Requests;
 using NoviVovi.Application.Steps.Features.Add;
 using NoviVovi.Application.Steps.Features.Delete;
 using NoviVovi.Application.Steps.Features.Get;

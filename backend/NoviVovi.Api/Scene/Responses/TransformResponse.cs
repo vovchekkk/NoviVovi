@@ -2,8 +2,10 @@
 
 public record TransformResponse
 (
-    PositionResponse Position,
-    SizeResponse Size,
+    double X,
+    double Y,
+    int Width,
+    int Height,
     double Scale,
     double Rotation,
     int ZIndex

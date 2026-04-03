@@ -1,10 +1,9 @@
+using NoviVovi.Api;
+using NoviVovi.Application;
 using NoviVovi.Infrastructure;
-using Npgsql;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-var connString = builder.Configuration.GetConnectionString("NovelDatabase") ??
-                 throw new ArgumentNullException("No such connection string");
 
 builder.Services.AddApi();
 builder.Services.AddApplication();
@@ -13,8 +12,6 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<NovelDatabaseService>(sp => 
-    new NovelDatabaseService(connString));
 
 var app = builder.Build();
 

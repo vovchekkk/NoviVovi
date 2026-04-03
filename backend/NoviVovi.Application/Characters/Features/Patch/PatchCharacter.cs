@@ -1,11 +1,20 @@
-﻿namespace NoviVovi.Application.Characters.Features.Patch;
+﻿using MediatR;
+using NoviVovi.Application.Characters.Dtos;
 
-public record PatchCharacterCommand
+namespace NoviVovi.Application.Characters.Features.Patch;
+
+public record PatchCharacterCommand : IRequest<CharacterDto>
 {
-    
+    public required Guid NovelId { get; init; }
+    public required Guid CharacterId { get; init; }
+    public string? Name { get; init; }
+    public string? Description { get; init; }
 }
 
-public class PatchCharacterHandler
+public class PatchCharacterHandler : IRequestHandler<PatchCharacterCommand, CharacterDto>
 {
-    
+    public Task<CharacterDto> Handle(PatchCharacterCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,11 +1,16 @@
-﻿namespace NoviVovi.Application.Characters.Features.Get;
+﻿using MediatR;
+using NoviVovi.Application.Characters.Dtos;
 
-public record GetCharactersQuery
-{
-    
-}
+namespace NoviVovi.Application.Characters.Features.Get;
 
-public class GetCharactersHandler
+public record GetCharactersQuery(
+    Guid NovelId
+) : IRequest<IEnumerable<CharacterDto>>;
+
+public class GetCharactersHandler : IRequestHandler<GetCharactersQuery, IEnumerable<CharacterDto>>
 {
-    
+    public Task<IEnumerable<CharacterDto>> Handle(GetCharactersQuery request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NoviVovi.Api.Novels.CommandMappers;
 using NoviVovi.Api.Novels.Mappers;
-using NoviVovi.Api.Novels.Requests.Create;
-using NoviVovi.Api.Novels.Requests.Patch;
+using NoviVovi.Api.Novels.Requests;
 using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Application.Novels.Features.Create;
 using NoviVovi.Application.Novels.Features.Delete;
@@ -17,9 +16,9 @@ namespace NoviVovi.Api.Novels.Controllers;
 [Route("api/novels")]
 public class NovelsController(
     IMediator mediator,
-    CreateCommandMapper createCommandMapper,
-    PatchCommandMapper patchCommandMapper,
-    NovelResponseMapper novelMapper
+    CreateNovelCommandMapper createNovelCommandMapper,
+    PatchNovelCommandMapper patchNovelCommandMapper,
+    NovelResponseMapper mapper
 ) : ControllerBase
 {
     [HttpPost]
@@ -27,11 +26,11 @@ public class NovelsController(
         [FromBody] CreateNovelRequest request
     )
     {
-        var command = createCommandMapper.ToCommand(request);
+        var command = createNovelCommandMapper.ToCommand(request);
         
         var novel = await mediator.Send(command);
 
-        return Ok(novelMapper.ToResponse(novel));
+        return Ok(mapper.ToResponse(novel));
     }
 
     [HttpGet("{novelId:guid}")]
@@ -41,7 +40,7 @@ public class NovelsController(
     {
         var novel = await mediator.Send(new GetNovelQuery(novelId));
 
-        return Ok(novelMapper.ToResponse(novel));
+        return Ok(mapper.ToResponse(novel));
     }
 
     [HttpGet]
@@ -49,7 +48,7 @@ public class NovelsController(
     {
         var novel = await mediator.Send(new GetNovelsQuery());
 
-        return Ok(novelMapper.ToResponses(novel));
+        return Ok(mapper.ToResponses(novel));
     }
 
     [HttpPatch("{novelId:guid}")]
@@ -58,11 +57,11 @@ public class NovelsController(
         [FromBody] PatchNovelRequest request
     )
     {
-        var command = patchCommandMapper.ToCommand(request, novelId);
+        var command = patchNovelCommandMapper.ToCommand(request, novelId);
         
         var novel = await mediator.Send(command);
 
-        return Ok(novelMapper.ToResponse(novel));
+        return Ok(mapper.ToResponse(novel));
     }
 
     [HttpDelete("{novelId:guid}")]

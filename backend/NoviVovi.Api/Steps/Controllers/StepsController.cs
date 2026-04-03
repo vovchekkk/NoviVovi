@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NoviVovi.Api.Steps.CommandMappers;
 using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Api.Steps.Mappers;
-using NoviVovi.Api.Steps.Requests.Add;
-using NoviVovi.Api.Steps.Requests.Patch;
+using NoviVovi.Api.Steps.Requests;
 using NoviVovi.Api.Steps.Responses;
 using NoviVovi.Application.Steps.Features.Delete;
 using NoviVovi.Application.Steps.Features.Get;
@@ -18,7 +17,7 @@ public class StepsController(
     IMediator mediator,
     AddStepCommandMapper addCommandMapper,
     PatchStepCommandMapper patchCommandMapper,
-    StepResponseMapper responseMapper
+    StepResponseMapper mapper
 ) : ControllerBase
 {
     [HttpPost]
@@ -32,7 +31,7 @@ public class StepsController(
         
         var step = await mediator.Send((dynamic) command);
 
-        return Ok(responseMapper.ToResponse(step));
+        return Ok(mapper.ToResponse(step));
     }
 
     [HttpGet("{stepid:guid}")]
@@ -41,7 +40,7 @@ public class StepsController(
     {
         var step = await mediator.Send(new GetStepQuery(novelId, labelId, stepId));
 
-        return Ok(responseMapper.ToResponse(step));
+        return Ok(mapper.ToResponse(step));
     }
 
     [HttpGet]
@@ -49,7 +48,7 @@ public class StepsController(
     {
         var step = await mediator.Send(new GetStepsQuery(novelId, labelId));
 
-        return Ok(responseMapper.ToResponse(step));
+        return Ok(mapper.ToResponse(step));
     }
 
     [HttpPatch("{stepid:guid}")]
@@ -64,7 +63,7 @@ public class StepsController(
 
         var step = await mediator.Send((dynamic)command);
 
-        return Ok(responseMapper.ToResponse(step));
+        return Ok(mapper.ToResponse(step));
     }
 
     [HttpDelete("{stepid:guid}")]

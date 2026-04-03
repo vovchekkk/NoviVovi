@@ -1,11 +1,16 @@
-﻿namespace NoviVovi.Application.Characters.Features.Delete;
+﻿using MediatR;
 
-public record DeleteCharacterCommand
-{
-    
-}
+namespace NoviVovi.Application.Characters.Features.Delete;
 
-public class DeleteCharacterHandler
+public record DeleteCharacterCommand(
+    Guid NovelId,
+    Guid CharacterId
+) : IRequest;
+
+public class DeleteCharacterHandler : IRequestHandler<DeleteCharacterCommand>
 {
-    
+    public Task Handle(DeleteCharacterCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

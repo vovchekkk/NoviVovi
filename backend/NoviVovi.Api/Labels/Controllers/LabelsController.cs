@@ -2,13 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using NoviVovi.Api.Labels.CommandMappers;
 using NoviVovi.Api.Labels.Mappers;
-using NoviVovi.Api.Labels.Requests.Add;
-using NoviVovi.Api.Labels.Requests.Patch;
+using NoviVovi.Api.Labels.Requests;
 using NoviVovi.Api.Labels.Responses;
-using NoviVovi.Application.Labels.Features.Add;
 using NoviVovi.Application.Labels.Features.Delete;
 using NoviVovi.Application.Labels.Features.Get;
-using NoviVovi.Application.Labels.Features.Patch;
 
 namespace NoviVovi.Api.Labels.Controllers;
 
@@ -17,9 +14,9 @@ namespace NoviVovi.Api.Labels.Controllers;
 [Route("api/novels/{novelId:guid}/labels")]
 public class LabelsController(
     IMediator mediator,
-    AddCommandMapper addCommandMapper,
-    PatchCommandMapper patchCommandMapper,
-    LabelResponseMapper novelMapper
+    AddLabelCommandMapper addCommandMapper,
+    PatchLabelCommandMapper patchCommandMapper,
+    LabelResponseMapper mapper
 ) : ControllerBase
 {
     [HttpPost]
@@ -32,7 +29,7 @@ public class LabelsController(
 
         var label = await mediator.Send(command);
 
-        return Ok(novelMapper.ToResponse(label));
+        return Ok(mapper.ToResponse(label));
     }
 
     [HttpGet("{labelId:guid}")]
@@ -43,7 +40,7 @@ public class LabelsController(
     {
         var label = await mediator.Send(new GetLabelQuery(novelId, labelId));
 
-        return Ok(novelMapper.ToResponse(label));
+        return Ok(mapper.ToResponse(label));
     }
 
     [HttpGet]
@@ -53,7 +50,7 @@ public class LabelsController(
     {
         var label = await mediator.Send(new GetLabelsQuery(novelId));
 
-        return Ok(novelMapper.ToResponses(label));
+        return Ok(mapper.ToResponses(label));
     }
 
     [HttpPatch("{labelId:guid}")]
@@ -67,7 +64,7 @@ public class LabelsController(
 
         var label = await mediator.Send(command);
 
-        return Ok(novelMapper.ToResponse(label));
+        return Ok(mapper.ToResponse(label));
     }
 
     [HttpDelete("{labelId:guid}")]
