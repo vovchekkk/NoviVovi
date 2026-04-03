@@ -9,20 +9,6 @@ namespace NoviVovi.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApi(this IServiceCollection services)
-    {
-        return services;
-    }
-    
-    public static IServiceCollection AddApplication(this IServiceCollection services)
-    {
-        services.AddSingleton<PreviewSessionStore>();
-
-        services.AddSingleton<ReplicaDtoMapper>();
-        
-        return services;
-    }
-    
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services, 
         IConfiguration configuration)
