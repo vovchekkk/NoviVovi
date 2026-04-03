@@ -11,7 +11,7 @@ public class Character : Entity
 
     public IReadOnlyList<CharacterState> CharacterStates => _characterStates;
 
-    private Character(Guid id, string name, string? description) : base(id)
+    public Character(Guid id, string name, string? description) : base(id)
     {
         Name = name;
         Description = description;

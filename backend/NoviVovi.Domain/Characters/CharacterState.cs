@@ -9,9 +9,9 @@ public class CharacterState : Entity
     public string Name { get; private set; }
     public string? Description { get; set; }
     public Image Image { get; private set; }
-    public Transform LocalTransform { get; private set; } 
+    public Transform LocalTransform { get; private set; }
 
-    private CharacterState(Guid id, string name, Image image, Transform localTransform, string? description) : base(id)
+    public CharacterState(Guid id, string name, Image image, Transform localTransform, string? description) : base(id)
     {
         Name = name;
         Description = description;
