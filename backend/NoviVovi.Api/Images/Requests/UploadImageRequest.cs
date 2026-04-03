@@ -1,10 +1,8 @@
-﻿namespace NoviVovi.Application.Images.Dtos;
+﻿namespace NoviVovi.Api.Images.Requests;
 
-public record ImageDto(
-    Guid Id,
+public record UploadImageRequest(
     string Name,
     string? Description,
-    string Url,
     string Format,
     string Type,
     int Width,

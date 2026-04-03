@@ -65,7 +65,7 @@ public class NovelsController(
     }
 
     [HttpDelete("{novelId:guid}")]
-    public async Task<ActionResult<NovelResponse>> Delete(
+    public async Task<IActionResult> Delete(
         [FromRoute] Guid novelId
     )
     {

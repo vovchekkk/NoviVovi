@@ -68,13 +68,13 @@ public class LabelsController(
     }
 
     [HttpDelete("{labelId:guid}")]
-    public async Task<ActionResult> Delete(
+    public async Task<IActionResult> Delete(
         [FromRoute] Guid novelId,
         [FromRoute] Guid labelId
     )
     {
         await mediator.Send(new DeleteLabelCommand(novelId, labelId));
 
-        return Ok();
+        return NoContent();
     }
 }

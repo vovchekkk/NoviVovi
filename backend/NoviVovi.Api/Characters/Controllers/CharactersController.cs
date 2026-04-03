@@ -68,13 +68,13 @@ public class CharactersController(
     }
 
     [HttpDelete("{characterId:guid}")]
-    public async Task<ActionResult> Delete(
+    public async Task<IActionResult> Delete(
         [FromRoute] Guid novelId,
         [FromRoute] Guid characterId
     )
     {
         await mediator.Send(new DeleteCharacterCommand(novelId, characterId));
 
-        return Ok();
+        return NoContent();
     }
 }

@@ -7,7 +7,7 @@ public record DeleteStepCommand(
     Guid NovelId,
     Guid LabelId,
     Guid StepId
-) : IRequest<StepDto>, IRequest;
+) : IRequest;
 
 public class DeleteStepHandler : IRequestHandler<DeleteStepCommand>
 {

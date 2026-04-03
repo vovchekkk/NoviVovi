@@ -15,9 +15,9 @@ public class DeleteLabelHandler(
     INovelRepository novelRepository,
     ILabelRepository labelRepository,
     LabelDtoMapper mapper
-) : IRequestHandler<AddLabelCommand, LabelDto>
+) : IRequestHandler<DeleteLabelCommand>
 {
-    public Task<LabelDto> Handle(AddLabelCommand request, CancellationToken cancellationToken)
+    public Task Handle(DeleteLabelCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

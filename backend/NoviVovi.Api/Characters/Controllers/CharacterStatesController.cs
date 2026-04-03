@@ -72,7 +72,7 @@ public class CharacterStatesController(
     }
 
     [HttpDelete("{stateId:guid}")]
-    public async Task<ActionResult> Delete(
+    public async Task<IActionResult> Delete(
         [FromRoute] Guid novelId,
         [FromRoute] Guid characterId,
         [FromRoute] Guid stateId
@@ -80,6 +80,6 @@ public class CharacterStatesController(
     {
         await mediator.Send(new DeleteCharacterStateCommand(novelId, characterId, stateId));
 
-        return Ok();
+        return NoContent();
     }
 }
