@@ -5,19 +5,26 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
-public partial class CharacterMapper
+public partial class CharacterMapper(CharacterStateMapper mapper)
 {
-    public partial Character ToCharacter(CharacterDbO dbo); //добавить в character цвет имени
-
-    public partial CharacterDbO ToDbO(Character character, Guid novelId); //бля, а как новеллу восстановить?
-
-    public FullCharacterDbO ToFullDbO(Character character, Guid novelId)
+    public Character ToCharacter(CharacterDbO dbo)
     {
-        var stateMapper = new CharacterStateMapper();
-        var res = new FullCharacterDbO
+        var res = new Character(dbo.Id, dbo.Name, dbo.Description);
+        foreach (var state in dbo.States)
+            res.AddState(mapper.ToState(state));
+        return res;
+    } //добавить в character цвет имени
+                                                            ////бля, а как новеллу восстановить?
+
+    public CharacterDbO ToFullDbO(Character character, Guid novelId)
+    {
+        var res = new CharacterDbO
         {
-            Character = ToDbO(character, novelId),
-            States = stateMapper.ToDbO(character.CharacterStates, character.Id)
+            Id = character.Id,
+            Name = character.Name,
+            NovelId = novelId,
+            Description = character.Description,
+            States = mapper.ToDbO(character.CharacterStates, character.Id)
         };
         return res;
     }

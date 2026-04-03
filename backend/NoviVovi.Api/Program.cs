@@ -1,6 +1,7 @@
 using NoviVovi.Api;
 using NoviVovi.Application;
 using NoviVovi.Infrastructure;
+using NoviVovi.Infrastructure.DatabaseService;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

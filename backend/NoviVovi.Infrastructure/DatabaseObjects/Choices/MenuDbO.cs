@@ -6,4 +6,6 @@ public class MenuDbO
     public string Name { get; set; } = string.Empty;
     public string? Text { get; set; }
     public string? Description { get; set; }
+    
+    public List<ChoiceDbO> Choices { get; set; } = new();
 }

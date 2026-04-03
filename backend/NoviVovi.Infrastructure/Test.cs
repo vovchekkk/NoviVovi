@@ -1,3 +1,4 @@
+using NoviVovi.Infrastructure.DatabaseService;
 using Npgsql;
 
 namespace NoviVovi.Infrastructure;
@@ -16,10 +17,19 @@ public class Test
 
     public async Task TestDb()
     {
+        var novelId = Guid.Parse("2a66792c-aa2a-45cd-86fb-dae3c621a6a5");
+        
         await GetAllPublicNovelsExample();
-        await GetNovelByIdExample(Guid.Parse("2a66792c-aa2a-45cd-86fb-dae3c621a6a5"));
-        await GetFullNovelExample(Guid.Parse("2a66792c-aa2a-45cd-86fb-dae3c621a6a5"));
-        await GetLabelStepsExample(Guid.Parse("2a66792c-aa2a-45cd-86fb-dae3c621a6a5"));
+        await GetNovelByIdExample(novelId);
+        await GetFullNovelExample(novelId);
+        
+        // Получаем первую метку новеллы, чтобы показать её шаги
+        var labels = await _dbService.GetLabelsByNovelIdAsync(novelId);
+        var firstLabelId = labels.FirstOrDefault()?.Id;
+        if (firstLabelId.HasValue)
+        {
+            await GetLabelStepsExample(firstLabelId.Value);
+        }
     }
 
     private async Task GetAllPublicNovelsExample()
@@ -50,11 +60,12 @@ public class Test
     {
         try
         {
+            // Используем GetNovelByIdAsync для плоской новеллы
             var novel = await _dbService.GetNovelByIdAsync(novelId);
             
             if (novel != null)
             {
-                Console.WriteLine($"\n📖 Новелла: {novel.Title}");
+                Console.WriteLine($"\n📖 Новелла (плоская): {novel.Title}");
                 Console.WriteLine($"  ID: {novel.Id}");
                 Console.WriteLine($"  Автор: {novel.UserId}");
                 Console.WriteLine($"  Публичная: {novel.IsPublic}");
@@ -81,33 +92,21 @@ public class Test
             
             if (fullNovel != null)
             {
-                Console.WriteLine($"\n📖 Полная информация о новелле: {fullNovel.Novel.Title}");
-                Console.WriteLine($"  Персонажей: {fullNovel.Characters.Count}");
+                Console.WriteLine($"\n📖 Полная информация о новелле: {fullNovel.Title}");
                 Console.WriteLine($"  Сцен: {fullNovel.Labels.Count}");
-                Console.WriteLine($"  Изображений: {fullNovel.Images.Count}");
-                
-                if (fullNovel.Characters.Any())
-                {
-                    Console.WriteLine("\n  Персонажи:");
-                    foreach (var character in fullNovel.Characters)
-                    {
-                        Console.WriteLine($"    - {character.Name} (#{character.NameColor})");
-                        if (!string.IsNullOrEmpty(character.Description))
-                        {
-                            var desc = character.Description.Length > 60 
-                                ? character.Description[..60] + "..." 
-                                : character.Description;
-                            Console.WriteLine($"      {desc}");
-                        }
-                    }
-                }
                 
                 if (fullNovel.Labels.Any())
                 {
                     Console.WriteLine("\n  Сцены:");
                     foreach (var label in fullNovel.Labels)
                     {
-                        Console.WriteLine($"    - {label.LabelName}");
+                        Console.WriteLine($"    - {label.LabelName} (ID: {label.Id})");
+                        
+                        // Показываем количество шагов в сцене
+                        if (label.Steps != null && label.Steps.Any())
+                        {
+                            Console.WriteLine($"      Шагов: {label.Steps.Count}");
+                        }
                     }
                 }
             }
@@ -126,47 +125,86 @@ public class Test
     {
         try
         {
+            // Используем GetFullStepByIdAsync для получения полных шагов
             var steps = await _dbService.GetStepsByLabelIdAsync(labelId);
             
-            Console.WriteLine($"\n🎬 Шаги сцены (всего: {steps.Count()}):");
+            Console.WriteLine($"\n🎬 Шаги сцены (ID: {labelId}, всего: {steps.Count()}):");
+            
             foreach (var step in steps)
             {
-                Console.WriteLine($"  [{step.StepOrder}] Тип: {step.StepType ?? "unknown"}");
+                // Загружаем полный шаг со всеми зависимостями
+                var fullStep = await _dbService.GetFullStepByIdAsync(step.Id);
                 
-                if (step.ReplicaId.HasValue)
+                if (fullStep == null) continue;
+                
+                Console.WriteLine($"\n  [{fullStep.StepOrder}] Тип: {fullStep.StepType ?? "unknown"} (ID: {fullStep.Id})");
+                
+                // Реплика
+                if (fullStep.Replica != null)
                 {
-                    var replica = await _dbService.GetReplicaByIdAsync(step.ReplicaId.Value);
-                    if (replica != null)
+                    var text = string.IsNullOrEmpty(fullStep.Replica.Text) 
+                        ? "Нет текста" 
+                        : (fullStep.Replica.Text.Length > 100 
+                            ? fullStep.Replica.Text[..100] + "..." 
+                            : fullStep.Replica.Text);
+                    Console.WriteLine($"      Реплика: {text}");
+                    
+                    if (fullStep.Replica.Speaker != null)
                     {
-                        var text = string.IsNullOrEmpty(replica.Text) 
-                            ? "Нет текста" 
-                            : (replica.Text.Length > 50 ? replica.Text[..50] + "..." : replica.Text);
-                        Console.WriteLine($"      Реплика: {text}");
+                        Console.WriteLine($"      Говорит: {fullStep.Replica.Speaker.Name} (ID: {fullStep.Replica.Speaker.Id})");
+                    }
+                    else if (fullStep.Replica.SpeakerId.HasValue)
+                    {
+                        Console.WriteLine($"      Говорит: персонаж {fullStep.Replica.SpeakerId}");
+                    }
+                }
+                
+                // Меню
+                if (fullStep.Menu != null)
+                {
+                    Console.WriteLine($"      Меню: {fullStep.Menu.Name} (выборов: {fullStep.Menu.Choices.Count})");
+                    foreach (var choice in fullStep.Menu.Choices)
+                    {
+                        var nextLabelName = choice.NextLabel?.LabelName ?? "неизвестно";
+                        Console.WriteLine($"        - {choice.Name}: {choice.Text} -> {nextLabelName}");
+                    }
+                }
+                
+                // Фон
+                if (fullStep.Background != null && fullStep.Background.Image != null)
+                {
+                    Console.WriteLine($"      Фон: {fullStep.Background.Image.Name} ({fullStep.Background.Image.Url})");
+                }
+                
+                // Персонажи на сцене
+                if (fullStep.StepCharacters != null && fullStep.StepCharacters.Any())
+                {
+                    Console.WriteLine($"      Персонажи на сцене: {fullStep.StepCharacters.Count}");
+                    foreach (var sc in fullStep.StepCharacters)
+                    {
+                        var characterName = sc.CharacterState != null 
+                            ? $"{sc.CharacterState.StateName}" 
+                            : sc.CharacterStateId.ToString();
+                        Console.WriteLine($"        - Состояние: {characterName}");
                         
-                        if (replica.SpeakerId.HasValue)
+                        if (sc.Transform != null)
                         {
-                            Console.WriteLine($"      Говорит: {replica.SpeakerId}");
+                            Console.WriteLine($"          Позиция: X={sc.Transform.XPos}, Y={sc.Transform.YPos}, Scale={sc.Transform.Scale}");
                         }
                     }
                 }
                 
-                if (step.MenuId.HasValue)
+                // Следующая метка
+                if (fullStep.NextLabel != null)
                 {
-                    var menu = await _dbService.GetFullMenuByIdAsync(step.MenuId.Value);
-                    if (menu != null)
-                    {
-                        Console.WriteLine($"      Меню: {menu.Menu.Name} (выборов: {menu.Choices.Count})");
-                        foreach (var choice in menu.Choices)
-                        {
-                            Console.WriteLine($"        - {choice.Name}: {choice.Text}");
-                        }
-                    }
+                    Console.WriteLine($"      Следующая сцена: {fullStep.NextLabel.LabelName}");
                 }
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Ошибка при получении шагов: {ex.Message}");
+            Console.WriteLine($"   StackTrace: {ex.StackTrace}");
         }
     }
 

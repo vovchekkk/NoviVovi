@@ -5,7 +5,7 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
-public partial class CharacterStateMapper
+public partial class CharacterStateMapper(ImageMapper imageMapper)
 {
     public CharacterStateDbO ToDbO(CharacterState character, Guid characterId)
     {
@@ -25,10 +25,9 @@ public partial class CharacterStateMapper
         return character.Select(characterState => ToDbO(characterState, characterId)).ToList();
     }
 
-    // public CharacterState ToCharacterState(CharacterStateDbO dbo)
-    // {
-    //     var imgMapper = new ImageMapper();
-    //     //загружаем картинку тут например
-    //     var res = new CharacterState(dbo.Id,  маммер(картинкаДБО(dbo.ImageId)), ...);
-    // }
+    public CharacterState ToState(CharacterStateDbO dbo)
+    {
+        throw new NotImplementedException();
+        // var res = new CharacterState(dbo.Id,  imageMapper.ToImage(dbo.Image), dbo.Description);
+    }
 }

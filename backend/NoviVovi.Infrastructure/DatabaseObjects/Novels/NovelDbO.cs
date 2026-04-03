@@ -1,3 +1,5 @@
+using NoviVovi.Infrastructure.DatabaseObjects.Labels;
+
 namespace NoviVovi.Infrastructure.DatabaseObjects.Novels;
 
 public class NovelDbO
@@ -11,4 +13,6 @@ public class NovelDbO
     public bool IsPublic { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime EditedAt { get; set; }
+    
+    public List<LabelDbO> Labels { get; set; } = new();
 }

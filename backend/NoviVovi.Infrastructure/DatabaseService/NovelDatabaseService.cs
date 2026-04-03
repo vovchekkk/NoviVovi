@@ -1,19 +1,13 @@
+using System.Data;
+using Dapper;
 using NoviVovi.Infrastructure.DatabaseObjects.Characters;
 using NoviVovi.Infrastructure.DatabaseObjects.Choices;
 using NoviVovi.Infrastructure.DatabaseObjects.Images;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using NoviVovi.Infrastructure.DatabaseObjects.Novels;
-
-namespace NoviVovi.Infrastructure;
-
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-using Dapper;
 using Npgsql;
 
-/*EntityFramework боль в дырка задница из-за циклических ссылок*/
+namespace NoviVovi.Infrastructure.DatabaseService;
 
 public class NovelDatabaseService : IDisposable
 {
@@ -40,6 +34,8 @@ public class NovelDatabaseService : IDisposable
         _connection?.Dispose();
     }
     
+    // ==================== БАЗОВЫЕ GET-МЕТОДЫ (плоские) ====================
+
     public async Task<NovelDbO?> GetNovelByIdAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -61,12 +57,9 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryFirstOrDefaultAsync<NovelDbO>(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Получить все публичные новеллы пользователя
-    /// </summary>
-    public async Task<IEnumerable<NovelDbO>> GetPublicNovelsByUserAsync(Guid userId)
+    private async Task<IEnumerable<NovelDbO>> GetPublicNovelsByUserAsync(Guid userId)
     {
-        using var conn = await GetConnectionAsync();
+        await using var conn = await GetConnectionAsync();
         
         const string sql = @"
             SELECT 
@@ -86,12 +79,9 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryAsync<NovelDbO>(sql, new { UserId = userId });
     }
 
-    /// <summary>
-    /// Получить все новеллы (с учётом приватных по коду)
-    /// </summary>
     public async Task<IEnumerable<NovelDbO>> GetAllNovelsAsync(bool onlyPublic = true)
     {
-        using var conn = await GetConnectionAsync();
+        await using var conn = await GetConnectionAsync();
         
         var sql = @"
             SELECT 
@@ -116,12 +106,9 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryAsync<NovelDbO>(sql);
     }
 
-    /// <summary>
-    /// Получить все метки (сцены) новеллы
-    /// </summary>
     public async Task<IEnumerable<LabelDbO>> GetLabelsByNovelIdAsync(Guid novelId)
     {
-        using var conn = await GetConnectionAsync();
+        await using var conn = await GetConnectionAsync();
         
         const string sql = @"
             SELECT 
@@ -135,9 +122,6 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryAsync<LabelDbO>(sql, new { NovelId = novelId });
     }
 
-    /// <summary>
-    /// Получить все шаги метки (сцены)
-    /// </summary>
     public async Task<IEnumerable<StepDbO>> GetStepsByLabelIdAsync(Guid labelId)
     {
         await using var conn = await GetConnectionAsync();
@@ -159,9 +143,6 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryAsync<StepDbO>(sql, new { LabelId = labelId });
     }
 
-    /// <summary>
-    /// Получить реплику по ID
-    /// </summary>
     public async Task<ReplicaDbO?> GetReplicaByIdAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -177,10 +158,7 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryFirstOrDefaultAsync<ReplicaDbO>(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Получить персонажей новеллы
-    /// </summary>
-    public async Task<IEnumerable<CharacterDbO>> GetCharactersByNovelIdAsync(Guid novelId)
+    private async Task<IEnumerable<CharacterDbO>> GetCharactersByNovelIdAsync(Guid novelId)
     {
         await using var conn = await GetConnectionAsync();
         
@@ -198,10 +176,7 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryAsync<CharacterDbO>(sql, new { NovelId = novelId });
     }
 
-    /// <summary>
-    /// Получить состояния персонажа
-    /// </summary>
-    public async Task<IEnumerable<CharacterStateDbO>> GetCharacterStatesByCharacterIdAsync(Guid characterId)
+    private async Task<IEnumerable<CharacterStateDbO>> GetCharacterStatesByCharacterIdAsync(Guid characterId)
     {
         await using var conn = await GetConnectionAsync();
         
@@ -219,150 +194,9 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryAsync<CharacterStateDbO>(sql, new { CharacterId = characterId });
     }
 
-    /// <summary>
-    /// Получить меню с выборами
-    /// </summary>
-    public async Task<FullMenuDbO?> GetFullMenuByIdAsync(Guid menuId)
-    {
-        await using var conn = await GetConnectionAsync();
-        
-        // Получаем меню
-        const string menuSql = @"
-            SELECT 
-                id AS Id,
-                name AS Name,
-                text AS Text,
-                description AS Description
-            FROM ""Menus""
-            WHERE id = @MenuId";
-
-        var menu = await conn.QueryFirstOrDefaultAsync<MenuDbO>(menuSql, new { MenuId = menuId });
-        
-        if (menu == null)
-            return null;
-
-        // Получаем выборы
-        const string choicesSql = @"
-            SELECT 
-                id AS Id,
-                menu_id AS MenuId,
-                next_label_id AS NextLabelId,
-                name AS Name,
-                text AS Text
-            FROM ""Choices""
-            WHERE menu_id = @MenuId
-            ORDER BY name";
-
-        var choices = await conn.QueryAsync<ChoiceDbO>(choicesSql, new { MenuId = menuId });
-
-        return new FullMenuDbO
-        {
-            Menu = menu,
-            Choices = choices.ToList()
-        };
-    }
-
-    /// <summary>
-    /// Получить полный шаг с репликой, меню и персонажами
-    /// </summary>
-    public async Task<FullStepDbO?> GetFullStepByIdAsync(Guid stepId)
-    {
-        await using var conn = await GetConnectionAsync();
-        
-        // Получаем шаг
-        const string stepSql = @"
-            SELECT 
-                id AS Id,
-                label_id AS LabelId,
-                replica_id AS ReplicaId,
-                menu_id AS MenuId,
-                bg_id AS BgId,
-                next_label_id AS NextLabelId,
-                step_order AS StepOrder,
-                step_type AS StepType
-            FROM ""Steps""
-            WHERE id = @StepId";
-
-        var step = await conn.QueryFirstOrDefaultAsync<StepDbO>(stepSql, new { StepId = stepId });
-        
-        if (step == null)
-            return null;
-
-        var fullStep = new FullStepDbO
-        {
-            Step = step
-        };
-
-        // Получаем реплику если есть
-        if (step.ReplicaId.HasValue)
-        {
-            fullStep.Replica = await GetReplicaByIdAsync(step.ReplicaId.Value);
-        }
-
-        // Получаем меню если есть
-        if (step.MenuId.HasValue)
-        {
-            fullStep.Menu = await GetFullMenuByIdAsync(step.MenuId.Value);
-        }
-
-        // Получаем фон если есть
-        if (step.BgId.HasValue)
-        {
-            const string bgSql = @"
-                SELECT 
-                    id AS Id,
-                    img AS Img,
-                    transform_id AS TransformId
-                FROM ""Backgrounds""
-                WHERE id = @BgId";
-
-            fullStep.Background = await conn.QueryFirstOrDefaultAsync<BackgroundDbO>(bgSql, new { BgId = step.BgId });
-        }
-
-        // Получаем персонажей на шаге
-        const string stepCharactersSql = @"
-            SELECT 
-                id AS Id,
-                transform_id AS TransformId,
-                character_state_id AS CharacterStateId,
-                step_id AS StepId
-            FROM ""StepCharacter""
-            WHERE step_id = @StepId";
-
-        fullStep.StepCharacters = (await conn.QueryAsync<StepCharacterDbO>(stepCharactersSql, new { StepId = stepId })).ToList();
-
-        return fullStep;
-    }
-
-    /// <summary>
-    /// Получить полную новеллу (со всеми зависимостями)
-    /// </summary>
-    public async Task<FullNovelDbO?> GetFullNovelByIdAsync(Guid novelId)
-    {
-        using var conn = await GetConnectionAsync();
-        
-        var novel = await GetNovelByIdAsync(novelId);
-        
-        if (novel == null)
-            return null;
-
-        var fullNovel = new FullNovelDbO
-        {
-            Novel = novel,
-            Labels = (await GetLabelsByNovelIdAsync(novelId)).ToList(),
-            Characters = (await GetCharactersByNovelIdAsync(novelId)).ToList(),
-            Images = (await GetImagesByNovelIdAsync(novelId)).ToList()
-        };
-
-        return fullNovel;
-    }
-
-    /// <summary>
-    /// Получить изображения новеллы
-    /// </summary>
     public async Task<IEnumerable<ImageDbO>> GetImagesByNovelIdAsync(Guid novelId)
     {
-        using var conn = await GetConnectionAsync();
+        await using var conn = await GetConnectionAsync();
         
         const string sql = @"
             SELECT 
@@ -382,12 +216,9 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryAsync<ImageDbO>(sql, new { NovelId = novelId });
     }
 
-    /// <summary>
-    /// Получить пользователя по ID
-    /// </summary>
     public async Task<UserDbO?> GetUserByIdAsync(Guid userId)
     {
-        using var conn = await GetConnectionAsync();
+        await using var conn = await GetConnectionAsync();
         
         const string sql = @"
             SELECT 
@@ -399,9 +230,6 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryFirstOrDefaultAsync<UserDbO>(sql, new { UserId = userId });
     }
 
-    /// <summary>
-    /// Получить пользователя по приватному коду
-    /// </summary>
     public async Task<UserDbO?> GetUserByPrivateCodeAsync(string privateCode)
     {
         await using var conn = await GetConnectionAsync();
@@ -416,12 +244,329 @@ public class NovelDatabaseService : IDisposable
         return await conn.QueryFirstOrDefaultAsync<UserDbO>(sql, new { PrivateCode = privateCode });
     }
 
+    public async Task<TransformDbO?> GetTransformByIdAsync(Guid transformId)
+    {
+        await using var conn = await GetConnectionAsync();
+        
+        const string sql = @"
+            SELECT 
+                id AS Id,
+                scale AS Scale,
+                rotation AS Rotation,
+                z_index AS ZIndex,
+                width AS Width,
+                height AS Height,
+                x_pos AS XPos,
+                y_pos AS YPos
+            FROM ""Transforms""
+            WHERE id = @Id";
 
-    //-----------------------------------------------------------------------------------------------
-    
+        return await conn.QueryFirstOrDefaultAsync<TransformDbO>(sql, new { Id = transformId });
+    }
+
+    public async Task<BackgroundDbO?> GetBackgroundByIdAsync(Guid bgId)
+    {
+        await using var conn = await GetConnectionAsync();
+        
+        const string sql = @"
+            SELECT 
+                id AS Id,
+                img AS Img,
+                transform_id AS TransformId
+            FROM ""Backgrounds""
+            WHERE id = @Id";
+
+        return await conn.QueryFirstOrDefaultAsync<BackgroundDbO>(sql, new { Id = bgId });
+    }
+
+    // ==================== ПОЛНЫЕ МЕТОДЫ (с вложенными объектами) ====================
+
     /// <summary>
-    /// Создать новеллу
+    /// Получить меню с выборами (полностью)
     /// </summary>
+    public async Task<MenuDbO?> GetFullMenuByIdAsync(Guid menuId)
+    {
+        await using var conn = await GetConnectionAsync();
+    
+        const string menuSql = @"
+        SELECT 
+            id AS Id,
+            name AS Name,
+            text AS Text,
+            description AS Description
+        FROM ""Menus""
+        WHERE id = @MenuId";
+
+        var menu = await conn.QueryFirstOrDefaultAsync<MenuDbO>(menuSql, new { MenuId = menuId });
+    
+        if (menu == null)
+            return null;
+
+        const string choicesSql = @"
+        SELECT 
+            id AS Id,
+            menu_id AS MenuId,
+            next_label_id AS NextLabelId,
+            name AS Name,
+            text AS Text
+        FROM ""Choices""
+        WHERE menu_id = @MenuId
+        ORDER BY name";
+
+        var choices = await conn.QueryAsync<ChoiceDbO>(choicesSql, new { MenuId = menuId });
+        
+        foreach (var choice in choices)
+        {
+            const string labelSql = @"
+            SELECT 
+                id AS Id,
+                novel_id AS NovelId,
+                label_name AS LabelName
+            FROM ""Labels""
+            WHERE id = @LabelId";
+        
+            choice.NextLabel = await conn.QueryFirstOrDefaultAsync<LabelDbO>(
+                labelSql, 
+                new { LabelId = choice.NextLabelId }
+            );
+        }
+    
+        menu.Choices = choices.AsList();
+        return menu;
+    }
+
+    /// <summary>
+    /// Получить состояние персонажа с изображением
+    /// </summary>
+    public async Task<CharacterStateDbO?> GetFullCharacterStateByIdAsync(Guid stateId)
+    {
+        await using var conn = await GetConnectionAsync();
+        
+        const string sql = @"
+            SELECT 
+                id AS Id,
+                character_id AS CharacterId,
+                image_id AS ImageId,
+                state_name AS StateName,
+                description AS Description
+            FROM ""CharacterStates""
+            WHERE id = @StateId";
+
+        var state = await conn.QueryFirstOrDefaultAsync<CharacterStateDbO>(sql, new { StateId = stateId });
+        
+        if (state == null)
+            return null;
+
+        // Загружаем изображение
+        const string imageSql = @"
+            SELECT 
+                id AS Id,
+                novel_id AS NovelId,
+                name AS Name,
+                ""URL"" AS Url,
+                format AS Format,
+                img_type AS ImgType,
+                height AS Height,
+                width AS Width,
+                size AS Size
+            FROM ""Images""
+            WHERE id = @ImageId";
+
+        state.Image = await conn.QueryFirstOrDefaultAsync<ImageDbO>(imageSql, new { ImageId = state.ImageId });
+
+        return state;
+    }
+
+    /// <summary>
+    /// Получить всех персонажей новеллы с их состояниями
+    /// </summary>
+    public async Task<IEnumerable<CharacterDbO>> GetFullCharactersByNovelIdAsync(Guid novelId)
+    {
+        await using var conn = await GetConnectionAsync();
+        
+        var characters = (await GetCharactersByNovelIdAsync(novelId)).ToList();
+        
+        foreach (var character in characters)
+        {
+            var states = await GetCharacterStatesByCharacterIdAsync(character.Id);
+            
+            // Загружаем изображения для каждого состояния
+            foreach (var state in states)
+            {
+                const string imageSql = @"
+                    SELECT 
+                        id AS Id,
+                        novel_id AS NovelId,
+                        name AS Name,
+                        ""URL"" AS Url,
+                        format AS Format,
+                        img_type AS ImgType,
+                        height AS Height,
+                        width AS Width,
+                        size AS Size
+                    FROM ""Images""
+                    WHERE id = @ImageId";
+                
+                state.Image = await conn.QueryFirstOrDefaultAsync<ImageDbO>(imageSql, new { ImageId = state.ImageId });
+            }
+            
+            character.States = states.ToList();
+        }
+        
+        return characters;
+    }
+
+    /// <summary>
+    /// Получить полный шаг с репликой, меню, фоном и персонажами
+    /// </summary>
+    public async Task<StepDbO?> GetFullStepByIdAsync(Guid stepId)
+    {
+        await using var conn = await GetConnectionAsync();
+        
+        const string stepSql = @"
+            SELECT 
+                id AS Id,
+                label_id AS LabelId,
+                replica_id AS ReplicaId,
+                menu_id AS MenuId,
+                bg_id AS BgId,
+                next_label_id AS NextLabelId,
+                step_order AS StepOrder,
+                step_type AS StepType
+            FROM ""Steps""
+            WHERE id = @StepId";
+
+        var step = await conn.QueryFirstOrDefaultAsync<StepDbO>(stepSql, new { StepId = stepId });
+        
+        if (step == null)
+            return null;
+
+        // Загружаем реплику
+        if (step.ReplicaId.HasValue)
+        {
+            step.Replica = await GetReplicaByIdAsync(step.ReplicaId.Value);
+        }
+
+        // Загружаем меню с выборами
+        if (step.MenuId.HasValue)
+        {
+            step.Menu = await GetFullMenuByIdAsync(step.MenuId.Value);
+        }
+
+        // Загружаем следующий лейбл (для навигации)
+        if (step.NextLabelId.HasValue)
+        {
+            const string labelSql = @"
+                SELECT 
+                    id AS Id,
+                    novel_id AS NovelId,
+                    label_name AS LabelName
+                FROM ""Labels""
+                WHERE id = @Id";
+            
+            step.NextLabel = await conn.QueryFirstOrDefaultAsync<LabelDbO>(labelSql, new { Id = step.NextLabelId });
+        }
+
+        // Загружаем фон
+        // Загружаем фон
+        if (step.BgId.HasValue)
+        {
+            step.Background = await GetBackgroundByIdAsync(step.BgId.Value);
+    
+            // Загружаем изображение для фона
+            if (step.Background != null)
+            {
+                const string imageSql = @"
+            SELECT 
+                id AS Id,
+                novel_id AS NovelId,
+                name AS Name,
+                ""URL"" AS Url,
+                format AS Format,
+                img_type AS ImgType,
+                height AS Height,
+                width AS Width,
+                size AS Size
+            FROM ""Images""
+            WHERE id = @ImageId";
+        
+                step.Background.Image = await conn.QueryFirstOrDefaultAsync<ImageDbO>(
+                    imageSql, 
+                    new { ImageId = step.Background.Img }
+                );
+        
+                // Загружаем трансформацию для фона
+                if (step.Background.TransformId.HasValue)
+                {
+                    step.Background.Transform = await GetTransformByIdAsync(step.Background.TransformId.Value);
+                }
+            }
+        }
+
+        // Загружаем персонажей на шаге
+        const string stepCharactersSql = @"
+            SELECT 
+                id AS Id,
+                transform_id AS TransformId,
+                character_state_id AS CharacterStateId,
+                step_id AS StepId
+            FROM ""StepCharacter""
+            WHERE step_id = @StepId";
+
+        var stepCharacters = await conn.QueryAsync<StepCharacterDbO>(stepCharactersSql, new { StepId = stepId });
+        
+        foreach (var sc in stepCharacters)
+        {
+            // Загружаем трансформацию
+            if (sc.TransformId.HasValue)
+            {
+                sc.Transform = await GetTransformByIdAsync(sc.TransformId.Value);
+            }
+            
+            // Загружаем состояние персонажа с изображением
+            sc.CharacterState = await GetFullCharacterStateByIdAsync(sc.CharacterStateId);
+        }
+        
+        step.StepCharacters = stepCharacters.AsList();
+
+        return step;
+    }
+
+    /// <summary>
+    /// Получить полную новеллу (со всеми зависимостями)
+    /// </summary>
+    public async Task<NovelDbO?> GetFullNovelByIdAsync(Guid novelId)
+    {
+        await using var conn = await GetConnectionAsync();
+    
+        var novel = await GetNovelByIdAsync(novelId);
+    
+        if (novel == null)
+            return null;
+        
+        var labels = (await GetLabelsByNovelIdAsync(novelId)).ToList();
+        foreach (var label in labels)
+        {
+            var steps = await GetStepsByLabelIdAsync(label.Id);
+            var fullSteps = new List<StepDbO>();
+        
+            foreach (var step in steps)
+            {
+                var fullStep = await GetFullStepByIdAsync(step.Id);
+                if (fullStep != null)
+                    fullSteps.Add(fullStep);
+            }
+        
+            label.Steps = fullSteps;
+        }
+    
+        novel.Labels = labels;
+
+        return novel;
+    }
+
+    // ==================== CRUD МЕТОДЫ ====================
+    
     public async Task<Guid> CreateNovelAsync(NovelDbO novel)
     {
         await using var conn = await GetConnectionAsync();
@@ -441,9 +586,6 @@ public class NovelDatabaseService : IDisposable
         return novel.Id;
     }
 
-    /// <summary>
-    /// Обновить новеллу
-    /// </summary>
     public async Task UpdateNovelAsync(NovelDbO novel)
     {
         await using var conn = await GetConnectionAsync();
@@ -462,9 +604,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, novel);
     }
 
-    /// <summary>
-    /// Удалить новеллу
-    /// </summary>
     public async Task DeleteNovelAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -473,9 +612,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать метку (сцену)
-    /// </summary>
     public async Task<Guid> CreateLabelAsync(LabelDbO label)
     {
         await using var conn = await GetConnectionAsync();
@@ -488,9 +624,6 @@ public class NovelDatabaseService : IDisposable
         return label.Id;
     }
     
-    /// <summary>
-    /// Обновить метку
-    /// </summary>
     public async Task UpdateLabelAsync(LabelDbO label)
     {
         await using var conn = await GetConnectionAsync();
@@ -504,9 +637,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, label);
     }
 
-    /// <summary>
-    /// Удалить метку
-    /// </summary>
     public async Task DeleteLabelAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -515,9 +645,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать шаг
-    /// </summary>
     public async Task<Guid> CreateStepAsync(StepDbO step)
     {
         await using var conn = await GetConnectionAsync();
@@ -535,9 +662,6 @@ public class NovelDatabaseService : IDisposable
         return step.Id;
     }
 
-    /// <summary>
-    /// Обновить шаг
-    /// </summary>
     public async Task UpdateStepAsync(StepDbO step)
     {
         await using var conn = await GetConnectionAsync();
@@ -556,9 +680,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, step);
     }
 
-    /// <summary>
-    /// Удалить шаг
-    /// </summary>
     public async Task DeleteStepAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -567,9 +688,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать реплику
-    /// </summary>
     public async Task<Guid> CreateReplicaAsync(ReplicaDbO replica)
     {
         await using var conn = await GetConnectionAsync();
@@ -582,9 +700,6 @@ public class NovelDatabaseService : IDisposable
         return replica.Id;
     }
 
-    /// <summary>
-    /// Обновить реплику
-    /// </summary>
     public async Task UpdateReplicaAsync(ReplicaDbO replica)
     {
         await using var conn = await GetConnectionAsync();
@@ -598,9 +713,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, replica);
     }
 
-    /// <summary>
-    /// Удалить реплику
-    /// </summary>
     public async Task DeleteReplicaAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -609,9 +721,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать персонажа
-    /// </summary>
     public async Task<Guid> CreateCharacterAsync(CharacterDbO character)
     {
         await using var conn = await GetConnectionAsync();
@@ -624,9 +733,6 @@ public class NovelDatabaseService : IDisposable
         return character.Id;
     }
 
-    /// <summary>
-    /// Обновить персонажа
-    /// </summary>
     public async Task UpdateCharacterAsync(CharacterDbO character)
     {
         await using var conn = await GetConnectionAsync();
@@ -642,9 +748,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, character);
     }
 
-    /// <summary>
-    /// Удалить персонажа
-    /// </summary>
     public async Task DeleteCharacterAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -653,9 +756,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать состояние персонажа
-    /// </summary>
     public async Task<Guid> CreateCharacterStateAsync(CharacterStateDbO state)
     {
         await using var conn = await GetConnectionAsync();
@@ -668,9 +768,6 @@ public class NovelDatabaseService : IDisposable
         return state.Id;
     }
 
-    /// <summary>
-    /// Обновить состояние персонажа
-    /// </summary>
     public async Task UpdateCharacterStateAsync(CharacterStateDbO state)
     {
         await using var conn = await GetConnectionAsync();
@@ -686,9 +783,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, state);
     }
 
-    /// <summary>
-    /// Удалить состояние персонажа
-    /// </summary>
     public async Task DeleteCharacterStateAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -697,9 +791,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать изображение
-    /// </summary>
     public async Task<Guid> CreateImageAsync(ImageDbO image)
     {
         await using var conn = await GetConnectionAsync();
@@ -712,9 +803,6 @@ public class NovelDatabaseService : IDisposable
         return image.Id;
     }
 
-    /// <summary>
-    /// Обновить изображение
-    /// </summary>
     public async Task UpdateImageAsync(ImageDbO image)
     {
         await using var conn = await GetConnectionAsync();
@@ -734,9 +822,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, image);
     }
 
-    /// <summary>
-    /// Удалить изображение
-    /// </summary>
     public async Task DeleteImageAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -745,9 +830,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать меню
-    /// </summary>
     public async Task<Guid> CreateMenuAsync(MenuDbO menu)
     {
         await using var conn = await GetConnectionAsync();
@@ -760,9 +842,6 @@ public class NovelDatabaseService : IDisposable
         return menu.Id;
     }
 
-    /// <summary>
-    /// Создать выбор
-    /// </summary>
     public async Task<Guid> CreateChoiceAsync(ChoiceDbO choice)
     {
         await using var conn = await GetConnectionAsync();
@@ -775,9 +854,6 @@ public class NovelDatabaseService : IDisposable
         return choice.Id;
     }
 
-    /// <summary>
-    /// Создать связь шага с персонажем
-    /// </summary>
     public async Task<Guid> CreateStepCharacterAsync(StepCharacterDbO stepCharacter)
     {
         await using var conn = await GetConnectionAsync();
@@ -790,9 +866,6 @@ public class NovelDatabaseService : IDisposable
         return stepCharacter.Id;
     }
 
-    /// <summary>
-    /// Удалить связь шага с персонажем
-    /// </summary>
     public async Task DeleteStepCharacterAsync(Guid id)
     {
         await using var conn = await GetConnectionAsync();
@@ -801,9 +874,6 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, new { Id = id });
     }
 
-    /// <summary>
-    /// Создать фон
-    /// </summary>
     public async Task<Guid> CreateBackgroundAsync(BackgroundDbO background)
     {
         await using var conn = await GetConnectionAsync();
@@ -816,9 +886,6 @@ public class NovelDatabaseService : IDisposable
         return background.Id;
     }
 
-    /// <summary>
-    /// Создать трансформацию
-    /// </summary>
     public async Task<Guid> CreateTransformAsync(TransformDbO transform)
     {
         await using var conn = await GetConnectionAsync();
@@ -831,9 +898,6 @@ public class NovelDatabaseService : IDisposable
         return transform.Id;
     }
 
-    /// <summary>
-    /// Создать пользователя
-    /// </summary>
     public async Task<Guid> CreateUserAsync(UserDbO user)
     {
         await using var conn = await GetConnectionAsync();
@@ -845,5 +909,4 @@ public class NovelDatabaseService : IDisposable
         await conn.ExecuteAsync(sql, user);
         return user.Id;
     }
-
 }
