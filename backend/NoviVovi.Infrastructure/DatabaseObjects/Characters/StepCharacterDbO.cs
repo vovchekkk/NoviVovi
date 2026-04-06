@@ -1,3 +1,5 @@
+using NoviVovi.Infrastructure.DatabaseObjects.Images;
+
 namespace NoviVovi.Infrastructure.DatabaseObjects.Characters;
 
 public class StepCharacterDbO
@@ -6,4 +8,7 @@ public class StepCharacterDbO
     public Guid? TransformId { get; set; }
     public Guid CharacterStateId { get; set; }
     public Guid StepId { get; set; }
+    
+    public TransformDbO? Transform { get; set; }
+    public CharacterStateDbO? CharacterState { get; set; }
 }

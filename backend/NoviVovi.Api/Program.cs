@@ -48,9 +48,12 @@ async Task RunDatabaseTest(string connectionString)
     
     try
     {
-        var test = new Test(connectionString);
-        await test.TestDb();
-        Console.WriteLine("\n=== ТЕСТИРОВАНИЕ ЗАВЕРШЕНО УСПЕШНО ===");
+        using (var serviceScope = app.Services.CreateScope())
+        {
+            var test = new Test(serviceScope.ServiceProvider.GetService<NovelDatabaseService>());
+            await test.TestDb();
+            Console.WriteLine("\n=== ТЕСТИРОВАНИЕ ЗАВЕРШЕНО УСПЕШНО ===");
+        }
     }
     catch (Exception ex)
     {

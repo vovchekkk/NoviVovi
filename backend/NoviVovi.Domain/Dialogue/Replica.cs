@@ -9,7 +9,7 @@ public class Replica : Entity
     public Character Speaker { get; private set; }
     public string Text { get; private set; }
 
-    private Replica(Guid id, Character speaker, string text) : base(id)
+    public Replica(Guid id, Character speaker, string text) : base(id)
     {
         Speaker = speaker;
         Text = text;

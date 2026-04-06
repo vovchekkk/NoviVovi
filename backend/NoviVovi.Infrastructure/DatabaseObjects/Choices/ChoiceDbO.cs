@@ -1,3 +1,5 @@
+using NoviVovi.Infrastructure.DatabaseObjects.Labels;
+
 namespace NoviVovi.Infrastructure.DatabaseObjects.Choices;
 
 public class ChoiceDbO
@@ -7,4 +9,6 @@ public class ChoiceDbO
     public Guid NextLabelId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
+    
+    public LabelDbO? NextLabel { get; set; }
 }

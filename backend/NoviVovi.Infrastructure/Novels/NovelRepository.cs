@@ -1,4 +1,5 @@
-﻿using NoviVovi.Application.Novels;
+﻿
+using NoviVovi.Application.Novels;
 using NoviVovi.Domain.Novels;
 using NoviVovi.Infrastructure.Persistence;
 
