@@ -2,7 +2,13 @@
 
 namespace NoviVovi.Application.Steps.Dtos;
 
-public record StepDto(
-    Guid Id,
-    TransitionDto Transition
-);
+public abstract record StepDto
+{
+    public required Guid Id { get; init; }
+}
+
+public abstract record StepDto<TTransition> : StepDto 
+    where TTransition : TransitionDto
+{
+    public required TTransition Transition { get; init; }
+}

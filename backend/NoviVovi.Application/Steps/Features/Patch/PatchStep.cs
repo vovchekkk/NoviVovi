@@ -22,10 +22,10 @@ public abstract class BasePatchStepHandler(
 {
     protected async Task<(Novel, Label, Step)> GetStepContextOrThrow(PatchStepCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId)
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
                     ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 
-        var label = await labelRepository.GetByIdAsync(request.LabelId)
+        var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
                     ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
 
         var step = label.Steps.FirstOrDefault(s => s.Id == request.StepId)

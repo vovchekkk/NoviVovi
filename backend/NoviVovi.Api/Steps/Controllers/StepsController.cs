@@ -48,7 +48,7 @@ public class StepsController(
     {
         var step = await mediator.Send(new GetStepsQuery(novelId, labelId));
 
-        return Ok(mapper.ToResponse(step));
+        return Ok(mapper.ToResponses(step));
     }
 
     [HttpPatch("{stepid:guid}")]

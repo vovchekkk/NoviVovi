@@ -2,7 +2,13 @@
 
 namespace NoviVovi.Api.Steps.Responses;
 
-public record StepResponse(
-    Guid Id,
-    TransitionResponse Transition
-);
+public abstract record StepResponse
+{
+    public required Guid Id { get; init; }
+}
+
+public abstract record StepResponse<TTransition> : StepResponse 
+    where TTransition : TransitionResponse
+{
+    public required TTransition Transition { get; init; }
+}

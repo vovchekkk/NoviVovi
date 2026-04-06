@@ -5,17 +5,22 @@ namespace NoviVovi.Infrastructure.Labels;
 
 public class LabelRepository : ILabelRepository
 {
-    public async Task<Label?> GetByIdAsync(Guid id)
+    public Task<Label?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public async Task AddAsync(Label label)
+    public Task AddAsync(Label label, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public async Task DeleteAsync(Label label)
+    public Task DeleteAsync(Label label, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteByNovelIdAsync(Guid novelId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

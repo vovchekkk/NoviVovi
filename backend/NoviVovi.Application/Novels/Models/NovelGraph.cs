@@ -1,9 +1,7 @@
-﻿using NoviVovi.Application.Novels.Dtos;
+﻿namespace NoviVovi.Application.Novels.Models;
 
-namespace NoviVovi.Application.Novels.Models;
-
-public record NovelGraph
+public class NovelGraph
 {
-    public required List<NodeDto> Nodes { get; init; }
-    public required List<EdgeDto> Edges { get; init; }
+    public required List<Node> Nodes { get; init; }
+    public required List<Edge> Edges { get; init; }
 }

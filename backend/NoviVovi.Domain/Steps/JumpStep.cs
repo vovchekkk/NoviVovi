@@ -17,4 +17,6 @@ public class JumpStep : Step
 
         return new JumpStep(Guid.NewGuid(), JumpTransition.Create(targetLabel));
     }
+    
+    public new JumpTransition Transition => (JumpTransition)base.Transition;
 }

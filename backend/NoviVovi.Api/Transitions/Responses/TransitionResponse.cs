@@ -1,5 +1,6 @@
 ﻿namespace NoviVovi.Api.Transitions.Responses;
 
-public record TransitionResponse(
-    Guid Id
-);
+public abstract record TransitionResponse
+{
+    public required Guid Id { get; init; }
+}

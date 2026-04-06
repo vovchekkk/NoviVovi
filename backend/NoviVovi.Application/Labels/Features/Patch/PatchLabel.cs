@@ -19,7 +19,7 @@ public class PatchLabelHandler(
     LabelDtoMapper mapper
 ) : IRequestHandler<AddLabelCommand, LabelDto>
 {
-    public Task<LabelDto> Handle(AddLabelCommand request, CancellationToken cancellationToken)
+    public Task<LabelDto> Handle(AddLabelCommand request, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

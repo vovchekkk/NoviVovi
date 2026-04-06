@@ -19,4 +19,6 @@ public class ShowMenuStep : Step
         
         return new ShowMenuStep(Guid.NewGuid(), menu, NextStepTransition.Create());
     }
+    
+    public new NextStepTransition Transition => (NextStepTransition)base.Transition;
 }

@@ -1,5 +1,5 @@
-﻿namespace NoviVovi.Api.Transitions.Responses;
+﻿using NoviVovi.Api.Transitions.Requests;
 
-public record NextStepTransitionResponse(
-    Guid Id
-) : TransitionResponse(Id);
+namespace NoviVovi.Api.Transitions.Responses;
+
+public record NextStepTransitionResponse : TransitionResponse;

@@ -3,8 +3,7 @@ using NoviVovi.Application.Transitions.Dtos;
 
 namespace NoviVovi.Application.Steps.Dtos;
 
-public record ShowBackgroundStepDto(
-    Guid Id,
-    BackgroundObjectDto BackgroundObject,
-    TransitionDto Transition
-) : StepDto(Id, Transition);
+public record ShowBackgroundStepDto : StepDto<NextStepTransitionDto>
+{
+    public required BackgroundObjectDto BackgroundObject { get; init; }
+}

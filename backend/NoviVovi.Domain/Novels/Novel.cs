@@ -33,6 +33,25 @@ public class Novel : Entity
 
         return new Novel(Guid.NewGuid(), title, startLabel);
     }
+    
+    public void UpdateTitle(string? title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            return;
+
+        Title = title;
+    }
+
+    public void SetStartLabel(Label label)
+    {
+        if (label is null)
+            throw new DomainException("Start label cannot be null");
+        
+        if (!_labels.Contains(label))
+            throw new DomainException($"Label {label.Id} does not belong to this novel");
+
+        StartLabel = label;
+    }
 
     public void AddLabel(Label label)
     {

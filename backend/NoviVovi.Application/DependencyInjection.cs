@@ -38,12 +38,7 @@ public static class DependencyInjection
         services.AddSingleton<SizeDtoMapper>();
         services.AddSingleton<TransformDtoMapper>();
         
-        services.AddSingleton<HideCharacterStepDtoMapper>();
-        services.AddSingleton<JumpStepDtoMapper>();
-        services.AddSingleton<ShowBackgroundStepDtoMapper>();
-        services.AddSingleton<ShowCharacterStepDtoMapper>();
-        services.AddSingleton<ShowMenuStepDtoMapper>();
-        services.AddSingleton<ShowReplicaStepDtoMapper>();
+        services.AddSingleton<StepDtoMapper>();
         
         services.AddSingleton<ChoiceTransitionDtoMapper>();
         services.AddSingleton<JumpTransitionDtoMapper>();

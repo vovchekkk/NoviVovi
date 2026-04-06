@@ -20,4 +20,6 @@ public class ShowReplicaStep : Step
         
         return new ShowReplicaStep(Guid.NewGuid(), replica, NextStepTransition.Create());
     }
+    
+    public new NextStepTransition Transition => (NextStepTransition)base.Transition;
 }

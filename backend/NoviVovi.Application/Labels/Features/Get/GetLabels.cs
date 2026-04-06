@@ -16,7 +16,7 @@ public class GetLabelsHandler(
     LabelDtoMapper mapper
 ) : IRequestHandler<GetLabelsQuery, IEnumerable<LabelDto>>
 {
-    public Task<IEnumerable<LabelDto>> Handle(GetLabelsQuery request, CancellationToken cancellationToken)
+    public Task<IEnumerable<LabelDto>> Handle(GetLabelsQuery request, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
