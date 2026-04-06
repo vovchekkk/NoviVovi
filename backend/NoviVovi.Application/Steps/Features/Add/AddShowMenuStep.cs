@@ -10,7 +10,7 @@ namespace NoviVovi.Application.Steps.Features.Add;
 public record AddShowMenuStepCommand : AddStepCommand
 {
     public required string Name { get; init; }
-    public required string Description { get; init; }
+    public required string? Description { get; init; }
     public required string Text { get; init; }
     public required MenuDto Menu { get; init; }
 }

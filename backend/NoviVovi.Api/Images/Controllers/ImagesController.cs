@@ -19,7 +19,7 @@ public class ImagesController(
     ImageResponseMapper mapper
 ) : ControllerBase
 {
-    [HttpPost]
+    [HttpGet]
     public async Task<ActionResult<ImageResponse>> Upload(
         [FromBody] UploadImageRequest request
     )

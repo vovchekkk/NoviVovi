@@ -2,6 +2,6 @@
 
 public record ReplicaResponse(
     Guid Id,
-    Guid? SpeakerId,
+    Guid SpeakerId,
     string Text
 );
