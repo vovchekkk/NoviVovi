@@ -9,6 +9,7 @@ using NoviVovi.Domain.Preview;
 namespace NoviVovi.Application.Preview.Features.Get;
 
 public record GetScenePreviewQuery(
+    Guid NovelId,
     Guid LabelId,
     Guid StepId
 ) : IRequest<SceneStateDto>;
@@ -21,6 +22,10 @@ public class GetScenePreviewHandler(
 {
     public async Task<SceneStateDto> Handle(GetScenePreviewQuery request, CancellationToken ct)
     {
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct);
+        if (novel == null)
+            throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        
         var label = await labelRepository.GetByIdAsync(request.LabelId, ct);
         if (label == null)
             throw new NotFoundException($"Метка '{request.LabelId}' не найдена");

@@ -14,13 +14,13 @@ public class PreviewController(
     SceneStateResponseMapper sceneStateMapper
 ) : ControllerBase
 {
-    [HttpGet("{novelId:guid}")]
+    [HttpGet("{novelId:guid}/labels/{labelId:guid}/steps/{stepId:guid}")]
     public async Task<ActionResult<SceneStateResponse>> GetPreview(
         [FromRoute] Guid novelId,
-        [FromQuery] Guid labelId,
-        [FromQuery] Guid stepId)
+        [FromRoute] Guid labelId,
+        [FromRoute] Guid stepId)
     {
-        var sceneState = await mediator.Send(new GetScenePreviewQuery(labelId, stepId));
+        var sceneState = await mediator.Send(new GetScenePreviewQuery(novelId, labelId, stepId));
         
         return Ok(sceneStateMapper.ToResponse(sceneState));
     }

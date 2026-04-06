@@ -56,7 +56,7 @@ public class NovelGraphBuilder
                     SourceLabelId = sourceLabelId,
                     TargetLabelId = choice.Transition.TargetLabel.Id,
                     Choice = choice,
-                    Text = choice.Text ?? choice.Name
+                    Name = choice.Name
                 });
             }
         }

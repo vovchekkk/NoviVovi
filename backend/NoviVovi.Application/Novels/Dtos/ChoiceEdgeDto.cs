@@ -8,5 +8,5 @@ public record ChoiceEdgeDto(
     Guid SourceLabelId,
     Guid TargetLabelId,
     ChoiceDto Choice,
-    string Text
+    string Name
 ) : EdgeDto(Id, SourceLabelId, TargetLabelId);
