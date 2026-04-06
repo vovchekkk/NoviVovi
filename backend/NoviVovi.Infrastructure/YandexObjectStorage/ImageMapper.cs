@@ -9,8 +9,9 @@ public partial class ImageMapper
 {
     public Image ToImage(ImageDbO imgDbo)
     {
-        var img = new Image(imgDbo.Id, imgDbo.Name, imgDbo.Url, imgDbo.ImgType);
-        return img;
+        //var img = new Image(imgDbo.Id, imgDbo.Name, imgDbo.Url, imgDbo.ImgType);
+        //return img;
+        throw new NotImplementedException();
     }
 
     //todo! переделать после мерджа

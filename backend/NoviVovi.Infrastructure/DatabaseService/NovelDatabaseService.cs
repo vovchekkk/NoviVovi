@@ -71,7 +71,7 @@ public class NovelDatabaseService : IDisposable
                 created_at AS CreatedAt,
                 edited_at AS EditedAt
             FROM ""Novels""
-            WHERE user_id = @UserId AND is_public = true
+            WHERE is_public = true
             ORDER BY created_at DESC";
 
         return await conn.QueryAsync<NovelDbO>(sql, new { UserId = userId });
@@ -84,7 +84,6 @@ public class NovelDatabaseService : IDisposable
         var sql = @"
             SELECT 
                 id AS Id,
-                user_id AS UserId,
                 title AS Title,
                 description AS Description,
                 start_label_id AS StartLabelId,

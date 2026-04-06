@@ -1,11 +1,9 @@
-﻿
-using NoviVovi.Application.Novels;
+﻿using NoviVovi.Application.Novels;
 using NoviVovi.Domain.Novels;
-using NoviVovi.Infrastructure.Persistence;
 
 namespace NoviVovi.Infrastructure.Novels;
 
-public class NovelRepository(AppDbContext db) : INovelRepository
+public class NovelRepository() : INovelRepository
 {
     public Task<Novel?> GetByIdAsync(Guid id, CancellationToken ct)
     {

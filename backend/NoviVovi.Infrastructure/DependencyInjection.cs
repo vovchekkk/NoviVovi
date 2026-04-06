@@ -1,10 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NoviVovi.Application.Dialogue.Mappers;
-using NoviVovi.Application.Labels;
-using NoviVovi.Application.Preview.Services;
 using NoviVovi.Infrastructure.DatabaseService;
-using NoviVovi.Infrastructure.Labels;
 using NoviVovi.Infrastructure.Mappers;
 
 namespace NoviVovi.Infrastructure;
@@ -22,8 +18,8 @@ public static class DependencyInjection
             new NovelDatabaseService(connString));
 
         services.AddSingleton<ImageMapper>();
-        services.AddSingleton<CharacterMapper>();
-        services.AddSingleton<CharacterStateMapper>();
+        // services.AddSingleton<CharacterMapper>();
+        // services.AddSingleton<CharacterStateMapper>();
         // services.AddScoped<INovelRepository, NovelRepository>();
         // services.AddScoped<ILabelRepository, LabelRepository>();
         
