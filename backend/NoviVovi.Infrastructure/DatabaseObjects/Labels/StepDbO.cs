@@ -1,5 +1,6 @@
 using NoviVovi.Infrastructure.DatabaseObjects.Characters;
 using NoviVovi.Infrastructure.DatabaseObjects.Choices;
+using NoviVovi.Infrastructure.DatabaseObjects.Enums;
 using NoviVovi.Infrastructure.DatabaseObjects.Images;
 
 namespace NoviVovi.Infrastructure.DatabaseObjects.Labels;
@@ -14,7 +15,8 @@ public class StepDbO
     public Guid? NextLabelId { get; set; }
     public int StepOrder { get; set; }
     public string? StepType { get; set; }
-    
+
+    public StepType Type{get;set;}
     public ReplicaDbO? Replica { get; set; }
     public MenuDbO? Menu { get; set; }
     public LabelDbO? NextLabel { get; set; }

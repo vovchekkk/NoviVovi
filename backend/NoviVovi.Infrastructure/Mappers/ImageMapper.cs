@@ -13,6 +13,7 @@ public partial class ImageMapper
         return img;
     }
 
+    //todo! переделать после мерджа
     public ImageDbO ToDbO(Image img)
     {
         var result = new ImageDbO();

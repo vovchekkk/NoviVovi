@@ -5,7 +5,7 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
-public partial class CharacterStateMapper(ImageMapper imageMapper)
+public partial class CharacterStateMapper(ImageMapper imageMapper, TransformMapper transformMapper)
 {
     public CharacterStateDbO ToDbO(CharacterState character, Guid characterId)
     {
@@ -27,7 +27,12 @@ public partial class CharacterStateMapper(ImageMapper imageMapper)
 
     public CharacterState ToState(CharacterStateDbO dbo)
     {
-        throw new NotImplementedException();
-        // var res = new CharacterState(dbo.Id,  imageMapper.ToImage(dbo.Image), dbo.Description);
+        //todo! заполнить все nullable поля
+        return new CharacterState(
+            dbo.Id,
+            dbo.StateName,
+            imageMapper.ToImage(dbo.Image),
+            transformMapper.ToTransform(dbo.Transform) ,
+            dbo.Description);
     }
 }

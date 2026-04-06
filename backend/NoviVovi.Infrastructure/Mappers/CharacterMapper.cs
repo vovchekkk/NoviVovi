@@ -13,10 +13,9 @@ public partial class CharacterMapper(CharacterStateMapper mapper)
         foreach (var state in dbo.States)
             res.AddState(mapper.ToState(state));
         return res;
-    } //добавить в character цвет имени
-                                                            ////бля, а как новеллу восстановить?
+    }
 
-    public CharacterDbO ToFullDbO(Character character, Guid novelId)
+    public CharacterDbO ToDbO(Character character, Guid novelId)
     {
         var res = new CharacterDbO
         {
