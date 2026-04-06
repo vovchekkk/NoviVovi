@@ -77,7 +77,7 @@ public class NovelsController(
     }
     
     [HttpGet("{novelId:guid}/graph")]
-    public async Task<ActionResult<NovelGraphResponseMapper>> GetGraph(
+    public async Task<ActionResult<NovelGraphResponse>> GetGraph(
         [FromRoute] Guid novelId
     )
     {

@@ -17,7 +17,7 @@ public class DeleteLabelHandler(
     LabelDtoMapper mapper
 ) : IRequestHandler<DeleteLabelCommand>
 {
-    public Task Handle(DeleteLabelCommand request, CancellationToken cancellationToken)
+    public Task Handle(DeleteLabelCommand request, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

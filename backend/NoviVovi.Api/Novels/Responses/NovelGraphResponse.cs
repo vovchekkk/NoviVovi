@@ -1,6 +1,7 @@
 ﻿namespace NoviVovi.Api.Novels.Responses;
 
-public record NovelGraphResponse(
-    List<NodeResponse> Nodes,
-    List<EdgeResponse> Edges
-);
+public record NovelGraphResponse
+{
+    public required List<NodeResponse> Nodes { get; init; }
+    public required List<EdgeResponse> Edges { get; init; }
+}

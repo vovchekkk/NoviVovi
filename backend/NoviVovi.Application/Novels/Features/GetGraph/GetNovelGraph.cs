@@ -1,18 +1,28 @@
 ﻿using MediatR;
+using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels.Dtos;
+using NoviVovi.Application.Novels.Mappers;
+using NoviVovi.Application.Novels.Models;
 
 namespace NoviVovi.Application.Novels.Features.GetGraph;
 
-public class GetNovelGraphQuery(
+public record GetNovelGraphQuery(
     Guid NovelId
 ) : IRequest<NovelGraphDto>;
 
 public class GetNovelGraphHandler(
-    INovelRepository novelRepository
+    INovelRepository novelRepository,
+    NovelGraphBuilder builder,
+    NovelGraphDtoMapper mapper
 ) : IRequestHandler<GetNovelGraphQuery, NovelGraphDto>
 {
-    public async Task<NovelGraphDto> Handle(GetNovelGraphQuery request, CancellationToken cancellationToken)
+    public async Task<NovelGraphDto> Handle(GetNovelGraphQuery request, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct);
+        if (novel == null)
+            throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+
+        return mapper.ToDto(builder.Build(novel));
     }
 }

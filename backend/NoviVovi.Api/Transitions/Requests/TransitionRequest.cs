@@ -1,5 +1,6 @@
 ﻿namespace NoviVovi.Api.Transitions.Requests;
 
-public record TransitionRequest(
-    Guid Id
-);
+public abstract record TransitionRequest
+{
+    public required Guid Id { get; init; }
+}

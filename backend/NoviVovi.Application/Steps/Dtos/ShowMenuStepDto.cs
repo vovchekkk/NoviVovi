@@ -3,8 +3,7 @@ using NoviVovi.Application.Transitions.Dtos;
 
 namespace NoviVovi.Application.Steps.Dtos;
 
-public record ShowMenuStepDto(
-    Guid Id,
-    MenuDto Menu,
-    TransitionDto Transition
-) : StepDto(Id, Transition);
+public record ShowMenuStepDto : StepDto<NextStepTransitionDto>
+{
+    public required MenuDto Menu { get; init; }
+}

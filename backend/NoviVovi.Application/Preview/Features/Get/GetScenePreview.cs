@@ -21,7 +21,7 @@ public class GetScenePreviewHandler(
 {
     public async Task<SceneStateDto> Handle(GetScenePreviewQuery request, CancellationToken ct)
     {
-        var label = await labelRepository.GetByIdAsync(request.LabelId);
+        var label = await labelRepository.GetByIdAsync(request.LabelId, ct);
         if (label == null)
             throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
 

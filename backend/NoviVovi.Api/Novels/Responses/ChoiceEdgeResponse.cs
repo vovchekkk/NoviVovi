@@ -2,10 +2,8 @@
 
 namespace NoviVovi.Api.Novels.Responses;
 
-public record ChoiceEdgeResponse(
-    Guid Id,
-    Guid SourceLabelId,
-    Guid TargetLabelId,
-    ChoiceResponse Choice,
-    string Text
-) : EdgeResponse(Id, SourceLabelId, TargetLabelId);
+public record ChoiceEdgeResponse : EdgeResponse
+{
+    public required Guid ChoiceId { get; init; }
+    public required string Text { get; init; }
+}

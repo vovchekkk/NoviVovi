@@ -1,10 +1,8 @@
-﻿using NoviVovi.Application.Characters.Dtos;
-using NoviVovi.Application.Transitions.Dtos;
+﻿using NoviVovi.Application.Transitions.Dtos;
 
 namespace NoviVovi.Application.Steps.Dtos;
 
-public record HideCharacterStepDto(
-    Guid Id,
-    Guid CharacterId,
-    TransitionDto Transition
-) : StepDto(Id, Transition);
+public record HideCharacterStepDto : StepDto<NextStepTransitionDto>
+{
+    public required Guid CharacterId { get; init; }
+}

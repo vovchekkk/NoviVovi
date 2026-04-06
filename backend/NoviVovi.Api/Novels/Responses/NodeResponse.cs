@@ -1,6 +1,7 @@
 ﻿namespace NoviVovi.Api.Novels.Responses;
 
-public record NodeResponse(
-    Guid Id,
-    string Name
-);
+public record NodeResponse
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+}

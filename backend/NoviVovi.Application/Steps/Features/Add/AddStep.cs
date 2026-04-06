@@ -20,10 +20,10 @@ public abstract class BaseAddStepHandler(
 {
     protected async Task<(Novel, Label)> GetStepContextOrThrow(AddStepCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId)
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
                     ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 
-        var label = await labelRepository.GetByIdAsync(request.LabelId)
+        var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
                     ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
 
         return (novel, label);

@@ -1,5 +1,6 @@
 ﻿namespace NoviVovi.Application.Transitions.Dtos;
 
-public record TransitionDto(
-    Guid Id
-);
+public abstract record TransitionDto
+{
+    public required Guid Id { get; init; }
+}

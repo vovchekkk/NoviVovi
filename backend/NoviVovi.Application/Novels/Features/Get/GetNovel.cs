@@ -14,9 +14,9 @@ public class GetNovelHandler(
     NovelDtoMapper mapper
 ) : IRequestHandler<GetNovelQuery, NovelDto>
 {
-    public async Task<NovelDto> Handle(GetNovelQuery request, CancellationToken cancellationToken)
+    public async Task<NovelDto> Handle(GetNovelQuery request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId);
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct);
         if (novel == null)
             throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 

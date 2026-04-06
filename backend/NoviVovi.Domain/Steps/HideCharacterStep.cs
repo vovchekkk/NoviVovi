@@ -20,4 +20,6 @@ public class HideCharacterStep : Step
         
         return new HideCharacterStep(Guid.NewGuid(), character, NextStepTransition.Create());
     }
+    
+    public new NextStepTransition Transition => (NextStepTransition)base.Transition;
 }

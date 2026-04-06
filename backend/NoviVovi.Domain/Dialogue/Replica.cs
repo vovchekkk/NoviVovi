@@ -6,7 +6,7 @@ namespace NoviVovi.Domain.Dialogue;
 
 public class Replica : Entity
 {
-    public Character? Speaker { get; private set; }
+    public Character Speaker { get; private set; }
     public string Text { get; private set; }
 
     private Replica(Guid id, Character speaker, string text) : base(id)

@@ -1,8 +1,8 @@
-﻿using NoviVovi.Api.Labels.Responses;
+﻿using NoviVovi.Api.Transitions.Requests;
 
 namespace NoviVovi.Api.Transitions.Responses;
 
-public record ChoiceTransitionResponse(
-    Guid Id,
-    Guid TargetLabelId
-) : TransitionResponse(Id);
+public record ChoiceTransitionResponse : TransitionResponse
+{
+    public required Guid TargetLabelId { get; init; }
+}

@@ -3,8 +3,7 @@ using NoviVovi.Application.Transitions.Dtos;
 
 namespace NoviVovi.Application.Steps.Dtos;
 
-public record ShowCharacterStepDto(
-    Guid Id,
-    CharacterObjectDto CharacterObject,
-    TransitionDto Transition
-) : StepDto(Id, Transition);
+public record ShowCharacterStepDto : StepDto<NextStepTransitionDto>
+{
+    public required CharacterObjectDto CharacterObject { get; init; }
+}

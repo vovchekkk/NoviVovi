@@ -26,4 +26,6 @@ public class ShowBackgroundStep : Step
         
         return new ShowBackgroundStep(Guid.NewGuid(), backgroundObject, NextStepTransition.Create());
     }
+    
+    public new NextStepTransition Transition => (NextStepTransition)base.Transition;
 }

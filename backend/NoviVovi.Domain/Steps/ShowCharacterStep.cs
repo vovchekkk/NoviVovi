@@ -26,4 +26,6 @@ public class ShowCharacterStep : Step
         
         return new ShowCharacterStep(Guid.NewGuid(), characterObject, NextStepTransition.Create());
     }
+    
+    public new NextStepTransition Transition => (NextStepTransition)base.Transition;
 }

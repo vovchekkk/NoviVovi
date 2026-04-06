@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Common;
 using NoviVovi.Application.Labels;
 using NoviVovi.Application.Novels.Dtos;
 using NoviVovi.Application.Novels.Mappers;
@@ -15,19 +16,21 @@ public record CreateNovelCommand : IRequest<NovelDto>
 public class CreateNovelHandler(
     INovelRepository novelRepository,
     ILabelRepository labelRepository,
+    IUnitOfWork unitOfWork,
     NovelDtoMapper mapper
 ) : IRequestHandler<CreateNovelCommand, NovelDto>
 {
-    public async Task<NovelDto> Handle(CreateNovelCommand request, CancellationToken cancellationToken)
+    public async Task<NovelDto> Handle(CreateNovelCommand request, CancellationToken ct)
     {
         var startLabel = Label.Create("Start");
 
         var novel = Novel.Create(request.Title, startLabel);
 
-        await labelRepository.AddAsync(startLabel);
-
-        await novelRepository.AddAsync(novel);
-
+        await labelRepository.AddAsync(startLabel, ct);
+        await novelRepository.AddAsync(novel, ct);
+        
+        await unitOfWork.SaveChangesAsync(ct);
+        
         return mapper.ToDto(novel);
     }
 }

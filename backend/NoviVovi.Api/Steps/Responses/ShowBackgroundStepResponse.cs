@@ -4,8 +4,7 @@ using NoviVovi.Api.Transitions.Responses;
 
 namespace NoviVovi.Api.Steps.Responses;
 
-public record ShowBackgroundStepResponse(
-    Guid Id,
-    BackgroundObjectResponse BackgroundObject,
-    TransitionResponse Transition
-) : StepResponse(Id, Transition);
+public record ShowBackgroundStepResponse : StepResponse<NextStepTransitionResponse>
+{
+    public required BackgroundObjectResponse BackgroundObject { get; init; }
+}

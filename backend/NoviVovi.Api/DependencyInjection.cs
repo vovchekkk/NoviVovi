@@ -56,12 +56,7 @@ public static class DependencyInjection
         services.AddSingleton<AddStepCommandMapper>();
         services.AddSingleton<PatchStepCommandMapper>();
         
-        services.AddSingleton<HideCharacterStepResponseMapper>();
-        services.AddSingleton<JumpStepResponseMapper>();
-        services.AddSingleton<ShowBackgroundStepResponseMapper>();
-        services.AddSingleton<ShowCharacterStepResponseMapper>();
-        services.AddSingleton<ShowMenuStepResponseMapper>();
-        services.AddSingleton<ShowReplicaStepResponseMapper>();
+        services.AddSingleton<StepResponseMapper>();
         
         services.AddSingleton<ChoiceTransitionResponseMapper>();
         services.AddSingleton<JumpTransitionResponseMapper>();

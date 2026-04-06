@@ -1,6 +1,6 @@
 ﻿namespace NoviVovi.Api.Transitions.Requests;
 
-public record ChoiceTransitionRequest(
-    Guid Id,
-    Guid TargetLabelId
-) : TransitionRequest(Id);
+public record ChoiceTransitionRequest : TransitionRequest
+{
+    public required Guid TargetLabelId { get; init; }
+}
