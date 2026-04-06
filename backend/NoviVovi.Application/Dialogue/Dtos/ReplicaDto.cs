@@ -4,6 +4,6 @@ namespace NoviVovi.Application.Dialogue.Dtos;
 
 public record ReplicaDto(
     Guid Id,
-    CharacterDto? Speaker,
+    Guid? SpeakerId,
     string Text
 );

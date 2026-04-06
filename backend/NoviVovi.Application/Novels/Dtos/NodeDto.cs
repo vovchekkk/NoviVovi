@@ -1,6 +1,9 @@
-﻿namespace NoviVovi.Application.Novels.Dtos;
+﻿using NoviVovi.Application.Images.Dtos;
+
+namespace NoviVovi.Application.Novels.Dtos;
 
 public record NodeDto(
     Guid Id,
-    string Name
+    string Name,
+    ImageDto Image
 );

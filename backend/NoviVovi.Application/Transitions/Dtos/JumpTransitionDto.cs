@@ -1,8 +1,6 @@
-﻿using NoviVovi.Application.Labels.Dtos;
-
-namespace NoviVovi.Application.Transitions.Dtos;
+﻿namespace NoviVovi.Application.Transitions.Dtos;
 
 public record JumpTransitionDto(
     Guid Id,
-    LabelDto TargetLabel
+    Guid TargetLabelId
 ) : TransitionDto(Id);

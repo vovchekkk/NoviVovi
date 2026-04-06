@@ -8,5 +8,5 @@ public record SceneStateResponse(
     BackgroundObjectResponse? Background,
     ReplicaResponse? Replica,
     MenuResponse? Menu,
-    Dictionary<Guid, CharacterObjectResponse> Characters
+    IReadOnlyCollection<CharacterObjectResponse> CharactersOnScene
 );

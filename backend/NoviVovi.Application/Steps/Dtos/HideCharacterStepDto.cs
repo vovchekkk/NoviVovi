@@ -5,6 +5,6 @@ namespace NoviVovi.Application.Steps.Dtos;
 
 public record HideCharacterStepDto(
     Guid Id,
-    CharacterDto Character,
+    Guid CharacterId,
     TransitionDto Transition
 ) : StepDto(Id, Transition);

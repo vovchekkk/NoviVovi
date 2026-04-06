@@ -6,7 +6,7 @@ namespace NoviVovi.Application.Novels.Dtos;
 public record NovelDto(
     Guid Id,
     string Title,
-    LabelDto StartLabel,
-    List<LabelDto> Labels,
-    List<CharacterDto> Characters
+    Guid StartLabelId,
+    List<Guid> LabelIds,
+    List<Guid> CharacterIds
 );

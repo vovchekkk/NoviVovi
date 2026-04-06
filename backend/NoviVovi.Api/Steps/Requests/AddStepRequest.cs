@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using NoviVovi.Api.Menu.Requests;
 using NoviVovi.Api.Scene.Requests;
 
 namespace NoviVovi.Api.Steps.Requests;
@@ -34,7 +35,8 @@ public record AddShowCharacterStepRequest(
 public record AddShowMenuStepRequest(
     string Name,
     string? Description,
-    string Text
+    string Text,
+    MenuRequest Menu
 ) : AddStepRequest;
 
 public record AddShowReplicaStepRequest(

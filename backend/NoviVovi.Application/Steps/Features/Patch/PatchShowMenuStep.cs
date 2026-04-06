@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Menu.Dtos;
 using NoviVovi.Application.Novels;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Application.Steps.Mappers;
@@ -13,6 +14,7 @@ public record PatchShowMenuStepCommand : PatchStepCommand
     public string? Name { get; init; }
     public string? Description { get; init; }
     public string? Text { get; init; }
+    public MenuDto? Menu { get; init; }
 }
 
 public class PatchShowMenuStepHandler(

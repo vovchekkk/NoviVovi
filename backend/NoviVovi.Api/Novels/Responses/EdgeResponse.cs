@@ -8,6 +8,6 @@ namespace NoviVovi.Api.Novels.Responses;
 [JsonDerivedType(typeof(ChoiceEdgeResponse), "choice")]
 public record EdgeResponse(
     Guid Id,
-    LabelResponse SourceLabel,
-    LabelResponse TargetLabel
+    Guid SourceLabelId,
+    Guid TargetLabelID
 );

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Menu.Dtos;
 using NoviVovi.Application.Novels;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Application.Steps.Mappers;
@@ -11,6 +12,7 @@ public record AddShowMenuStepCommand : AddStepCommand
     public required string Name { get; init; }
     public required string Description { get; init; }
     public required string Text { get; init; }
+    public required MenuDto Menu { get; init; }
 }
 
 public class AddShowMenuStepHandler(

@@ -6,7 +6,6 @@ using NoviVovi.Application.Labels.Mappers;
 using NoviVovi.Application.Menu.Mappers;
 using NoviVovi.Application.Novels.Mappers;
 using NoviVovi.Application.Preview.Mappers;
-using NoviVovi.Application.Preview.Services;
 using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Steps.Mappers;
 using NoviVovi.Application.Transitions.Mappers;
@@ -32,8 +31,6 @@ public static class DependencyInjection
         services.AddSingleton<NovelDtoMapper>();
         
         services.AddSingleton<SceneStateDtoMapper>();
-        
-        services.AddSingleton<PreviewSessionStore>();
         
         services.AddSingleton<BackgroundObjectDtoMapper>();
         services.AddSingleton<CharacterObjectDtoMapper>();

@@ -8,5 +8,5 @@ public record SceneStateDto(
     BackgroundObjectDto? Background,
     ReplicaDto? Replica,
     MenuDto? Menu,
-    Dictionary<Guid, CharacterObjectDto> Characters
+    IReadOnlyCollection<CharacterObjectDto> CharactersOnScene
 );

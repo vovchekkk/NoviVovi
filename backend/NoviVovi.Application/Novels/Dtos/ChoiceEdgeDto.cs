@@ -5,8 +5,8 @@ namespace NoviVovi.Application.Novels.Dtos;
 
 public record ChoiceEdgeDto(
     Guid Id,
-    LabelDto SourceLabel,
-    LabelDto TargetLabel,
+    Guid SourceLabelId,
+    Guid TargetLabelId,
     ChoiceDto Choice,
     string Text
-) : EdgeDto(Id, SourceLabel, TargetLabel);
+) : EdgeDto(Id, SourceLabelId, TargetLabelId);

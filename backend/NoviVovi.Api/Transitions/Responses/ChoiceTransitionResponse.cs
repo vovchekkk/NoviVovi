@@ -4,5 +4,5 @@ namespace NoviVovi.Api.Transitions.Responses;
 
 public record ChoiceTransitionResponse(
     Guid Id,
-    LabelResponse TargetLabel
+    Guid TargetLabelId
 ) : TransitionResponse(Id);

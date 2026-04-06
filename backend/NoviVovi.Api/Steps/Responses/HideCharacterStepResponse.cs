@@ -5,6 +5,6 @@ namespace NoviVovi.Api.Steps.Responses;
 
 public record HideCharacterStepResponse(
     Guid Id,
-    CharacterResponse Character,
+    Guid CharacterId,
     TransitionResponse Transition
 ) : StepResponse(Id, Transition);
