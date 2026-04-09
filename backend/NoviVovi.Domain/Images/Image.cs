@@ -4,13 +4,13 @@ namespace NoviVovi.Domain.Images;
 
 public class Image : Entity
 {
-    public string Name { get; set; }
-    public string? Description { get; set; }
-    public string Url { get; set; }
-    public string Format { get; set; }
-    public string Type { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
+    public string Name { get; private set; }
+    public string? Description { get; private set; }
+    public string Url { get; private set; }
+    public string Format { get; private set; }
+    public string Type { get; private set; }
+    public int Width { get; private set; }
+    public int Height { get; private set; }
 
     private Image(
         Guid id,

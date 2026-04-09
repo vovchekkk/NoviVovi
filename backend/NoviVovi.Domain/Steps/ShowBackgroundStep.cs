@@ -6,7 +6,7 @@ namespace NoviVovi.Domain.Steps;
 
 public class ShowBackgroundStep : Step
 {
-    public BackgroundObject BackgroundObject { get; }
+    public BackgroundObject BackgroundObject { get; private set; }
 
     private ShowBackgroundStep(
         Guid id,

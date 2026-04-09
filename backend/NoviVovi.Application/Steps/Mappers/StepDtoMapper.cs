@@ -27,14 +27,11 @@ public partial class StepDtoMapper(
     
     public partial IEnumerable<StepDto> ToDtos(IEnumerable<Step> source);
     
-    public partial HideCharacterStepDto ToDto(HideCharacterStep source);
-    
     public JumpStepDto ToDto(JumpStep source) => new()
     {
         Id = source.Id,
         Transition = new JumpTransitionDto 
         { 
-            Id = source.Transition.Id, 
             TargetLabelId = source.Transition.TargetLabel.Id
         }
     };

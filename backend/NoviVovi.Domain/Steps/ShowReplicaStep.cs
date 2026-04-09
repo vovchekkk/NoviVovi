@@ -6,7 +6,7 @@ namespace NoviVovi.Domain.Steps;
 
 public class ShowReplicaStep : Step
 {
-    public Replica Replica { get; }
+    public Replica Replica { get; private set; }
     
     private ShowReplicaStep(Guid id, Replica replica, NextStepTransition transition) : base(id, transition)
     {

@@ -6,7 +6,7 @@ namespace NoviVovi.Domain.Steps;
 
 public class ShowCharacterStep : Step
 {
-    public CharacterObject CharacterObject { get; }
+    public CharacterObject CharacterObject { get; private set; }
 
     private ShowCharacterStep(
         Guid id,

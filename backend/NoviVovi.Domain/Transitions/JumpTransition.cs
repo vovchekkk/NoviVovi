@@ -6,9 +6,9 @@ namespace NoviVovi.Domain.Transitions;
 
 public sealed class JumpTransition : Transition
 {
-    public Label TargetLabel { get; }
+    public Label TargetLabel { get; private set; }
     
-    private JumpTransition(Guid id, Label targetLabel) : base(id)
+    private JumpTransition(Label targetLabel)
     {
         TargetLabel = targetLabel;
     }
@@ -18,6 +18,6 @@ public sealed class JumpTransition : Transition
         if (targetLabel is null)
             throw new DomainException($"TargetLabel cannot be null");
 
-        return new JumpTransition(Guid.NewGuid(), targetLabel);
+        return new JumpTransition(targetLabel);
     }
 }

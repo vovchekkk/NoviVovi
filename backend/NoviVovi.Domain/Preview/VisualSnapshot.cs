@@ -9,9 +9,9 @@ public class VisualSnapshot
     public BackgroundObject? Background { get; private set; }
     public Replica? Replica { get; private set; }
     public Menu.Menu? Menu { get; private set; }
-    private readonly Dictionary<Guid, CharacterObject> _characters = new();
+    private readonly List<CharacterObject> _characters = new();
     
-    public IReadOnlyCollection<CharacterObject> CharactersOnScene => _characters.Values;
+    public IReadOnlyCollection<CharacterObject> CharactersOnScene => _characters.AsReadOnly();
     
     public void Apply(Step step)
     {
@@ -21,10 +21,10 @@ public class VisualSnapshot
                 Background = s.BackgroundObject;
                 break;
             case ShowCharacterStep s:
-                _characters[s.CharacterObject.Character.Id] = s.CharacterObject;
+                _characters.Add(s.CharacterObject);
                 break;
             case HideCharacterStep s:
-                _characters.Remove(s.Character.Id);
+                _characters.Remove(s.CharacterObject);
                 break;
             case ShowReplicaStep s:
                 Replica = s.Replica;

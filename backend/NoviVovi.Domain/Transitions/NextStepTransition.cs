@@ -2,12 +2,12 @@
 
 public sealed class NextStepTransition : Transition
 {
-    private NextStepTransition(Guid id) : base(id)
+    private NextStepTransition()
     {
     }
 
     public static NextStepTransition Create()
     {
-        return new NextStepTransition(Guid.NewGuid());
+        return new NextStepTransition();
     }
 }

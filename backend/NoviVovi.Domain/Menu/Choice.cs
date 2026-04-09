@@ -6,9 +6,9 @@ namespace NoviVovi.Domain.Menu;
 
 public class Choice : Entity
 {
-    public string Name { get; }
-    public string? Description { get; }
-    public string? Text { get; }
+    public string Name { get; private set; }
+    public string? Description { get; private set; }
+    public string? Text { get; private set; }
     public ChoiceTransition Transition { get; private set; }
     
     private Choice(Guid id, string name, string? description, string? text, ChoiceTransition transition) : base(id)

@@ -6,7 +6,7 @@ namespace NoviVovi.Domain.Scene;
 
 public class BackgroundObject : SceneObject
 {
-    public Image Image { get; }
+    public Image Image { get; private set; }
 
     private BackgroundObject(Guid id, Image image, Transform transform)
         : base(id, transform)

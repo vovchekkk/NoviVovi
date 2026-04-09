@@ -2,6 +2,6 @@
 
 namespace NoviVovi.Domain.Transitions;
 
-public abstract class Transition(Guid id) : Entity(id)
+public abstract class Transition : ValueObject
 {
 }

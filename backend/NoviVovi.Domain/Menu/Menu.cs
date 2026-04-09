@@ -4,9 +4,9 @@ namespace NoviVovi.Domain.Menu;
 
 public class Menu : Entity
 {
-    public string? Name { get; }
-    public string? Description { get; }
-    public string? Text { get; }
+    public string? Name { get; private set; }
+    public string? Description { get; private set; }
+    public string? Text { get; private set; }
     private readonly List<Choice> _choices = new();
     
     public IReadOnlyList<Choice> Choices => _choices.AsReadOnly();

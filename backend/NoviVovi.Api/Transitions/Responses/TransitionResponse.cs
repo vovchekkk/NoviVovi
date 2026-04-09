@@ -2,5 +2,4 @@
 
 public abstract record TransitionResponse
 {
-    public required Guid Id { get; init; }
 }

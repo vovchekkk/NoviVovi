@@ -5,11 +5,11 @@ namespace NoviVovi.Domain.Characters;
 
 public class Character : Entity
 {
-    public string Name { get; set; }
-    public string? Description { get; set; }
+    public string Name { get; private set; }
+    public string? Description { get; private set; }
     private readonly List<CharacterState> _characterStates = new();
 
-    public IReadOnlyList<CharacterState> CharacterStates => _characterStates;
+    public IReadOnlyList<CharacterState> CharacterStates => _characterStates.AsReadOnly();
 
     public Character(Guid id, string name, string? description) : base(id)
     {

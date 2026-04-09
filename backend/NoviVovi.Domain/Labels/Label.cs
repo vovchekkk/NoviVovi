@@ -6,9 +6,10 @@ namespace NoviVovi.Domain.Labels;
 public class Label : Entity
 {
     public string Name { get; private set; }
+    public Guid NovelId { get; private set; }
     private readonly List<Step> _steps = new();
 
-    public IReadOnlyList<Step> Steps => _steps;
+    public IReadOnlyList<Step> Steps => _steps.AsReadOnly();
 
     private Label(Guid id, string name) : base(id)
     {

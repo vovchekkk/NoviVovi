@@ -7,7 +7,7 @@ namespace NoviVovi.Domain.Characters;
 public class CharacterState : Entity
 {
     public string Name { get; private set; }
-    public string? Description { get; set; }
+    public string? Description { get; private set; }
     public Image Image { get; private set; }
     public Transform LocalTransform { get; private set; }
 

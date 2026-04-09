@@ -27,14 +27,11 @@ public partial class StepResponseMapper(
     
     public partial IEnumerable<StepResponse> ToResponses(IEnumerable<StepDto> source);
     
-    public partial HideCharacterStepResponse ToResponse(HideCharacterStepDto source);
-    
     public JumpStepResponse ToResponse(JumpStepDto source) => new()
     {
         Id = source.Id,
         Transition = new JumpTransitionResponse 
         { 
-            Id = source.Transition.Id, 
             TargetLabelId = source.Transition.TargetLabelId
         }
     };
