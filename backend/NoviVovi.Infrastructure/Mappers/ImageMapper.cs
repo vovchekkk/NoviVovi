@@ -1,4 +1,5 @@
 using NoviVovi.Domain.Images;
+using NoviVovi.Domain.Scene;
 using NoviVovi.Infrastructure.DatabaseObjects.Images;
 using Riok.Mapperly.Abstractions;
 
@@ -34,5 +35,10 @@ public partial class ImageMapper
             NovelId = novelId
         };
         return result;
+    }
+
+    public BackgroundObject ToDbO(BackgroundDbO stepBackground)
+    {
+        throw new NotImplementedException();
     }
 }

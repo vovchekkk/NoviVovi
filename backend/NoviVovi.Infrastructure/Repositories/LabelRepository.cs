@@ -13,9 +13,9 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
         return  dbo == null ? null : mapper.ToDomain(dbo);
     }
 
-    public async Task AddAsync(Label label, CancellationToken ct)
+    public async Task AddAsync(Label label, Guid novelId, CancellationToken ct)
     {
-        var dbo = mapper.ToDbO(label);
+        var dbo = mapper.ToDbO(label, novelId);
         await dboRepo.AddFullAsync(dbo);
     }
 

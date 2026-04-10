@@ -2,7 +2,7 @@
 
 public sealed class NextStepTransition : Transition
 {
-    private NextStepTransition(Guid id) : base(id)
+    public NextStepTransition(Guid id) : base(id)
     {
     }
 

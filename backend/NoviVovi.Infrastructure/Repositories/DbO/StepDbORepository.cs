@@ -83,8 +83,8 @@ public class NewStepRepository(
         if (step.MenuId.HasValue)
             step.Menu = await menuRepository.GetFullByIdAsync(step.MenuId.Value);
 
-        if (step.BgId.HasValue)
-            step.Background = await GetFullBackgroundByIdAsync(step.BgId.Value);
+        if (step.BackgroundId.HasValue)
+            step.Background = await GetFullBackgroundByIdAsync(step.BackgroundId.Value);
         
         if(step.CharacterId.HasValue)
             step.Character = await GetFullStepCharactersByIdAsync(step.CharacterId.Value);

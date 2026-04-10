@@ -7,12 +7,12 @@ namespace NoviVovi.Infrastructure.Mappers;
 [Mapper]
 public partial class LabelMapper
 {
-    public Label? ToDomain(LabelDbO dbo)
+    public Label ToDomain(LabelDbO dbo)
     {
         throw new NotImplementedException();
     }
 
-    public LabelDbO ToDbO(Label label)
+    public LabelDbO ToDbO(Label label, Guid novelId)
     {
         throw new NotImplementedException();
     }

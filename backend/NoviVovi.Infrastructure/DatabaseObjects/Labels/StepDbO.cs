@@ -11,7 +11,7 @@ public class StepDbO
     public Guid LabelId { get; set; }
     public Guid? ReplicaId { get; set; }
     public Guid? MenuId { get; set; }
-    public Guid? BgId { get; set; }
+    public Guid? BackgroundId { get; set; }
     public Guid? CharacterId { get; set; }
     public Guid? NextLabelId { get; set; }
     public int StepOrder { get; set; }

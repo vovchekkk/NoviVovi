@@ -6,8 +6,8 @@ namespace NoviVovi.Domain.Steps;
 public class ShowMenuStep : Step
 {
     public Menu.Menu Menu { get; }
-    
-    private ShowMenuStep(Guid id, Menu.Menu menu, NextStepTransition transition) : base(id, transition)
+
+    public ShowMenuStep(Guid id, Menu.Menu menu, NextStepTransition transition) : base(id, transition)
     {
         Menu = menu;
     }

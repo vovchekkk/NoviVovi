@@ -8,7 +8,7 @@ public class ShowBackgroundStep : Step
 {
     public BackgroundObject BackgroundObject { get; }
 
-    private ShowBackgroundStep(
+    public ShowBackgroundStep(
         Guid id,
         BackgroundObject backgroundObject,
         NextStepTransition transition

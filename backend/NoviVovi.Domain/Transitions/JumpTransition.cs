@@ -7,8 +7,8 @@ namespace NoviVovi.Domain.Transitions;
 public sealed class JumpTransition : Transition
 {
     public Label TargetLabel { get; }
-    
-    private JumpTransition(Guid id, Label targetLabel) : base(id)
+
+    public JumpTransition(Guid id, Label targetLabel) : base(id)
     {
         TargetLabel = targetLabel;
     }

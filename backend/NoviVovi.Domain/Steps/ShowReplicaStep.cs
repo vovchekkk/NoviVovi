@@ -7,8 +7,8 @@ namespace NoviVovi.Domain.Steps;
 public class ShowReplicaStep : Step
 {
     public Replica Replica { get; }
-    
-    private ShowReplicaStep(Guid id, Replica replica, NextStepTransition transition) : base(id, transition)
+
+    public ShowReplicaStep(Guid id, Replica replica, NextStepTransition transition) : base(id, transition)
     {
         Replica = replica;
     }

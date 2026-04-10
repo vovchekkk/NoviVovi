@@ -26,7 +26,7 @@ public class CreateNovelHandler(
 
         var novel = Novel.Create(request.Title, startLabel);
 
-        await labelRepository.AddAsync(startLabel, ct);
+        await labelRepository.AddAsync(startLabel, novel.Id , ct);
         await novelRepository.AddAsync(novel, ct);
         
         await unitOfWork.SaveChangesAsync(ct);
