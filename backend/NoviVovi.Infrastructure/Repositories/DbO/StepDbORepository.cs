@@ -189,6 +189,8 @@ public class NewStepRepository(
         var character = await QueryFirstOrDefaultAsync<StepCharacterDbO>(sql, new { Id = id });
         if (character == null) return null;
         character.CharacterState = await characterRepository.GetFullCharacterStateByIdAsync(character.CharacterStateId);
+        if (character.CharacterState != null)
+            character.Character = await characterRepository.GetFullCharacterByIdAsync(character.CharacterState.CharacterId);
         return character;
     }
     

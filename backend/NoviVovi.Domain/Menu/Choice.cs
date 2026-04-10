@@ -10,8 +10,8 @@ public class Choice : Entity
     public string? Description { get; }
     public string? Text { get; }
     public ChoiceTransition Transition { get; private set; }
-    
-    private Choice(Guid id, string name, string? description, string? text, ChoiceTransition transition) : base(id)
+
+    public Choice(Guid id, string name, string? description, string? text, ChoiceTransition transition) : base(id)
     {
         Name = name;
         Description = description;

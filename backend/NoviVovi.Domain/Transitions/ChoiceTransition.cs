@@ -6,8 +6,8 @@ namespace NoviVovi.Domain.Transitions;
 public sealed class ChoiceTransition : Transition
 {
     public Label TargetLabel { get; }
-    
-    private ChoiceTransition(Guid id, Label targetLabel) : base(id)
+
+    public ChoiceTransition(Guid id, Label targetLabel) : base(id)
     {
         TargetLabel = targetLabel;
     }

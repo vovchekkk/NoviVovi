@@ -10,7 +10,7 @@ public class Label : Entity
 
     public IReadOnlyList<Step> Steps => _steps;
 
-    private Label(Guid id, string name) : base(id)
+    public Label(Guid id, string name) : base(id)
     {
         Name = name;
     }

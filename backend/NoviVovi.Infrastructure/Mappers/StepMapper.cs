@@ -1,5 +1,6 @@
 using NoviVovi.Domain.Steps;
 using NoviVovi.Domain.Transitions;
+using NoviVovi.Infrastructure.DatabaseObjects.Characters;
 using NoviVovi.Infrastructure.DatabaseObjects.Enums;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using Riok.Mapperly.Abstractions;
@@ -56,7 +57,7 @@ public partial class StepMapper(
         return res;
     }
 
-    public StepDbO ToDbO(ShowCharacterStep step, Guid labelId, int stepOrder)
+    public StepDbO ToDbO(ShowCharacterStep step, Guid labelId, Guid novelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -66,12 +67,12 @@ public partial class StepMapper(
             StepOrder = stepOrder,
             CharacterId = step.CharacterObject.Id
         };
-        var character = characterMapper.ToDbO(step.CharacterObject);
+        var character = characterMapper.ToDbO(step.CharacterObject, novelId);
         res.Character = character;
         return res;
     }
 
-    public StepDbO ToDbO(ShowMenuStep step, Guid labelId, int stepOrder)
+    public StepDbO ToDbO(ShowMenuStep step, Guid labelId, Guid novelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -81,7 +82,7 @@ public partial class StepMapper(
             StepOrder = stepOrder,
             MenuId = step.Menu.Id
         };
-        var menu = menuMapper.ToDbO(step.Menu);
+        var menu = menuMapper.ToDbO(step.Menu, novelId);
         res.Menu = menu;
         return res;
     }
@@ -103,7 +104,10 @@ public partial class StepMapper(
 
     public HideCharacterStep ToHideCharacterStep(StepDbO step)
     {
-        throw new NotImplementedException(); //уберу когда ребейзнусь или смерджусь
+        if(step.CharacterId == null || step.Character == null)
+            throw new ArgumentException("Invalid step character");
+        var res = new HideCharacterStep(step.Id, characterMapper.ToDomain(step.Character.Character), new NextStepTransition(Guid.Empty));
+        return res;
     }
 
     public JumpStep ToJumpStep(StepDbO step)
@@ -127,7 +131,7 @@ public partial class StepMapper(
     {
         if(step.CharacterId == null || step.Character == null)
             throw new ArgumentException("Invalid CharacterStep StepDbO");
-        var res = new ShowCharacterStep(step.Id, characterMapper.ToDomain(step), new NextStepTransition(Guid.Empty));
+        var res = new ShowCharacterStep(step.Id, characterMapper.ToDomain(step.Character), new NextStepTransition(Guid.Empty));
         return res;
     }
     
@@ -177,9 +181,11 @@ public partial class StepMapper(
         if(type == typeof(ShowBackgroundStep))
             return ToDbO((ShowBackgroundStep)step, labelId, stepOrder);
         if(type == typeof(ShowMenuStep))
-            return ToDbO((ShowMenuStep)step, labelId, stepOrder);
+            return ToDbO((ShowMenuStep)step, labelId, novelId, stepOrder);
         if(type == typeof(ShowReplicaStep))
             return ToDbO((ShowReplicaStep)step, labelId, novelId, stepOrder);
+        if(type == typeof(ShowCharacterStep))
+            return ToDbO((ShowCharacterStep)step, labelId, novelId, stepOrder);
         throw new ArgumentException("Unsupported step type");
     }
 }

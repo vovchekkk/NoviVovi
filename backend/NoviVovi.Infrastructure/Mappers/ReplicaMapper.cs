@@ -9,7 +9,9 @@ public partial class ReplicaMapper(CharacterMapper charMapper)
 {
     public Replica ToDomain(ReplicaDbO rep)
     {
-        return new Replica(rep.Id, charMapper.ToCharacter(rep.Speaker), rep.Text);
+        if (rep is { Speaker: not null, Text: not null }) 
+            return new Replica(rep.Id, charMapper.ToDomain(rep.Speaker), rep.Text);
+        throw new ArgumentException("Incorrect replica");
     }
 
     public ReplicaDbO ToDbO(Replica rep, Guid novelId)

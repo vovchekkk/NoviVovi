@@ -7,8 +7,8 @@ namespace NoviVovi.Domain.Steps;
 public class HideCharacterStep : Step
 {
     public Character Character { get; }
-    
-    private HideCharacterStep(Guid id, Character character, NextStepTransition transition) : base(id, transition)
+
+    public HideCharacterStep(Guid id, Character character, NextStepTransition transition) : base(id, transition)
     {
         Character = character;
     }

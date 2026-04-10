@@ -10,8 +10,8 @@ public class Menu : Entity
     private readonly List<Choice> _choices = new();
     
     public IReadOnlyList<Choice> Choices => _choices.AsReadOnly();
-    
-    private Menu(Guid id, string? name, string? description, string? text) : base(id)
+
+    public Menu(Guid id, string? name, string? description, string? text) : base(id)
     {
         Name = name;
         Description = description;
