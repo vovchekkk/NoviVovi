@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="OldStuff\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="4.0.20.2" />
     <PackageReference Include="Dapper" Version="2.1.72" />
     <PackageReference Include="Mapperly" Version="1.0.0" />

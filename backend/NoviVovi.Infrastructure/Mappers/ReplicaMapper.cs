@@ -7,7 +7,7 @@ namespace NoviVovi.Infrastructure.Mappers;
 [Mapper]
 public partial class ReplicaMapper(CharacterMapper charMapper)
 {
-    public Replica ToReplica(ReplicaDbO rep)
+    public Replica ToDomain(ReplicaDbO rep)
     {
         return new Replica(rep.Id, charMapper.ToCharacter(rep.Speaker), rep.Text);
     }

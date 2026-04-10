@@ -12,7 +12,7 @@ public class Image : Entity
     public int Width { get; set; }
     public int Height { get; set; }
 
-    private Image(
+    public Image(
         Guid id,
         string name,
         string url,

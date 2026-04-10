@@ -11,7 +11,7 @@ public partial class CharacterMapper(CharacterStateMapper mapper)
     {
         var res = new Character(dbo.Id, dbo.Name, dbo.Description);
         foreach (var state in dbo.States)
-            res.AddState(mapper.ToState(state));
+            res.AddState(mapper.ToDomain(state));
         return res;
     }
 

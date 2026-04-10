@@ -25,14 +25,14 @@ public partial class CharacterStateMapper(ImageMapper imageMapper, TransformMapp
         return character.Select(characterState => ToDbO(characterState, characterId)).ToList();
     }
 
-    public CharacterState ToState(CharacterStateDbO dbo)
+    public CharacterState ToDomain(CharacterStateDbO dbo)
     {
         //todo! заполнить все nullable поля
         return new CharacterState(
             dbo.Id,
             dbo.StateName,
-            imageMapper.ToImage(dbo.Image),
-            transformMapper.ToTransform(dbo.Transform) ,
+            imageMapper.ToDomain(dbo.Image),
+            transformMapper.ToDomain(dbo.Transform) ,
             dbo.Description);
     }
 }

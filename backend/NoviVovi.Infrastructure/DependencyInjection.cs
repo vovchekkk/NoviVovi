@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NoviVovi.Infrastructure.DatabaseService;
 using NoviVovi.Infrastructure.Mappers;
 
 namespace NoviVovi.Infrastructure;
@@ -14,8 +13,7 @@ public static class DependencyInjection
         var connString = configuration.GetConnectionString("NovelDatabase") ??
                                throw new ArgumentNullException("No such connection string");
         
-        services.AddScoped<NovelDatabaseService>(sp => 
-            new NovelDatabaseService(connString));
+        
 
         services.AddSingleton<ImageMapper>();
         // services.AddSingleton<CharacterMapper>();

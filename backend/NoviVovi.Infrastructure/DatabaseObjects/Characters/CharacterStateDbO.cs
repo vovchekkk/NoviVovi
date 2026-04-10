@@ -13,6 +13,5 @@ public class CharacterStateDbO
     public Guid? TransformId { get; set; }
     
     public TransformDbO? Transform { get; set; }
-    
     public ImageDbO? Image { get; set; }
 }
