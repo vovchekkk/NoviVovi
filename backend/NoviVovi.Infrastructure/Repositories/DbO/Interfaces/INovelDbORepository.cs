@@ -9,4 +9,5 @@ public interface INovelDbORepository
     Task<Guid> AddAsync(NovelDbO novel);
     Task UpdateAsync(NovelDbO novel);
     Task DeleteAsync(Guid id);
+    Task AddFullAsync(NovelDbO dbo);
 }

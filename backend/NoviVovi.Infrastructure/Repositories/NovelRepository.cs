@@ -1,27 +1,32 @@
 ﻿using NoviVovi.Application.Novels;
 using NoviVovi.Domain.Novels;
+using NoviVovi.Infrastructure.Mappers;
+using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
-namespace NoviVovi.Infrastructure.Novels;
+namespace NoviVovi.Infrastructure.Repositories;
 
-public class NovelRepository() : INovelRepository
+public class NovelRepository(INovelDbORepository dbORepository, NovelsMapper mapper) : INovelRepository
 {
-    public Task<Novel?> GetByIdAsync(Guid id, CancellationToken ct)
+    public async Task<Novel?> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbo = await dbORepository.GetFullByIdAsync(id);
+        return dbo == null ? null : mapper.ToDomain(dbo);
     }
 
-    public Task AddAsync(Novel novel, CancellationToken ct)
+    public async Task AddAsync(Novel novel, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbo = mapper.ToDbO(novel);
+        await dbORepository.AddFullAsync(dbo);
     }
 
-    public Task DeleteAsync(Novel novel, CancellationToken ct)
+    public async Task DeleteAsync(Novel novel, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        await dbORepository.DeleteAsync(novel.Id);
     }
 
-    public Task<IEnumerable<Novel>> GetAllAsync(CancellationToken ct)
+    public async Task<IEnumerable<Novel>> GetAllAsync(CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbos = await dbORepository.GetAllFullAsync();
+        return dbos.Select(dto => mapper.ToDomain(dto));
     }
 }

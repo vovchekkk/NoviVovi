@@ -116,4 +116,20 @@ public class NovelDbORepository(
         const string sql = "DELETE FROM \"Novels\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
+
+    public async Task AddFullAsync(NovelDbO dbo)
+    {
+        foreach (var label in dbo.Labels)
+        {
+            await labelRepository.AddFullAsync(label);
+        }
+
+        if (dbo.StartLabel != null) 
+            await labelRepository.AddAsync(dbo.StartLabel);
+        foreach (var character in dbo.Characters)
+        {
+            await characterRepository.AddAsync(character);
+        }
+        await AddAsync(dbo);
+    }
 }
