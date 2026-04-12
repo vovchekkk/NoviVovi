@@ -11,20 +11,32 @@ public class Label : Entity
 
     public IReadOnlyList<Step> Steps => _steps.AsReadOnly();
 
-    private Label(Guid id, string name) : base(id)
+    private Label(Guid id, string name, Guid novelId) : base(id)
     {
         Name = name;
+        NovelId = novelId;
     }
 
-    public static Label Create(string? name)
+    public static Label Create(string? name, Guid novelId)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException($"Name cannot be empty");
+        
+        if (novelId == Guid.Empty)
+            throw new DomainException($"NovelId cannot be empty");
 
-        return new Label(Guid.NewGuid(), name);
+        return new Label(Guid.NewGuid(), name, novelId);
     }
 
-    public void AddStep(Step step)
+    public void UpdateName(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException("Name cannot be empty");
+
+        Name = name;
+    }
+
+    public void AddStep(Step? step)
     {
         if (step is null)
             throw new DomainException($"Step cannot be null");
@@ -33,5 +45,17 @@ public class Label : Entity
             throw new DomainException($"Step {step.Id} already exists");
         
         _steps.Add(step);
+    }
+
+    public void RemoveStepById(Guid stepId)
+    {
+        if (stepId == Guid.Empty)
+            throw new DomainException($"StepId {stepId} cannot be empty");
+
+        var step = _steps.FirstOrDefault(item => item.Id == stepId);
+        if (step is null)
+            throw new DomainException($"StepId {stepId} doesn't exists");
+
+        _steps.Remove(step);
     }
 }

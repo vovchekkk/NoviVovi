@@ -9,7 +9,7 @@ public record GetCharactersQuery(
 
 public class GetCharactersHandler : IRequestHandler<GetCharactersQuery, IEnumerable<CharacterDto>>
 {
-    public Task<IEnumerable<CharacterDto>> Handle(GetCharactersQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CharacterDto>> Handle(GetCharactersQuery request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

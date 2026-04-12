@@ -12,7 +12,7 @@ public record AddCharacterCommand : IRequest<CharacterDto>
 
 public class AddCharacterHandler : IRequestHandler<AddCharacterCommand, CharacterDto>
 {
-    public Task<CharacterDto> Handle(AddCharacterCommand request, CancellationToken cancellationToken)
+    public async Task<CharacterDto> Handle(AddCharacterCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

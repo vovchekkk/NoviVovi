@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Transitions.Mappers;
 [Mapper]
 public partial class NextStepTransitionDtoMapper
 {
-    public partial NextStepTransitionDto ToDto(NextStepTransition? subject);
+    public partial NextStepTransitionDto ToDto(NextStepTransition subject);
     
     public partial IEnumerable<NextStepTransitionDto> ToDtos(IEnumerable<NextStepTransition> subjects);
 }

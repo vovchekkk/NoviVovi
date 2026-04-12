@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Transitions.Mappers;
 [Mapper]
 public partial class JumpTransitionDtoMapper
 {
-    public partial JumpTransitionDto ToDto(JumpTransition? subject);
+    public partial JumpTransitionDto ToDto(JumpTransition subject);
     
     public partial IEnumerable<JumpTransitionDto> ToDtos(IEnumerable<JumpTransition> subjects);
 }

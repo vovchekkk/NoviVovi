@@ -1,7 +1,10 @@
 ﻿using MediatR;
+using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels.Dtos;
 using NoviVovi.Application.Labels.Mappers;
 using NoviVovi.Application.Novels;
+using NoviVovi.Domain.Labels;
 
 namespace NoviVovi.Application.Labels.Features.Add;
 
@@ -14,11 +17,23 @@ public record AddLabelCommand : IRequest<LabelDto>
 public class AddLabelHandler(
     INovelRepository novelRepository,
     ILabelRepository labelRepository,
+    IUnitOfWork unitOfWork,
     LabelDtoMapper mapper
 ) : IRequestHandler<AddLabelCommand, LabelDto>
 {
-    public Task<LabelDto> Handle(AddLabelCommand request, CancellationToken ct)
+    public async Task<LabelDto> Handle(AddLabelCommand request, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        
+        var label = Label.Create(request.Name, request.NovelId);
+        
+        novel.AddLabel(label);
+        
+        await labelRepository.AddAsync(label, ct);
+        
+        await unitOfWork.SaveChangesAsync(ct);
+        
+        return mapper.ToDto(label);
     }
 }

@@ -19,9 +19,8 @@ public class GetNovelGraphHandler(
 {
     public async Task<NovelGraphDto> Handle(GetNovelGraphQuery request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct);
-        if (novel == null)
-            throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 
         return mapper.ToDto(builder.Build(novel));
     }

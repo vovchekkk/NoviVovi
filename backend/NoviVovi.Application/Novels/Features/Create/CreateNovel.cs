@@ -22,11 +22,11 @@ public class CreateNovelHandler(
 {
     public async Task<NovelDto> Handle(CreateNovelCommand request, CancellationToken ct)
     {
-        var startLabel = Label.Create("Start");
-
-        var novel = Novel.Create(request.Title, startLabel);
-
-        await labelRepository.AddAsync(startLabel, ct);
+        const string startLabelName = "StartLabel";
+        
+        var novel = Novel.Create(request.Title, startLabelName);
+        
+        await labelRepository.AddAsync(novel.StartLabel, ct);
         await novelRepository.AddAsync(novel, ct);
         
         await unitOfWork.SaveChangesAsync(ct);

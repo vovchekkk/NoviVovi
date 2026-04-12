@@ -4,8 +4,8 @@ namespace NoviVovi.Application.Menu.Dtos;
 
 public record ChoiceDto(
     Guid Id,
-    string? Name,
+    string Name,
     string? Description,
-    string? Text,
+    string Text,
     ChoiceTransitionDto Transition
 );

@@ -36,7 +36,7 @@ public record PatchShowMenuStepRequest(
     string? Name = null,
     string? Description = null,
     string? Text = null,
-    MenuRequest? Menu = null
+    List<ChoiceRequest>? Choices = null
 ) : PatchStepRequest;
 
 public record PatchShowReplicaStepRequest(

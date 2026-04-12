@@ -2,8 +2,8 @@
 
 public record MenuRequest(
     Guid Id,
-    string? Name,
+    string Name,
     string? Description,
-    string? Text,
+    string Text,
     List<ChoiceRequest> Choices
 );

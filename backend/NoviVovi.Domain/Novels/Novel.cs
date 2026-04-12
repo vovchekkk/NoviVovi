@@ -20,29 +20,30 @@ public class Novel : Entity
     {
         Title = title;
         StartLabel = startLabel;
-        _labels.Add(startLabel);
+        AddLabel(startLabel);
     }
 
-    public static Novel Create(string? title, Label startLabel)
+    public static Novel Create(string? title, string startLabelName)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new DomainException("Title cannot be empty");
+        
+        var novelId = Guid.NewGuid();
 
-        if (startLabel is null)
-            throw new DomainException($"Label cannot be null");
+        var startLabel = Label.Create(startLabelName, novelId);
 
-        return new Novel(Guid.NewGuid(), title, startLabel);
+        return new Novel(novelId, title, startLabel);
     }
     
     public void UpdateTitle(string? title)
     {
         if (string.IsNullOrWhiteSpace(title))
-            return;
+            throw new DomainException("Title cannot be empty");
 
         Title = title;
     }
 
-    public void SetStartLabel(Label label)
+    public void SetStartLabel(Label? label)
     {
         if (label is null)
             throw new DomainException("Start label cannot be null");
@@ -53,7 +54,7 @@ public class Novel : Entity
         StartLabel = label;
     }
 
-    public void AddLabel(Label label)
+    public void AddLabel(Label? label)
     {
         if (label is null)
             throw new DomainException($"Label cannot be null");
@@ -64,7 +65,7 @@ public class Novel : Entity
         _labels.Add(label);
     }
 
-    public void RemoveLabel(Guid labelId)
+    public void RemoveLabelById(Guid labelId)
     {
         if (labelId == Guid.Empty)
             throw new DomainException($"LabelId {labelId} cannot be empty");
@@ -76,7 +77,7 @@ public class Novel : Entity
         _labels.Remove(label);
     }
 
-    public void AddCharacter(Character character)
+    public void AddCharacter(Character? character)
     {
         if (character is null)
             throw new DomainException($"Character cannot be null");
@@ -87,7 +88,7 @@ public class Novel : Entity
         _characters.Add(character);
     }
 
-    public void RemoveCharacter(Guid characterId)
+    public void RemoveCharacterById(Guid characterId)
     {
         if (characterId == Guid.Empty)
             throw new DomainException($"CharacterId {characterId} cannot be empty");

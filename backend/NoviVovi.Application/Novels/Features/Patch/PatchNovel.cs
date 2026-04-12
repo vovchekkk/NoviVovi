@@ -24,18 +24,16 @@ public class PatchNovelHandler(
 {
     public async Task<NovelDto> Handle(PatchNovelCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct);
-        if (novel == null)
-            throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
         
         if (request.Title != null)
             novel.UpdateTitle(request.Title);
         
         if (request.StartLabelId != null)
         {
-             var label = await labelRepository.GetByIdAsync(request.StartLabelId.Value, ct);
-             if (label == null)
-                 throw new NotFoundException($"Метка '{request.StartLabelId}' не найдена");
+             var label = await labelRepository.GetByIdAsync(request.StartLabelId.Value, ct)
+                         ?? throw new NotFoundException($"Метка '{request.StartLabelId}' не найдена");
              
              novel.SetStartLabel(label);
         }

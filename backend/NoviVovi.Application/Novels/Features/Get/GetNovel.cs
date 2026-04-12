@@ -16,9 +16,8 @@ public class GetNovelHandler(
 {
     public async Task<NovelDto> Handle(GetNovelQuery request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct);
-        if (novel == null)
-            throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 
         return mapper.ToDto(novel);
     }

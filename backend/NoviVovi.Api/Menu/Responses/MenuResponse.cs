@@ -2,8 +2,8 @@ namespace NoviVovi.Api.Menu.Responses;
 
 public record MenuResponse(
     Guid Id,
-    string? Name,
+    string Name,
     string? Description,
-    string? Text,
+    string Text,
     List<ChoiceResponse> Choices
 );

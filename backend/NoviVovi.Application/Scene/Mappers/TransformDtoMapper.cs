@@ -19,4 +19,15 @@ public partial class TransformDtoMapper
     };
 
     public partial IEnumerable<TransformDto> ToDtos(IEnumerable<Transform> subjects);
+    
+    public Transform ToEntity(TransformDto s) => new()
+    {
+        Position = new Position(s.X, s.Y),
+        Size = new Size(s.Width, s.Height),
+        Scale = s.Scale,
+        Rotation = s.Rotation,
+        ZIndex = s.ZIndex
+    };
+    
+    public partial IEnumerable<Transform> ToEntities(IEnumerable<TransformDto> subjects);
 }

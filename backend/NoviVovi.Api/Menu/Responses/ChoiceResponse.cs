@@ -4,8 +4,8 @@ namespace NoviVovi.Api.Menu.Responses;
 
 public record ChoiceResponse(
     Guid Id,
-    string? Name,
+    string Name,
     string? Description,
-    string? Text,
+    string Text,
     ChoiceTransitionResponse Transition
 );

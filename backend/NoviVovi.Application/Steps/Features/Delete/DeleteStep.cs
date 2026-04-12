@@ -1,5 +1,8 @@
 ﻿using MediatR;
-using NoviVovi.Application.Steps.Dtos;
+using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Labels;
+using NoviVovi.Application.Novels;
 
 namespace NoviVovi.Application.Steps.Features.Delete;
 
@@ -9,10 +12,22 @@ public record DeleteStepCommand(
     Guid StepId
 ) : IRequest;
 
-public class DeleteStepHandler : IRequestHandler<DeleteStepCommand>
+public class DeleteStepHandler(
+    INovelRepository novelRepository,
+    ILabelRepository labelRepository,
+    IUnitOfWork unitOfWork
+) : IRequestHandler<DeleteStepCommand>
 {
-    public Task Handle(DeleteStepCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteStepCommand request, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
+                    ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
+        
+        if (label.NovelId != request.NovelId)
+            throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
+
+        label.RemoveStepById(request.StepId);
+        
+        await unitOfWork.SaveChangesAsync(ct);
     }
 }
