@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels.Dtos;
 using NoviVovi.Application.Labels.Features.Add;
 using NoviVovi.Application.Labels.Mappers;
@@ -16,8 +18,13 @@ public class GetLabelsHandler(
     LabelDtoMapper mapper
 ) : IRequestHandler<GetLabelsQuery, IEnumerable<LabelDto>>
 {
-    public Task<IEnumerable<LabelDto>> Handle(GetLabelsQuery request, CancellationToken ct)
+    public async Task<IEnumerable<LabelDto>> Handle(GetLabelsQuery request, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+
+        var labels = novel.Labels;
+        
+        return mapper.ToDtos(labels);
     }
 }

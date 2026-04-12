@@ -6,5 +6,5 @@ namespace NoviVovi.Api.Steps.Responses;
 
 public record HideCharacterStepResponse : StepResponse<NextStepTransitionResponse>
 {
-    public required CharacterObjectResponse CharacterObject { get; init; }
+    public required CharacterResponse Character { get; init; }
 }

@@ -24,7 +24,7 @@ public class VisualSnapshot
                 _characters.Add(s.CharacterObject);
                 break;
             case HideCharacterStep s:
-                _characters.Remove(s.CharacterObject);
+                // _characters.Remove(s.CharacterObject);
                 break;
             case ShowReplicaStep s:
                 Replica = s.Replica;

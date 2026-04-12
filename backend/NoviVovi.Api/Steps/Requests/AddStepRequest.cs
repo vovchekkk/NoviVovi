@@ -36,7 +36,7 @@ public record AddShowMenuStepRequest(
     string Name,
     string? Description,
     string Text,
-    MenuRequest Menu
+    List<ChoiceRequest> Choices
 ) : AddStepRequest;
 
 public record AddShowReplicaStepRequest(

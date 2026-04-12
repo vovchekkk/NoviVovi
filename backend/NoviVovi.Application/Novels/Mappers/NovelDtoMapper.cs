@@ -9,9 +9,7 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Application.Novels.Mappers;
 
 [Mapper]
-public partial class NovelDtoMapper(
-    CharacterDtoMapper characterMapper
-)
+public partial class NovelDtoMapper
 {
     [MapProperty("StartLabel.Id", nameof(NovelDto.StartLabelId))]
     [MapProperty(nameof(Novel.Labels), nameof(NovelDto.LabelIds))]
@@ -20,8 +18,6 @@ public partial class NovelDtoMapper(
     
     private Guid MapLabelToId(Label label) => label.Id;
     private Guid MapCharacterToId(Character character) => character.Id;
-    
-    private CharacterDto MapCharacter(Character source) => characterMapper.ToDto(source);
 
     public partial IEnumerable<NovelDto> ToDtos(IEnumerable<Novel> subjects);
 }

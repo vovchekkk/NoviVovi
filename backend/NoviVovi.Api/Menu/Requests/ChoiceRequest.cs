@@ -4,8 +4,8 @@ namespace NoviVovi.Api.Menu.Requests;
 
 public record ChoiceRequest(
     Guid Id,
-    string? Name,
+    string Name,
     string? Description,
-    string? Text,
+    string Text,
     ChoiceTransitionRequest Transition
 );

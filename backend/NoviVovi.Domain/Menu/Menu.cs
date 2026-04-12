@@ -23,7 +23,7 @@ public class Menu : Entity
         return new Menu(Guid.NewGuid(), name, description, text);
     }
 
-    public void AddChoice(Choice choice)
+    public void AddChoice(Choice? choice)
     {
         if (choice is null)
             throw new DomainException($"Choice cannot be null");
@@ -32,5 +32,25 @@ public class Menu : Entity
             throw new DomainException($"Choice {choice.Id} already exists");
         
         _choices.Add(choice);
+    }
+    
+    public void RemoveChoiceById(Guid choiceId)
+    {
+        if (choiceId == Guid.Empty)
+            throw new DomainException($"StepId {choiceId} cannot be empty");
+
+        var choice = _choices.FirstOrDefault(item => item.Id == choiceId);
+        if (choice is null)
+            throw new DomainException($"StepId {choiceId} doesn't exists");
+
+        _choices.Remove(choice);
+    }
+    
+    public void AddChoices(IEnumerable<Choice>? choices)
+    {
+        if (choices is null)
+            throw new DomainException($"Choices cannot be null");
+        
+        _choices.AddRange(choices);
     }
 }

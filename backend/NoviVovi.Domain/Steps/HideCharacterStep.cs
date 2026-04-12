@@ -7,23 +7,23 @@ namespace NoviVovi.Domain.Steps;
 
 public class HideCharacterStep : Step
 {
-    public CharacterObject CharacterObject { get; private set; }
+    public Character Character { get; private set; }
 
     private HideCharacterStep(
         Guid id,
-        CharacterObject characterObject,
+        Character character,
         NextStepTransition transition
     ) : base(id, transition)
     {
-        CharacterObject = characterObject;
+        Character = character;
     }
 
-    public static HideCharacterStep Create(CharacterObject? characterObject)
+    public static HideCharacterStep Create(Character? character)
     {
-        if (characterObject is null)
-            throw new DomainException($"CharacterObject cannot be null");
+        if (character is null)
+            throw new DomainException($"Character cannot be null");
 
-        return new HideCharacterStep(Guid.NewGuid(), characterObject, NextStepTransition.Create());
+        return new HideCharacterStep(Guid.NewGuid(), character, NextStepTransition.Create());
     }
 
     public new NextStepTransition Transition => (NextStepTransition)base.Transition;

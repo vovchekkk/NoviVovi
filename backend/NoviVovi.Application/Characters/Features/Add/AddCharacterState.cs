@@ -16,7 +16,7 @@ public record AddCharacterStateCommand : IRequest<CharacterStateDto>
 
 public class AddCharacterStateHandler : IRequestHandler<AddCharacterStateCommand, CharacterStateDto>
 {
-    public Task<CharacterStateDto> Handle(AddCharacterStateCommand request, CancellationToken cancellationToken)
+    public async Task<CharacterStateDto> Handle(AddCharacterStateCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
