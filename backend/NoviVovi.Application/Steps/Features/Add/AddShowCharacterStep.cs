@@ -31,13 +31,13 @@ public class AddShowCharacterStepHandler(
     {
         var (_, label) = await GetStepContextOrThrow(request, ct);
 
-        var character = await NovelRepository.GetCharacterByIdAsync(request.CharacterId, ct)
+        var character = await novelRepository.GetCharacterByIdAsync(request.CharacterId, ct)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         
-        var characterState = await NovelRepository.GetCharacterStateByIdAsync(request.CharacterId, request.CharacterStateId, ct)
+        var characterState = await novelRepository.GetCharacterStateByIdAsync(request.CharacterId, request.CharacterStateId, ct)
                             ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterStateId}' не найдено");
 
-        var transform = transformMapper.ToEntity(request.Transform);
+        var transform = transformMapper.ToDomainModel(request.Transform);
         
         var characterObject = CharacterObject.Create(character, characterState, transform);
 

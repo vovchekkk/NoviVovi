@@ -26,5 +26,11 @@ public class HideCharacterStep : Step
         return new HideCharacterStep(Guid.NewGuid(), character, NextStepTransition.Create());
     }
 
+    public void Update(Character? character)
+    {
+        if (character is not null)
+            Character = character;
+    }
+
     public new NextStepTransition Transition => (NextStepTransition)base.Transition;
 }

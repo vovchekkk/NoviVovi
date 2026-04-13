@@ -24,4 +24,10 @@ public class BackgroundObject : SceneObject
 
         return new BackgroundObject(Guid.NewGuid(), image, transform);
     }
+
+    public void UpdateImage(Image? image)
+    {
+        Image = image
+                ?? throw new DomainException($"Image cannot be null");
+    }
 }

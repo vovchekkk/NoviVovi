@@ -36,7 +36,7 @@ public class AddShowBackgroundStepHandler(
         var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
                     ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
         
-        var transform = transformMapper.ToEntity(request.Transform);
+        var transform = transformMapper.ToDomainModel(request.Transform);
         
         var background = BackgroundObject.Create(image, transform);
         

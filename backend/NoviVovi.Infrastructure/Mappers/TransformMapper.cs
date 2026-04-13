@@ -7,15 +7,16 @@ namespace NoviVovi.Infrastructure.Mappers;
 [Mapper]
 public partial class TransformMapper
 {
-    public Transform ToTransform(TransformDbO dbo)
+    public Transform ToTransform(TransformDbO dbo) => new()
     {
-        var res = new Transform();
-        if (dbo is { YPos: not null, XPos: not null }) 
-            res.Position = new Position((double)dbo.XPos.Value, (double)dbo.YPos.Value);
-        res.Rotation = dbo.Rotation==null ? 0 : (double)dbo.Rotation;
-        res.Scale = dbo.Scale==null ? 1 : (double)dbo.Scale;
-        res.ZIndex = dbo.ZIndex ?? 0;
-        res.Size = new Size(dbo.Width, dbo.Height);
-        return res;
-    }
+        Position = dbo.XPos.HasValue && dbo.YPos.HasValue
+            ? new Position((double)dbo.XPos.Value, (double)dbo.YPos.Value)
+            : new Position(0.0, 0.0),
+
+        Size = new Size(dbo.Width, dbo.Height),
+
+        Scale = dbo.Scale.HasValue ? (double)dbo.Scale : 1.0,
+        Rotation = dbo.Rotation.HasValue ? (double)dbo.Rotation : 0.0,
+        ZIndex = dbo.ZIndex ?? 0
+    };
 }

@@ -19,4 +19,10 @@ public sealed class ChoiceTransition : Transition
 
         return new ChoiceTransition(targetLabel);
     }
+    
+    public void ApplyTargetLabel(Label? targetLabel)
+    {
+        TargetLabel = targetLabel
+                      ?? throw new DomainException($"TargetLabel cannot be null");
+    }
 }
