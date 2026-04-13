@@ -32,7 +32,7 @@ public class AddShowMenuStepHandler(
         var (_, label) = await GetStepContextOrThrow(request, ct);
 
         var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
-        var targetLabels = await LabelRepository.GetByIdsAsync(targetIds, ct);
+        var targetLabels = await labelRepository.GetByIdsAsync(targetIds, ct);
         
         var labelLookup = targetLabels.ToDictionary(l => l.Id);
         

@@ -1,4 +1,5 @@
 ﻿using NoviVovi.Domain.Common;
+using NoviVovi.Domain.Images;
 using NoviVovi.Domain.Scene;
 using NoviVovi.Domain.Transitions;
 
@@ -25,6 +26,15 @@ public class ShowBackgroundStep : Step
             throw new DomainException($"BackgroundObject cannot be null");
         
         return new ShowBackgroundStep(Guid.NewGuid(), backgroundObject, NextStepTransition.Create());
+    }
+    
+    public void Update(Image? image, TransformPatch? transformPatch)
+    {
+        if (image is not null) 
+            BackgroundObject.UpdateImage(image);
+
+        if (transformPatch is not null)
+            BackgroundObject.PatchTransform(transformPatch);
     }
     
     public new NextStepTransition Transition => (NextStepTransition)base.Transition;

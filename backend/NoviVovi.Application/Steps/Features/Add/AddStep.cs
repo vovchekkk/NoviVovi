@@ -16,11 +16,12 @@ public abstract record AddStepCommand : IRequest<StepDto>
 
 public abstract class BaseAddStepHandler(
     INovelRepository novelRepository,
-    ILabelRepository labelRepository)
+    ILabelRepository labelRepository
+)
 {
     protected readonly INovelRepository NovelRepository = novelRepository;
     protected readonly ILabelRepository LabelRepository = labelRepository;
-    
+
     protected async Task<(Novel, Label)> GetStepContextOrThrow(AddStepCommand request, CancellationToken ct)
     {
         var novel = await NovelRepository.GetByIdAsync(request.NovelId, ct)
@@ -28,7 +29,7 @@ public abstract class BaseAddStepHandler(
 
         var label = await LabelRepository.GetByIdAsync(request.LabelId, ct)
                     ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
-        
+
         if (label.NovelId != request.NovelId)
             throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
 

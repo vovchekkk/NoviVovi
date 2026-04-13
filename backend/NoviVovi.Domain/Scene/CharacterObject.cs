@@ -35,4 +35,16 @@ public class CharacterObject : SceneObject
 
         return new CharacterObject(Guid.NewGuid(), character, state, transform);
     }
+
+    public void UpdateCharacter(Character? character)
+    {
+        Character = character
+            ?? throw new DomainException($"Character cannot be null");;
+    }
+    
+    public void UpdateCharacterState(CharacterState? state)
+    {
+        State = state
+            ?? throw new DomainException($"CharacterState cannot be null");;
+    }
 }

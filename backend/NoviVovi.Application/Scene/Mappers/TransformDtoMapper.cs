@@ -7,27 +7,31 @@ namespace NoviVovi.Application.Scene.Mappers;
 [Mapper]
 public partial class TransformDtoMapper
 {
-    public TransformDto ToDto(Transform s) => new()
+    public TransformDto ToDto(Transform source) => new()
     {
-        X = s.Position.X,
-        Y = s.Position.Y,
-        Width = s.Size.Width,
-        Height = s.Size.Height,
-        Scale = s.Scale,
-        Rotation = s.Rotation,
-        ZIndex = s.ZIndex
+        X = source.Position.X,
+        Y = source.Position.Y,
+        Width = source.Size.Width,
+        Height = source.Size.Height,
+        Scale = source.Scale,
+        Rotation = source.Rotation,
+        ZIndex = source.ZIndex
     };
 
-    public partial IEnumerable<TransformDto> ToDtos(IEnumerable<Transform> subjects);
+    public partial IEnumerable<TransformDto> ToDtos(IEnumerable<Transform> sources);
     
-    public Transform ToEntity(TransformDto s) => new()
+    public Transform ToDomainModel(TransformDto source) => new()
     {
-        Position = new Position(s.X, s.Y),
-        Size = new Size(s.Width, s.Height),
-        Scale = s.Scale,
-        Rotation = s.Rotation,
-        ZIndex = s.ZIndex
+        Position = new Position(source.X, source.Y),
+        Size = new Size(source.Width, source.Height),
+        Scale = source.Scale,
+        Rotation = source.Rotation,
+        ZIndex = source.ZIndex
     };
     
-    public partial IEnumerable<Transform> ToEntities(IEnumerable<TransformDto> subjects);
+    public partial IEnumerable<Transform> ToDomainModels(IEnumerable<TransformDto> sources);
+    
+    public partial TransformPatch ToDomainPatch(TransformDto source);
+    
+    public partial IEnumerable<TransformPatch> ToDomainPatches(IEnumerable<TransformDto> sources);
 }

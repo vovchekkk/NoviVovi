@@ -1,4 +1,5 @@
-﻿using NoviVovi.Domain.Common;
+﻿using System.Data;
+using NoviVovi.Domain.Common;
 using NoviVovi.Domain.Dialogue;
 using NoviVovi.Domain.Transitions;
 
@@ -19,6 +20,12 @@ public class ShowReplicaStep : Step
             throw new DomainException($"Replica cannot be null");
         
         return new ShowReplicaStep(Guid.NewGuid(), replica, NextStepTransition.Create());
+    }
+
+    public void Update(Replica? replica)
+    {
+        if (replica is not null)
+            Replica = replica;
     }
     
     public new NextStepTransition Transition => (NextStepTransition)base.Transition;

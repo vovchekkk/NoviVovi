@@ -20,4 +20,10 @@ public sealed class JumpTransition : Transition
 
         return new JumpTransition(targetLabel);
     }
+    
+    public void ApplyTargetLabel(Label? targetLabel)
+    {
+        TargetLabel = targetLabel
+                      ?? throw new DomainException($"TargetLabel cannot be null");
+    }
 }
