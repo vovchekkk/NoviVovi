@@ -3,5 +3,6 @@
 public enum ImageType
 {
     Background,
-    Character
+    Character,
+    Default
 }
