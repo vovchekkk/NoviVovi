@@ -21,17 +21,16 @@ public record AddShowBackgroundStepCommand : AddStepCommand
 }
 
 public class AddShowBackgroundStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IImageRepository imageRepository,
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BaseAddStepHandler(novelRepository, labelRepository), IRequestHandler<AddShowBackgroundStepCommand, StepDto>
+) : BaseAddStepHandler(labelRepository), IRequestHandler<AddShowBackgroundStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(AddShowBackgroundStepCommand request, CancellationToken ct)
     {
-        var (_, label) = await GetStepContextOrThrow(request, ct);
+        var label = await GetStepContextOrThrow(request, ct);
         
         var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
                     ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");

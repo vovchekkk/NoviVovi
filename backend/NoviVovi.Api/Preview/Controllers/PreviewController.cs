@@ -21,7 +21,7 @@ public class PreviewController(
         [FromRoute] Guid stepId)
     {
         var sceneState = await mediator.Send(new GetScenePreviewQuery(novelId, labelId, stepId));
-        
+
         return Ok(sceneStateMapper.ToResponse(sceneState));
     }
 }

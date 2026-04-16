@@ -23,13 +23,13 @@ public class AddHideCharacterStepHandler(
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BaseAddStepHandler(novelRepository, labelRepository), IRequestHandler<AddHideCharacterStepCommand, StepDto>
+) : BaseAddStepHandler(labelRepository), IRequestHandler<AddHideCharacterStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(AddHideCharacterStepCommand request, CancellationToken ct)
     {
-        var (_, label) = await GetStepContextOrThrow(request, ct);
+        var label = await GetStepContextOrThrow(request, ct);
 
-        var character = await novelRepository.GetCharacterByIdAsync(request.CharacterId, ct)
+        var character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId, ct)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
         var step = HideCharacterStep.Create(character);

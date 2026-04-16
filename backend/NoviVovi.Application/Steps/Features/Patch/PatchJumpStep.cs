@@ -16,15 +16,14 @@ public record PatchJumpStepCommand : PatchStepCommand
 }
 
 public class PatchJumpStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BasePatchStepHandler(novelRepository, labelRepository), IRequestHandler<PatchJumpStepCommand, StepDto>
+) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchJumpStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(PatchJumpStepCommand request, CancellationToken ct)
     {
-        var (_, _, step) = await GetStepContextOrThrow(request, ct);
+        var (_, step) = await GetStepContextOrThrow(request, ct);
 
         if (step is not JumpStep jumpStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(JumpStep)}");

@@ -25,16 +25,16 @@ public class AddShowCharacterStepHandler(
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BaseAddStepHandler(novelRepository, labelRepository), IRequestHandler<AddShowCharacterStepCommand, StepDto>
+) : BaseAddStepHandler(labelRepository), IRequestHandler<AddShowCharacterStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(AddShowCharacterStepCommand request, CancellationToken ct)
     {
-        var (_, label) = await GetStepContextOrThrow(request, ct);
+        var label = await GetStepContextOrThrow(request, ct);
 
-        var character = await novelRepository.GetCharacterByIdAsync(request.CharacterId, ct)
+        var character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId, ct)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         
-        var characterState = await novelRepository.GetCharacterStateByIdAsync(request.CharacterId, request.CharacterStateId, ct)
+        var characterState = await novelRepository.GetCharacterStateByIdAsync(request.NovelId, request.CharacterId, request.CharacterStateId, ct)
                             ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterStateId}' не найдено");
 
         var transform = transformMapper.ToDomainModel(request.Transform);
