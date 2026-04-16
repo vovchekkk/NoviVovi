@@ -14,10 +14,10 @@ public partial class NovelDtoMapper
     [MapProperty("StartLabel.Id", nameof(NovelDto.StartLabelId))]
     [MapProperty(nameof(Novel.Labels), nameof(NovelDto.LabelIds))]
     [MapProperty(nameof(Novel.Characters), nameof(NovelDto.CharacterIds))]
-    public partial NovelDto ToDto(Novel subject);
+    public partial NovelDto ToDto(Novel source);
     
     private Guid MapLabelToId(Label label) => label.Id;
     private Guid MapCharacterToId(Character character) => character.Id;
 
-    public partial IEnumerable<NovelDto> ToDtos(IEnumerable<Novel> subjects);
+    public partial IEnumerable<NovelDto> ToDtos(IEnumerable<Novel> sources);
 }

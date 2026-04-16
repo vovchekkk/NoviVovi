@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Scene.Mappers;
 [Mapper]
 public partial class SizeDtoMapper
 {
-    public partial SizeDto ToDto(Size subject);
+    public partial SizeDto ToDto(Size source);
     
-    public partial IEnumerable<SizeDto> ToDtos(IEnumerable<Size> subjects);
+    public partial IEnumerable<SizeDto> ToDtos(IEnumerable<Size> sources);
 }

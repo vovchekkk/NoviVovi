@@ -46,9 +46,7 @@ public static class DependencyInjection
         
         services.AddSingleton<StepDtoMapper>();
         
-        services.AddSingleton<ChoiceTransitionDtoMapper>();
-        services.AddSingleton<JumpTransitionDtoMapper>();
-        services.AddSingleton<NextStepTransitionDtoMapper>();
+        services.AddSingleton<TransitionDtoMapper>();
         
         return services;
     }

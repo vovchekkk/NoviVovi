@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Images.Mappers;
 [Mapper]
 public partial class UploadInfoImageDtoMapper
 {
-    public partial UploadInfoImageDto ToDto(UploadInfoImage subject);
+    public partial UploadInfoImageDto ToDto(UploadInfoImage source);
 
-    public partial IEnumerable<UploadInfoImageDto> ToDtos(IEnumerable<UploadInfoImage> subjects);
+    public partial IEnumerable<UploadInfoImageDto> ToDtos(IEnumerable<UploadInfoImage> sources);
 }

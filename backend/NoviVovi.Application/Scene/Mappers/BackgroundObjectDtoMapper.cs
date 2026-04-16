@@ -13,10 +13,10 @@ public partial class BackgroundObjectDtoMapper(
     TransformDtoMapper transformMapper
 )
 {
-    public partial BackgroundObjectDto ToDto(BackgroundObject subject);
+    public partial BackgroundObjectDto ToDto(BackgroundObject source);
 
     private ImageDto MapImage(Image source) => imageMapper.ToDto(source);
     private TransformDto MapTransform(Transform source) => transformMapper.ToDto(source);
 
-    public partial IEnumerable<BackgroundObjectDto> ToDtos(IEnumerable<BackgroundObject> subjects);
+    public partial IEnumerable<BackgroundObjectDto> ToDtos(IEnumerable<BackgroundObject> sources);
 }

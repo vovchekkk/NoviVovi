@@ -12,9 +12,9 @@ public partial class LabelDtoMapper(
     StepDtoMapper stepMapper
 )
 {
-    public partial LabelDto ToDto(Label subject);
+    public partial LabelDto ToDto(Label source);
 
     private StepDto MapStep(Step source) => stepMapper.ToDto(source);
 
-    public partial IEnumerable<LabelDto> ToDtos(IEnumerable<Label> subjects);
+    public partial IEnumerable<LabelDto> ToDtos(IEnumerable<Label> sources);
 }

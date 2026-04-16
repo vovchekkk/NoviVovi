@@ -16,10 +16,10 @@ public partial class CharacterStateDtoMapper(
     TransformDtoMapper transformMapper
 )
 {
-    public partial CharacterStateDto ToDto(CharacterState subject);
+    public partial CharacterStateDto ToDto(CharacterState source);
 
     private ImageDto MapImage(Image source) => imageMapper.ToDto(source);
     private TransformDto MapTransform(Transform source) => transformMapper.ToDto(source);
 
-    public partial IEnumerable<CharacterStateDto> ToDtos(IEnumerable<CharacterState> subjects);
+    public partial IEnumerable<CharacterStateDto> ToDtos(IEnumerable<CharacterState> sources);
 }

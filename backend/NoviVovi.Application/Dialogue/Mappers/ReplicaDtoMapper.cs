@@ -12,9 +12,9 @@ public partial class ReplicaDtoMapper(
     CharacterDtoMapper characterMapper
 )
 {
-    public partial ReplicaDto ToDto(Replica subject);
+    public partial ReplicaDto ToDto(Replica source);
 
     private CharacterDto MapCharacter(Character source) => characterMapper.ToDto(source);
 
-    public partial IEnumerable<ReplicaDto> ToDtos(IEnumerable<Replica> subjects);
+    public partial IEnumerable<ReplicaDto> ToDtos(IEnumerable<Replica> sources);
 }

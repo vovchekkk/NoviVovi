@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Novels.Mappers;
 [Mapper]
 public partial class ChoiceEdgeDtoMapper
 {
-    public partial ChoiceEdgeDto ToDto(ChoiceEdge subject);
+    public partial ChoiceEdgeDto ToDto(ChoiceEdge source);
     
-    public partial IEnumerable<ChoiceEdgeDto> ToDtos(IEnumerable<ChoiceEdge> subjects);
+    public partial IEnumerable<ChoiceEdgeDto> ToDtos(IEnumerable<ChoiceEdge> sources);
 }

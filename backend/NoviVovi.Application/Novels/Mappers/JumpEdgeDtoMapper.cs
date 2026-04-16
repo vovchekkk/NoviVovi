@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Novels.Mappers;
 [Mapper]
 public partial class JumpEdgeDtoMapper
 {
-    public partial JumpEdgeDto ToDto(JumpEdge subject);
+    public partial JumpEdgeDto ToDto(JumpEdge source);
     
-    public partial IEnumerable<JumpEdgeDto> ToDtos(IEnumerable<JumpEdge> subjects);
+    public partial IEnumerable<JumpEdgeDto> ToDtos(IEnumerable<JumpEdge> sources);
 }

@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Scene.Mappers;
 [Mapper]
 public partial class PositionDtoMapper
 {
-    public partial PositionDto ToDto(Position subject);
+    public partial PositionDto ToDto(Position source);
     
-    public partial IEnumerable<PositionDto> ToDtos(IEnumerable<Position> subjects);
+    public partial IEnumerable<PositionDto> ToDtos(IEnumerable<Position> sources);
 }
