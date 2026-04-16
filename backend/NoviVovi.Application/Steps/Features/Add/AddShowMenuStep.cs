@@ -28,12 +28,14 @@ public class AddShowMenuStepHandler(
     StepDtoMapper mapper
 ) : BaseAddStepHandler(labelRepository), IRequestHandler<AddShowMenuStepCommand, StepDto>
 {
+    private readonly ILabelRepository _labelRepository = labelRepository;
+
     public async Task<StepDto> Handle(AddShowMenuStepCommand request, CancellationToken ct)
     {
         var label = await GetStepContextOrThrow(request, ct);
 
         var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
-        var targetLabels = await labelRepository.GetByIdsAsync(targetIds, ct);
+        var targetLabels = await _labelRepository.GetByIdsAsync(targetIds, ct);
         
         var labelLookup = targetLabels.ToDictionary(l => l.Id);
         

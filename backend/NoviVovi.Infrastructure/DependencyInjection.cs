@@ -1,33 +1,50 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Abstractions;
-using NoviVovi.Application.Labels;
+using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Labels.Abstractions;
-using NoviVovi.Application.Novels;
 using NoviVovi.Application.Novels.Abstractions;
+using NoviVovi.Infrastructure.Mappers;
 using NoviVovi.Infrastructure.Repositories;
-using NovelRepository = NoviVovi.Infrastructure.Novels.NovelRepository;
+using NoviVovi.Infrastructure.Repositories.DbO;
+using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
+using NoviVovi.Infrastructure.Repositories.New;
 
 namespace NoviVovi.Infrastructure;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connString = configuration.GetConnectionString("NovelDatabase") ??
+        var connectionString = configuration.GetConnectionString("NovelDatabase") ??
                                throw new ArgumentNullException("No such connection string");
-        
-        // services.AddScoped<NovelDatabaseService>(sp => 
-        //     new NovelDatabaseService(connString));
-        
-        services.AddSingleton<INovelRepository, NovelRepository>();
-        services.AddSingleton<ILabelRepository, LabelRepository>();
-        
+
+        services.AddSingleton(new DatabaseOptions(connectionString));
+
+        services.AddSingleton<CharacterMapper>();
+        services.AddSingleton<ImageMapper>();
+        services.AddSingleton<LabelMapper>();
+        services.AddSingleton<MenuMapper>();
+        services.AddSingleton<NovelMapper>();
+        services.AddSingleton<ReplicaMapper>();
+        services.AddSingleton<StepMapper>();
+        services.AddSingleton<TransformMapper>();
+
+        services.AddScoped<ICharacterDbORepository, CharacterDbORepository>();
+        services.AddScoped<IImageDbORepository, ImageDbORepository>();
+        services.AddScoped<ILabelDbORepository, LabelDbORepository>();
+        services.AddScoped<IMenuDbORepository, MenuDbORepository>();
+        services.AddScoped<INovelDbORepository, NovelDbORepository>();
+        services.AddScoped<IStepDbORepository, StepDbORepository>();
+
+        services.AddScoped<INovelRepository, NovelRepository>();
+        services.AddScoped<ILabelRepository, LabelRepository>();
+        services.AddScoped<IImageRepository, ImageRepository>();
+
         services.AddSingleton<IStorageService, S3StorageService>();
-        services.AddSingleton<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

@@ -7,7 +7,10 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
-public partial class CharacterMapper(ImageMapper imageMapper, TransformMapper transformMapper)
+public partial class CharacterMapper(
+    // ImageMapper imageMapper,
+    // TransformMapper transformMapper
+)
 {
     public Character ToDomain(CharacterDbO dbo)
     {
@@ -29,19 +32,20 @@ public partial class CharacterMapper(ImageMapper imageMapper, TransformMapper tr
         };
         return res;
     }
-    
+
     public CharacterStateDbO ToDbO(CharacterState character, Guid characterId, Guid novelId)
     {
-        var res = new CharacterStateDbO
-        {
-            Id = character.Id,
-            CharacterId = characterId,
-            Description = character.Description,
-            ImageId = character.Image.Id,
-            StateName = character.Name,
-            Image = imageMapper.ToDbO(character.Image, novelId),
-        };
-        return res;
+        throw new NotImplementedException();
+        // var res = new CharacterStateDbO
+        // {
+        //     Id = character.Id,
+        //     CharacterId = characterId,
+        //     Description = character.Description,
+        //     ImageId = character.Image.Id,
+        //     StateName = character.Name,
+        //     Image = imageMapper.ToDbO(character.Image, novelId),
+        // };
+        // return res;
     }
 
     public List<CharacterStateDbO> ToDbO(IEnumerable<CharacterState> character, Guid characterId, Guid novelId)
@@ -51,38 +55,43 @@ public partial class CharacterMapper(ImageMapper imageMapper, TransformMapper tr
 
     public CharacterState ToDomain(CharacterStateDbO dbo)
     {
-        if (dbo is { Transform: not null, Image: not null })
-            return new CharacterState(
-                dbo.Id,
-                dbo.StateName,
-                imageMapper.ToDomain(dbo.Image),
-                transformMapper.ToDomain(dbo.Transform),
-                dbo.Description);
-        throw new ArgumentException("Invalid character state");
+        throw new NotImplementedException();
+        // if (dbo is { Transform: not null, Image: not null })
+        //     return new CharacterState(
+        //         dbo.Id,
+        //         dbo.StateName,
+        //         imageMapper.ToDomain(dbo.Image),
+        //         transformMapper.ToDomain(dbo.Transform),
+        //         dbo.Description);
+        // throw new ArgumentException("Invalid character state");
     }
 
     public StepCharacterDbO ToDbO(CharacterObject stepCharacterObject, Guid novelId)
     {
-        var res = new StepCharacterDbO
-        {
-            Id = stepCharacterObject.Id,
-            CharacterStateId = stepCharacterObject.State.Id,
-            CharacterState = ToDbO(stepCharacterObject.State, stepCharacterObject.Character.Id, novelId),
-            TransformId = Guid.Empty,
-            Transform = transformMapper.ToDbO(stepCharacterObject.Transform),
-            Character = ToDbO(stepCharacterObject.Character, novelId)
-        };
-        return res;
+        throw new NotImplementedException();
+        // var res = new StepCharacterDbO
+        // {
+        //     Id = stepCharacterObject.Id,
+        //     CharacterStateId = stepCharacterObject.State.Id,
+        //     CharacterState = ToDbO(stepCharacterObject.State, stepCharacterObject.Character.Id, novelId),
+        //     TransformId = Guid.Empty,
+        //     Transform = transformMapper.ToDbO(stepCharacterObject.Transform),
+        //     Character = ToDbO(stepCharacterObject.Character, novelId)
+        // };
+        // return res;
     }
 
     public CharacterObject ToDomain(StepCharacterDbO stepCharacter)
     {
-        if (stepCharacter is { CharacterState: not null, Transform: not null })
-        {
-            var res = new CharacterObject(stepCharacter.Id, ToDomain(stepCharacter.Character), ToDomain(stepCharacter.CharacterState),
-                transformMapper.ToDomain(stepCharacter.Transform));
-            return res;
-        }
-        throw new ArgumentException("Invalid step character");
+        throw new NotImplementedException();
+        // if (stepCharacter is { CharacterState: not null, Transform: not null })
+        // {
+        //     var res = new CharacterObject(stepCharacter.Id, ToDomain(stepCharacter.Character),
+        //         ToDomain(stepCharacter.CharacterState),
+        //         transformMapper.ToDomain(stepCharacter.Transform));
+        //     return res;
+        // }
+        //
+        // throw new ArgumentException("Invalid step character");
     }
 }

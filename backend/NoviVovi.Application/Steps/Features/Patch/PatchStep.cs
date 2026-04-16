@@ -20,11 +20,9 @@ public abstract record PatchStepCommand : IRequest<StepDto>
 public abstract class BasePatchStepHandler(
     ILabelRepository labelRepository)
 {
-    protected readonly ILabelRepository LabelRepository = labelRepository;
-    
     protected async Task<Step> GetStepContextOrThrow(PatchStepCommand request, CancellationToken ct)
     {
-        var label = await LabelRepository.GetByIdAsync(request.LabelId, ct)
+        var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
                     ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
         
         if (label.NovelId != request.NovelId)

@@ -19,11 +19,9 @@ public abstract class BaseAddStepHandler(
     ILabelRepository labelRepository
 )
 {
-    protected readonly ILabelRepository LabelRepository = labelRepository;
-
     protected async Task<Label> GetStepContextOrThrow(AddStepCommand request, CancellationToken ct)
     {
-        var label = await LabelRepository.GetByIdAsync(request.LabelId, ct)
+        var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
                     ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
 
         if (label.NovelId != request.NovelId)

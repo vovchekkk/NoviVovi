@@ -6,7 +6,9 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
-public partial class MenuMapper(LabelMapper labelMapper)
+public partial class MenuMapper(
+    // LabelMapper labelMapper
+)
 {
     public MenuDbO ToDbO(Menu stepMenu, Guid novelId)
     {
@@ -22,15 +24,16 @@ public partial class MenuMapper(LabelMapper labelMapper)
 
     public ChoiceDbO ToDbO(Choice choice, Guid novelId, Guid menuId)
     {
-        var res = new ChoiceDbO
-        {
-            Id = choice.Id,
-            Name = choice.Name,
-            Text = choice.Text,
-            NextLabelId = choice.Transition.TargetLabel.Id,
-            NextLabel = labelMapper.ToDbO(choice.Transition.TargetLabel),
-        };
-        return res;
+        throw new NotImplementedException();
+        // var res = new ChoiceDbO
+        // {
+        //     Id = choice.Id,
+        //     Name = choice.Name,
+        //     Text = choice.Text,
+        //     NextLabelId = choice.Transition.TargetLabel.Id,
+        //     NextLabel = labelMapper.ToDbO(choice.Transition.TargetLabel),
+        // };
+        // return res;
     }
 
     public Menu ToDomain(MenuDbO menu)
@@ -40,14 +43,16 @@ public partial class MenuMapper(LabelMapper labelMapper)
         {
             res.AddChoice(ToDomain(choice));
         }
+
         return res;
     }
 
     private Choice ToDomain(ChoiceDbO choice)
     {
-        if (choice.NextLabel == null) throw new ArgumentException("Unsupported choice");
-        var res = new Choice(choice.Id, choice.Name, null, choice.Text,
-            new ChoiceTransition(labelMapper.ToDomain(choice.NextLabel)));
-        return res;
+        throw new NotImplementedException();
+        // if (choice.NextLabel == null) throw new ArgumentException("Unsupported choice");
+        // var res = new Choice(choice.Id, choice.Name, null, choice.Text,
+        //     new ChoiceTransition(labelMapper.ToDomain(choice.NextLabel)));
+        // return res;
     }
 }

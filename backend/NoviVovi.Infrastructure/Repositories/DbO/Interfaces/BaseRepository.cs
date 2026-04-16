@@ -4,81 +4,93 @@ using Npgsql;
 
 namespace NoviVovi.Infrastructure.Repositories;
 
-public abstract class BaseRepository : IDisposable
+// Мы используем IAsyncDisposable, так как работаем с асинхронными ресурсами БД
+public abstract class BaseRepository(DatabaseOptions options) : IDisposable, IAsyncDisposable
 {
-    private readonly string connectionString;
-    private NpgsqlConnection? connection;
-    private NpgsqlTransaction? transaction;
+    private NpgsqlConnection? _connection;
+    private NpgsqlTransaction? _transaction;
 
-    protected BaseRepository(string connectionString)
+    protected async Task<NpgsqlConnection> GetConnectionAsync(CancellationToken ct = default)
     {
-        this.connectionString = connectionString;
-    }
-
-    protected async Task<NpgsqlConnection> GetConnectionAsync()
-    {
-        if (connection == null || connection.State != ConnectionState.Open)
+        // 1. Используем строку из объекта настроек, который мы внедрили через DI
+        if (_connection == null)
         {
-            connection = new NpgsqlConnection(connectionString);
-            await connection.OpenAsync();
+            _connection = new NpgsqlConnection(options.ConnectionString);
         }
-        return connection;
-    }
 
-    protected async Task<NpgsqlTransaction> BeginTransactionAsync()
-    {
-        var conn = await GetConnectionAsync();
-        transaction = await conn.BeginTransactionAsync();
-        return transaction;
-    }
-
-    protected async Task CommitTransactionAsync()
-    {
-        if (transaction != null)
+        if (_connection.State != ConnectionState.Open)
         {
-            await transaction.CommitAsync();
-            await transaction.DisposeAsync();
-            transaction = null;
+            await _connection.OpenAsync(ct);
         }
+
+        return _connection;
     }
 
-    protected async Task RollbackTransactionAsync()
+    protected async Task<NpgsqlTransaction> BeginTransactionAsync(CancellationToken ct = default)
     {
-        if (transaction != null)
+        var conn = await GetConnectionAsync(ct);
+        _transaction = await conn.BeginTransactionAsync(ct);
+        return _transaction;
+    }
+
+    protected async Task CommitTransactionAsync(CancellationToken ct = default)
+    {
+        if (_transaction != null)
         {
-            await transaction.RollbackAsync();
-            await transaction.DisposeAsync();
-            transaction = null;
+            await _transaction.CommitAsync(ct);
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
     }
 
-    protected async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? param = null)
+    protected async Task RollbackTransactionAsync(CancellationToken ct = default)
     {
-        await using var conn = await GetConnectionAsync();
-        return await conn.QueryFirstOrDefaultAsync<T>(sql, param, transaction);
+        if (_transaction != null)
+        {
+            await _transaction.RollbackAsync(ct);
+            await _transaction.DisposeAsync();
+            _transaction = null;
+        }
     }
 
-    protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? param = null)
+    // ВАЖНО: Мы НЕ используем 'await using' внутри методов, 
+    // так как соединением управляет жизненный цикл самого репозитория (Scoped)
+    protected async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, CancellationToken ct = default)
     {
-        await using var conn = await GetConnectionAsync();
-        return await conn.QueryAsync<T>(sql, param, transaction);
+        var conn = await GetConnectionAsync(ct);
+        return await conn.QueryFirstOrDefaultAsync<T>(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
     }
 
-    protected async Task<int> ExecuteAsync(string sql, object? param = null)
+    protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? param = null, CancellationToken ct = default)
     {
-        await using var conn = await GetConnectionAsync();
-        return await conn.ExecuteAsync(sql, param, transaction);
+        var conn = await GetConnectionAsync(ct);
+        return await conn.QueryAsync<T>(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
     }
 
-    protected async Task<Guid?> ExecuteScalarAsync<Guid>(string sql, object? param = null)
+    protected async Task<int> ExecuteAsync(string sql, object? param = null, CancellationToken ct = default)
     {
-        await using var conn = await GetConnectionAsync();
-        return await conn.ExecuteScalarAsync<Guid>(sql, param, transaction);
+        var conn = await GetConnectionAsync(ct);
+        return await conn.ExecuteAsync(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
+    }
+
+    // Исправил generic-параметр: не называй его <Guid>, чтобы не путать с типом Guid
+    protected async Task<T?> ExecuteScalarAsync<T>(string sql, object? param = null, CancellationToken ct = default)
+    {
+        var conn = await GetConnectionAsync(ct);
+        return await conn.ExecuteScalarAsync<T>(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
     }
 
     public void Dispose()
     {
-        transaction?.Dispose();
-        connection?.Dispose();
+        _transaction?.Dispose();
+        _connection?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_transaction != null) await _transaction.DisposeAsync();
+        if (_connection != null) await _connection.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }

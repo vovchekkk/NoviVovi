@@ -6,7 +6,9 @@ using Riok.Mapperly.Abstractions;
 namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
-public partial class ImageMapper(TransformMapper mapper)
+public partial class ImageMapper(
+    // TransformMapper mapper
+)
 {
     public Image ToDomain(ImageDbO imgDbo)
     {
@@ -18,7 +20,7 @@ public partial class ImageMapper(TransformMapper mapper)
             imgDbo.ImgType.ToImageType(),
             new Size(imgDbo.Width, imgDbo.Height),
             null,
-            ImageStatus.Active); 
+            ImageStatus.Active);
         return img;
     }
 
@@ -40,29 +42,31 @@ public partial class ImageMapper(TransformMapper mapper)
 
     public BackgroundObject ToDomain(BackgroundDbO background)
     {
-        if (background.Image != null)
-        {
-            var result = new BackgroundObject(
-                background.Id,
-                ToDomain(background.Image),
-                mapper.ToDomain(background.Transform) 
-            );
-            return result;
-        }
-
-        throw new ArgumentException("Bg object should have image");
+        throw new NotImplementedException();
+        // if (background.Image != null)
+        // {
+        //     var result = new BackgroundObject(
+        //         background.Id,
+        //         ToDomain(background.Image),
+        //         mapper.ToDomain(background.Transform)
+        //     );
+        //     return result;
+        // }
+        //
+        // throw new ArgumentException("Bg object should have image");
     }
 
     public BackgroundDbO ToDbO(BackgroundObject bg, Guid novelId)
     {
-        var result = new BackgroundDbO
-        {
-            Id = bg.Id,
-            Img = bg.Image.Id,
-            Transform = mapper.ToDbO(bg.Transform),
-            TransformId = Guid.Empty,  //TODO: саня, выпили Id из трансформов 
-            Image = ToDbO(bg.Image, novelId)
-        };
-        return result;
+        throw new NotImplementedException();
+        // var result = new BackgroundDbO
+        // {
+        //     Id = bg.Id,
+        //     Img = bg.Image.Id,
+        //     Transform = mapper.ToDbO(bg.Transform),
+        //     TransformId = Guid.Empty, //TODO: саня, выпили Id из трансформов 
+        //     Image = ToDbO(bg.Image, novelId)
+        // };
+        // return result;
     }
 }

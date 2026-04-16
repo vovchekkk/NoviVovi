@@ -5,28 +5,30 @@ using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
 public class MenuDbORepository(
-    string connectionString,
-    ILabelDbORepository labelRepo) : BaseRepository(connectionString), IMenuDbORepository
+    DatabaseOptions options/*,
+    ILabelDbORepository labelRepo*/
+) : BaseRepository(options), IMenuDbORepository
 {
     public async Task<MenuDbO?> GetFullByIdAsync(Guid menuId)
     {
-        const string menuSql = @"SELECT id AS Id, name AS Name, text AS Text, description AS Description 
-                                 FROM ""Menus"" WHERE id = @MenuId";
-        var menu = await QueryFirstOrDefaultAsync<MenuDbO>(menuSql, new { MenuId = menuId });
-        if (menu == null) return null;
-
-        const string choicesSql = @"SELECT id AS Id, menu_id AS MenuId, next_label_id AS NextLabelId,
-                                           name AS Name, text AS Text
-                                    FROM ""Choices"" WHERE menu_id = @MenuId ORDER BY name";
-        var choices = (await QueryAsync<ChoiceDbO>(choicesSql, new { MenuId = menuId })).ToList();
-
-        foreach (var choice in choices)
-        {
-            choice.NextLabel = await labelRepo.GetFullByIdAsync(choice.NextLabelId);
-        }
-
-        menu.Choices = choices;
-        return menu;
+        throw new NotImplementedException();
+        // const string menuSql = @"SELECT id AS Id, name AS Name, text AS Text, description AS Description
+        //                          FROM ""Menus"" WHERE id = @MenuId";
+        // var menu = await QueryFirstOrDefaultAsync<MenuDbO>(menuSql, new { MenuId = menuId });
+        // if (menu == null) return null;
+        //
+        // const string choicesSql = @"SELECT id AS Id, menu_id AS MenuId, next_label_id AS NextLabelId,
+        //                                    name AS Name, text AS Text
+        //                             FROM ""Choices"" WHERE menu_id = @MenuId ORDER BY name";
+        // var choices = (await QueryAsync<ChoiceDbO>(choicesSql, new { MenuId = menuId })).ToList();
+        //
+        // foreach (var choice in choices)
+        // {
+        //     choice.NextLabel = await labelRepo.GetFullByIdAsync(choice.NextLabelId);
+        // }
+        //
+        // menu.Choices = choices;
+        // return menu;
     }
 
     public async Task<Guid> AddAsync(MenuDbO menu)
@@ -48,11 +50,11 @@ public class MenuDbORepository(
         await ExecuteAsync(sql, choice);
         return choice.Id;
     }
-    
+
     public async Task UpdateChoiceAsync(ChoiceDbO choice)
     {
         const string sql = @"
-            UPDATE ""Choices"" 
+            UPDATE ""Choices""
             SET next_label_id = @NextLabelId,
                 name = @Name,
                 text = @Text
@@ -64,7 +66,7 @@ public class MenuDbORepository(
     public async Task UpdateAsync(MenuDbO menu)
     {
         const string sql = @"
-            UPDATE ""Menus"" 
+            UPDATE ""Menus""
             SET name = @Name,
                 text = @Text,
                 description = @Description
@@ -85,6 +87,7 @@ public class MenuDbORepository(
         {
             await AddChoiceAsync(choice);
         }
+
         await AddAsync(stepMenu);
     }
 }

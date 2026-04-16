@@ -28,6 +28,8 @@ public class PatchShowMenuStepHandler(
     StepDtoMapper mapper
 ) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchShowMenuStepCommand, StepDto>
 {
+    private readonly ILabelRepository _labelRepository = labelRepository;
+
     public async Task<StepDto> Handle(PatchShowMenuStepCommand request, CancellationToken ct)
     {
         var step = await GetStepContextOrThrow(request, ct);
@@ -39,7 +41,7 @@ public class PatchShowMenuStepHandler(
         if (request.Choices is not null)
         {
             var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
-            var targetLabels = await labelRepository.GetByIdsAsync(targetIds, ct);
+            var targetLabels = await _labelRepository.GetByIdsAsync(targetIds, ct);
 
             var labelLookup = targetLabels.ToDictionary(l => l.Id);
 

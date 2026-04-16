@@ -22,11 +22,13 @@ public class AddJumpStepHandler(
     StepDtoMapper mapper
 ) : BaseAddStepHandler(labelRepository), IRequestHandler<AddJumpStepCommand, StepDto>
 {
+    private readonly ILabelRepository _labelRepository = labelRepository;
+
     public async Task<StepDto> Handle(AddJumpStepCommand request, CancellationToken ct)
     {
         var label = await GetStepContextOrThrow(request, ct);
         
-        var targetLabel = await labelRepository.GetByIdAsync(request.TargetLabelId, ct)
+        var targetLabel = await _labelRepository.GetByIdAsync(request.TargetLabelId, ct)
                             ?? throw new NotFoundException($"Метка '{request.TargetLabelId}' не найдена");
         
         var step = JumpStep.Create(targetLabel);

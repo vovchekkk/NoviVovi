@@ -3,7 +3,9 @@ using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
-public class ImageDbORepository(string connectionString) : BaseRepository(connectionString), IImageDbORepository
+public class ImageDbORepository(
+    DatabaseOptions options
+) : BaseRepository(options), IImageDbORepository
 {
     public async Task<ImageDbO?> GetImageByIdAsync(Guid id)
     {
@@ -20,7 +22,7 @@ public class ImageDbORepository(string connectionString) : BaseRepository(connec
             size AS Size
         FROM ""Images""
         WHERE id = @ImageId";
-        return await QueryFirstOrDefaultAsync<ImageDbO>(imageSql, new { ImageId = id});
+        return await QueryFirstOrDefaultAsync<ImageDbO>(imageSql, new { ImageId = id });
     }
 
     public async Task<TransformDbO?> GetTransformByIdAsync(Guid id)
@@ -38,16 +40,16 @@ public class ImageDbORepository(string connectionString) : BaseRepository(connec
             FROM ""Transforms""
             WHERE id = @Id";
 
-        return await QueryFirstOrDefaultAsync<TransformDbO>(sql, new { Id = id});
+        return await QueryFirstOrDefaultAsync<TransformDbO>(sql, new { Id = id });
     }
-    
-    
+
+
     public async Task DeleteImageAsync(Guid id)
     {
         const string sql = "DELETE FROM \"Images\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
-    
+
     public async Task UpdateImageAsync(ImageDbO image)
     {
         const string sql = @"
@@ -64,7 +66,7 @@ public class ImageDbORepository(string connectionString) : BaseRepository(connec
 
         await ExecuteAsync(sql, image);
     }
-    
+
     public async Task<Guid> AddImageAsync(ImageDbO image)
     {
         const string sql = @"

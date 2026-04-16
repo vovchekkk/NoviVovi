@@ -10,4 +10,9 @@ public sealed class NextStepTransition : Transition
     {
         return new NextStepTransition();
     }
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield break;
+    }
 }

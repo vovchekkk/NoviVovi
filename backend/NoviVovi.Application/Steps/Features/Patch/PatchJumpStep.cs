@@ -23,6 +23,8 @@ public class PatchJumpStepHandler(
     StepDtoMapper mapper
 ) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchJumpStepCommand, StepDto>
 {
+    private readonly ILabelRepository _labelRepository = labelRepository;
+
     public async Task<StepDto> Handle(PatchJumpStepCommand request, CancellationToken ct)
     {
         var step = await GetStepContextOrThrow(request, ct);
@@ -33,7 +35,7 @@ public class PatchJumpStepHandler(
         Label? targetLabel = null;
         if (request.TargetLabelId.HasValue)
         {
-            targetLabel = await labelRepository.GetByIdAsync(request.TargetLabelId.Value, ct)
+            targetLabel = await _labelRepository.GetByIdAsync(request.TargetLabelId.Value, ct)
                               ?? throw new NotFoundException($"Метка '{request.TargetLabelId}' не найдена");
         }
         

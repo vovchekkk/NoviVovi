@@ -27,4 +27,13 @@ public class Transform : ValueObject
             ZIndex = patch.ZIndex ?? ZIndex
         };
     }
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return Position;
+        yield return Size;
+        yield return Scale;
+        yield return Rotation;
+        yield return ZIndex;
+    }
 }

@@ -26,4 +26,9 @@ public sealed class JumpTransition : Transition
         TargetLabel = targetLabel
                       ?? throw new DomainException($"TargetLabel cannot be null");
     }
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return TargetLabel;
+    }
 }
