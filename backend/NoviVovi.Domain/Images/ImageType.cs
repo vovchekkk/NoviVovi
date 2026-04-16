@@ -3,7 +3,8 @@
 public enum ImageType
 {
     Background,
-    Character
+    Character,
+    Default
 }
 
 public static class ImageTypeExtension
@@ -14,6 +15,7 @@ public static class ImageTypeExtension
         {
             "background" => ImageType.Background,
             "character" => ImageType.Character,
+            "default" => ImageType.Default,
             _ => throw new Exception("Unknown image type: " + str)
         };
     }
@@ -24,6 +26,7 @@ public static class ImageTypeExtension
         {
             ImageType.Background => "background",
             ImageType.Character => "character",
+            ImageType.Default => "default",
             _ => throw new Exception("Unknown image type: " + imageType)
         };
     }

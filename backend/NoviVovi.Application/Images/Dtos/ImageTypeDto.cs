@@ -3,5 +3,6 @@
 public enum ImageTypeDto
 {
     Background,
-    Character
+    Character,
+    Default
 }

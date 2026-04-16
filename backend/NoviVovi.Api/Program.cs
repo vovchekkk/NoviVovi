@@ -10,14 +10,16 @@ builder.Services.AddApi();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddControllers();
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // Это добавит кавычки и текст вместо цифр
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddOpenApi();
 
