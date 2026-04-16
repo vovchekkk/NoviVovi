@@ -15,15 +15,14 @@ public record AddJumpStepCommand : AddStepCommand
 }
 
 public class AddJumpStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BaseAddStepHandler(novelRepository, labelRepository), IRequestHandler<AddJumpStepCommand, StepDto>
+) : BaseAddStepHandler(labelRepository), IRequestHandler<AddJumpStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(AddJumpStepCommand request, CancellationToken ct)
     {
-        var (_, label) = await GetStepContextOrThrow(request, ct);
+        var label = await GetStepContextOrThrow(request, ct);
         
         var targetLabel = await labelRepository.GetByIdAsync(request.TargetLabelId, ct)
                             ?? throw new NotFoundException($"Метка '{request.TargetLabelId}' не найдена");

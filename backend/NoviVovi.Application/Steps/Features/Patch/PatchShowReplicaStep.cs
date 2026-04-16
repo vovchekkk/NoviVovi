@@ -22,11 +22,11 @@ public class PatchShowReplicaStepHandler(
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BasePatchStepHandler(novelRepository, labelRepository), IRequestHandler<PatchShowReplicaStepCommand, StepDto>
+) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchShowReplicaStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(PatchShowReplicaStepCommand request, CancellationToken ct)
     {
-        var (_, _, step) = await GetStepContextOrThrow(request, ct);
+        var (_, step) = await GetStepContextOrThrow(request, ct);
 
         if (step is not ShowReplicaStep showReplicaStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(ShowReplicaStep)}");
@@ -34,7 +34,7 @@ public class PatchShowReplicaStepHandler(
         Character? character = null;
         if (request.CharacterId.HasValue)
         {
-            character = await novelRepository.GetCharacterByIdAsync(request.CharacterId.Value, ct)
+            character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId.Value, ct)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         }
 

@@ -11,7 +11,6 @@ public record DeleteNovelCommand(
 
 public class DeleteNovelHandler(
     INovelRepository novelRepository,
-    ILabelRepository labelRepository,
     IUnitOfWork unitOfWork
 ) : IRequestHandler<DeleteNovelCommand>
 {

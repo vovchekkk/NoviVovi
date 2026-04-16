@@ -21,15 +21,14 @@ public record PatchShowMenuStepCommand : PatchStepCommand
 }
 
 public class PatchShowMenuStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BasePatchStepHandler(novelRepository, labelRepository), IRequestHandler<PatchShowMenuStepCommand, StepDto>
+) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchShowMenuStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(PatchShowMenuStepCommand request, CancellationToken ct)
     {
-        var (_, _, step) = await GetStepContextOrThrow(request, ct);
+        var (_, step) = await GetStepContextOrThrow(request, ct);
 
         if (step is not ShowMenuStep showMenuStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(ShowMenuStep)}");

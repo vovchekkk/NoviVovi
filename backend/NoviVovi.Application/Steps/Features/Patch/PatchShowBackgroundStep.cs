@@ -20,17 +20,16 @@ public record PatchShowBackgroundStepCommand : PatchStepCommand
 }
 
 public class PatchShowBackgroundStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IImageRepository imageRepository,
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BasePatchStepHandler(novelRepository, labelRepository), IRequestHandler<PatchShowBackgroundStepCommand, StepDto>
+) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchShowBackgroundStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(PatchShowBackgroundStepCommand request, CancellationToken ct)
     {
-        var (_, _, step) = await GetStepContextOrThrow(request, ct);
+        var (_, step) = await GetStepContextOrThrow(request, ct);
 
         if (step is not ShowBackgroundStep showBackgroundStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(ShowBackgroundStep)}");

@@ -26,11 +26,11 @@ public class PatchShowCharacterStepHandler(
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BasePatchStepHandler(novelRepository, labelRepository), IRequestHandler<PatchShowCharacterStepCommand, StepDto>
+) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchShowCharacterStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(PatchShowCharacterStepCommand request, CancellationToken ct)
     {
-        var (_, _, step) = await GetStepContextOrThrow(request, ct);
+        var (_, step) = await GetStepContextOrThrow(request, ct);
 
         if (step is not ShowCharacterStep showCharacterStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(ShowCharacterStep)}");
@@ -38,14 +38,14 @@ public class PatchShowCharacterStepHandler(
         Character? character = null;
         if (request.CharacterId.HasValue)
         {
-            character = await novelRepository.GetCharacterByIdAsync(request.CharacterId.Value, ct)
+            character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId.Value, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         }
         
         CharacterState? state = null;
         if (request.CharacterId.HasValue && request.CharacterStateId.HasValue)
         {
-            state = await novelRepository.GetCharacterStateByIdAsync(request.CharacterId.Value, request.CharacterStateId.Value, ct)
+            state = await novelRepository.GetCharacterStateByIdAsync(request.NovelId, request.CharacterId.Value, request.CharacterStateId.Value, ct)
                     ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterStateId}' не найдено");
         }
 

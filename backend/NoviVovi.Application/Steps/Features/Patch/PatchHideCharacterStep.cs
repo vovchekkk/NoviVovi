@@ -20,11 +20,11 @@ public class PatchHideCharacterStepHandler(
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BasePatchStepHandler(novelRepository, labelRepository), IRequestHandler<PatchHideCharacterStepCommand, StepDto>
+) : BasePatchStepHandler(labelRepository), IRequestHandler<PatchHideCharacterStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(PatchHideCharacterStepCommand request, CancellationToken ct)
     {
-        var (_, _, step) = await GetStepContextOrThrow(request, ct);
+        var (_, step) = await GetStepContextOrThrow(request, ct);
 
         if (step is not HideCharacterStep hideCharacterStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(HideCharacterStep)}");
@@ -32,7 +32,7 @@ public class PatchHideCharacterStepHandler(
         Character? character = null;
         if (request.CharacterId.HasValue)
         {
-            character = await novelRepository.GetCharacterByIdAsync(request.CharacterId.Value, ct)
+            character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId.Value, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         }
         

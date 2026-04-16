@@ -27,6 +27,15 @@ public class Label : Entity
 
         return new Label(Guid.NewGuid(), name, novelId);
     }
+    
+    public IEnumerable<Step> GetStepsUntil(Guid stepId)
+    {
+        foreach (var step in _steps)
+        {
+            yield return step;
+            if (step.Id == stepId) yield break;
+        }
+    }
 
     public void UpdateName(string? name)
     {

@@ -16,7 +16,6 @@ public record PatchLabelCommand : IRequest<LabelDto>
 }
 
 public class PatchLabelHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     LabelDtoMapper mapper

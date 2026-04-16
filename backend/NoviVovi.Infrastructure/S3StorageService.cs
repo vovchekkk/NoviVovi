@@ -9,7 +9,7 @@ public class S3StorageService : IStorageService
         throw new NotImplementedException();
     }
 
-    public string GetViewUrl(string storagePath)
+    public string GetViewUrl(string storagePath) // тут написать что-то осмысленное
     {
         if (string.IsNullOrEmpty(storagePath)) return string.Empty;
         // Здесь логика генерации ссылки (через AWS SDK или просто склейка строк)

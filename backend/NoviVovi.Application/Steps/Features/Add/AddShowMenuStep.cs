@@ -21,15 +21,14 @@ public record AddShowMenuStepCommand : AddStepCommand
 }
 
 public class AddShowMenuStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
-) : BaseAddStepHandler(novelRepository, labelRepository), IRequestHandler<AddShowMenuStepCommand, StepDto>
+) : BaseAddStepHandler(labelRepository), IRequestHandler<AddShowMenuStepCommand, StepDto>
 {
     public async Task<StepDto> Handle(AddShowMenuStepCommand request, CancellationToken ct)
     {
-        var (_, label) = await GetStepContextOrThrow(request, ct);
+        var label = await GetStepContextOrThrow(request, ct);
 
         var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
         var targetLabels = await labelRepository.GetByIdsAsync(targetIds, ct);
