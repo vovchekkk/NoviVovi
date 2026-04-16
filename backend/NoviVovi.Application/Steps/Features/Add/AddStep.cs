@@ -29,6 +29,6 @@ public abstract class BaseAddStepHandler(
         if (label.NovelId != request.NovelId)
             throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
 
-        return (label);
+        return label;
     }
 }

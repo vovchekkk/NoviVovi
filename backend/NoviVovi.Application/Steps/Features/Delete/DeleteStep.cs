@@ -16,7 +16,6 @@ public record DeleteStepCommand(
 ) : IRequest;
 
 public class DeleteStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork
 ) : IRequestHandler<DeleteStepCommand>

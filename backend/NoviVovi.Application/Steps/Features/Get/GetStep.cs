@@ -16,7 +16,6 @@ public record GetStepQuery(
 ) : IRequest<StepDto>;
 
 public class GetStepHandler(
-    INovelRepository novelRepository,
     ILabelRepository labelRepository,
     StepDtoMapper mapper
 ) : IRequestHandler<GetStepQuery, StepDto>
