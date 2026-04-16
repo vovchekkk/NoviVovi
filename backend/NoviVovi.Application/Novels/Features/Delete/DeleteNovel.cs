@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Novels.Abstractions;
 
 namespace NoviVovi.Application.Novels.Features.Delete;
 

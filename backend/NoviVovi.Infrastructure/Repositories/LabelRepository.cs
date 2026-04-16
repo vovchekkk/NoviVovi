@@ -1,4 +1,5 @@
 ﻿using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Domain.Labels;
 using NoviVovi.Infrastructure.Mappers;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;

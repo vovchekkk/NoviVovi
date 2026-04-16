@@ -2,9 +2,12 @@
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Images;
+using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Scene.Dtos;
 using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Domain.Characters;
@@ -31,16 +34,14 @@ public class AddCharacterStateHandler(
 {
     public async Task<CharacterStateDto> Handle(AddCharacterStateCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
-
-        var character = novel.Characters.FirstOrDefault(c => c.Id == request.CharacterId)
-            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
         var image = await imageRepository.GetByIdAsync(request.ImageId, ct);
-        
+
         var transform = transformMapper.ToDomainModel(request.Transform);
-        
+
         var state = CharacterState.Create(request.Name, image, transform, request.Description);
 
         character.AddCharacterState(state);

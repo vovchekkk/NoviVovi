@@ -1,4 +1,5 @@
 ﻿using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 
 namespace NoviVovi.Infrastructure;
 

@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Application.Steps.Mappers;
@@ -23,7 +25,7 @@ public class PatchJumpStepHandler(
 {
     public async Task<StepDto> Handle(PatchJumpStepCommand request, CancellationToken ct)
     {
-        var (_, step) = await GetStepContextOrThrow(request, ct);
+        var step = await GetStepContextOrThrow(request, ct);
 
         if (step is not JumpStep jumpStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(JumpStep)}");

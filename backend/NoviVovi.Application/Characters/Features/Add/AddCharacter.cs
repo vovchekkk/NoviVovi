@@ -2,8 +2,10 @@
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Domain.Characters;
 
 namespace NoviVovi.Application.Characters.Features.Add;

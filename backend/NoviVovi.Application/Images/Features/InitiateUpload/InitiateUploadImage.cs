@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
 using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
+using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Images.Dtos;
 using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Images.Models;

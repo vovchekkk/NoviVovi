@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Scene.Dtos;
 using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Steps.Dtos;
@@ -30,7 +33,9 @@ public class PatchShowCharacterStepHandler(
 {
     public async Task<StepDto> Handle(PatchShowCharacterStepCommand request, CancellationToken ct)
     {
-        var (_, step) = await GetStepContextOrThrow(request, ct);
+        var step = await GetStepContextOrThrow(request, ct);
+        
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
 
         if (step is not ShowCharacterStep showCharacterStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(ShowCharacterStep)}");
@@ -38,15 +43,18 @@ public class PatchShowCharacterStepHandler(
         Character? character = null;
         if (request.CharacterId.HasValue)
         {
-            character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId.Value, ct)
-                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         }
         
         CharacterState? state = null;
         if (request.CharacterId.HasValue && request.CharacterStateId.HasValue)
         {
-            state = await novelRepository.GetCharacterStateByIdAsync(request.NovelId, request.CharacterId.Value, request.CharacterStateId.Value, ct)
-                    ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterStateId}' не найдено");
+            character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            
+            state = character.CharacterStates.FirstOrDefault(c => c.Id == request.CharacterStateId)
+                                ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterStateId}' не найдено");
         }
 
         var transformPatch = request.Transform != null 

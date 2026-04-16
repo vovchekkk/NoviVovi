@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Labels.Dtos;
 using NoviVovi.Application.Labels.Features.Add;
 using NoviVovi.Application.Labels.Mappers;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 
 namespace NoviVovi.Application.Labels.Features.Get;
 
