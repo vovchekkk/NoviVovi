@@ -8,7 +8,7 @@ public class CharacterObject : SceneObject
     public Character Character { get; private set; }
     public CharacterState State { get; private set; }
 
-    private CharacterObject(
+    public CharacterObject(
         Guid id,
         Character character,
         CharacterState state,

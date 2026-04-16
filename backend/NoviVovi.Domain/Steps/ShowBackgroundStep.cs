@@ -9,7 +9,7 @@ public class ShowBackgroundStep : Step
 {
     public BackgroundObject BackgroundObject { get; private set; }
 
-    private ShowBackgroundStep(
+    public ShowBackgroundStep(
         Guid id,
         BackgroundObject backgroundObject,
         NextStepTransition transition

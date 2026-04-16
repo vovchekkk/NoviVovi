@@ -16,7 +16,7 @@ public class Novel : Entity
     public IReadOnlyList<Label> Labels => _labels.AsReadOnly();
     public IReadOnlyCollection<Character> Characters => _characters.AsReadOnly();
 
-    private Novel(Guid id, string title, Label startLabel) : base(id)
+    public Novel(Guid id, string title, Label startLabel) : base(id)
     {
         Title = title;
         StartLabel = startLabel;

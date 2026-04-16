@@ -7,16 +7,31 @@ namespace NoviVovi.Infrastructure.Mappers;
 [Mapper]
 public partial class TransformMapper
 {
-    public Transform ToTransform(TransformDbO dbo) => new()
+    public Transform ToDomain(TransformDbO? dbo)
     {
-        Position = dbo.XPos.HasValue && dbo.YPos.HasValue
-            ? new Position((double)dbo.XPos.Value, (double)dbo.YPos.Value)
-            : new Position(0.0, 0.0),
+        dbo ??= new TransformDbO();
+        var res = new Transform
+        {
+            Position = dbo is { YPos: not null, XPos: not null } ? new Position((double)dbo.XPos.Value, (double)dbo.YPos.Value) : new Position(0, 0),
+            Rotation = dbo.Rotation == null ? 0 : (double)dbo.Rotation,
+            Scale = dbo.Scale==null ? 1 : (double)dbo.Scale,
+            ZIndex = dbo.ZIndex ?? 0,
+            Size = new Size(dbo.Width, dbo.Height)
+        };
+        return res;
+    }
 
-        Size = new Size(dbo.Width, dbo.Height),
-
-        Scale = dbo.Scale.HasValue ? (double)dbo.Scale : 1.0,
-        Rotation = dbo.Rotation.HasValue ? (double)dbo.Rotation : 0.0,
-        ZIndex = dbo.ZIndex ?? 0
-    };
+    public TransformDbO ToDbO(Transform transform)
+    {
+        return new TransformDbO
+        {
+            Height = transform.Size.Height,
+            Width = transform.Size.Width,
+            Rotation = transform.Scale == 0 ? null : (decimal)transform.Rotation,
+            Scale = transform.Scale == 0 ? 1 : (decimal)transform.Scale,
+            XPos = (decimal)transform.Position.X,
+            YPos = (decimal)transform.Position.Y,
+            ZIndex = transform.ZIndex
+        };
+    }
 }

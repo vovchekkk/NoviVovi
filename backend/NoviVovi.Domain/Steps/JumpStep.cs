@@ -6,7 +6,7 @@ namespace NoviVovi.Domain.Steps;
 
 public class JumpStep : Step
 {
-    private JumpStep(Guid id, JumpTransition transition) : base(id, transition)
+    public JumpStep(Guid id, JumpTransition transition) : base(id, transition)
     {
     }
 

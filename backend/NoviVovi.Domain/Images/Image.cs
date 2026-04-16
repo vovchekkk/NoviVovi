@@ -13,7 +13,7 @@ public class Image : Entity
     public Size Size { get; private set; }
     public ImageStatus Status { get; private set; }
 
-    private Image(
+    public Image(
         Guid id,
         string name,
         string storagePath,

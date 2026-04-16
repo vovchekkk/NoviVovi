@@ -1,3 +1,4 @@
+using NoviVovi.Infrastructure.DatabaseObjects.Characters;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 
 namespace NoviVovi.Infrastructure.DatabaseObjects.Novels;
@@ -13,5 +14,7 @@ public class NovelDbO
     public DateTime CreatedAt { get; set; }
     public DateTime EditedAt { get; set; }
     
+    public List<CharacterDbO> Characters { get; set; } = new();
     public List<LabelDbO> Labels { get; set; } = new();
+    public LabelDbO? StartLabel { get; set; } = new();
 }

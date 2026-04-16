@@ -11,15 +11,19 @@ public class StepDbO
     public Guid LabelId { get; set; }
     public Guid? ReplicaId { get; set; }
     public Guid? MenuId { get; set; }
-    public Guid? BgId { get; set; }
+    public Guid? BackgroundId { get; set; }
+    public Guid? CharacterId { get; set; }
     public Guid? NextLabelId { get; set; }
     public int StepOrder { get; set; }
     public string? StepType { get; set; }
+    
+    
 
     public StepType Type{get;set;}
     public ReplicaDbO? Replica { get; set; }
     public MenuDbO? Menu { get; set; }
     public LabelDbO? NextLabel { get; set; }
+    
+    public StepCharacterDbO? Character { get; set; }
     public BackgroundDbO? Background { get; set; }
-    public List<StepCharacterDbO> StepCharacters { get; set; } = new();
 }

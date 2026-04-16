@@ -9,7 +9,7 @@ public class ShowCharacterStep : Step
 {
     public CharacterObject CharacterObject { get; private set; }
 
-    private ShowCharacterStep(
+    public ShowCharacterStep(
         Guid id,
         CharacterObject characterObject,
         NextStepTransition transition
