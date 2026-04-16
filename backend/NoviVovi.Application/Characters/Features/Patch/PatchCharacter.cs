@@ -13,7 +13,7 @@ public record PatchCharacterCommand : IRequest<CharacterDto>
 
 public class PatchCharacterHandler : IRequestHandler<PatchCharacterCommand, CharacterDto>
 {
-    public async Task<CharacterDto> Handle(PatchCharacterCommand request, CancellationToken cancellationToken)
+    public async Task<CharacterDto> Handle(PatchCharacterCommand request, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

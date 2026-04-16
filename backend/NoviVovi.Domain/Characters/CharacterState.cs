@@ -20,8 +20,8 @@ public class CharacterState : Entity
     }
 
     public static CharacterState Create(
-        Image? image,
         string? name,
+        Image? image,
         Transform? localTransform,
         string? description = null)
     {

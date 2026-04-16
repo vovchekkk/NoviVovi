@@ -25,7 +25,7 @@ public class Character : Entity
         return new Character(Guid.NewGuid(), name, description);
     }
 
-    public void AddState(CharacterState characterState)
+    public void AddCharacterState(CharacterState characterState)
     {
         if (characterState is null)
             throw new DomainException($"CharacterState cannot be null");

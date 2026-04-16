@@ -10,7 +10,7 @@ public record GetCharacterStatesQuery(
 
 public class GetCharacterStatesHandler : IRequestHandler<GetCharacterStatesQuery, IEnumerable<CharacterStateDto>>
 {
-    public async Task<IEnumerable<CharacterStateDto>> Handle(GetCharacterStatesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CharacterStateDto>> Handle(GetCharacterStatesQuery request, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

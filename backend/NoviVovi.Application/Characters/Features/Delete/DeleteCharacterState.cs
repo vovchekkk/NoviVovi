@@ -10,7 +10,7 @@ public record DeleteCharacterStateCommand(
 
 public class DeleteCharacterStateHandler : IRequestHandler<DeleteCharacterCommand>
 {
-    public async Task Handle(DeleteCharacterCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteCharacterCommand request, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
