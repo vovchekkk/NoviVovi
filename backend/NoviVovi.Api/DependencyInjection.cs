@@ -1,6 +1,7 @@
 ﻿using NoviVovi.Api.Characters.CommandMappers;
 using NoviVovi.Api.Characters.Mappers;
 using NoviVovi.Api.Dialogue.Mappers;
+using NoviVovi.Api.Images.CommandMappers;
 using NoviVovi.Api.Images.Mappers;
 using NoviVovi.Api.Labels.CommandMappers;
 using NoviVovi.Api.Labels.Mappers;
@@ -29,7 +30,11 @@ public static class DependencyInjection
         
         services.AddSingleton<ReplicaResponseMapper>();
         
+        services.AddSingleton<InitiateUploadImageCommandMapper>();
+        services.AddSingleton<PatchImageCommandMapper>();
+        
         services.AddSingleton<ImageResponseMapper>();
+        services.AddSingleton<UploadInfoImageResponseMapper>();
         
         services.AddSingleton<AddLabelCommandMapper>();
         services.AddSingleton<PatchLabelCommandMapper>();
@@ -42,6 +47,11 @@ public static class DependencyInjection
         services.AddSingleton<CreateNovelCommandMapper>();
         services.AddSingleton<PatchNovelCommandMapper>();
         
+        services.AddSingleton<ChoiceEdgeResponseMapper>();
+        services.AddSingleton<EdgeResponseMapper>();
+        services.AddSingleton<JumpEdgeResponseMapper>();
+        services.AddSingleton<NodeResponseMapper>();
+        services.AddSingleton<NovelGraphResponseMapper>();
         services.AddSingleton<NovelResponseMapper>();
         
         services.AddSingleton<SceneStateResponseMapper>();

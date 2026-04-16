@@ -22,13 +22,19 @@ public static class DependencyInjection
         services.AddSingleton<ReplicaDtoMapper>();
         
         services.AddSingleton<ImageDtoMapper>();
+        services.AddSingleton<UploadInfoImageDtoMapper>();
         
         services.AddSingleton<LabelDtoMapper>();
         
         services.AddSingleton<ChoiceDtoMapper>();
         services.AddSingleton<MenuDtoMapper>();
         
+        services.AddSingleton<ChoiceEdgeDtoMapper>();
+        services.AddSingleton<EdgeDtoMapper>();
+        services.AddSingleton<JumpEdgeDtoMapper>();
+        services.AddSingleton<NodeDtoMapper>();
         services.AddSingleton<NovelDtoMapper>();
+        services.AddSingleton<NovelGraphDtoMapper>();
         
         services.AddSingleton<SceneStateDtoMapper>();
         

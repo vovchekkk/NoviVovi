@@ -1,6 +1,7 @@
 ﻿using MediatR;
+using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Images.Dtos;
-using NoviVovi.Application.Images.Features.Upload;
 using NoviVovi.Application.Images.Mappers;
 
 namespace NoviVovi.Application.Images.Features.Get;
@@ -10,11 +11,18 @@ public record GetImageQuery(
 ) : IRequest<ImageDto>;
 
 public class GetImageHandler(
+    IImageRepository imageRepository,
+    IStorageService storageService,
     ImageDtoMapper mapper
 ) : IRequestHandler<GetImageQuery, ImageDto>
 {
-    public Task<ImageDto> Handle(GetImageQuery request, CancellationToken cancellationToken)
+    public async Task<ImageDto> Handle(GetImageQuery request, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
+                    ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+        
+        var viewUrl = storageService.GetViewUrl(image.StoragePath);
+        
+        return mapper.ToDto(image);
     }
 }
