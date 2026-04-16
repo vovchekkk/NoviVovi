@@ -1,12 +1,15 @@
+using NoviVovi.Api.Scene.Responses;
+
 namespace NoviVovi.Api.Images.Responses;
 
 public record ImageResponse(
     Guid Id,
     string Name,
     string? Description,
-    string Url,
+    string? Url,
+    string StoragePath,
     string Format,
-    string Type,
-    int Width,
-    int Height
+    ImageTypeResponse Type,
+    SizeResponse Size,
+    ImageStatusResponse Status
 );

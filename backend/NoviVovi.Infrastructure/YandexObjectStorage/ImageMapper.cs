@@ -20,7 +20,6 @@ public partial class ImageMapper
         var result = new ImageDbO();
         result.Id = img.Id;
         result.Name = img.Name;
-        result.Url = img.Url;
         result.ImgType = img.Description;
         return result;
     }

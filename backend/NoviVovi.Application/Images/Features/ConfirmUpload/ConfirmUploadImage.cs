@@ -1,29 +1,30 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Images.Dtos;
 using NoviVovi.Application.Images.Mappers;
 
-namespace NoviVovi.Application.Images.Features.Delete;
+namespace NoviVovi.Application.Images.Features.ConfirmUpload;
 
-public record DeleteImageCommand(
+public record ConfirmUploadImageCommand(
     Guid ImageId
-) : IRequest;
+) : IRequest<ImageDto>;
 
-public class DeleteImageHandler(
+public class ConfirmUploadImageHandler(
     IImageRepository imageRepository,
-    IStorageService storageService,
-    IUnitOfWork unitOfWork
-) : IRequestHandler<DeleteImageCommand>
+    IUnitOfWork unitOfWork,
+    ImageDtoMapper mapper
+) : IRequestHandler<ConfirmUploadImageCommand, ImageDto>
 {
-    public async Task Handle(DeleteImageCommand request, CancellationToken ct)
+    public async Task<ImageDto> Handle(ConfirmUploadImageCommand request, CancellationToken ct)
     {
         var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
                     ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
         
-        await imageRepository.DeleteAsync(image, ct);
+        image.ConfirmUpload();
         
         await unitOfWork.SaveChangesAsync(ct);
         
-        await storageService.DeleteFileAsync(image.StoragePath, ct);
+        return mapper.ToDto(image);
     }
 }

@@ -1,0 +1,23 @@
+﻿using NoviVovi.Application.Common;
+
+namespace NoviVovi.Infrastructure;
+
+public class S3StorageService : IStorageService
+{
+    public async Task<string> GetPresignedUploadUrlAsync(string storagePath, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string GetViewUrl(string storagePath)
+    {
+        if (string.IsNullOrEmpty(storagePath)) return string.Empty;
+        // Здесь логика генерации ссылки (через AWS SDK или просто склейка строк)
+        return $"https://cdn.novivovi.com/{storagePath}";
+    }
+
+    public async Task DeleteFileAsync(string storagePath, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+}
