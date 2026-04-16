@@ -20,32 +20,27 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApi(this IServiceCollection services)
     {
-        services.AddSingleton<AddCharacterCommandMapper>();
-        services.AddSingleton<AddCharacterStateCommandMapper>();
-        services.AddSingleton<PatchCharacterCommandMapper>();
-        services.AddSingleton<PatchCharacterStateCommandMapper>();
+        services.AddSingleton<CharacterCommandMapper>();
+        services.AddSingleton<CharacterStateCommandMapper>();
         
         services.AddSingleton<CharacterResponseMapper>();
         services.AddSingleton<CharacterStateResponseMapper>();
         
         services.AddSingleton<ReplicaResponseMapper>();
         
-        services.AddSingleton<InitiateUploadImageCommandMapper>();
-        services.AddSingleton<PatchImageCommandMapper>();
+        services.AddSingleton<ImageCommandMapper>();
         
         services.AddSingleton<ImageResponseMapper>();
         services.AddSingleton<UploadInfoImageResponseMapper>();
         
-        services.AddSingleton<AddLabelCommandMapper>();
-        services.AddSingleton<PatchLabelCommandMapper>();
+        services.AddSingleton<LabelCommandMapper>();
         
         services.AddSingleton<LabelResponseMapper>();
         
         services.AddSingleton<ChoiceResponseMapper>();
         services.AddSingleton<MenuResponseMapper>();
         
-        services.AddSingleton<CreateNovelCommandMapper>();
-        services.AddSingleton<PatchNovelCommandMapper>();
+        services.AddSingleton<NovelCommandMapper>();
         
         services.AddSingleton<ChoiceEdgeResponseMapper>();
         services.AddSingleton<EdgeResponseMapper>();
@@ -63,14 +58,11 @@ public static class DependencyInjection
         services.AddSingleton<TransformRequestMapper>();
         services.AddSingleton<TransformResponseMapper>();
         
-        services.AddSingleton<AddStepCommandMapper>();
-        services.AddSingleton<PatchStepCommandMapper>();
+        services.AddSingleton<StepCommandMapper>();
         
         services.AddSingleton<StepResponseMapper>();
         
-        services.AddSingleton<ChoiceTransitionResponseMapper>();
-        services.AddSingleton<JumpTransitionResponseMapper>();
-        services.AddSingleton<NextStepTransitionResponseMapper>();
+        services.AddSingleton<TransitionResponseMapper>();
         
         return services;
     }

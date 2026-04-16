@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Scene.Dtos;
 using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Steps.Dtos;
@@ -31,15 +34,16 @@ public class AddShowCharacterStepHandler(
     {
         var label = await GetStepContextOrThrow(request, ct);
 
-        var character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId, ct)
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         
-        var characterState = await novelRepository.GetCharacterStateByIdAsync(request.NovelId, request.CharacterId, request.CharacterStateId, ct)
-                            ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterStateId}' не найдено");
+        var state = character.CharacterStates.FirstOrDefault(c => c.Id == request.CharacterStateId)
+                    ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterId}' не найдено");
 
         var transform = transformMapper.ToDomainModel(request.Transform);
         
-        var characterObject = CharacterObject.Create(character, characterState, transform);
+        var characterObject = CharacterObject.Create(character, state, transform);
 
         var step = ShowCharacterStep.Create(characterObject);
 

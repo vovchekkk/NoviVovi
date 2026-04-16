@@ -9,9 +9,9 @@ public partial class NovelGraphDtoMapper(
     EdgeDtoMapper edgeMapper
 )
 {
-    public partial NovelGraphDto ToDto(NovelGraph subject);
+    public partial NovelGraphDto ToDto(NovelGraph source);
 
     private EdgeDto MapEdge(Edge source) => edgeMapper.ToDto(source);
 
-    public partial IEnumerable<NovelGraphDto> ToDtos(IEnumerable<NovelGraph> subjects);
+    public partial IEnumerable<NovelGraphDto> ToDtos(IEnumerable<NovelGraph> sources);
 }

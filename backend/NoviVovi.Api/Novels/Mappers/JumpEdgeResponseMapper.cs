@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Novels.Mappers;
 [Mapper]
 public partial class JumpEdgeResponseMapper
 {
-    public partial JumpEdgeResponse ToResponse(JumpEdge subject);
+    public partial JumpEdgeResponse ToResponse(JumpEdge source);
     
-    public partial IEnumerable<JumpEdgeResponse> ToResponses(IEnumerable<JumpEdge> subjects);
+    public partial IEnumerable<JumpEdgeResponse> ToResponses(IEnumerable<JumpEdge> sources);
 }

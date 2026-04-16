@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Infrastructure.Repositories;
 using NovelRepository = NoviVovi.Infrastructure.Novels.NovelRepository;
 

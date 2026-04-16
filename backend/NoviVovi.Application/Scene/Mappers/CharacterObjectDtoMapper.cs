@@ -13,10 +13,10 @@ public partial class CharacterObjectDtoMapper(
     TransformDtoMapper transformMapper
 )
 {
-    public partial CharacterObjectDto ToDto(CharacterObject subject);
+    public partial CharacterObjectDto ToDto(CharacterObject source);
 
     private ImageDto MapImage(Image source) => imageMapper.ToDto(source);
     private TransformDto MapTransform(Transform source) => transformMapper.ToDto(source);
 
-    public partial IEnumerable<CharacterObjectDto> ToDtos(IEnumerable<CharacterObject> subjects);
+    public partial IEnumerable<CharacterObjectDto> ToDtos(IEnumerable<CharacterObject> sources);
 }

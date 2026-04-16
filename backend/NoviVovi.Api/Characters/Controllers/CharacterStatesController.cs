@@ -14,8 +14,7 @@ namespace NoviVovi.Api.Characters.Controllers;
 [Route("api/novels/{novelId:guid}/characters/{characterId:guid}/states")]
 public class CharacterStatesController(
     IMediator mediator,
-    AddCharacterStateCommandMapper addCommandMapper,
-    PatchCharacterStateCommandMapper patchCommandMapper,
+    CharacterStateCommandMapper commandMapper,
     CharacterStateResponseMapper mapper
 ) : ControllerBase
 {
@@ -26,7 +25,7 @@ public class CharacterStatesController(
         [FromBody] AddCharacterStateRequest request
     )
     {
-        var command = addCommandMapper.ToCommand(request, novelId, characterId);
+        var command = commandMapper.ToCommand(request, novelId, characterId);
 
         var characterState = await mediator.Send(command);
 
@@ -64,7 +63,7 @@ public class CharacterStatesController(
         PatchCharacterStateRequest request
     )
     {
-        var command = patchCommandMapper.ToCommand(request, novelId, characterId, stateId);
+        var command = commandMapper.ToCommand(request, novelId, characterId, stateId);
 
         var characterState = await mediator.Send(command);
 

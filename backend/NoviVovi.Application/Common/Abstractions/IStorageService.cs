@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Application.Common;
+﻿namespace NoviVovi.Application.Common.Abstractions;
 
 public interface IStorageService
 {

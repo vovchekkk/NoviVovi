@@ -3,6 +3,7 @@ using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 
 namespace NoviVovi.Application.Characters.Features.Get;
 
@@ -17,11 +18,8 @@ public class GetCharactersHandler(
 {
     public async Task<IEnumerable<CharacterDto>> Handle(GetCharactersQuery request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
 
-        var characters = novel.Characters;
-
-        return mapper.ToDtos(characters);
+        return mapper.ToDtos(allCharacters);
     }
 }

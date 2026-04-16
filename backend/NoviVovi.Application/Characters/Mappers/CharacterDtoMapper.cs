@@ -9,9 +9,9 @@ public partial class CharacterDtoMapper(
     CharacterStateDtoMapper characterStateMapper
 )
 {
-    public partial CharacterDto ToDto(Character subject);
+    public partial CharacterDto ToDto(Character source);
 
     private CharacterStateDto MapCharacterState(CharacterState source) => characterStateMapper.ToDto(source);
 
-    public partial IEnumerable<CharacterDto> ToDtos(IEnumerable<Character> subjects);
+    public partial IEnumerable<CharacterDto> ToDtos(IEnumerable<Character> sources);
 }

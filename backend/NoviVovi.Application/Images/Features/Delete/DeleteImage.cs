@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Images.Mappers;
 
 namespace NoviVovi.Application.Images.Features.Delete;

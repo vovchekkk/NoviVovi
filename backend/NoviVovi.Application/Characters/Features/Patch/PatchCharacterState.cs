@@ -2,9 +2,12 @@
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Images;
+using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Scene.Dtos;
 using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Domain.Images;
@@ -32,11 +35,9 @@ public class PatchCharacterStateHandler(
 {
     public async Task<CharacterStateDto> Handle(PatchCharacterStateCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
-
-        var character = novel.Characters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                    ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
         var state = character.CharacterStates.FirstOrDefault(c => c.Id == request.StateId)
                     ?? throw new NotFoundException($"Состояние персонажа '{request.StateId}' не найдено");

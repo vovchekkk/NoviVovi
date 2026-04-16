@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Scene.Mappers;
 [Mapper]
 public partial class SizeResponseMapper
 {
-    public partial SizeResponse ToResponse(SizeDto subject);
+    public partial SizeResponse ToResponse(SizeDto source);
     
-    public partial IEnumerable<SizeResponse> ToResponses(IEnumerable<SizeDto> subjects);
+    public partial IEnumerable<SizeResponse> ToResponses(IEnumerable<SizeDto> sources);
 }

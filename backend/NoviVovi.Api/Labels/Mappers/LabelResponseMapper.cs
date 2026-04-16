@@ -12,9 +12,9 @@ public partial class LabelResponseMapper(
     StepResponseMapper stepMapper
 )
 {
-    public partial LabelResponse ToResponse(LabelDto subject);
+    public partial LabelResponse ToResponse(LabelDto source);
 
     private StepResponse MapStep(StepDto source) => stepMapper.ToResponse(source);
 
-    public partial IEnumerable<LabelResponse> ToResponses(IEnumerable<LabelDto> subjects);
+    public partial IEnumerable<LabelResponse> ToResponses(IEnumerable<LabelDto> sources);
 }

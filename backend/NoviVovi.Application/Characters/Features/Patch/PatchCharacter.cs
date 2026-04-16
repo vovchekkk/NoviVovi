@@ -2,8 +2,10 @@
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 
 namespace NoviVovi.Application.Characters.Features.Patch;
 
@@ -23,10 +25,8 @@ public class PatchCharacterHandler(
 {
     public async Task<CharacterDto> Handle(PatchCharacterCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
-
-        var character = novel.Characters.FirstOrDefault(c => c.Id == request.CharacterId)
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         
         if (request.Name is not null)

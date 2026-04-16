@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Application.Steps.Mappers;
 using NoviVovi.Domain.Dialogue;
@@ -28,7 +31,8 @@ public class AddShowReplicaStepHandler(
     {
         var label = await GetStepContextOrThrow(request, ct);
 
-        var character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId, ct)
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         
         var replica = Replica.Create(character, request.Text);

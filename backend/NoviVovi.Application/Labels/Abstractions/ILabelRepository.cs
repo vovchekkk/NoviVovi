@@ -1,6 +1,6 @@
 ﻿using NoviVovi.Domain.Labels;
 
-namespace NoviVovi.Application.Labels;
+namespace NoviVovi.Application.Labels.Abstractions;
 
 public interface ILabelRepository
 {

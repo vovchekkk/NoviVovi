@@ -1,4 +1,5 @@
 ﻿using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Images.Dtos;
 using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Domain.Images;

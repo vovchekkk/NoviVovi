@@ -15,8 +15,7 @@ namespace NoviVovi.Api.Steps.Controllers;
 [Route("api/novels/{novelId:guid}/labels/{labelId:guid}/steps")]
 public class StepsController(
     IMediator mediator,
-    AddStepCommandMapper addCommandMapper,
-    PatchStepCommandMapper patchCommandMapper,
+    StepCommandMapper commandMapper,
     StepResponseMapper mapper
 ) : ControllerBase
 {
@@ -27,7 +26,7 @@ public class StepsController(
         AddStepRequest request
     )
     {
-        var command = addCommandMapper.ToCommand((dynamic)request, novelId, labelId);
+        var command = commandMapper.ToCommand((dynamic)request, novelId, labelId);
         
         var step = await mediator.Send((dynamic) command);
 
@@ -59,7 +58,7 @@ public class StepsController(
         [FromBody] PatchStepRequest request
     )
     {
-        var command = patchCommandMapper.ToCommand((dynamic)request, novelId, labelId, stepId);
+        var command = commandMapper.ToCommand((dynamic)request, novelId, labelId, stepId);
 
         var step = await mediator.Send((dynamic)command);
 

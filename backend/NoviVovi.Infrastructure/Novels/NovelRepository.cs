@@ -1,4 +1,5 @@
 ﻿using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Domain.Characters;
 using NoviVovi.Domain.Novels;
 

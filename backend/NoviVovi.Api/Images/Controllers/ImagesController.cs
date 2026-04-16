@@ -15,8 +15,7 @@ namespace NoviVovi.Api.Images.Controllers;
 [Route("api/images")]
 public class ImagesController(
     IMediator mediator,
-    InitiateUploadImageCommandMapper initiateUploadCommandMapper,
-    PatchImageCommandMapper patchCommandMapper,
+    ImageCommandMapper commandMapper,
     ImageResponseMapper mapper,
     UploadInfoImageResponseMapper uploadInfoImageMapper
 ) : ControllerBase
@@ -42,7 +41,7 @@ public class ImagesController(
         [FromBody] InitiateUploadImageRequest request
     )
     {
-        var command = initiateUploadCommandMapper.ToCommand(request);
+        var command = commandMapper.ToCommand(request);
         var uploadInfo = await mediator.Send(command);
 
         // Мапим техническую инфу (ID и URL на загрузку)
@@ -71,7 +70,7 @@ public class ImagesController(
         [FromBody] PatchImageRequest request
     )
     {
-        var command = patchCommandMapper.ToCommand(request, imageId);
+        var command = commandMapper.ToCommand(request, imageId);
         var imageDto = await mediator.Send(command);
         return Ok(mapper.ToResponse(imageDto));
     }

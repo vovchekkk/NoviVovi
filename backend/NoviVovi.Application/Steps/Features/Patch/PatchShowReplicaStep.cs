@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Application.Steps.Mappers;
 using NoviVovi.Domain.Characters;
@@ -26,7 +29,9 @@ public class PatchShowReplicaStepHandler(
 {
     public async Task<StepDto> Handle(PatchShowReplicaStepCommand request, CancellationToken ct)
     {
-        var (_, step) = await GetStepContextOrThrow(request, ct);
+        var step = await GetStepContextOrThrow(request, ct);
+        
+        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
 
         if (step is not ShowReplicaStep showReplicaStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(ShowReplicaStep)}");
@@ -34,7 +39,7 @@ public class PatchShowReplicaStepHandler(
         Character? character = null;
         if (request.CharacterId.HasValue)
         {
-            character = await novelRepository.GetCharacterByIdAsync(request.NovelId, request.CharacterId.Value, ct)
+            character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         }
 

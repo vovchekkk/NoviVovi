@@ -7,7 +7,7 @@ namespace NoviVovi.Application.Novels.Mappers;
 [Mapper]
 public partial class NodeDtoMapper
 {
-    public partial NodeDto ToDto(Node subject);
+    public partial NodeDto ToDto(Node source);
     
-    public partial IEnumerable<NodeDto> ToDtos(IEnumerable<Node> subjects);
+    public partial IEnumerable<NodeDto> ToDtos(IEnumerable<Node> sources);
 }

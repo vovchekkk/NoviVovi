@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Images;
+using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels;
 using NoviVovi.Application.Scene.Dtos;
 using NoviVovi.Application.Scene.Mappers;
@@ -29,7 +32,7 @@ public class PatchShowBackgroundStepHandler(
 {
     public async Task<StepDto> Handle(PatchShowBackgroundStepCommand request, CancellationToken ct)
     {
-        var (_, step) = await GetStepContextOrThrow(request, ct);
+        var step = await GetStepContextOrThrow(request, ct);
 
         if (step is not ShowBackgroundStep showBackgroundStep)
             throw new BadRequestException($"Step {step.Id} is not {typeof(ShowBackgroundStep)}");

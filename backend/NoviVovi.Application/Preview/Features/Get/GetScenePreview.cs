@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Labels;
+using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Preview.Dtos;
 using NoviVovi.Application.Preview.Mappers;
 using NoviVovi.Domain.Preview;

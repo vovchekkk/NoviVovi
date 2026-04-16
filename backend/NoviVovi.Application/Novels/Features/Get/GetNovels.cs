@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Novels.Dtos;
 using NoviVovi.Application.Novels.Mappers;
 
