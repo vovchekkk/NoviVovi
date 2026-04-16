@@ -2,7 +2,7 @@
 
 public sealed class NextStepTransition : Transition
 {
-    private NextStepTransition()
+    public NextStepTransition()
     {
     }
 

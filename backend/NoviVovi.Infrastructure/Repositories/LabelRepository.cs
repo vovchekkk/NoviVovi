@@ -13,19 +13,18 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
         return  dbo == null ? null : mapper.ToDomain(dbo);
     }
 
-    public async Task AddAsync(Label label, Guid novelId, CancellationToken ct)
+    public Task<IEnumerable<Label>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct)
     {
-        var dbo = mapper.ToDbO(label, novelId);
-        await dboRepo.AddFullAsync(dbo);
+        throw new NotImplementedException();
+    }
+
+    public Task AddAsync(Label label, CancellationToken ct)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task DeleteAsync(Label label, CancellationToken ct)
     {
         await dboRepo.DeleteAsync(label.Id);
-    }
-
-    public Task DeleteByNovelIdAsync(Guid novelId, CancellationToken ct)
-    {
-        throw new NotImplementedException(); //а это зачем? У нас при удалении новеллы и так все удалится
     }
 }

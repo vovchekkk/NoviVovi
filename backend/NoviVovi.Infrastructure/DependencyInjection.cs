@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NoviVovi.Application.Common;
-using NoviVovi.Application.Labels;
 using NoviVovi.Application.Novels;
-using NoviVovi.Infrastructure.DatabaseService;
-using NoviVovi.Infrastructure.Mappers;
 using NoviVovi.Infrastructure.Novels;
-using NoviVovi.Infrastructure.OldStuff.Labels;
 
 namespace NoviVovi.Infrastructure;
 
@@ -19,11 +15,11 @@ public static class DependencyInjection
         var connString = configuration.GetConnectionString("NovelDatabase") ??
                                throw new ArgumentNullException("No such connection string");
         
-        services.AddScoped<NovelDatabaseService>(sp => 
-            new NovelDatabaseService(connString));
+        // services.AddScoped<NovelDatabaseService>(sp => 
+        //     new NovelDatabaseService(connString));
         
         services.AddSingleton<INovelRepository, NovelRepository>();
-        services.AddSingleton<ILabelRepository, LabelRepository>();
+        // services.AddSingleton<ILabelRepository, LabelRepository>();
         
         services.AddSingleton<IStorageService, S3StorageService>();
         services.AddSingleton<IUnitOfWork, UnitOfWork>();

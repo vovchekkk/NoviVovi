@@ -9,7 +9,7 @@ public class HideCharacterStep : Step
 {
     public Character Character { get; private set; }
 
-    private HideCharacterStep(
+    public HideCharacterStep(
         Guid id,
         Character character,
         NextStepTransition transition

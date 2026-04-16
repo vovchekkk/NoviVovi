@@ -31,27 +31,27 @@ public static class DbExtensions
         };
     }
 
-    public static ImageType ToImageType(this string imgType)
-    {
-        return imgType switch
-        {
-            "character" => ImageType.Character,
-            "background" => ImageType.Background,
-            "cover" => ImageType.Cover,
-            "icon" => ImageType.Icon,
-            _ => ImageType.Character
-        };
-    }
+    // public static ImageType ToImageType(this string imgType)
+    // {
+    //     return imgType switch
+    //     {
+    //         "character" => ImageType.Character,
+    //         "background" => ImageType.Background,
+    //         "cover" => ImageType.Cover,
+    //         "icon" => ImageType.Icon,
+    //         _ => ImageType.Character
+    //     };
+    // }
 
-    public static string ToImageTypeString(this ImageType imageType)
-    {
-        return imageType switch
-        {
-            ImageType.Character => "character",
-            ImageType.Background => "background",
-            ImageType.Cover => "cover",
-            ImageType.Icon => "icon",
-            _ => "character"
-        };
-    }
+    // public static string ToImageTypeString(this ImageType imageType)
+    // {
+    //     return imageType switch
+    //     {
+    //         ImageType.Character => "character",
+    //         ImageType.Background => "background",
+    //         ImageType.Cover => "cover",
+    //         ImageType.Icon => "icon",
+    //         _ => "character"
+    //     };
+    // }
 }

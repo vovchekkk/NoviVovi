@@ -15,9 +15,10 @@ public partial class ImageMapper(TransformMapper mapper)
             imgDbo.Name,
             imgDbo.Url,
             imgDbo.Format,
-            imgDbo.ImgType,
-            imgDbo.Width,
-            imgDbo.Height); 
+            imgDbo.ImgType.ToImageType(),
+            new Size(imgDbo.Width, imgDbo.Height),
+            null,
+            ImageStatus.Active); 
         return img;
     }
 
@@ -27,10 +28,10 @@ public partial class ImageMapper(TransformMapper mapper)
         {
             Id = img.Id,
             Name = img.Name,
-            Url = img.Url,
-            ImgType = img.Type,
-            Width = img.Width,
-            Height = img.Height,
+            Url = img.StoragePath,
+            ImgType = img.Type.TypeToString(),
+            Width = img.Size.Width,
+            Height = img.Size.Height,
             Format = img.Format,
             NovelId = novelId
         };

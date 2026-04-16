@@ -11,7 +11,7 @@ public class Label : Entity
 
     public IReadOnlyList<Step> Steps => _steps.AsReadOnly();
 
-    private Label(Guid id, string name, Guid novelId) : base(id)
+    public Label(Guid id, string name, Guid novelId) : base(id)
     {
         Name = name;
         NovelId = novelId;

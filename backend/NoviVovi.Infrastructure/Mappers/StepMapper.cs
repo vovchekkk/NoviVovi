@@ -29,7 +29,7 @@ public partial class StepMapper(
         return new StepDbO();
     }
 
-    public StepDbO ToDbO(JumpStep step, Guid labelId, Guid novelId, int stepOrder)
+    public StepDbO ToDbO(JumpStep step, Guid labelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -39,7 +39,7 @@ public partial class StepMapper(
             StepOrder = stepOrder,
             NextLabelId = step.Transition.TargetLabel.Id
         };
-        var label = labelMapper.ToDbO(step.Transition.TargetLabel, novelId);
+        var label = labelMapper.ToDbO(step.Transition.TargetLabel);
         res.NextLabel = label;
         return res;
     }
@@ -107,7 +107,7 @@ public partial class StepMapper(
     {
         if(step.CharacterId == null || step.Character == null)
             throw new ArgumentException("Invalid step character");
-        var res = new HideCharacterStep(step.Id, characterMapper.ToDomain(step.Character.Character), new NextStepTransition(Guid.Empty));
+        var res = new HideCharacterStep(step.Id, characterMapper.ToDomain(step.Character.Character), new NextStepTransition());
         return res;
     }
 
@@ -115,7 +115,7 @@ public partial class StepMapper(
     {
         if (step.NextLabelId == null || step.NextLabel == null)
             throw new ArgumentException("Invalid JumpStep StepDbO, not a jump, not a step");
-        var res = new JumpStep(step.Id, new JumpTransition(Guid.Empty, labelMapper.ToDomain(step.NextLabel)));
+        var res = new JumpStep(step.Id, new JumpTransition(labelMapper.ToDomain(step.NextLabel)));
         return res;
     }
 
@@ -124,7 +124,7 @@ public partial class StepMapper(
         if(step.BackgroundId == null || step.Background == null)
             throw new ArgumentException("Invalid BackgroundStep StepDbO");
         var res = new ShowBackgroundStep(step.Id, imageMapper.ToDomain(step.Background),
-            new NextStepTransition(Guid.Empty));
+            new NextStepTransition());
         return res;
     }
 
@@ -132,7 +132,7 @@ public partial class StepMapper(
     {
         if(step.CharacterId == null || step.Character == null)
             throw new ArgumentException("Invalid CharacterStep StepDbO");
-        var res = new ShowCharacterStep(step.Id, characterMapper.ToDomain(step.Character), new NextStepTransition(Guid.Empty));
+        var res = new ShowCharacterStep(step.Id, characterMapper.ToDomain(step.Character), new NextStepTransition());
         return res;
     }
     
@@ -140,7 +140,7 @@ public partial class StepMapper(
     {
         if(step.MenuId == null || step.Menu == null)
             throw new ArgumentException("Invalid MenuStep StepDbO");
-        var res = new ShowMenuStep(step.Id, menuMapper.ToDomain(step.Menu), new NextStepTransition(Guid.Empty));
+        var res = new ShowMenuStep(step.Id, menuMapper.ToDomain(step.Menu), new NextStepTransition());
         return res;
     }
 
@@ -148,7 +148,7 @@ public partial class StepMapper(
     {
         if(step.ReplicaId == null || step.Replica == null)
             throw new ArgumentException("Invalid ReplicaStep StepDbO");
-        var res = new ShowReplicaStep(step.Id, replicaMapper.ToDomain(step.Replica), new NextStepTransition(Guid.Empty));
+        var res = new ShowReplicaStep(step.Id, replicaMapper.ToDomain(step.Replica), new NextStepTransition());
         return res;
     }
     

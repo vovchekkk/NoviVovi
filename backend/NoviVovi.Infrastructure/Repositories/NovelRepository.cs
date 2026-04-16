@@ -1,4 +1,5 @@
 ﻿using NoviVovi.Application.Novels;
+using NoviVovi.Domain.Characters;
 using NoviVovi.Domain.Novels;
 using NoviVovi.Infrastructure.Mappers;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
@@ -28,5 +29,45 @@ public class NovelRepository(INovelDbORepository dbORepository, NovelsMapper map
     {
         var dbos = await dbORepository.GetAllFullAsync();
         return dbos.Select(dto => mapper.ToDomain(dto));
+    }
+
+    public Task<Character?> GetCharacterByIdAsync(Guid characterId, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddCharacterAsync(Character character, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteCharacterAsync(Character character, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Character>> GetAllCharactersAsync(CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CharacterState?> GetCharacterStateByIdAsync(Guid characterId, Guid stateId, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddCharacterStateAsync(Guid characterId, CharacterState state, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteCharacterStateAsync(Guid characterId, CharacterState state, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<CharacterState>> GetAllCharacterStatesAsync(Guid characterId, CancellationToken ct)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -28,7 +28,7 @@ public partial class MenuMapper(LabelMapper labelMapper)
             Name = choice.Name,
             Text = choice.Text,
             NextLabelId = choice.Transition.TargetLabel.Id,
-            NextLabel = labelMapper.ToDbO(choice.Transition.TargetLabel, novelId),
+            NextLabel = labelMapper.ToDbO(choice.Transition.TargetLabel),
         };
         return res;
     }
@@ -47,7 +47,7 @@ public partial class MenuMapper(LabelMapper labelMapper)
     {
         if (choice.NextLabel == null) throw new ArgumentException("Unsupported choice");
         var res = new Choice(choice.Id, choice.Name, null, choice.Text,
-            new ChoiceTransition(Guid.Empty, labelMapper.ToDomain(choice.NextLabel)));
+            new ChoiceTransition(labelMapper.ToDomain(choice.NextLabel)));
         return res;
     }
 }

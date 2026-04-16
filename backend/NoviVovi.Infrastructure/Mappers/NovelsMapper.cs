@@ -30,8 +30,8 @@ public partial class NovelsMapper(CharacterMapper characterMapper, LabelMapper l
             Title = domain.Title,
             IsPublic = true,
             Characters = domain.Characters.Select(c => characterMapper.ToDbO(c, domain.Id)).ToList(),
-            Labels = domain.Labels.Select(l => labelMapper.ToDbO(l, domain.Id)).ToList(),
-            StartLabel = labelMapper.ToDbO(domain.StartLabel, domain.Id)
+            Labels = domain.Labels.Select(labelMapper.ToDbO).ToList(),
+            StartLabel = labelMapper.ToDbO(domain.StartLabel)
         };
         return result;
     }
