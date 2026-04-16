@@ -31,42 +31,42 @@ public class NovelRepository(INovelDbORepository dbORepository, NovelsMapper map
         return dbos.Select(dto => mapper.ToDomain(dto));
     }
 
-    public Task<Character?> GetCharacterByIdAsync(Guid characterId, CancellationToken ct)
+    public Task<Character?> GetCharacterByIdAsync(Guid novelId, Guid characterId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task AddCharacterAsync(Character character, CancellationToken ct)
+    public Task AddCharacterAsync(Guid novelId, Character character, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteCharacterAsync(Character character, CancellationToken ct)
+    public Task DeleteCharacterAsync(Guid novelId, Character character, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Character>> GetAllCharactersAsync(CancellationToken ct)
+    public Task<IEnumerable<Character>> GetAllCharactersAsync(Guid novelId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task<CharacterState?> GetCharacterStateByIdAsync(Guid characterId, Guid stateId, CancellationToken ct)
+    public Task<CharacterState?> GetCharacterStateByIdAsync(Guid novelId, Guid characterId, Guid stateId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task AddCharacterStateAsync(Guid characterId, CharacterState state, CancellationToken ct)
+    public Task AddCharacterStateAsync(Guid novelId, Guid characterId, CharacterState state, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteCharacterStateAsync(Guid characterId, CharacterState state, CancellationToken ct)
+    public Task DeleteCharacterStateAsync(Guid novelId, Guid characterId, CharacterState state, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<CharacterState>> GetAllCharacterStatesAsync(Guid characterId, CancellationToken ct)
+    public Task<IEnumerable<CharacterState>> GetAllCharacterStatesAsync(Guid novelId, Guid characterId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

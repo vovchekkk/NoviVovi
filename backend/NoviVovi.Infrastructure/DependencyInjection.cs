@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NoviVovi.Application.Common;
+using NoviVovi.Application.Labels;
 using NoviVovi.Application.Novels;
-using NoviVovi.Infrastructure.Novels;
+using NoviVovi.Infrastructure.Repositories;
+using NovelRepository = NoviVovi.Infrastructure.Novels.NovelRepository;
 
 namespace NoviVovi.Infrastructure;
 
@@ -19,7 +21,7 @@ public static class DependencyInjection
         //     new NovelDatabaseService(connString));
         
         services.AddSingleton<INovelRepository, NovelRepository>();
-        // services.AddSingleton<ILabelRepository, LabelRepository>();
+        services.AddSingleton<ILabelRepository, LabelRepository>();
         
         services.AddSingleton<IStorageService, S3StorageService>();
         services.AddSingleton<IUnitOfWork, UnitOfWork>();

@@ -10,32 +10,34 @@ public partial class ImageMapper(TransformMapper mapper)
 {
     public Image ToDomain(ImageDbO imgDbo)
     {
-        var img = new Image(
-            imgDbo.Id,
-            imgDbo.Name,
-            imgDbo.Url,
-            imgDbo.Format,
-            imgDbo.ImgType.ToImageType(),
-            new Size(imgDbo.Width, imgDbo.Height),
-            null,
-            ImageStatus.Active); 
-        return img;
+        // var img = new Image(
+        //     imgDbo.Id,
+        //     imgDbo.Name,
+        //     imgDbo.Url,
+        //     imgDbo.Format,
+        //     imgDbo.ImgType.ToImageType(),
+        //     new Size(imgDbo.Width, imgDbo.Height),
+        //     null,
+        //     ImageStatus.Active); 
+        // return img;
+        throw new NotImplementedException();
     }
 
     public ImageDbO ToDbO(Image img, Guid novelId)
     {
-        var result = new ImageDbO
-        {
-            Id = img.Id,
-            Name = img.Name,
-            Url = img.StoragePath,
-            ImgType = img.Type.TypeToString(),
-            Width = img.Size.Width,
-            Height = img.Size.Height,
-            Format = img.Format,
-            NovelId = novelId
-        };
-        return result;
+        // var result = new ImageDbO
+        // {
+        //     Id = img.Id,
+        //     Name = img.Name,
+        //     Url = img.StoragePath,
+        //     ImgType = img.Type.TypeToString(),
+        //     Width = img.Size.Width,
+        //     Height = img.Size.Height,
+        //     Format = img.Format,
+        //     NovelId = novelId
+        // };
+        // return result;
+        throw new NotImplementedException();
     }
 
     public BackgroundObject ToDomain(BackgroundDbO background)
