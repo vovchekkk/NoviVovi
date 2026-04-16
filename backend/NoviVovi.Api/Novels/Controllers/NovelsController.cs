@@ -17,8 +17,7 @@ namespace NoviVovi.Api.Novels.Controllers;
 [Route("api/novels")]
 public class NovelsController(
     IMediator mediator,
-    CreateNovelCommandMapper createNovelCommandMapper,
-    PatchNovelCommandMapper patchNovelCommandMapper,
+    NovelCommandMapper commandMapper,
     NovelResponseMapper novelMapper,
     NovelGraphResponseMapper novelGraphMapper
 ) : ControllerBase
@@ -28,7 +27,7 @@ public class NovelsController(
         [FromBody] CreateNovelRequest request
     )
     {
-        var command = createNovelCommandMapper.ToCommand(request);
+        var command = commandMapper.ToCommand(request);
         
         var novel = await mediator.Send(command);
 
@@ -59,7 +58,7 @@ public class NovelsController(
         [FromBody] PatchNovelRequest request
     )
     {
-        var command = patchNovelCommandMapper.ToCommand(request, novelId);
+        var command = commandMapper.ToCommand(request, novelId);
         
         var novel = await mediator.Send(command);
 

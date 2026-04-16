@@ -14,8 +14,7 @@ namespace NoviVovi.Api.Labels.Controllers;
 [Route("api/novels/{novelId:guid}/labels")]
 public class LabelsController(
     IMediator mediator,
-    AddLabelCommandMapper addCommandMapper,
-    PatchLabelCommandMapper patchCommandMapper,
+    LabelCommandMapper commandMapper,
     LabelResponseMapper mapper
 ) : ControllerBase
 {
@@ -25,7 +24,7 @@ public class LabelsController(
         [FromBody] AddLabelRequest request
     )
     {
-        var command = addCommandMapper.ToCommand(request, novelId);
+        var command = commandMapper.ToCommand(request, novelId);
 
         var label = await mediator.Send(command);
 
@@ -60,7 +59,7 @@ public class LabelsController(
         PatchLabelRequest request
     )
     {
-        var command = patchCommandMapper.ToCommand(request, novelId, labelId);
+        var command = commandMapper.ToCommand(request, novelId, labelId);
 
         var label = await mediator.Send(command);
 
