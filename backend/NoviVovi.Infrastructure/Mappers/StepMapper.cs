@@ -24,7 +24,7 @@ public partial class StepMapper(
             StepType = StepType.HideCharacter.ToStepTypeString(),
             LabelId = labelId,
             StepOrder = stepOrder,
-            CharacterId = step.Character.Id //TODO! убить владимира
+            CharacterId = step.Character.Id
         };
         return new StepDbO();
     }
@@ -44,7 +44,7 @@ public partial class StepMapper(
         return res;
     }
 
-    public StepDbO ToDbO(ShowBackgroundStep step, Guid labelId, int stepOrder)
+    public StepDbO ToDbO(ShowBackgroundStep step, Guid labelId, Guid novelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -52,7 +52,8 @@ public partial class StepMapper(
             StepType = StepType.ShowBackground.ToStepTypeString(),
             LabelId = labelId,
             StepOrder = stepOrder,
-            BackgroundId = step.BackgroundObject.Id
+            BackgroundId = step.BackgroundObject.Id,
+            Background = imageMapper.ToDbO(step.BackgroundObject, novelId)
         };
         return res;
     }
@@ -122,7 +123,7 @@ public partial class StepMapper(
     {
         if(step.BackgroundId == null || step.Background == null)
             throw new ArgumentException("Invalid BackgroundStep StepDbO");
-        var res = new ShowBackgroundStep(step.Id, imageMapper.ToDbO(step.Background),
+        var res = new ShowBackgroundStep(step.Id, imageMapper.ToDomain(step.Background),
             new NextStepTransition(Guid.Empty));
         return res;
     }
@@ -179,7 +180,7 @@ public partial class StepMapper(
         if(type == typeof(JumpStep))
             return ToDbO((JumpStep)step, labelId, novelId, stepOrder);
         if(type == typeof(ShowBackgroundStep))
-            return ToDbO((ShowBackgroundStep)step, labelId, stepOrder);
+            return ToDbO((ShowBackgroundStep)step, labelId, novelId, stepOrder);
         if(type == typeof(ShowMenuStep))
             return ToDbO((ShowMenuStep)step, labelId, novelId, stepOrder);
         if(type == typeof(ShowReplicaStep))

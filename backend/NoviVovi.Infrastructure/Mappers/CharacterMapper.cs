@@ -25,12 +25,12 @@ public partial class CharacterMapper(ImageMapper imageMapper, TransformMapper tr
             Name = character.Name,
             NovelId = novelId,
             Description = character.Description,
-            States = ToDbO(character.CharacterStates, character.Id)
+            States = ToDbO(character.CharacterStates, character.Id, novelId)
         };
         return res;
     }
     
-    public CharacterStateDbO ToDbO(CharacterState character, Guid characterId)
+    public CharacterStateDbO ToDbO(CharacterState character, Guid characterId, Guid novelId)
     {
         var res = new CharacterStateDbO
         {
@@ -38,14 +38,15 @@ public partial class CharacterMapper(ImageMapper imageMapper, TransformMapper tr
             CharacterId = characterId,
             Description = character.Description,
             ImageId = character.Image.Id,
-            StateName = character.Name
+            StateName = character.Name,
+            Image = imageMapper.ToDbO(character.Image, novelId),
         };
         return res;
     }
 
-    public List<CharacterStateDbO> ToDbO(IEnumerable<CharacterState> character, Guid characterId)
+    public List<CharacterStateDbO> ToDbO(IEnumerable<CharacterState> character, Guid characterId, Guid novelId)
     {
-        return character.Select(characterState => ToDbO(characterState, characterId)).ToList();
+        return character.Select(characterState => ToDbO(characterState, characterId, novelId)).ToList();
     }
 
     public CharacterState ToDomain(CharacterStateDbO dbo)
@@ -66,9 +67,10 @@ public partial class CharacterMapper(ImageMapper imageMapper, TransformMapper tr
         {
             Id = stepCharacterObject.Id,
             CharacterStateId = stepCharacterObject.State.Id,
-            CharacterState = ToDbO(stepCharacterObject.State, novelId),
+            CharacterState = ToDbO(stepCharacterObject.State, stepCharacterObject.Character.Id, novelId),
             TransformId = Guid.Empty,
-            Transform = transformMapper.ToDbO(stepCharacterObject.Transform)
+            Transform = transformMapper.ToDbO(stepCharacterObject.Transform),
+            Character = ToDbO(stepCharacterObject.Character, novelId)
         };
         return res;
     }

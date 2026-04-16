@@ -45,11 +45,9 @@ public partial class MenuMapper(LabelMapper labelMapper)
 
     private Choice ToDomain(ChoiceDbO choice)
     {
-        if (choice.NextLabel != null)
-        {
-            var res = new Choice(choice.Id, choice.Name, null, choice.Text,
-                new ChoiceTransition(Guid.Empty, labelMapper.ToDomain(choice.NextLabel)));
-        }
-        throw new ArgumentException("Unsupported choice");
+        if (choice.NextLabel == null) throw new ArgumentException("Unsupported choice");
+        var res = new Choice(choice.Id, choice.Name, null, choice.Text,
+            new ChoiceTransition(Guid.Empty, labelMapper.ToDomain(choice.NextLabel)));
+        return res;
     }
 }

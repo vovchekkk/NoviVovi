@@ -8,7 +8,7 @@ public class BackgroundObject : SceneObject
 {
     public Image Image { get; }
 
-    private BackgroundObject(Guid id, Image image, Transform transform)
+    public BackgroundObject(Guid id, Image image, Transform transform)
         : base(id, transform)
     {
         Image = image;
