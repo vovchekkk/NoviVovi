@@ -9,8 +9,8 @@ public abstract class SceneObject(Guid id, Transform transform) : Entity(id)
 {
     public Transform Transform { get; private set; } = transform;
 
-    public void PatchTransform(TransformPatch patch)
+    public void PatchTransform(TransformPatch transformPatch)
     {
-        Transform = Transform.ApplyPatch(patch);
+        Transform = Transform.ApplyPatch(transformPatch);
     }
 }

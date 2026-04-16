@@ -25,7 +25,20 @@ public class Character : Entity
         return new Character(Guid.NewGuid(), name, description);
     }
 
-    public void AddState(CharacterState characterState)
+    public void UpdateName(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException($"Name cannot be empty");
+
+        Name = name;
+    }
+
+    public void UpdateDescription(string? description)
+    {
+        Description = description;
+    }
+
+    public void AddCharacterState(CharacterState characterState)
     {
         if (characterState is null)
             throw new DomainException($"CharacterState cannot be null");
@@ -34,5 +47,17 @@ public class Character : Entity
             throw new DomainException($"State {characterState.Name} already exists");
         
         _characterStates.Add(characterState);
+    }
+
+    public void RemoveCharacterStateById(Guid stateId)
+    {
+        if (stateId == Guid.Empty)
+            throw new DomainException($"StateId {stateId} cannot be empty");
+
+        var state = _characterStates.FirstOrDefault(item => item.Id == stateId);
+        if (state is null)
+            throw new DomainException($"StateId {stateId} doesn't exists");
+
+        _characterStates.Remove(state);
     }
 }

@@ -13,7 +13,7 @@ public partial class CharacterMapper(ImageMapper imageMapper, TransformMapper tr
     {
         var res = new Character(dbo.Id, dbo.Name, dbo.Description);
         foreach (var state in dbo.States)
-            res.AddState(ToDomain(state));
+            res.AddCharacterState(ToDomain(state));
         return res;
     }
 
