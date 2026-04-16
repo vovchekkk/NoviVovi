@@ -88,14 +88,6 @@ public class Image : Entity
     {
         Description = description;
     }
-    
-    public void UpdateFormat(string? format)
-    {
-        if (string.IsNullOrWhiteSpace(format))
-            throw new DomainException("Format cannot be empty");
-        
-        Format = format;
-    }
 
     public void UpdateType(ImageType? type)
     {
@@ -103,24 +95,5 @@ public class Image : Entity
             throw new DomainException("ImageType cannot be empty");
         
         Type = type.Value;
-    }
-    
-    public void UpdateSize(Size? size)
-    {
-        if (size is null)
-            throw new DomainException($"Size cannot be null");
-        
-        if (size.Width <= 0 || size.Height <= 0)
-            throw new DomainException($"Invalid dimensions");
-        
-        Size = size;
-    }
-    
-    public void UpdateSize(int width, int height)
-    {
-        if (width <= 0 || height <= 0)
-            throw new DomainException($"Invalid dimensions");
-        
-        Size = new Size(width, height);
     }
 }

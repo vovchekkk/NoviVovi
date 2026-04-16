@@ -5,7 +5,5 @@ namespace NoviVovi.Api.Images.Requests;
 public record PatchImageRequest(
     string? Name,
     string? Description,
-    string? Format,
-    ImageTypeRequest? Type,
-    SizeRequest? Size
+    ImageTypeRequest? Type
 );

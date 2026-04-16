@@ -15,14 +15,11 @@ public class PatchImageCommand : IRequest<ImageDto>
     public required Guid ImageId { get; init; }
     public string? Name { get; init; }
     public string? Description { get; init; }
-    public string? Format { get; init; }
     public ImageType? Type { get; init; }
-    public SizeDto? Size { get; init; }
 }
 
 public class PatchImageHandler(
     IImageRepository imageRepository,
-    IStorageService storageService,
     IUnitOfWork unitOfWork,
     ImageDtoMapper mapper
 ) : IRequestHandler<PatchImageCommand, ImageDto>
@@ -32,20 +29,14 @@ public class PatchImageHandler(
         var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
                     ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
         
-        if (request.Name != null)
+        if (request.Name is not null)
             image.UpdateName(request.Name);
         
-        if (request.Description != null)
+        if (request.Description is not null)
             image.UpdateDescription(request.Description);
         
-        if (request.Format != null)
-            image.UpdateFormat(request.Format);
-        
         if (request.Type.HasValue)
-            image.UpdateType(request.Type);
-        
-        if (request.Size != null)
-            image.UpdateSize(request.Size.Width, request.Size.Height);
+            image.UpdateType(request.Type.Value);
 
         await unitOfWork.SaveChangesAsync(ct);
 
