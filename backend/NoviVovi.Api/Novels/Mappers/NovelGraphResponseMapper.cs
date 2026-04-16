@@ -9,9 +9,9 @@ public partial class NovelGraphResponseMapper(
     EdgeResponseMapper edgeMapper
 )
 {
-    public partial NovelGraphResponse ToResponse(NovelGraphDto subject);
+    public partial NovelGraphResponse ToResponse(NovelGraphDto source);
 
     private EdgeResponse MapEdge(EdgeDto source) => edgeMapper.ToResponse(source);
 
-    public partial IEnumerable<NovelGraphResponse> ToResponses(IEnumerable<NovelGraphDto> subjects);
+    public partial IEnumerable<NovelGraphResponse> ToResponses(IEnumerable<NovelGraphDto> sources);
 }

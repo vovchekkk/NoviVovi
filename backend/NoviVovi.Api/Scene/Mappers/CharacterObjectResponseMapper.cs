@@ -20,11 +20,11 @@ public partial class CharacterObjectResponseMapper(
     TransformDtoMapper transformMapper
 )
 {
-    public partial CharacterObjectDto ToResponse(CharacterObject subject);
+    public partial CharacterObjectDto ToResponse(CharacterObject source);
 
     private ImageDto MapImage(Image source) => imageMapper.ToDto(source);
     private TransformDto MapTransform(Transform source) => transformMapper.ToDto(source);
     private CharacterDto MapCharacter(Character source) => characterMapper.ToDto(source);
 
-    public partial IEnumerable<CharacterObjectDto> ToResponses(IEnumerable<CharacterObject> subjects);
+    public partial IEnumerable<CharacterObjectDto> ToResponses(IEnumerable<CharacterObject> sources);
 }

@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Novels.Mappers;
 [Mapper]
 public partial class NodeResponseMapper
 {
-    public partial NodeResponse ToResponse(Node subject);
+    public partial NodeResponse ToResponse(Node source);
     
-    public partial IEnumerable<NodeResponse> ToResponses(IEnumerable<Node> subjects);
+    public partial IEnumerable<NodeResponse> ToResponses(IEnumerable<Node> sources);
 }

@@ -68,9 +68,7 @@ public static class DependencyInjection
         
         services.AddSingleton<StepResponseMapper>();
         
-        services.AddSingleton<ChoiceTransitionResponseMapper>();
-        services.AddSingleton<JumpTransitionResponseMapper>();
-        services.AddSingleton<NextStepTransitionResponseMapper>();
+        services.AddSingleton<TransitionResponseMapper>();
         
         return services;
     }

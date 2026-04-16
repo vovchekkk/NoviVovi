@@ -7,7 +7,7 @@ namespace NoviVovi.Api.Novels.Mappers;
 [Mapper]
 public partial class ChoiceEdgeResponseMapper
 {
-    public partial ChoiceEdgeResponse ToResponse(ChoiceEdge subject);
+    public partial ChoiceEdgeResponse ToResponse(ChoiceEdge source);
     
-    public partial IEnumerable<ChoiceEdgeResponse> ToResponses(IEnumerable<ChoiceEdge> subjects);
+    public partial IEnumerable<ChoiceEdgeResponse> ToResponses(IEnumerable<ChoiceEdge> sources);
 }

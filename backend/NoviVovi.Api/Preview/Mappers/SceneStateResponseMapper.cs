@@ -8,7 +8,7 @@ namespace NoviVovi.Api.Preview.Mappers;
 [Mapper]
 public partial class SceneStateResponseMapper
 {
-    public partial SceneStateResponse ToResponse(SceneStateDto subject);
+    public partial SceneStateResponse ToResponse(SceneStateDto source);
 
-    public partial IEnumerable<SceneStateResponse> ToResponses(IEnumerable<SceneStateDto> subjects);
+    public partial IEnumerable<SceneStateResponse> ToResponses(IEnumerable<SceneStateDto> sources);
 }
