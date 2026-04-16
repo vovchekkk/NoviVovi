@@ -35,4 +35,16 @@ public class Character : Entity
         
         _characterStates.Add(characterState);
     }
+
+    public void RemoveCharacterStateById(Guid stateId)
+    {
+        if (stateId == Guid.Empty)
+            throw new DomainException($"StateId {stateId} cannot be empty");
+
+        var state = _characterStates.FirstOrDefault(item => item.Id == stateId);
+        if (state is null)
+            throw new DomainException($"StateId {stateId} doesn't exists");
+
+        _characterStates.Remove(state);
+    }
 }

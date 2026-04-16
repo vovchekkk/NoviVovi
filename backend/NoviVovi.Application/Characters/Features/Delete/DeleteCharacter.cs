@@ -1,4 +1,7 @@
 ﻿using MediatR;
+using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Novels;
 
 namespace NoviVovi.Application.Characters.Features.Delete;
 
@@ -7,10 +10,18 @@ public record DeleteCharacterCommand(
     Guid CharacterId
 ) : IRequest;
 
-public class DeleteCharacterHandler : IRequestHandler<DeleteCharacterCommand>
+public class DeleteCharacterHandler(
+    INovelRepository novelRepository,
+    IUnitOfWork unitOfWork
+) : IRequestHandler<DeleteCharacterCommand>
 {
     public async Task Handle(DeleteCharacterCommand request, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        
+        novel.RemoveCharacterById(request.CharacterId);
+
+        await unitOfWork.SaveChangesAsync(ct);
     }
 }
