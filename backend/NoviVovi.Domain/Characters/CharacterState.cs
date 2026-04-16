@@ -27,13 +27,38 @@ public class CharacterState : Entity
     {
         if (image is null)
             throw new DomainException($"NextAction cannot be null");
-        
+
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException($"Name cannot be empty");
-        
+
         if (localTransform is null)
             throw new DomainException($"LocalTransform cannot be null");
 
         return new CharacterState(Guid.NewGuid(), name, image, localTransform, description);
+    }
+
+    public void UpdateName(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException($"Name cannot be empty");
+
+        Name = name;
+    }
+
+    public void UpdateDescription(string? description)
+    {
+        Description = description;
+    }
+
+    public void UpdateImage(Image? image)
+    {
+        if (image is not null)
+            Image = image;
+    }
+
+    public void PatchTransform(TransformPatch? transformPatch)
+    {
+        if (transformPatch is not null)
+            LocalTransform = LocalTransform.ApplyPatch(transformPatch);
     }
 }

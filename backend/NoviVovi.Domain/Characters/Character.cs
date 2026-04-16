@@ -25,6 +25,19 @@ public class Character : Entity
         return new Character(Guid.NewGuid(), name, description);
     }
 
+    public void UpdateName(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException($"Name cannot be empty");
+
+        Name = name;
+    }
+
+    public void UpdateDescription(string? description)
+    {
+        Description = description;
+    }
+
     public void AddCharacterState(CharacterState characterState)
     {
         if (characterState is null)

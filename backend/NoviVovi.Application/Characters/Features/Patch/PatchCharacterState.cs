@@ -1,6 +1,13 @@
 ﻿using MediatR;
 using NoviVovi.Application.Characters.Dtos;
+using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Common;
+using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Images;
+using NoviVovi.Application.Novels;
 using NoviVovi.Application.Scene.Dtos;
+using NoviVovi.Application.Scene.Mappers;
+using NoviVovi.Domain.Images;
 
 namespace NoviVovi.Application.Characters.Features.Patch;
 
@@ -15,10 +22,48 @@ public record PatchCharacterStateCommand : IRequest<CharacterStateDto>
     public TransformDto? Transform { get; init; }
 }
 
-public class PatchCharacterStateHandler : IRequestHandler<PatchCharacterStateCommand, CharacterStateDto>
+public class PatchCharacterStateHandler(
+    INovelRepository novelRepository,
+    IImageRepository imageRepository,
+    TransformDtoMapper transformMapper,
+    IUnitOfWork unitOfWork,
+    CharacterStateDtoMapper mapper
+) : IRequestHandler<PatchCharacterStateCommand, CharacterStateDto>
 {
     public async Task<CharacterStateDto> Handle(PatchCharacterStateCommand request, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+
+        var character = novel.Characters.FirstOrDefault(c => c.Id == request.CharacterId)
+                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+
+        var state = character.CharacterStates.FirstOrDefault(c => c.Id == request.StateId)
+                    ?? throw new NotFoundException($"Состояние персонажа '{request.StateId}' не найдено");
+        
+        if (request.Name is not null)
+            state.UpdateName(request.Name);
+        
+        if (request.Description is not null)
+            state.UpdateDescription(request.Description);
+        
+        if (request.ImageId.HasValue)
+        {
+            var image = await imageRepository.GetByIdAsync(request.ImageId.Value, ct)
+                    ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+            
+            state.UpdateImage(image);
+        }
+
+        if (request.Transform is not null)
+        {
+            var transformPatch = transformMapper.ToDomainPatch(request.Transform);
+            
+            state.PatchTransform(transformPatch);
+        }
+
+        await unitOfWork.SaveChangesAsync(ct);
+        
+        return mapper.ToDto(state);
     }
 }
