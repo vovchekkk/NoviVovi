@@ -10,7 +10,8 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
 {
     public async Task<Label?> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        var dbo = await dboRepo.GetFullByIdAsync(id);
+        var ctx = new LoadContext();
+        var dbo = await dboRepo.GetFullByIdAsync(id, ctx);
         return  dbo == null ? null : mapper.ToDomain(dbo);
     }
 
@@ -19,9 +20,10 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
         throw new NotImplementedException();
     }
 
-    public Task AddAsync(Label label, CancellationToken ct)
+    public async Task AddAsync(Label label, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbo = mapper.ToDbO(label);
+        await dboRepo.AddOrUpdateFullAsync(dbo);
     }
 
     public async Task DeleteAsync(Label label, CancellationToken ct)

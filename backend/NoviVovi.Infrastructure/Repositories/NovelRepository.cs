@@ -7,18 +7,19 @@ using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories;
 
-public class NovelRepository(INovelDbORepository dbORepository, NovelMapper mapper) : INovelRepository
+public class NovelRepository(INovelDbORepository dbORepository, ICharacterDbORepository characterDbORepo, NovelMapper mapper, CharacterMapper characterMapper) : INovelRepository
 {
     public async Task<Novel?> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        var dbo = await dbORepository.GetFullByIdAsync(id);
+        var ctx = new LoadContext();
+        var dbo = await dbORepository.GetFullByIdAsync(id, ctx);
         return dbo == null ? null : mapper.ToDomain(dbo);
     }
 
     public async Task AddAsync(Novel novel, CancellationToken ct)
     {
         var dbo = mapper.ToDbO(novel);
-        await dbORepository.AddFullAsync(dbo);
+        await dbORepository.AddOrUpdateFullAsync(dbo);
     }
 
     public async Task DeleteAsync(Novel novel, CancellationToken ct)
@@ -32,8 +33,9 @@ public class NovelRepository(INovelDbORepository dbORepository, NovelMapper mapp
         return dbos.Select(dto => mapper.ToDomain(dto));
     }
     
-    public Task<IEnumerable<Character>> GetAllCharactersAsync(Guid novelId, CancellationToken ct)
+    public async Task<IEnumerable<Character>> GetAllCharactersAsync(Guid novelId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbos = await characterDbORepo.GetFullByNovelIdAsync(novelId);
+        return dbos.Where(dbo => dbo != null).Select(characterMapper.ToDomain);
     }
 }

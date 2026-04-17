@@ -4,10 +4,8 @@ namespace NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 public interface INovelDbORepository
 {
-    Task<NovelDbO?> GetFullByIdAsync(Guid id);
+    Task<NovelDbO?> GetFullByIdAsync(Guid id, LoadContext ctx);
     Task<IEnumerable<NovelDbO>> GetAllFullAsync(bool onlyPublic = true);
-    Task<Guid> AddAsync(NovelDbO novel);
-    Task UpdateAsync(NovelDbO novel);
     Task DeleteAsync(Guid id);
-    Task AddFullAsync(NovelDbO dbo);
+    Task<Guid> AddOrUpdateFullAsync(NovelDbO novel);
 }

@@ -12,6 +12,14 @@ using NoviVovi.Infrastructure.Repositories.New;
 
 namespace NoviVovi.Infrastructure;
 
+public class LazyResolver<T> : Lazy<T>
+{
+    public LazyResolver(IServiceProvider provider)
+        : base(provider.GetRequiredService<T>)
+    {
+    }
+}
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
@@ -20,6 +28,8 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("NovelDatabase") ??
                                throw new ArgumentNullException("No such connection string");
+        
+        services.AddScoped(typeof(Lazy<>), typeof(LazyResolver<>));
 
         services.AddSingleton(new DatabaseOptions(connectionString));
 
