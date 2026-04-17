@@ -1,7 +1,6 @@
 using NoviVovi.Domain.Characters;
 using NoviVovi.Domain.Scene;
 using NoviVovi.Infrastructure.DatabaseObjects.Characters;
-using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Infrastructure.Mappers;
@@ -35,7 +34,6 @@ public partial class CharacterMapper(
 
     public CharacterStateDbO ToDbO(CharacterState character, Guid characterId, Guid novelId)
     {
-        throw new NotImplementedException();
         var res = new CharacterStateDbO
         {
             Id = character.Id,

@@ -32,15 +32,15 @@ public static class DependencyInjection
         services.AddScoped(typeof(Lazy<>), typeof(LazyResolver<>));
 
         services.AddSingleton(new DatabaseOptions(connectionString));
-
-        services.AddSingleton<CharacterMapper>();
-        services.AddSingleton<ImageMapper>();
-        services.AddSingleton<LabelMapper>();
-        services.AddSingleton<MenuMapper>();
-        services.AddSingleton<NovelMapper>();
-        services.AddSingleton<ReplicaMapper>();
-        services.AddSingleton<StepMapper>();
-        services.AddSingleton<TransformMapper>();
+        
+        services.AddScoped<CharacterMapper>();
+        services.AddScoped<ImageMapper>();
+        services.AddScoped<LabelMapper>();
+        services.AddScoped<MenuMapper>();
+        services.AddScoped<NovelMapper>();
+        services.AddScoped<ReplicaMapper>();
+        services.AddScoped<StepMapper>();
+        services.AddScoped<TransformMapper>();
 
         services.AddScoped<ICharacterDbORepository, CharacterDbORepository>();
         services.AddScoped<IImageDbORepository, ImageDbORepository>();

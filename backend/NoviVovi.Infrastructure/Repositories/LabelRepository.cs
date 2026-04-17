@@ -12,7 +12,7 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
     {
         var ctx = new LoadContext();
         var dbo = await dboRepo.GetFullByIdAsync(id, ctx);
-        return  dbo == null ? null : mapper.ToDomain(dbo);
+        return  dbo == null ? null : mapper.ToDomain(dbo, new MappingContext());
     }
 
     public Task<IEnumerable<Label>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct)
@@ -22,7 +22,7 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
 
     public async Task AddAsync(Label label, CancellationToken ct)
     {
-        var dbo = mapper.ToDbO(label);
+        var dbo = mapper.ToDbO(label, new MappingContext());
         await dboRepo.AddOrUpdateFullAsync(dbo);
     }
 
