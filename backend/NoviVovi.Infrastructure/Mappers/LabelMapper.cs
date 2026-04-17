@@ -6,31 +6,43 @@ namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
 public partial class LabelMapper(
-    // StepMapper stepMapper
+    Lazy<StepMapper> stepMapper
 )
 {
-    public Label ToDomain(LabelDbO dbo)
+    public Label ToDomain(LabelDbO dbo, MappingContext ctx)
     {
-        throw new NotImplementedException();
-        // var res = new Label(dbo.Id, dbo.LabelName, dbo.NovelId);
-        // foreach (var steps in dbo.Steps)
-        // {
-        //     res.AddStep(stepMapper.ToDomain(steps));
-        // }
-        //
-        // return res;
+        if (ctx.Labels.TryGetValue(dbo.Id, out var cached))
+            return cached;
+
+        var res = new Label(dbo.Id, dbo.LabelName, dbo.NovelId);
+        ctx.Labels[dbo.Id] = res;
+
+        foreach (var step in dbo.Steps)
+        {
+            res.AddStep(stepMapper.Value.ToDomain(step, ctx));
+        }
+
+        return res;
     }
 
-    public LabelDbO ToDbO(Label label)
+    public LabelDbO ToDbO(Label label, MappingContext ctx)
     {
-        throw new NotImplementedException();
-        // var res = new LabelDbO
-        // {
-        //     Id = label.Id,
-        //     LabelName = label.Name,
-        //     NovelId = label.NovelId
-        // };
-        // res.Steps = label.Steps.Select((step, i) => stepMapper.ToDbO(step, label.Id, label.NovelId, i)).ToList();
-        // return res;
+        if (ctx.LabelDbOs.TryGetValue(label.Id, out var cached))
+            return cached;
+
+        var res = new LabelDbO
+        {
+            Id = label.Id,
+            LabelName = label.Name,
+            NovelId = label.NovelId
+        };
+
+        ctx.LabelDbOs[label.Id] = res;
+
+        res.Steps = label.Steps
+            .Select((step, i) => stepMapper.Value.ToDbO(step, label.Id, label.NovelId, i, ctx))
+            .ToList();
+
+        return res;
     }
 }

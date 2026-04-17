@@ -6,48 +6,75 @@ using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
 public class StepDbORepository(
-    DatabaseOptions options/*,
-    IMenuDbORepository menuRepository,
+    DatabaseOptions options,
+    IMenuDbORepository menuRepo,
     ICharacterDbORepository characterRepository,
-    ILabelDbORepository labelRepository,
-    IImageDbORepository imageRepository*/
+    ILabelDbORepository labelRepo,
+    IImageDbORepository imageRepository
 ) : BaseRepository(options), IStepDbORepository
 {
-    public async Task<IEnumerable<StepDbO>> GetOrderedByLabelIdAsync(Guid labelId)
+    public async Task<IEnumerable<StepDbO>> GetOrderedByLabelIdAsync(Guid labelId, LoadContext ctx)
     {
-        throw new NotImplementedException();
-        // const string sql = @"SELECT
-        //         id AS Id,
-        //         label_id AS LabelId,
-        //         replica_id AS ReplicaId,
-        //         menu_id AS MenuId,
-        //         bg_id AS BgId,
-        //         character_id AS CharacterId,
-        //         next_label_id AS NextLabelId,
-        //         step_order AS StepOrder, step_type AS StepType
-        //              FROM ""Steps"" WHERE label_id = @LabelId ORDER BY step_order";
-        // return await QueryAsync<StepDbO>(sql, new { LabelId = labelId });
+        const string sql = @"SELECT
+            id AS Id,
+            label_id AS LabelId,
+            replica_id AS ReplicaId,
+            menu_id AS MenuId,
+            bg_id AS BackgroundId,
+            character_id AS CharacterId,
+            next_label_id AS NextLabelId,
+            step_order AS StepOrder,
+            step_type AS StepType
+        FROM ""Steps""
+        WHERE label_id = @LabelId
+        ORDER BY step_order";
+
+        var steps = (await QueryAsync<StepDbO>(sql, new { LabelId = labelId })).ToList();
+
+        var result = new List<StepDbO>();
+
+        foreach (var step in steps)
+        {
+            if (ctx.Steps.TryGetValue(step.Id, out var cached))
+            {
+                result.Add(cached);
+                continue;
+            }
+
+            ctx.Steps[step.Id] = step;
+
+            // MENU
+            if (step.MenuId.HasValue)
+                step.Menu = await menuRepo.GetFullByIdAsync(step.MenuId.Value, ctx);
+
+            // NEXT LABEL (ВОТ ТУТ БЫЛ ЦИКЛ)
+            if (step.NextLabelId.HasValue)
+                step.NextLabel = await labelRepo.GetFullByIdAsync(step.NextLabelId.Value, ctx);
+
+            result.Add(step);
+        }
+
+        return result;
     }
 
     public async Task<IEnumerable<StepDbO>> GetByLabelIdsAsync(IEnumerable<Guid> labelIds)
     {
-        throw new NotImplementedException();
-        // if (!labelIds?.Any() ?? true) return Enumerable.Empty<StepDbO>();
-        // const string sql = @"SELECT
-        //         id AS Id,
-        //         label_id AS LabelId,
-        //         replica_id AS ReplicaId,
-        //         menu_id AS MenuId,
-        //         bg_id AS BgId,
-        //         character_id AS CharacterId,
-        //         next_label_id AS NextLabelId,
-        //         step_order AS StepOrder,
-        //         step_type AS StepType
-        //             FROM ""Steps"" WHERE label_id = ANY(@LabelIds) ORDER BY label_id, step_order";
-        // return await QueryAsync<StepDbO>(sql, new { LabelIds = labelIds.ToArray() });
+        if (!labelIds?.Any() ?? true) return Enumerable.Empty<StepDbO>();
+        const string sql = @"SELECT
+                id AS Id,
+                label_id AS LabelId,
+                replica_id AS ReplicaId,
+                menu_id AS MenuId,
+                bg_id AS BgId,
+                character_id AS CharacterId,
+                next_label_id AS NextLabelId,
+                step_order AS StepOrder,
+                step_type AS StepType
+                    FROM ""Steps"" WHERE label_id = ANY(@LabelIds) ORDER BY label_id, step_order";
+        return await QueryAsync<StepDbO>(sql, new { LabelIds = labelIds.ToArray() });
     }
 
-    public async Task<IEnumerable<StepDbO>> GetFullByLabelIdsAsync(IEnumerable<Guid> labelIds)
+    public async Task<IEnumerable<StepDbO>> GetFullByLabelIdsAsync(IEnumerable<Guid> labelIds )
     {
         if (!labelIds?.Any() ?? true) return Enumerable.Empty<StepDbO>();
 
@@ -56,80 +83,85 @@ public class StepDbORepository(
 
         foreach (var step in steps)
         {
-            var full = await GetFullByIdAsync(step.Id);
+            var ctx = new LoadContext();
+            var full = await GetFullByIdAsync(step.Id, ctx);
             if (full != null) fullSteps.Add(full);
         }
 
         return fullSteps;
     }
 
-    public async Task<StepDbO?> GetFullByIdAsync(Guid stepId)
+    public async Task<StepDbO?> GetFullByIdAsync(Guid stepId, LoadContext ctx)
     {
-        throw new NotImplementedException();
-        // const string sql = @"SELECT
-        //         id AS Id,
-        //         label_id AS LabelId,
-        //         replica_id AS ReplicaId,
-        //         character_id AS CharacterId,
-        //         menu_id AS MenuId,
-        //         bg_id AS BgId,
-        //         next_label_id AS NextLabelId,
-        //         step_order AS StepOrder, step_type AS StepType
-        //             FROM ""Steps"" WHERE id = @StepId";
-        //
-        // var step = await QueryFirstOrDefaultAsync<StepDbO>(sql, new { StepId = stepId });
-        // if (step == null) return null;
-        //
-        // if (step.ReplicaId.HasValue)
-        //     step.Replica = await GetReplicaByIdAsync(step.ReplicaId.Value);
-        //
-        // if (step.MenuId.HasValue)
-        //     step.Menu = await menuRepository.GetFullByIdAsync(step.MenuId.Value);
-        //
-        // if (step.BackgroundId.HasValue)
-        //     step.Background = await GetFullBackgroundByIdAsync(step.BackgroundId.Value);
-        //
-        // if (step.CharacterId.HasValue)
-        //     step.Character = await GetFullStepCharactersByIdAsync(step.CharacterId.Value);
-        //
-        // if (step.NextLabelId.HasValue)
-        //     step.NextLabel = await GetLabelByIdAsync(step.NextLabelId.Value);
-        //
-        // return step;
+        if (ctx.Steps.TryGetValue(stepId, out var cached))
+            return cached;
+
+        const string sql = @"
+        SELECT id AS Id,
+               label_id AS LabelId,
+               replica_id AS ReplicaId,
+               character_id AS CharacterId,
+               menu_id AS MenuId,
+               bg_id AS BackgroundId,
+               next_label_id AS NextLabelId,
+               step_order AS StepOrder,
+               step_type AS StepType
+        FROM ""Steps""
+        WHERE id = @StepId";
+
+        var step = await QueryFirstOrDefaultAsync<StepDbO>(sql, new { StepId = stepId });
+        if (step == null) return null;
+
+        ctx.Steps[stepId] = step;
+
+        if (step.MenuId.HasValue)
+            step.Menu = await menuRepo.GetFullByIdAsync(step.MenuId.Value, ctx);
+
+        if (step.NextLabelId.HasValue)
+            step.NextLabel = await labelRepo.GetFullByIdAsync(step.NextLabelId.Value, ctx);
+
+        if (step.CharacterId.HasValue)
+            step.Character = await characterRepository.GetFullStepCharacterByIdAsync(step.CharacterId.Value);
+
+        if (step.BackgroundId.HasValue)
+            step.Background = await imageRepository.GetFullBackgroundByIdAsync(step.BackgroundId.Value);
+
+        if (step.ReplicaId.HasValue)
+            step.Replica = await GetReplicaByIdAsync(step.ReplicaId.Value);
+
+        return step;
     }
 
-    public async Task<Guid> AddAsync(StepDbO step)
+    private async Task<Guid> AddAsync(StepDbO step)
     {
-        throw new NotImplementedException();
-        // const string sql = @"
-        //     INSERT INTO ""Steps"" (
-        //         id, label_id, replica_id, menu_id, bg_id,
-        //         next_label_id, step_order, step_type, character_id
-        //     ) VALUES (
-        //         @Id, @LabelId, @ReplicaId, @MenuId, @BgId,
-        //         @NextLabelId, @StepOrder, @StepType, @CharacterId
-        //     )";
-        //
-        // await ExecuteAsync(sql, step);
-        // return step.Id;
+        const string sql = @"
+            INSERT INTO ""Steps"" (
+                id, label_id, replica_id, menu_id, bg_id,
+                next_label_id, step_order, step_type, character_id
+            ) VALUES (
+                @Id, @LabelId, @ReplicaId, @MenuId, @BgId,
+                @NextLabelId, @StepOrder, @StepType, @CharacterId
+            )";
+        
+        await ExecuteAsync(sql, step);
+        return step.Id;
     }
 
     public async Task UpdateAsync(StepDbO step)
     {
-        throw new NotImplementedException();
-        // const string sql = @"
-        //     UPDATE ""Steps"" SET
-        //         label_id = @LabelId,
-        //         replica_id = @ReplicaId,
-        //         menu_id = @MenuId,
-        //         bg_id = @BgId,
-        //         character_id AS @CharacterId,
-        //         next_label_id = @NextLabelId,
-        //         step_order = @StepOrder,
-        //         step_type = @StepType
-        //     WHERE id = @Id";
-        //
-        // await ExecuteAsync(sql, step);
+        const string sql = @"
+            UPDATE ""Steps"" SET
+                label_id = @LabelId,
+                replica_id = @ReplicaId,
+                menu_id = @MenuId,
+                bg_id = @BgId,
+                character_id AS @CharacterId,
+                next_label_id = @NextLabelId,
+                step_order = @StepOrder,
+                step_type = @StepType
+            WHERE id = @Id";
+        
+        await ExecuteAsync(sql, step);
     }
 
     public async Task DeleteAsync(Guid id)
@@ -137,72 +169,63 @@ public class StepDbORepository(
         const string sql = "DELETE FROM \"Steps\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
-
-    public async Task AddFullAsync(StepDbO step) //TODO: AddOrUpdate
+    
+    private async Task<bool> CheckIfExistsAsync(Guid id)
     {
-        throw new NotImplementedException();
-        // if (step.Replica != null)
-        //     await CreateReplicaAsync(step.Replica);
-        // if (step.Menu != null)
-        //     await menuRepository.AddFullAsync(step.Menu);
-        // if (step.Background != null)
-        //     await imageRepository.AddBgAsync(step.Background);
-        // if (step.NextLabel != null)
-        //     await labelRepository.AddFullAsync(step.NextLabel);
-        // if (step.Character != null)
-        //     await characterRepository.AddStepCharacterAsync(step.Character);
+        const string sql = @"SELECT 1 FROM ""Steps"" WHERE id = @Id LIMIT 1";
+        var result = await QueryFirstOrDefaultAsync<int?>(sql, new { Id = id });
+        return result.HasValue;
     }
+    
+    public async Task AddOrUpdateFullAsync(StepDbO step, LoadContext ctx)
+    {
+        if (ctx.Steps.ContainsKey(step.Id))
+            return;
 
-    // ========================================
+        ctx.Steps[step.Id] = step;
+        
+        var exists = await CheckIfExistsAsync(step.Id);
 
+        if (exists)
+            await UpdateAsync(step);
+        else
+            await AddAsync(step);
+
+        if (step.Replica != null)
+        {
+            await CreateReplicaAsync(step.Replica);
+        }
+
+        if (step.Menu != null)
+        {
+            await menuRepo.AddOrUpdateFullAsync(step.Menu, ctx);
+        }
+
+        if (step.Background != null)
+        {
+            await imageRepository.AddBgAsync(step.Background);
+        }
+
+        if (step.Character != null)
+        {
+            await characterRepository.AddStepCharacterAsync(step.Character);
+        }
+
+        if (step.NextLabel != null)
+        {
+            await labelRepo.AddOrUpdateFullAsync(step.NextLabel, ctx);
+        }
+    }
+    
     private async Task<ReplicaDbO?> GetReplicaByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
-        // const string sql = @"SELECT id AS Id, speaker_id AS SpeakerId, text AS Text
-        //                      FROM ""Replicas"" WHERE id = @Id";
-        // var replica = await QueryFirstOrDefaultAsync<ReplicaDbO>(sql, new { Id = id });
-        // if (replica == null) return null;
-        // if (replica.SpeakerId != null)
-        //     replica.Speaker = await characterRepository.GetFullCharacterByIdAsync(replica.SpeakerId.Value);
-        // return replica;
-    }
-
-    private async Task<LabelDbO?> GetLabelByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-        // return await labelRepository.GetFullByIdAsync(id);
-    }
-
-    private async Task<BackgroundDbO?> GetFullBackgroundByIdAsync(Guid bgId)
-    {
-        throw new NotImplementedException();
-        // const string sql = @"SELECT id AS Id, img AS Img, transform_id AS TransformId
-        //                      FROM ""Backgrounds"" WHERE id = @BgId";
-        // var bg = await QueryFirstOrDefaultAsync<BackgroundDbO>(sql, new { BgId = bgId });
-        // if (bg == null) return null;
-        //
-        // bg.Image = await imageRepository.GetImageByIdAsync(bg.Img);
-        // if (bg.TransformId.HasValue)
-        //     bg.Transform = await imageRepository.GetTransformByIdAsync(bg.TransformId.Value);
-        //
-        // return bg;
-    }
-
-    private async Task<StepCharacterDbO?> GetFullStepCharactersByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-        // const string sql = @"SELECT
-        //         id AS Id,
-        //         transform_id AS TransformId,
-        //         character_state_id AS CharacterStateId
-        //                      FROM ""StepCharacter"" WHERE id = @id";
-        // var character = await QueryFirstOrDefaultAsync<StepCharacterDbO>(sql, new { Id = id });
-        // if (character == null) return null;
-        // character.CharacterState = await characterRepository.GetFullCharacterStateByIdAsync(character.CharacterStateId);
-        // if (character.CharacterState != null)
-        //     character.Character =
-        //         await characterRepository.GetFullCharacterByIdAsync(character.CharacterState.CharacterId);
-        // return character;
+        const string sql = @"SELECT id AS Id, speaker_id AS SpeakerId, text AS Text
+                             FROM ""Replicas"" WHERE id = @Id";
+        var replica = await QueryFirstOrDefaultAsync<ReplicaDbO>(sql, new { Id = id });
+        if (replica == null) return null;
+        if (replica.SpeakerId != null)
+            replica.Speaker = await characterRepository.GetFullCharacterByIdAsync(replica.SpeakerId.Value);
+        return replica;
     }
 
 

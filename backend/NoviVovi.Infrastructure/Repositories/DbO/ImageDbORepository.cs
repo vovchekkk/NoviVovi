@@ -97,4 +97,18 @@ public class ImageDbORepository(
         await ExecuteAsync(sql, transform);
         return transform.Id;
     }
+
+    public async Task<BackgroundDbO?> GetFullBackgroundByIdAsync(Guid bgId)
+    {
+        const string sql = @"SELECT id AS Id, img AS Img, transform_id AS TransformId
+                             FROM ""Backgrounds"" WHERE id = @BgId";
+        var bg = await QueryFirstOrDefaultAsync<BackgroundDbO>(sql, new { BgId = bgId });
+        if (bg == null) return null;
+        
+        bg.Image = await GetImageByIdAsync(bg.Img);
+        if (bg.TransformId.HasValue)
+            bg.Transform = await GetTransformByIdAsync(bg.TransformId.Value);
+        
+        return bg;
+    }
 }

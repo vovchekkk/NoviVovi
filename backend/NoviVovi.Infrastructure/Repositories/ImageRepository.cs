@@ -1,22 +1,28 @@
 ﻿using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Domain.Images;
+using NoviVovi.Infrastructure.Mappers;
+using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories;
 
-public class ImageRepository : IImageRepository
+public class ImageRepository(IImageDbORepository dboRepo, ImageMapper mapper) : IImageRepository
 {
-    public Task<Image?> GetByIdAsync(Guid id, CancellationToken ct)
+    public async Task<Image?> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbo = await dboRepo.GetImageByIdAsync(id);
+        if (dbo != null) 
+            return mapper.ToDomain(dbo);
+        return null;
     }
 
-    public Task AddAsync(Image image, CancellationToken ct)
+    public async Task AddAsync(Image image, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbo = mapper.ToDbO(image, Guid.Empty); //TODO: айдишки у картинок или нам пофиг?
+        await dboRepo.AddImageAsync(dbo);
     }
 
-    public Task DeleteAsync(Image image, CancellationToken ct)
+    public async Task DeleteAsync(Image image, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        await dboRepo.DeleteImageAsync(image.Id);
     }
 }

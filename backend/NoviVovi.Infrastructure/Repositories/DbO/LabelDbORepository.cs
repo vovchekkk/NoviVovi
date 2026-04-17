@@ -4,8 +4,8 @@ using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 namespace NoviVovi.Infrastructure.Repositories.New;
 
 public class LabelDbORepository(
-    DatabaseOptions options/*,
-    IStepDbORepository stepDbORepository*/
+    DatabaseOptions options,
+    Lazy<IStepDbORepository> stepRepo
 ) : BaseRepository(options), ILabelDbORepository
 {
     private async Task<IEnumerable<LabelDbO>> GetByNovelIdsAsync(IEnumerable<Guid> novelIds)
@@ -27,15 +27,14 @@ public class LabelDbORepository(
 
     private async Task<LabelDbO?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
-        // const string sql = @"
-        //     SELECT
-        //         id AS Id,
-        //         novel_id AS NovelId,
-        //         label_name AS LabelName
-        //     FROM ""Labels""
-        //     WHERE label_id = @Id";
-        // return await QueryFirstOrDefaultAsync<LabelDbO>(sql, new { Id = id });
+        const string sql = @"
+            SELECT
+                id AS Id,
+                novel_id AS NovelId,
+                label_name AS LabelName
+            FROM ""Labels""
+            WHERE label_id = @Id";
+        return await QueryFirstOrDefaultAsync<LabelDbO>(sql, new { Id = id });
     }
 
     private async Task<IEnumerable<LabelDbO>> GetByNovelIdAsync(Guid novelId)
@@ -51,45 +50,56 @@ public class LabelDbORepository(
 
         return await QueryAsync<LabelDbO>(sql, new { NovelId = novelId });
     }
+    
+    
 
     public async Task<IEnumerable<LabelDbO?>> GetFullByNovelIdAsync(Guid novelId)
     {
-        return await GetByNovelIdsAsync([novelId]);
+        return await GetFullByNovelIdsAsync([novelId]);
     }
-
+    
     public async Task<IEnumerable<LabelDbO>> GetFullByNovelIdsAsync(IEnumerable<Guid> novelIds)
     {
-        throw new NotImplementedException();
-        // if (!novelIds?.Any() ?? true)
-        //     return [];
-        //
-        // var labels = (await GetByNovelIdsAsync(novelIds)).ToList();
-        //
-        // if (!labels.Any())
-        //     return labels;
-        //
-        // var labelIds = labels.Select(l => l.Id).ToArray();
-        // var allFullSteps = await stepDbORepository.GetFullByLabelIdsAsync(labelIds);
-        // var stepsByLabel = allFullSteps.GroupBy(s => s.LabelId)
-        //     .ToDictionary(g => g.Key, g => g.ToList());
-        //
-        // foreach (var label in labels)
-        // {
-        //     label.Steps = stepsByLabel.TryGetValue(label.Id, out var steps)
-        //         ? steps
-        //         : [];
-        // }
-        //
-        // return labels;
-    }
+        if (!novelIds?.Any() ?? true)
+            return Enumerable.Empty<LabelDbO>();
 
-    public async Task<LabelDbO?> GetFullByIdAsync(Guid id)
+        var ctx = new LoadContext();
+
+        var labels = (await GetByNovelIdsAsync(novelIds)).ToList();
+
+        foreach (var label in labels)
+        {
+            if (ctx.Labels.ContainsKey(label.Id))
+                continue;
+
+            ctx.Labels[label.Id] = label;
+
+            var steps = await stepRepo.Value.GetOrderedByLabelIdAsync(label.Id, ctx);
+            label.Steps = steps.ToList();
+        }
+
+        return labels;
+    }
+    
+    public async Task<LabelDbO?> GetFullByIdAsync(Guid id, LoadContext ctx)
     {
-        throw new NotImplementedException();
-        // var label = await GetByIdAsync(id);
-        // var steps = await stepDbORepository.GetOrderedByLabelIdAsync(label.Id);
-        // label.Steps = steps.ToList();
-        // return label;
+        if (ctx.Labels.TryGetValue(id, out var cached))
+            return cached;
+
+        const string sql = @"
+        SELECT id AS Id, novel_id AS NovelId, label_name AS LabelName
+        FROM ""Labels""
+        WHERE id = @Id";
+
+        var label = await QueryFirstOrDefaultAsync<LabelDbO>(sql, new { Id = id });
+        if (label == null) return null;
+
+        ctx.Labels[id] = label;
+
+        var steps = await stepRepo.Value.GetOrderedByLabelIdAsync(id, ctx);
+        label.Steps = steps.ToList();
+
+        return label;
     }
 
     public async Task<Guid> AddAsync(LabelDbO label)
@@ -102,7 +112,7 @@ public class LabelDbORepository(
         return label.Id;
     }
 
-    public async Task UpdateAsync(LabelDbO label)
+    private async Task UpdateAsync(LabelDbO label)
     {
         const string sql = @"
             UPDATE ""Labels"" SET
@@ -119,14 +129,37 @@ public class LabelDbORepository(
         await ExecuteAsync(sql, new { Id = id });
     }
 
-    public async Task AddFullAsync(LabelDbO dbo) //TODO: AddOrUpdate
+    private async Task<bool> CheckIfExistsAsync(Guid id)
     {
-        throw new NotImplementedException();
-        // foreach (var step in dbo.Steps)
-        // {
-        //     await stepDbORepository.AddFullAsync(step);
-        // }
-        //
-        // await AddAsync(dbo);
+        const string sql = @"SELECT 1 FROM ""Labels"" WHERE id = @Id LIMIT 1";
+        var result = await QueryFirstOrDefaultAsync<int?>(sql, new { Id = id });
+        return result.HasValue;
+    }
+    
+    public async Task<Guid> AddOrUpdateFullAsync(LabelDbO label, LoadContext? ctx = null)
+    {
+        ctx ??= new LoadContext();
+        
+        if (ctx.Labels.ContainsKey(label.Id))
+            return label.Id;
+
+        ctx.Labels[label.Id] = label;
+
+        var exists = await CheckIfExistsAsync(label.Id);
+
+        if (exists)
+            await UpdateAsync(label);
+        else
+            await AddAsync(label);
+        
+        if (label.Steps != null && label.Steps.Any())
+        {
+            foreach (var step in label.Steps)
+            {
+                await stepRepo.Value.AddOrUpdateFullAsync(step, ctx);
+            }
+        }
+
+        return label.Id;
     }
 }

@@ -9,11 +9,11 @@ namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
 public partial class StepMapper(
-    // LabelMapper labelMapper,
-    // ImageMapper imageMapper,
-    // CharacterMapper characterMapper,
-    // MenuMapper menuMapper,
-    // ReplicaMapper replicaMapper
+    Lazy<LabelMapper> labelMapper,
+    ImageMapper imageMapper,
+    CharacterMapper characterMapper,
+    Lazy<MenuMapper> menuMapper,
+    ReplicaMapper replicaMapper
 )
 {
     private StepDbO ToDbO(HideCharacterStep step, Guid labelId, int stepOrder)
@@ -28,143 +28,151 @@ public partial class StepMapper(
         };
         return new StepDbO();
     }
+    
+    
 
-    public StepDbO ToDbO(JumpStep step, Guid labelId, int stepOrder)
+    public StepDbO ToDbO(JumpStep step, Guid labelId, Guid novelId, int stepOrder, MappingContext ctx)
     {
-        throw new NotImplementedException();
-        // var res = new StepDbO
-        // {
-        //     Id = step.Id,
-        //     StepType = StepType.Jump.ToStepTypeString(),
-        //     LabelId = labelId,
-        //     StepOrder = stepOrder,
-        //     NextLabelId = step.Transition.TargetLabel.Id
-        // };
-        // var label = labelMapper.ToDbO(step.Transition.TargetLabel);
-        // res.NextLabel = label;
-        // return res;
+        var res = new StepDbO
+        {
+            Id = step.Id,
+            StepType = StepType.Jump.ToStepTypeString(),
+            LabelId = labelId,
+            StepOrder = stepOrder,
+            NextLabelId = step.Transition.TargetLabel.Id,
+            NextLabel = labelMapper.Value.ToDbO(step.Transition.TargetLabel, ctx)
+        };
+
+        return res;
     }
 
     public StepDbO ToDbO(ShowBackgroundStep step, Guid labelId, Guid novelId, int stepOrder)
     {
-        throw new NotImplementedException();
-        // var res = new StepDbO
-        // {
-        //     Id = step.Id,
-        //     StepType = StepType.ShowBackground.ToStepTypeString(),
-        //     LabelId = labelId,
-        //     StepOrder = stepOrder,
-        //     BackgroundId = step.BackgroundObject.Id,
-        //     Background = imageMapper.ToDbO(step.BackgroundObject, novelId)
-        // };
-        // return res;
+        return new StepDbO
+        {
+            Id = step.Id,
+            StepType = StepType.ShowBackground.ToStepTypeString(),
+            LabelId = labelId,
+            StepOrder = stepOrder,
+            BackgroundId = step.BackgroundObject.Id,
+            Background = imageMapper.ToDbO(step.BackgroundObject, novelId)
+        };
     }
 
     public StepDbO ToDbO(ShowCharacterStep step, Guid labelId, Guid novelId, int stepOrder)
     {
-        throw new NotImplementedException();
-        // var res = new StepDbO
-        // {
-        //     Id = step.Id,
-        //     StepType = StepType.ShowCharacter.ToStepTypeString(),
-        //     LabelId = labelId,
-        //     StepOrder = stepOrder,
-        //     CharacterId = step.CharacterObject.Id
-        // };
-        // var character = characterMapper.ToDbO(step.CharacterObject, novelId);
-        // res.Character = character;
-        // return res;
+        var res = new StepDbO
+        {
+            Id = step.Id,
+            StepType = StepType.ShowCharacter.ToStepTypeString(),
+            LabelId = labelId,
+            StepOrder = stepOrder,
+            CharacterId = step.CharacterObject.Id
+        };
+
+        res.Character = characterMapper.ToDbO(step.CharacterObject, novelId);
+        return res;
     }
 
     public StepDbO ToDbO(ShowMenuStep step, Guid labelId, Guid novelId, int stepOrder)
     {
-        throw new NotImplementedException();
-        // var res = new StepDbO
-        // {
-        //     Id = step.Id,
-        //     StepType = StepType.ShowMenu.ToStepTypeString(),
-        //     LabelId = labelId,
-        //     StepOrder = stepOrder,
-        //     MenuId = step.Menu.Id
-        // };
-        // var menu = menuMapper.ToDbO(step.Menu, novelId);
-        // res.Menu = menu;
-        // return res;
-    }
+        var res = new StepDbO
+        {
+            Id = step.Id,
+            StepType = StepType.ShowMenu.ToStepTypeString(),
+            LabelId = labelId,
+            StepOrder = stepOrder,
+            MenuId = step.Menu.Id
+        };
 
+        res.Menu = menuMapper.Value.ToDbO(step.Menu, novelId);
+        return res;
+    }
+    
     public StepDbO ToDbO(ShowReplicaStep step, Guid labelId, Guid novelId, int stepOrder)
     {
-        throw new NotImplementedException();
-        // var res = new StepDbO
-        // {
-        //     Id = step.Id,
-        //     StepType = StepType.ShowReplica.ToStepTypeString(),
-        //     LabelId = labelId,
-        //     StepOrder = stepOrder,
-        //     ReplicaId = step.Replica.Id
-        // };
-        // var replica = replicaMapper.ToDbO(step.Replica, novelId);
-        // res.Replica = replica;
-        // return res;
+        var res = new StepDbO
+        {
+            Id = step.Id,
+            StepType = StepType.ShowReplica.ToStepTypeString(),
+            LabelId = labelId,
+            StepOrder = stepOrder,
+            ReplicaId = step.Replica.Id
+        };
+
+        res.Replica = replicaMapper.ToDbO(step.Replica, novelId);
+        return res;
     }
 
     public HideCharacterStep ToHideCharacterStep(StepDbO step)
     {
-        throw new NotImplementedException();
-        // if (step.CharacterId == null || step.Character == null)
-        //     throw new ArgumentException("Invalid step character");
-        // var res = new HideCharacterStep(step.Id, characterMapper.ToDomain(step.Character.Character),
-        //     new NextStepTransition());
-        // return res;
+        if (step.CharacterId == null || step.Character == null)
+            throw new ArgumentException("Invalid step character");
+        var res = new HideCharacterStep(step.Id, characterMapper.ToDomain(step.Character.Character),
+            new NextStepTransition());
+        return res;
     }
 
-    public JumpStep ToJumpStep(StepDbO step)
+    public JumpStep ToJumpStep(StepDbO step, MappingContext ctx)
     {
-        throw new NotImplementedException();
-        // if (step.NextLabelId == null || step.NextLabel == null)
-        //     throw new ArgumentException("Invalid JumpStep StepDbO, not a jump, not a step");
-        // var res = new JumpStep(step.Id, new JumpTransition(labelMapper.ToDomain(step.NextLabel)));
-        // return res;
+        if (step.NextLabel == null)
+            throw new ArgumentException();
+
+        return new JumpStep(
+            step.Id,
+            new JumpTransition(labelMapper.Value.ToDomain(step.NextLabel, ctx))
+        );
     }
 
     public ShowBackgroundStep ToShowBackgroundStep(StepDbO step)
     {
-        throw new NotImplementedException();
-        // if (step.BackgroundId == null || step.Background == null)
-        //     throw new ArgumentException("Invalid BackgroundStep StepDbO");
-        // var res = new ShowBackgroundStep(step.Id, imageMapper.ToDomain(step.Background),
-        //     new NextStepTransition());
-        // return res;
+        if (step.Background == null)
+            throw new ArgumentException();
+
+        return new ShowBackgroundStep(
+            step.Id,
+            imageMapper.ToDomain(step.Background),
+            new NextStepTransition()
+        );
     }
 
     public ShowCharacterStep ToShowCharacterStep(StepDbO step)
     {
-        throw new NotImplementedException();
-        // if (step.CharacterId == null || step.Character == null)
-        //     throw new ArgumentException("Invalid CharacterStep StepDbO");
-        // var res = new ShowCharacterStep(step.Id, characterMapper.ToDomain(step.Character), new NextStepTransition());
-        // return res;
+        if (step.Character == null)
+            throw new ArgumentException();
+
+        return new ShowCharacterStep(
+            step.Id,
+            characterMapper.ToDomain(step.Character),
+            new NextStepTransition()
+        );
     }
 
     public ShowMenuStep ToShowMenuStep(StepDbO step)
     {
-        throw new NotImplementedException();
-        // if (step.MenuId == null || step.Menu == null)
-        //     throw new ArgumentException("Invalid MenuStep StepDbO");
-        // var res = new ShowMenuStep(step.Id, menuMapper.ToDomain(step.Menu), new NextStepTransition());
-        // return res;
+        if (step.Menu == null)
+            throw new ArgumentException();
+
+        return new ShowMenuStep(
+            step.Id,
+            menuMapper.Value.ToDomain(step.Menu),
+            new NextStepTransition()
+        );
     }
 
     public ShowReplicaStep ToShowReplicaStep(StepDbO step)
     {
-        throw new NotImplementedException();
-        // if (step.ReplicaId == null || step.Replica == null)
-        //     throw new ArgumentException("Invalid ReplicaStep StepDbO");
-        // var res = new ShowReplicaStep(step.Id, replicaMapper.ToDomain(step.Replica), new NextStepTransition());
-        // return res;
+        if (step.Replica == null)
+            throw new ArgumentException();
+
+        return new ShowReplicaStep(
+            step.Id,
+            replicaMapper.ToDomain(step.Replica),
+            new NextStepTransition()
+        );
     }
 
-    public Step ToDomain(StepDbO dbo)
+    public Step ToDomain(StepDbO dbo, MappingContext ctx)
     {
         var type = dbo.StepType.ToStepType();
         switch (type)
@@ -172,25 +180,27 @@ public partial class StepMapper(
             case StepType.HideCharacter:
                 return ToHideCharacterStep(dbo);
             case StepType.Jump:
-                return ToJumpStep(dbo);
+                return ToJumpStep(dbo, ctx);
             case StepType.ShowBackground:
                 return ToShowBackgroundStep(dbo);
             case StepType.ShowMenu:
                 return ToShowMenuStep(dbo);
             case StepType.ShowReplica:
                 return ToShowReplicaStep(dbo);
+            case StepType.ShowCharacter:
+                return ToShowCharacterStep(dbo);
             default:
                 throw new ArgumentOutOfRangeException($"Unknown step type {dbo.StepType}");
         }
     }
 
-    public StepDbO ToDbO(Step step, Guid labelId, Guid novelId, int stepOrder)
+    public StepDbO ToDbO(Step step, Guid labelId, Guid novelId, int stepOrder, MappingContext ctx)
     {
-        var type = typeof(Step);
+        var type = step.GetType();
         if (type == typeof(HideCharacterStep))
             return ToDbO((HideCharacterStep)step, labelId, stepOrder);
         if (type == typeof(JumpStep))
-            return ToDbO((JumpStep)step, labelId, novelId, stepOrder);
+            return ToDbO((JumpStep)step, labelId, novelId, stepOrder, ctx);
         if (type == typeof(ShowBackgroundStep))
             return ToDbO((ShowBackgroundStep)step, labelId, novelId, stepOrder);
         if (type == typeof(ShowMenuStep))
