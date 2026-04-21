@@ -1,9 +1,8 @@
-using Microsoft.Extensions.DependencyInjection;
 using NoviVovi.Infrastructure.DatabaseObjects.Images;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using NoviVovi.Infrastructure.Mappers;
 
-namespace NoviVovi.Infrastructure.Tests;
+namespace NoviVovi.Infrastructure.Tests.Tests;
 
 public class TestMapping(LabelMapper mapper)
 {
@@ -11,19 +10,19 @@ public class TestMapping(LabelMapper mapper)
     {
         var bgId = Guid.NewGuid();
         
-        var Label1Id = Guid.NewGuid();
-        var Label2Id = Guid.NewGuid();
+        var label1Id = Guid.NewGuid();
+        var label2Id = Guid.NewGuid();
         
-        var Label1 = new LabelDbO()
+        var label1 = new LabelDbO()
         {
-            Id = Label1Id,
+            Id = label1Id,
             LabelName = "Label1",
             Steps = new List<StepDbO>()
         };
 
-        var Label2 = new LabelDbO()
+        var label2 = new LabelDbO()
         {
-            Id = Label2Id,
+            Id = label2Id,
             LabelName = "Label2",
             Steps = new List<StepDbO>()
         };
@@ -57,37 +56,15 @@ public class TestMapping(LabelMapper mapper)
         var step2 = new StepDbO
         {
             Id = Guid.NewGuid(),
-            NextLabelId = Label2Id,
-            NextLabel = Label2,
+            NextLabelId = label2Id,
+            NextLabel = label2,
             StepType = "jump"
         };
         
-        Label1.Steps.Add(step1);
-        Label1.Steps.Add(step2);
+        label1.Steps.Add(step1);
+        label1.Steps.Add(step2);
         
-        var res = mapper.ToDomain(Label1, new MappingContext());
+        var res = mapper.ToDomain(label1, new MappingContext());
         Console.WriteLine(res);
-    }
-    
-    public static void RunTest()
-    {
-        var services = new ServiceCollection();
-        
-        services.AddScoped<LabelMapper>();
-        services.AddScoped<StepMapper>();
-        services.AddScoped<MenuMapper>();
-        services.AddScoped<CharacterMapper>();
-        services.AddScoped<ImageMapper>();
-        services.AddScoped<ReplicaMapper>();
-        services.AddScoped<TransformMapper>();
-
-        var provider = services.BuildServiceProvider();
-
-        using var scope = provider.CreateScope();
-
-        var mapper = scope.ServiceProvider.GetRequiredService<LabelMapper>();
-
-        var test = new TestMapping(mapper);
-        test.Test1();
     }
 }

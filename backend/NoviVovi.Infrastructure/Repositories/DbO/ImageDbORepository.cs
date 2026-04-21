@@ -14,7 +14,7 @@ public class ImageDbORepository(
             id AS Id,
             novel_id AS NovelId,
             name AS Name,
-            ""URL"" AS Url,
+            Url AS Url,
             format AS Format,
             img_type AS ImgType,
             height AS Height,
@@ -42,11 +42,16 @@ public class ImageDbORepository(
 
         return await QueryFirstOrDefaultAsync<TransformDbO>(sql, new { Id = id });
     }
-
-
+    
     public async Task DeleteImageAsync(Guid id)
     {
         const string sql = "DELETE FROM \"Images\" WHERE id = @Id";
+        await ExecuteAsync(sql, new { Id = id });
+    }
+
+    public async Task DeleteTransformById(Guid id)
+    {
+        const string sql = "DELETE FROM \"Transforms\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
 
@@ -56,7 +61,7 @@ public class ImageDbORepository(
             UPDATE ""Images"" SET
                 novel_id = @NovelId,
                 name = @Name,
-                ""URL"" = @Url,
+                url = @Url,
                 format = @Format,
                 img_type = @ImgType,
                 height = @Height,
@@ -70,7 +75,7 @@ public class ImageDbORepository(
     public async Task<Guid> AddImageAsync(ImageDbO image)
     {
         const string sql = @"
-            INSERT INTO ""Images"" (id, novel_id, name, ""URL"", format, img_type, height, width, size)
+            INSERT INTO ""Images"" (id, novel_id, name, Url, format, img_type, height, width, size)
             VALUES (@Id, @NovelId, @Name, @Url, @Format, @ImgType, @Height, @Width, @Size)";
 
         await ExecuteAsync(sql, image);
