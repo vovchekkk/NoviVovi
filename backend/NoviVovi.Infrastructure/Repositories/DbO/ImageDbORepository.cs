@@ -116,4 +116,43 @@ public class ImageDbORepository(
         
         return bg;
     }
+    
+    public async Task<Guid> AddOrUpdateTransformAsync(TransformDbO transform)
+    {
+        const string sql = @"
+        INSERT INTO ""Transforms"" 
+        (id, scale, rotation, z_index, width, height, x_pos, y_pos)
+        VALUES (@Id, @Scale, @Rotation, @ZIndex, @Width, @Height, @XPos, @YPos)
+        ON CONFLICT (id) DO UPDATE SET
+            scale = EXCLUDED.scale,
+            rotation = EXCLUDED.rotation,
+            z_index = EXCLUDED.z_index,
+            width = EXCLUDED.width,
+            height = EXCLUDED.height,
+            x_pos = EXCLUDED.x_pos,
+            y_pos = EXCLUDED.y_pos";
+
+        await ExecuteAsync(sql, transform);
+        return transform.Id;
+    }
+    
+    public async Task<Guid> AddOrUpdateImageAsync(ImageDbO image)
+    {
+        const string sql = @"
+        INSERT INTO ""Images"" 
+        (id, novel_id, name, url, format, img_type, height, width, size)
+        VALUES (@Id, @NovelId, @Name, @Url, @Format, @ImgType, @Height, @Width, @Size)
+        ON CONFLICT (id) DO UPDATE SET
+            novel_id = EXCLUDED.novel_id,
+            name = EXCLUDED.name,
+            url = EXCLUDED.url,
+            format = EXCLUDED.format,
+            img_type = EXCLUDED.img_type,
+            height = EXCLUDED.height,
+            width = EXCLUDED.width,
+            size = EXCLUDED.size";
+
+        await ExecuteAsync(sql, image);
+        return image.Id;
+    }
 }

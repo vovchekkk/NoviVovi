@@ -78,7 +78,21 @@ public class CharacterDbORepository(
                 name_color AS NameColor, 
                 description AS Description
                              FROM ""Characters"" WHERE id = @Id";
-        return await QueryFirstOrDefaultAsync<CharacterDbO>(sql, new { Id = id });
+        var character = await QueryFirstOrDefaultAsync<CharacterDbO>(sql, new { Id = id });
+        if (character != null)
+        {
+            var states = await GetStatesByCharacterIdAsync(character.Id);
+            foreach (var state in states)
+            {
+                state.Image = await imageDbORepository.GetImageByIdAsync(state.ImageId);
+
+                if (state.TransformId.HasValue)
+                    state.Transform = await imageDbORepository.GetTransformByIdAsync(state.TransformId.Value);
+            }
+
+            character.States = states.ToList();
+        }
+        return character;
     }
 
     public async Task<Guid> AddAsync(CharacterDbO character)
@@ -141,7 +155,7 @@ public class CharacterDbORepository(
         
         if (exists)
         {
-            await UpdateAsync(character);
+            await UpdateAsync(character);  //тут не будет петли?
         }
         else
         {
@@ -175,6 +189,7 @@ public class CharacterDbORepository(
             character.Transform = await imageDbORepository.GetTransformByIdAsync(character.TransformId.Value);
 
         return character;
+        //TODO: доставать вместе с Character из бд
     }
 
     public async Task DeleteStepCharacterAsync(Guid id)
@@ -229,10 +244,6 @@ public class CharacterDbORepository(
 
     private async Task<Guid> AddOrUpdateStateAsync(CharacterStateDbO state)
     {
-        const string sql = @"
-        INSERT INTO ""CharacterStates"" (id, character_id, image_id, state_name, description, transform_id)
-        VALUES (@Id, @CharacterId, @ImageId, @StateName, @Description, @TransformId)";
-        
         var exists = await CheckStateIfExistsAsync(state.Id);
 
         if (exists)
@@ -241,15 +252,13 @@ public class CharacterDbORepository(
             await AddStateAsync(state);
         
         if (state.Transform != null)
-            await imageDbORepository.AddTransformAsync(state.Transform);
+            await imageDbORepository.AddOrUpdateTransformAsync(state.Transform);
         if (state.Image != null)
-            await imageDbORepository.AddImageAsync(state.Image);
-        
-        await ExecuteAsync(sql, state);
+            await imageDbORepository.AddOrUpdateImageAsync(state.Image);
         return state.Id;
     }
 
-    private async Task AddStateAsync(CharacterStateDbO state)
+    public async Task AddStateAsync(CharacterStateDbO state)
     {
         const string sql = @"
             INSERT INTO ""CharacterStates"" 
