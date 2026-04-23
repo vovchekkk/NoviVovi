@@ -139,16 +139,37 @@ public class NovelDbORepository(
         
         if (novel.StartLabel != null)
         {
+            novel.StartLabel.NovelId = novel.Id;
             await labelRepository.AddOrUpdateFullAsync(novel.StartLabel, ctx);
         }
         
+        var existingLabels = (await labelRepository.GetFullByNovelIdAsync(novel.Id)).ToList();
+        var existingLabelIds = existingLabels.Select(l => l.Id).ToHashSet();
+        var newLabelIds = novel.Labels.Select(l => l.Id).ToHashSet();
+        var toDeleteLabels = existingLabelIds.Except(newLabelIds).ToList();
+        foreach (var labelId in toDeleteLabels)
+        {
+            await labelRepository.DeleteAsync(labelId);
+        }
+
         foreach (var label in novel.Labels)
         {
+            label.NovelId = novel.Id;
             await labelRepository.AddOrUpdateFullAsync(label, ctx);
         }
         
+        var existingCharacters = (await characterRepository.GetFullByNovelIdAsync(novel.Id)).ToList();
+        var existingCharIds = existingCharacters.Select(c => c.Id).ToHashSet();
+        var newCharIds = novel.Characters.Select(c => c.Id).ToHashSet();
+        var toDeleteChars = existingCharIds.Except(newCharIds).ToList();
+        foreach (var charId in toDeleteChars)
+        {
+            await characterRepository.DeleteAsync(charId);
+        }
+
         foreach (var character in novel.Characters)
         {
+            character.NovelId = novel.Id;
             await characterRepository.AddOrUpdateFullAsync(character);
         }
 
