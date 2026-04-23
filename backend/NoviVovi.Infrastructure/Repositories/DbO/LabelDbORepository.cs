@@ -33,7 +33,7 @@ public class LabelDbORepository(
                 novel_id AS NovelId,
                 label_name AS LabelName
             FROM ""Labels""
-            WHERE label_id = @Id";
+            WHERE id = @Id";
         return await QueryFirstOrDefaultAsync<LabelDbO>(sql, new { Id = id });
     }
 

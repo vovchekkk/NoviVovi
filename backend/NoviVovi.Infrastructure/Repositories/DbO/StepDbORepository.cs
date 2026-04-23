@@ -20,7 +20,7 @@ public class StepDbORepository(
             label_id AS LabelId,
             replica_id AS ReplicaId,
             menu_id AS MenuId,
-            bg_id AS BackgroundId,
+            background_id AS BackgroundId,
             character_id AS CharacterId,
             next_label_id AS NextLabelId,
             step_order AS StepOrder,
@@ -80,12 +80,13 @@ public class StepDbORepository(
 
         var steps = (await GetByLabelIdsAsync(labelIds)).ToList();
         var fullSteps = new List<StepDbO>();
-
+        var ctx = new LoadContext();
+        
         foreach (var step in steps)
         {
-            var ctx = new LoadContext();
             var full = await GetFullByIdAsync(step.Id, ctx);
-            if (full != null) fullSteps.Add(full);
+            if (full != null) 
+                fullSteps.Add(full);
         }
 
         return fullSteps;
@@ -102,7 +103,7 @@ public class StepDbORepository(
                replica_id AS ReplicaId,
                character_id AS CharacterId,
                menu_id AS MenuId,
-               bg_id AS BackgroundId,
+               background_id AS BackgroundId,
                next_label_id AS NextLabelId,
                step_order AS StepOrder,
                step_type AS StepType
@@ -136,10 +137,10 @@ public class StepDbORepository(
     {
         const string sql = @"
             INSERT INTO ""Steps"" (
-                id, label_id, replica_id, menu_id, bg_id,
+                id, label_id, replica_id, menu_id, background_id,
                 next_label_id, step_order, step_type, character_id
             ) VALUES (
-                @Id, @LabelId, @ReplicaId, @MenuId, @BgId,
+                @Id, @LabelId, @ReplicaId, @MenuId, @BackgroundId,
                 @NextLabelId, @StepOrder, @StepType, @CharacterId
             )";
         
@@ -154,8 +155,8 @@ public class StepDbORepository(
                 label_id = @LabelId,
                 replica_id = @ReplicaId,
                 menu_id = @MenuId,
-                bg_id = @BgId,
-                character_id AS @CharacterId,
+                background_id = @BackgroundId,
+                character_id = @CharacterId,
                 next_label_id = @NextLabelId,
                 step_order = @StepOrder,
                 step_type = @StepType
