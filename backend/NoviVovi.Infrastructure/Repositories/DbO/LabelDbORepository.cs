@@ -152,6 +152,15 @@ public class LabelDbORepository(
         else
             await AddAsync(label);
         
+        var existingStepIds = await stepRepo.Value.GetStepIdsByLabelIdAsync(label.Id);
+        var newStepIds = label.Steps?.Select(s => s.Id).ToHashSet() ?? new HashSet<Guid>();
+        var stepIdsToDelete = existingStepIds.Except(newStepIds).ToList();
+        
+        foreach (var stepId in stepIdsToDelete)
+        {
+            await stepRepo.Value.DeleteStepAsync(stepId);
+        }
+        
         if (label.Steps != null && label.Steps.Any())
         {
             foreach (var step in label.Steps)

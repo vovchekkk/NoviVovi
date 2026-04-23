@@ -198,7 +198,7 @@ ALTER TABLE "Choices"
 ADD FOREIGN KEY ("menu_id") REFERENCES "Menus"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Choices"
-ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE CASCADE
 
 ALTER TABLE "Replicas"
 ADD FOREIGN KEY ("speaker_id") REFERENCES "Characters"("id") ON DELETE SET NULL;

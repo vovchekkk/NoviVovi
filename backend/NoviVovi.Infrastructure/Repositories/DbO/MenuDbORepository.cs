@@ -58,6 +58,12 @@ public class MenuDbORepository(
         return choice.Id;
     }
 
+    public async Task DeleteChoiceAsync(Guid choiceId)
+    {
+        const string sql = "DELETE FROM \"Choices\" WHERE id = @Id";
+        await ExecuteAsync(sql, new { Id = choiceId });
+    }
+
     private async Task UpdateChoiceAsync(ChoiceDbO choice)
     {
         const string sql = @"
@@ -118,6 +124,16 @@ public class MenuDbORepository(
         else
             await AddAsync(menu);
         
+        var existingChoiceIds = await GetChoiceIdsByMenuIdAsync(menu.Id);
+        var newChoiceIds = menu.Choices?.Select(c => c.Id).ToHashSet() ?? new HashSet<Guid>();
+        
+        var choiceIdsToDelete = existingChoiceIds.Except(newChoiceIds).ToList();
+    
+        foreach (var choiceId in choiceIdsToDelete)
+        {
+            await DeleteChoiceAsync(choiceId);
+        }
+        
         if (menu.Choices != null && menu.Choices.Any())
         {
             foreach (var choice in menu.Choices)
@@ -144,5 +160,12 @@ public class MenuDbORepository(
         }
 
         return choice.Id;
+    }
+    
+    public async Task<HashSet<Guid>> GetChoiceIdsByMenuIdAsync(Guid menuId)
+    {
+        const string sql = "SELECT id FROM \"Choices\" WHERE menu_id = @MenuId";
+        var ids = await QueryAsync<Guid>(sql, new { MenuId = menuId });
+        return ids.ToHashSet();
     }
 }

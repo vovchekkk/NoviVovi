@@ -217,7 +217,20 @@ public class StepDbORepository(
             await labelRepo.AddOrUpdateFullAsync(step.NextLabel, ctx);
         }
     }
-    
+
+    public async Task DeleteStepAsync(Guid stepId)
+    {
+        const string sql = "DELETE FROM \"Steps\" WHERE id = @Id";
+        await ExecuteAsync(sql, new { Id = stepId });
+    }
+
+    public async Task<HashSet<Guid>> GetStepIdsByLabelIdAsync(Guid labelId)
+    {
+        const string sql = "SELECT id FROM \"Steps\" WHERE label_id = @LabelId";
+        var ids = await QueryAsync<Guid>(sql, new { LabelId = labelId });
+        return ids.ToHashSet();
+    }
+
     private async Task<ReplicaDbO?> GetReplicaByIdAsync(Guid id)
     {
         const string sql = @"SELECT id AS Id, speaker_id AS SpeakerId, text AS Text

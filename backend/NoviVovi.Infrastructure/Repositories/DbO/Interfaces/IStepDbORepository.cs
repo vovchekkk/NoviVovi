@@ -10,4 +10,6 @@ public interface IStepDbORepository
     Task<StepDbO?> GetFullByIdAsync(Guid stepId, LoadContext ctx);
     Task DeleteAsync(Guid id);
     Task AddOrUpdateFullAsync(StepDbO step, LoadContext ctx);
+    Task DeleteStepAsync(Guid stepId);
+    Task<HashSet<Guid>> GetStepIdsByLabelIdAsync(Guid labelId);
 }

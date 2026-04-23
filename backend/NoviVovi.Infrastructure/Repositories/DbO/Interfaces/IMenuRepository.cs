@@ -8,6 +8,7 @@ public interface IMenuDbORepository
 
     Task<Guid> AddAsync(MenuDbO menu);
     Task<Guid> AddChoiceAsync(ChoiceDbO choice);
+    Task DeleteChoiceAsync(Guid menuId);
     Task UpdateAsync(MenuDbO menu);
     Task DeleteAsync(Guid id);
     Task<Guid> AddOrUpdateFullAsync(MenuDbO stepMenu, LoadContext ctx);

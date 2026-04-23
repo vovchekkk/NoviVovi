@@ -348,6 +348,37 @@ public class LabelRepoTest :  IAsyncLifetime  //короче, оно вроде 
         Assert.Contains(resultList, l => l?.Id == label1.Id);
         Assert.Contains(resultList, l => l?.Id == label2.Id);
     }
+    
+    [Fact]
+    public async Task TestUpdateLabelRemovesObsoleteSteps()
+    {
+        var label = CreateLabel("label_with_steps");
+        var step1 = CreateStep(label, 1);
+        var step2 = CreateStep(label, 2);
+        var step3 = CreateStep(label, 3);
+    
+        label.Steps = [step1, step2, step3];
+        await labelRepo.AddOrUpdateFullAsync(label);
+    
+        await using var conn = new NpgsqlConnection(connectionString);
+        var beforeCount = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM \"Steps\" WHERE label_id = @LabelId", 
+            new { LabelId = label.Id });
+        Assert.Equal(3, beforeCount);
+    
+        label.Steps = [step1, step3];
+        await labelRepo.AddOrUpdateFullAsync(label);
+        
+        var afterCount = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM \"Steps\" WHERE label_id = @LabelId", 
+            new { LabelId = label.Id });
+        Assert.Equal(2, afterCount);
+    
+        var step2Exists = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM \"Steps\" WHERE id = @Id", 
+            new { Id = step2.Id });
+        Assert.Equal(0, step2Exists);
+    }
 
     public async Task DisposeAsync()
     {
