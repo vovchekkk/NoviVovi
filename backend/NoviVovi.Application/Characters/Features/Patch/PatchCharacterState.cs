@@ -22,7 +22,7 @@ public record PatchCharacterStateCommand : IRequest<CharacterStateDto>
     public string? Name { get; init; }
     public string? Description { get; init; }
     public Guid? ImageId { get; init; }
-    public TransformDto? Transform { get; init; }
+    public TransformDto? LocalTransform { get; init; }
 }
 
 public class PatchCharacterStateHandler(
@@ -56,9 +56,9 @@ public class PatchCharacterStateHandler(
             state.UpdateImage(image);
         }
 
-        if (request.Transform is not null)
+        if (request.LocalTransform is not null)
         {
-            var transformPatch = transformMapper.ToDomainPatch(request.Transform);
+            var transformPatch = transformMapper.ToDomainPatch(request.LocalTransform);
             
             state.PatchTransform(transformPatch);
         }

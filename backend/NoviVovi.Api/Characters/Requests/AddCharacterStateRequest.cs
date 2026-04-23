@@ -6,5 +6,5 @@ public record AddCharacterStateRequest(
     string Name,
     string? Description,
     Guid ImageId,
-    TransformRequest Transform
+    TransformRequest LocalTransform
 );

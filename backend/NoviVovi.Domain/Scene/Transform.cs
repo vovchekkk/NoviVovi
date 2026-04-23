@@ -28,6 +28,18 @@ public class Transform : ValueObject
         };
     }
 
+    public static Transform operator +(Transform a, Transform b)
+    {
+        return new Transform
+        {
+            Position = new Position(a.Position.X + b.Position.X, a.Position.Y + b.Position.Y),
+            Size = new Size(a.Size.Width + b.Size.Width, a.Size.Height + b.Size.Height),
+            Scale = a.Scale * b.Scale,
+            Rotation = a.Rotation + b.Rotation,
+            ZIndex = a.ZIndex + b.ZIndex
+        };
+    }
+
     protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return Position;

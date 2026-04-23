@@ -7,6 +7,7 @@ public class CharacterObject : SceneObject
 {
     public Character Character { get; private set; }
     public CharacterState State { get; private set; }
+    public new Transform Transform => base.Transform + State.LocalTransform;
 
     public CharacterObject(
         Guid id,

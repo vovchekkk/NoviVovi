@@ -21,7 +21,7 @@ public record AddCharacterStateCommand : IRequest<CharacterStateDto>
     public required string Name { get; init; }
     public string? Description { get; init; }
     public required Guid ImageId { get; init; }
-    public required TransformDto Transform { get; init; }
+    public required TransformDto LocalTransform { get; init; }
 }
 
 public class AddCharacterStateHandler(
@@ -40,7 +40,7 @@ public class AddCharacterStateHandler(
 
         var image = await imageRepository.GetByIdAsync(request.ImageId, ct);
 
-        var transform = transformMapper.ToDomainModel(request.Transform);
+        var transform = transformMapper.ToDomainModel(request.LocalTransform);
 
         var state = CharacterState.Create(request.Name, image, transform, request.Description);
 
