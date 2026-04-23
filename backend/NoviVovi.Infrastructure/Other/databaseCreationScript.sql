@@ -147,7 +147,6 @@ CREATE TABLE "Steps" (
 CREATE TABLE "StepCharacter" (
     "id" UUID PRIMARY KEY,
     "character_state_id" UUID NOT NULL,
-    "step_id" UUID NOT NULL,
     "transform_id" UUID
 );
 
@@ -189,7 +188,7 @@ ALTER TABLE "Steps"
 ADD FOREIGN KEY ("background_id") REFERENCES "Backgrounds"("id") ON DELETE SET NULL;
 
 ALTER TABLE "Steps"
-ADD FOREIGN KEY ("character_id") REFERENCES "Characters"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("character_id") REFERENCES "StepCharacter"("id") ON DELETE SET NULL;
 
 ALTER TABLE "Steps"
 ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE SET NULL;
@@ -198,7 +197,7 @@ ALTER TABLE "Choices"
 ADD FOREIGN KEY ("menu_id") REFERENCES "Menus"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Choices"
-ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE CASCADE
+ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Replicas"
 ADD FOREIGN KEY ("speaker_id") REFERENCES "Characters"("id") ON DELETE SET NULL;
@@ -208,9 +207,6 @@ ADD FOREIGN KEY ("img") REFERENCES "Images"("id") ON DELETE CASCADE;
 
 ALTER TABLE "StepCharacter"
 ADD FOREIGN KEY ("character_state_id") REFERENCES "CharacterStates"("id") ON DELETE CASCADE;
-
-ALTER TABLE "StepCharacter"
-ADD FOREIGN KEY ("step_id") REFERENCES "Steps"("id") ON DELETE CASCADE;
 
 ALTER TABLE "CharacterStates"
     ADD FOREIGN KEY ("transform_id") REFERENCES "Transforms"("id") ON DELETE SET NULL;

@@ -8,6 +8,7 @@ using Npgsql;
 
 namespace NoviVovi.Infrastructure.Tests.Database; 
 
+[Collection("Sequential")]
 public class LabelRepoTest :  IAsyncLifetime  //короче, оно вроде бы работает
 {
     private readonly IServiceProvider provider;

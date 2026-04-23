@@ -9,6 +9,8 @@ using XUnitPriorityOrderer;
 
 namespace NoviVovi.Infrastructure.Tests.Database;
 
+
+[Collection("Sequential")]
 public class ImageRepoTest :  IAsyncLifetime
 {
     private readonly IServiceProvider provider;
@@ -138,7 +140,7 @@ public class ImageRepoTest :  IAsyncLifetime
             Width = 100,
             Size = 1
         };
-        await repo.AddImageAsync(testImage);
+        await repo.AddOrUpdateImageAsync(testImage);
         var after = await conn.QueryFirstAsync<int>(countScript, new { Id = id });
         Assert.True(after > 0);
         
@@ -261,7 +263,7 @@ public class ImageRepoTest :  IAsyncLifetime
         Assert.Equal(0, before);
         
         var repo = provider.GetRequiredService<IImageDbORepository>();
-        await repo.AddTransformAsync(transform);
+        await repo.AddOrUpdateTransformAsync(transform);
         
         var after = await conn.QueryFirstAsync<int>(countScript, new { Id = id });
         Assert.True(after > 0);

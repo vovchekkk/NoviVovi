@@ -1,5 +1,3 @@
-using NoviVovi.Infrastructure.DatabaseObjects.Characters;
-using NoviVovi.Infrastructure.DatabaseObjects.Images;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
@@ -148,7 +146,7 @@ public class StepDbORepository(
         return step.Id;
     }
 
-    public async Task UpdateAsync(StepDbO step)
+    private async Task UpdateAsync(StepDbO step)
     {
         const string sql = @"
             UPDATE ""Steps"" SET
@@ -187,35 +185,56 @@ public class StepDbORepository(
         
         var exists = await CheckIfExistsAsync(step.Id);
 
-        if (exists)
-            await UpdateAsync(step);
-        else
-            await AddAsync(step);
-
         if (step.Replica != null)
         {
-            await CreateReplicaAsync(step.Replica);
+            await AddOrUpdateReplicaAsync(step.Replica);
+            step.ReplicaId = step.Replica.Id;
         }
 
         if (step.Menu != null)
         {
             await menuRepo.AddOrUpdateFullAsync(step.Menu, ctx);
+            step.MenuId = step.Menu.Id;
         }
 
         if (step.Background != null)
         {
-            await imageRepository.AddBgAsync(step.Background);
+            await imageRepository.AddOrUpdateBackgroundAsync(step.Background);
+            step.BackgroundId = step.Background.Id;
         }
 
         if (step.Character != null)
         {
-            await characterRepository.AddStepCharacterAsync(step.Character);
+            await characterRepository.AddOrUpdateStepCharacterAsync(step.Character);
+            step.CharacterId = step.Character.Id;
         }
 
         if (step.NextLabel != null)
         {
             await labelRepo.AddOrUpdateFullAsync(step.NextLabel, ctx);
+            step.NextLabelId = step.NextLabel.Id;
         }
+        
+        if (exists)
+            await UpdateAsync(step);
+        else
+            await AddAsync(step);
+    }
+
+    private async Task AddOrUpdateReplicaAsync(ReplicaDbO replica)
+    {
+        var exists = await ReplicaExistsAsync(replica.Id);
+        if (exists)
+            await UpdateReplicaAsync(replica);
+        else
+            await CreateReplicaAsync(replica);
+    }
+
+    private async Task<bool> ReplicaExistsAsync(Guid id)
+    {
+        const string sql = "SELECT 1 FROM \"Replicas\" WHERE id = @Id LIMIT 1";
+        var result = await QueryFirstOrDefaultAsync<int?>(sql, new { Id = id });
+        return result.HasValue;
     }
 
     public async Task DeleteStepAsync(Guid stepId)
@@ -231,7 +250,7 @@ public class StepDbORepository(
         return ids.ToHashSet();
     }
 
-    private async Task<ReplicaDbO?> GetReplicaByIdAsync(Guid id)
+    public async Task<ReplicaDbO?> GetReplicaByIdAsync(Guid id)
     {
         const string sql = @"SELECT id AS Id, speaker_id AS SpeakerId, text AS Text
                              FROM ""Replicas"" WHERE id = @Id";

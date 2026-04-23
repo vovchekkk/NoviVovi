@@ -144,25 +144,25 @@ public class MenuDbORepository(
 
         return menu.Id;
     }
-    
-    private async Task<Guid> AddOrUpdateChoiceAsync(ChoiceDbO choice, LoadContext ctx)
+
+    public async Task<Guid> AddOrUpdateChoiceAsync(ChoiceDbO choice, LoadContext ctx)
     {
         var exists = await CheckChoiceExistsAsync(choice.Id);
-
-        if (exists)
-            await UpdateChoiceAsync(choice);
-        else
-            await AddChoiceAsync(choice);
         
         if (choice.NextLabel != null)
         {
             await labelRepo.Value.AddOrUpdateFullAsync(choice.NextLabel, ctx);
         }
+        
+        if (exists)
+            await UpdateChoiceAsync(choice);
+        else
+            await AddChoiceAsync(choice);
 
         return choice.Id;
     }
-    
-    public async Task<HashSet<Guid>> GetChoiceIdsByMenuIdAsync(Guid menuId)
+
+    private async Task<HashSet<Guid>> GetChoiceIdsByMenuIdAsync(Guid menuId)
     {
         const string sql = "SELECT id FROM \"Choices\" WHERE menu_id = @MenuId";
         var ids = await QueryAsync<Guid>(sql, new { MenuId = menuId });

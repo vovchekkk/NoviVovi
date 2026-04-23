@@ -124,20 +124,20 @@ public class CharacterDbORepository(
         await ExecuteAsync(sql, new { Id = id });
     }
 
-    public async Task<Guid> AddStepCharacterAsync(StepCharacterDbO stepCharacter)  //TODO: AddOrUpdateFull
-    {
-        const string sql = @"
-            INSERT INTO ""StepCharacter"" (id, transform_id, character_state_id, step_id)
-            VALUES (@Id, @TransformId, @CharacterStateId, @StepId)";
-        
-        if (stepCharacter.Transform != null)
-            await imageDbORepository.AddTransformAsync(stepCharacter.Transform);
-        if (stepCharacter.CharacterState != null)
-            await AddOrUpdateStateAsync(stepCharacter.CharacterState);
-        
-        await ExecuteAsync(sql, stepCharacter);
-        return stepCharacter.Id;
-    }
+    // public async Task<Guid> AddStepCharacterAsync(StepCharacterDbO stepCharacter)  //TODO: AddOrUpdateFull
+    // {
+    //     const string sql = @"
+    //         INSERT INTO ""StepCharacter"" (id, transform_id, character_state_id, step_id)
+    //         VALUES (@Id, @TransformId, @CharacterStateId, @StepId)";
+    //     
+    //     if (stepCharacter.Transform != null)
+    //         await imageDbORepository.AddOrUpdateTransformAsync(stepCharacter.Transform); //AddOrUpdate
+    //     if (stepCharacter.CharacterState != null)
+    //         await AddOrUpdateStateAsync(stepCharacter.CharacterState); //AddOrUpdate
+    //     
+    //     await ExecuteAsync(sql, stepCharacter);
+    //     return stepCharacter.Id;
+    // }
 
     public async Task<bool> CheckIfExists(CharacterDbO character)
     {
@@ -242,19 +242,20 @@ public class CharacterDbORepository(
         return result.HasValue;
     }
 
-    private async Task<Guid> AddOrUpdateStateAsync(CharacterStateDbO state)
+    public async Task<Guid> AddOrUpdateStateAsync(CharacterStateDbO state)
     {
         var exists = await CheckStateIfExistsAsync(state.Id);
-
-        if (exists)
-            await UpdateStateAsync(state);
-        else
-            await AddStateAsync(state);
         
         if (state.Transform != null)
             await imageDbORepository.AddOrUpdateTransformAsync(state.Transform);
         if (state.Image != null)
             await imageDbORepository.AddOrUpdateImageAsync(state.Image);
+        
+        if (exists)
+            await UpdateStateAsync(state);
+        else
+            await AddStateAsync(state);
+        
         return state.Id;
     }
 
@@ -267,5 +268,51 @@ public class CharacterDbORepository(
             (@Id, @CharacterId, @ImageId, @StateName, @Description, @TransformId)";
 
         await ExecuteAsync(sql, state);
+    }
+    
+    public async Task<Guid> AddOrUpdateStepCharacterAsync(StepCharacterDbO stepCharacter)
+    {
+        // Сохраняем связанные объекты
+        if (stepCharacter.Transform != null)
+            await imageDbORepository.AddOrUpdateTransformAsync(stepCharacter.Transform);
+    
+        if (stepCharacter.CharacterState != null)
+            await AddOrUpdateStateAsync(stepCharacter.CharacterState);
+        
+        var exists = await CheckStepCharacterExistsAsync(stepCharacter.Id);
+    
+        if (exists)
+            await UpdateStepCharacterAsync(stepCharacter);
+        else
+            await AddStepCharacterInternalAsync(stepCharacter);
+    
+        return stepCharacter.Id;
+    }
+
+    private async Task<bool> CheckStepCharacterExistsAsync(Guid id)
+    {
+        const string sql = "SELECT 1 FROM \"StepCharacter\" WHERE id = @Id LIMIT 1";
+        var result = await QueryFirstOrDefaultAsync<int?>(sql, new { Id = id });
+        return result.HasValue;
+    }
+
+    private async Task UpdateStepCharacterAsync(StepCharacterDbO stepCharacter)
+    {
+        const string sql = @"
+        UPDATE ""StepCharacter"" 
+        SET transform_id = @TransformId,
+            character_state_id = @CharacterStateId
+        WHERE id = @Id";
+    
+        await ExecuteAsync(sql, stepCharacter);
+    }
+
+    private async Task AddStepCharacterInternalAsync(StepCharacterDbO stepCharacter)
+    {
+        const string sql = @"
+        INSERT INTO ""StepCharacter"" (id, transform_id, character_state_id)
+        VALUES (@Id, @TransformId, @CharacterStateId)";
+    
+        await ExecuteAsync(sql, stepCharacter);
     }
 }

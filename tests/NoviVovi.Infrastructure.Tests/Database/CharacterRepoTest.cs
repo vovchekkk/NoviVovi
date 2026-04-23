@@ -9,6 +9,7 @@ using Npgsql;
 
 namespace NoviVovi.Infrastructure.Tests.Database;
 
+[Collection("Sequential")]
 public class CharacterRepoTest : IAsyncLifetime
 {
     private readonly IServiceProvider provider;
@@ -278,7 +279,7 @@ public class CharacterRepoTest : IAsyncLifetime
 
         var state = CreateCharacterState(character, image, transform);
 
-        await repo.AddStateAsync(state);
+        await repo.AddOrUpdateStateAsync(state);
 
         var result = await repo.GetFullCharacterStateByIdAsync(state.Id);
 
@@ -303,7 +304,7 @@ public class CharacterRepoTest : IAsyncLifetime
 
         var state = CreateCharacterState(character, image, transform);
 
-        await repo.AddStateAsync(state);
+        await repo.AddOrUpdateStateAsync(state);
 
         await repo.DeleteStateAsync(state.Id);
 

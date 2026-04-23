@@ -9,6 +9,8 @@ using Npgsql;
 
 namespace NoviVovi.Infrastructure.Tests.Database;
 
+
+[Collection("Sequential")]
 public class MenuRepoTest : IAsyncLifetime
 {
     private readonly IServiceProvider provider;
@@ -260,11 +262,11 @@ public class MenuRepoTest : IAsyncLifetime
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
         var label = CreateLabel("choice_label");
-        await labelRepo.AddOrUpdateFullAsync(label);
+        // await labelRepo.AddOrUpdateFullAsync(label); //важно было убрать эту хуйню
         
         var choice = CreateChoice(menu.Id, label);
         
-        var result = await menuRepo.AddChoiceAsync(choice);
+        var result = await menuRepo.AddOrUpdateChoiceAsync(choice, new LoadContext());
         
         Assert.Equal(choice.Id, result);
         
@@ -341,7 +343,7 @@ public class MenuRepoTest : IAsyncLifetime
         await labelRepo.AddOrUpdateFullAsync(label);
         
         var choice = CreateChoice(menu.Id, label);
-        await menuRepo.AddChoiceAsync(choice);
+        await menuRepo.AddOrUpdateChoiceAsync(choice, new LoadContext());
         
         const string countSql = "SELECT COUNT(*) FROM \"Choices\" WHERE id = @Id";
         await using var conn = new NpgsqlConnection(connectionString);
@@ -369,8 +371,8 @@ public class MenuRepoTest : IAsyncLifetime
         var choice1 = CreateChoice(menu.Id, label1, "choice_1");
         var choice2 = CreateChoice(menu.Id, label2, "choice_2");
         
-        await menuRepo.AddChoiceAsync(choice1);
-        await menuRepo.AddChoiceAsync(choice2);
+        await menuRepo.AddOrUpdateChoiceAsync(choice1, new LoadContext());
+        await menuRepo.AddOrUpdateChoiceAsync(choice2, new LoadContext());
         
         var ctx = new LoadContext();
         var result = await menuRepo.GetFullByIdAsync(menu.Id, ctx);
@@ -400,10 +402,8 @@ public class MenuRepoTest : IAsyncLifetime
         var choice2 = CreateChoice(menu.Id, label2, "new_choice_2");
         menu.Choices = [choice1, choice2];
         
-        // Act
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
-        // Assert
         const string countSql = "SELECT COUNT(*) FROM \"Choices\" WHERE menu_id = @MenuId";
         await using var conn = new NpgsqlConnection(connectionString);
         var count = await conn.ExecuteScalarAsync<int>(countSql, new { MenuId = menu.Id });
@@ -470,8 +470,8 @@ public class MenuRepoTest : IAsyncLifetime
         var choice2 = CreateChoice(menu.Id, label, "choice_2");
         
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
-        await menuRepo.AddChoiceAsync(choice1);
-        await menuRepo.AddChoiceAsync(choice2);
+        await menuRepo.AddOrUpdateChoiceAsync(choice1, new LoadContext());
+        await menuRepo.AddOrUpdateChoiceAsync(choice2, new LoadContext());
         
         await using var conn = new NpgsqlConnection(connectionString);
         
@@ -480,11 +480,9 @@ public class MenuRepoTest : IAsyncLifetime
         Assert.Equal(1, menuBefore);
         Assert.Equal(2, choicesBefore);
         
-        // Act
         await menuRepo.DeleteAsync(menu.Id);
         idsToDelete["Menus"].Remove(menu.Id);
         
-        // Assert
         var menuAfter = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"Menus\" WHERE id = @Id", new { Id = menu.Id });
         var choicesAfter = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"Choices\" WHERE menu_id = @MenuId", new { MenuId = menu.Id });
         

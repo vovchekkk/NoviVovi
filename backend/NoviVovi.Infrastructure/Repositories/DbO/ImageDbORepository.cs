@@ -82,14 +82,17 @@ public class ImageDbORepository(
         return image.Id;
     }
 
-    public async Task<Guid> AddBgAsync(BackgroundDbO background)
+    public async Task<Guid> AddOrUpdateBackgroundAsync(BackgroundDbO background)
     {
         const string sql = @"
             INSERT INTO ""Backgrounds"" (id, img, transform_id)
-            VALUES (@Id, @Img, @TransformId)";
+            VALUES (@Id, @Img, @TransformId)
+            ON CONFLICT (id) DO UPDATE SET
+                img = EXCLUDED.img,
+                transform_id = EXCLUDED.transform_id;";
 
-        if (background.Image != null) await AddImageAsync(background.Image);
-        if (background.Transform != null) await AddTransformAsync(background.Transform);
+        if (background.Image != null) await AddOrUpdateImageAsync(background.Image);
+        if (background.Transform != null) await AddOrUpdateTransformAsync(background.Transform);
         await ExecuteAsync(sql, background);
         return background.Id;
     }
