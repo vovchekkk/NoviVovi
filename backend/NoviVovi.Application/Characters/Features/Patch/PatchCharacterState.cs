@@ -20,6 +20,7 @@ public record PatchCharacterStateCommand : IRequest<CharacterStateDto>
     public required Guid CharacterId { get; init; }
     public required Guid StateId { get; init; }
     public string? Name { get; init; }
+    public string? NameColor { get; init; }
     public string? Description { get; init; }
     public Guid? ImageId { get; init; }
     public TransformDto? LocalTransform { get; init; }

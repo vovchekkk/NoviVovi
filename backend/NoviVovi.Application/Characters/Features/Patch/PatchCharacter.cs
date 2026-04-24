@@ -14,6 +14,7 @@ public record PatchCharacterCommand : IRequest<CharacterDto>
     public required Guid NovelId { get; init; }
     public required Guid CharacterId { get; init; }
     public string? Name { get; init; }
+    public string? NameColor { get; init; }
     public string? Description { get; init; }
 }
 
@@ -31,6 +32,9 @@ public class PatchCharacterHandler(
         
         if (request.Name is not null)
             character.UpdateName(request.Name);
+        
+        if (request.NameColor is not null)
+            character.UpdateNameColor(request.NameColor);
         
         if (request.Description is not null)
             character.UpdateDescription(request.Description);

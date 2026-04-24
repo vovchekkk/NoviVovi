@@ -3,6 +3,7 @@
 public record CharacterDto(
     Guid Id,
     string Name,
+    string NameColor,
     string? Description,
     List<CharacterStateDto> CharacterStates
 );

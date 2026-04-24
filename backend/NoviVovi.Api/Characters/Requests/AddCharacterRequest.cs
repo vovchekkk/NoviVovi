@@ -2,5 +2,6 @@
 
 public record AddCharacterRequest(
     string Name,
+    string NameColor,
     string? Description
 );
