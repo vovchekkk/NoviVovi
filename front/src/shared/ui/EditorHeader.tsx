@@ -10,7 +10,6 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            px: '8',
         })}>
             <nav className={css({
                 display: 'flex',
@@ -24,7 +23,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
                     className={css({
                         color: 'black',
                         position: 'relative',
-                        px: '20px',
+                        px: '30px',
                         py: '6px',
                         zIndex: '1',
                         backgroundColor: '#DFC6D1',
@@ -45,7 +44,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
                     className={css({
                         color: 'black',
                         position: 'relative',
-                        px: '20px',
+                        px: '30px',
                         py: '6px',
                         zIndex: '1',
                         backgroundColor: '#DFC6D1',
@@ -66,7 +65,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
                     className={css({
                         color: 'black',
                         position: 'relative',
-                        px: '20px',
+                        px: '30px',
                         py: '6px',
                         zIndex: '1',
                         backgroundColor: '#DFC6D1',

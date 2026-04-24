@@ -1,21 +1,753 @@
 import Header from "../shared/ui/Header.tsx";
-import { css } from '../../styled-system/css'
-import EditorContainer from "../shared/ui/EditorContainer.tsx";
+import {css} from '../../styled-system/css'
+import {useEffect, useState} from "react";
+import EditorHeader from "../shared/ui/EditorHeader.tsx";
+import Preview from "../shared/ui/Preview.tsx";
+import BlockPanel from "../shared/ui/BlockPanel.tsx";
+import Selector from "../shared/ui/Selector.tsx";
+import {Controller, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {z} from "zod";
+import Modal from "../shared/ui/Modal.tsx";
+import api from "../api.tsx";
+import {useParams} from "react-router-dom";
+import {vstack} from '../../styled-system/patterns';
+
+export enum StepType {
+    BACKGROUND = 'background',
+    SHOW = 'show',
+    HIDE = 'hide',
+    REPLICA = 'replica',
+    JUMP = 'jump',
+    CHOICE = 'choice',
+}
+
+export const stepDisplayNames: Record<StepType, string> = {
+    [StepType.BACKGROUND]: 'Фон',
+    [StepType.SHOW]: 'Появление',
+    [StepType.HIDE]: 'Исчезновение',
+    [StepType.REPLICA]: 'Реплика',
+    [StepType.JUMP]: 'Переход',
+    [StepType.CHOICE]: 'Выбор',
+};
+const baseStepSchema = z.object({
+    id: z.string().min(1),
+});
+const transformSchema = z.object({
+    x: z.number(),
+    y: z.number(),
+    width: z.number(),
+    height: z.number(),
+    scale: z.number(),
+    rotation: z.number(),
+    zIndex: z.number(),
+});
+
+const hideStepSchema = baseStepSchema.extend({
+    type: z.literal('hide'),
+    characterId: z.string().min(1, 'Выберите персонажа'),
+});
+
+const jumpStepSchema = baseStepSchema.extend({
+    type: z.literal('jump'),
+    targetId: z.string().min(1, 'Выберите следующую сцену'),
+});
+
+const showStepSchema = baseStepSchema.extend({
+    type: z.literal('show'),
+    characterId: z.string().min(1),
+    characterStateId: z.string().min(1),
+    transform: transformSchema,
+});
+
+const backgroundStepSchema = baseStepSchema.extend({
+    type: z.literal('background'),
+    imageId: z.string().min(1),
+    transform: transformSchema,
+});
+
+const replicaStepSchema = baseStepSchema.extend({
+    type: z.literal('replica'),
+    characterId: z.string().min(1),
+    text: z.string().min(1, 'Введите текст реплики'),
+});
+
+const choiceStepSchema = baseStepSchema.extend({
+    type: z.literal('choice'),
+    name: z.string(),
+    text: z.string(),
+    menuRequest: z.object({
+        id: z.string(),
+        name: z.string().nullable(),
+        text: z.string().nullable(),
+        choices: z.array(z.object({
+            id: z.string(),
+            name: z.string(),
+            text: z.string(),
+            targetLabelId: z.string(),
+        })),
+    }),
+});
+
+export const stepSchema = z.discriminatedUnion('type', [
+    hideStepSchema,
+    jumpStepSchema,
+    showStepSchema,
+    backgroundStepSchema,
+    replicaStepSchema,
+    choiceStepSchema,
+]);
+
+export type Step = z.infer<typeof stepSchema>;
+export type Label = {
+    id: string;
+    name: string;
+}
+
+const CHARACTERS = ['Анна', 'Мария', 'Борис'];
+const SCENES = ['Парк', 'Улица', 'Дом'];
+type StepFormProps = {
+    control: any;
+    errors: any;
+    register: any;
+};
+
+function HideStepForm({control, errors}: StepFormProps) {
+    return (
+        <div>
+            <Controller
+                control={control}
+                name="characterId"
+                render={({field}) => <Selector title="Персонаж" options={CHARACTERS} {...field} />}
+            />
+            {errors.characterId && <p className={css({color: 'red'})}>{errors.characterId.message}</p>}
+        </div>
+    );
+}
+
+function JumpStepForm({control, errors}: StepFormProps) {
+    return (
+        <div>
+            <Controller
+                control={control}
+                name="targetId"
+                render={({field}) => <Selector title="Сцена" options={SCENES} {...field} />}
+            />
+            {errors.targetId && <p className={css({color: 'red'})}>{errors.targetId.message}</p>}
+        </div>
+    );
+}
+
+function ShowStepForm({control, errors}: StepFormProps) {
+    return (
+        <div className={css({display: 'flex', flexDirection: 'column', gap: '16px'})}>
+            <div>
+                <Controller
+                    control={control}
+                    name="characterId"
+                    render={({field}) => <Selector title="Персонаж" options={CHARACTERS} {...field} />}
+                />
+                {errors.characterId &&
+                    <p className={css({color: 'red', fontSize: '13px'})}>{errors.characterId.message}</p>}
+            </div>
+            <div>
+                <label className={css({fontWeight: 'bold', display: 'block'})}>Состояние персонажа</label>
+                <Controller
+                    control={control}
+                    name="characterStateId"
+                    render={({field}) => <Selector title="Состояние" options={['normal', 'happy', 'sad']} {...field} />}
+                />
+                {errors.characterStateId &&
+                    <p className={css({color: 'red', fontSize: '13px'})}>{errors.characterStateId.message}</p>}
+            </div>
+            {/* Transform можно вынести в отдельный компонент позже */}
+            <div className={css({fontSize: '13px', color: '#666'})}>
+                Transform (x, y, scale и т.д.) — можно добавить позже
+            </div>
+        </div>
+    );
+}
+
+function BackgroundStepForm({control, errors}: StepFormProps) {
+    return (
+        <div>
+            <Controller
+                control={control}
+                name="imageId"
+                render={({field}) => <Selector title="Фон" options={['bg_park', 'bg_street', 'bg_room']} {...field} />}
+            />
+            {errors.imageId && <p className={css({color: 'red', fontSize: '13px'})}>{errors.imageId.message}</p>}
+            <div className={css({fontSize: '13px', color: '#666', marginTop: '8px'})}>
+                Transform (x, y, scale и т.д.) — можно добавить позже
+            </div>
+        </div>
+    );
+}
+
+function ReplicaStepForm({control, errors, register}: StepFormProps) {
+    return (
+        <div className={css({display: 'flex', flexDirection: 'column', gap: '16px'})}>
+            <Controller
+                control={control}
+                name="characterId"
+                render={({field}) => <Selector title="Персонаж" options={CHARACTERS} {...field} />}
+            />
+            {errors.characterId &&
+                <p className={css({color: 'red', fontSize: '13px'})}>{errors.characterId.message}</p>}
+
+            <div className={css({
+                display: "flex",
+                flexDirection: "column",
+                gap: '10px',
+                width: '300px',
+                margin: '0 auto',
+            })}>
+                <label className={css({fontSize: '18px', textAlign: 'left'})}>Текст реплики</label>
+                <textarea
+                    {...register('text')}
+                    className={css({
+                        width: '300px',
+                        minHeight: '120px',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        backgroundColor: 'white',
+                        border: '1px solid black',
+                    })}
+                />
+            </div>
+            {errors.text && <p className={css({color: 'red', fontSize: '13px'})}>{errors.text.message}</p>}
+        </div>
+    );
+}
+
+function ChoiceStepForm({control, errors}: StepFormProps) {
+    return (
+        <div className={css({display: 'flex', flexDirection: 'column', gap: '16px'})}>
+            <div className={css({
+                display: "flex",
+                flexDirection: "column",
+                gap: '10px',
+                width: '300px',
+                margin: '0 auto',
+            })}>
+                <label className={css({fontSize: '18px', textAlign: 'left'})}>Название</label>
+                <input
+                    {...control.register('name')}
+                    className={css({
+                        width: '100%',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        backgroundColor: 'white',
+                        border: '1px solid black'
+                    })}
+                />
+            </div>
+
+            <div className={css({
+                display: "flex",
+                flexDirection: "column",
+                gap: '10px',
+                width: '300px',
+                margin: '0 auto',
+            })}>
+                <label className={css({fontSize: '18px', textAlign: 'left'})}>Текст</label>
+                <input
+                    {...control.register('text')}
+                    className={css({
+                        width: '100%',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        backgroundColor: 'white',
+                        border: '1px solid black'
+                    })}
+                />
+            </div>
+
+            <div className={css({fontSize: '13px', color: '#666', marginTop: '20px'})}>
+                Выборы (menuRequest.choices) — будет отдельно с useFieldArray позже
+            </div>
+        </div>
+    );
+}
 
 export default function Editor() {
+    const {novelId} = useParams<{ novelId: string }>() ?? 0;
+    const [isOpen, setIsOpen] = useState(false);
+    const [steps, setSteps] = useState<Step[]>([]);
+    const [labels, setLabels] = useState<Label[]>([{id: '1', name: 'label1'}, {id: '2', name: 'label2'}]);
+    const [selectedLabelId, setSelectedLabelId] = useState<string | null>(labels[0]?.id ?? null);
+    const [selectedStepIndex, setSelectedStepIndex] = useState(0);
+    const [selectedId, setSelectedId] = useState<string | null>(steps[0]?.id ?? null);
+    const currentStep = steps[selectedStepIndex];
+    const [loading, setLoading] = useState(true);
+    const {
+        register,
+        handleSubmit,
+        reset,
+        control,
+        formState: {errors},
+    } = useForm<Step>({
+        resolver: zodResolver(stepSchema),
+        mode: 'onChange',
+    });
+
+    useEffect(() => {
+        if (currentStep) {
+            reset(currentStep);
+        }
+    }, [selectedStepIndex, currentStep, reset]);
+    useEffect(() => {
+        const loadStepData = async () => {
+            if (!selectedId) return;
+
+            try {
+                setLoading(true);
+                const {data} = await api.get<Step>(`/steps/${selectedId}`);
+                const baseData = ({
+                    id: data.id,
+                    type: data.type,
+                });
+                switch (data.type) {
+                    case 'show':
+                        reset({
+                            ...baseData,
+                            characterId: data.characterId,
+                            characterStateId: data.characterStateId,
+                            transform: data.transform,
+                        });
+                        break;
+
+                    case 'hide':
+                        reset({
+                            ...baseData,
+                            characterId: data.characterId,
+                        });
+                        break;
+
+                    case 'background':
+                        reset({
+                            ...baseData,
+                            imageId: data.imageId,
+                            transform: data.transform,
+                        });
+                        break;
+
+                    case 'jump':
+                        reset({
+                            ...baseData,
+                            targetId: data.targetId,
+                        });
+                        break;
+
+                    case 'replica':
+                        reset({
+                            ...baseData,
+                            characterId: data.characterId,
+                            text: data.text,
+                        });
+                        break;
+
+                    case 'choice':
+                        reset({
+                            ...baseData,
+                            name: data.name,
+                            text: data.text,
+                            menuRequest: data.menuRequest,
+                        });
+                        break;
+
+                    default:
+                        reset(baseData);
+                }
+            } catch (e) {
+                console.error('Ошибка загрузки:', e);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadStepData();
+    }, [selectedId, reset]);
+    useEffect(() => {
+        const fetchSteps = async () => {
+            try {
+                setLoading(true);
+                const {data} = await api.get<Step[]>('/steps');
+                setSteps(data);
+
+                if (data.length > 0) {
+                    setSelectedId(data[0].id);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Не удалось загрузить шаги');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSteps();
+    }, []);
+    const onSave = (formData: Step) => {
+        const newSteps = [...steps];
+        newSteps[selectedStepIndex] = formData;
+        setSteps(newSteps);
+    };
+    const addStep = (type: StepType) => {
+        const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+        let newStep: Step;
+
+        switch (type) {
+            case 'hide':
+                newStep = {
+                    id: tempId,
+                    type: 'hide',
+                    characterId: '',
+                };
+                break;
+
+            case 'show':
+                newStep = {
+                    id: tempId,
+                    type: 'show',
+                    characterId: '',
+                    characterStateId: '',
+                    transform: {x: 0, y: 0, width: 0, height: 0, scale: 1, rotation: 0, zIndex: 0},
+                };
+                break;
+
+            case 'background':
+                newStep = {
+                    id: tempId,
+                    type: 'background',
+                    imageId: '',
+                    transform: {x: 0, y: 0, width: 0, height: 0, scale: 1, rotation: 0, zIndex: 0},
+                };
+                break;
+
+            case 'replica':
+                newStep = {
+                    id: tempId,
+                    type: 'replica',
+                    characterId: '',
+                    text: '',
+                };
+                break;
+
+            case 'jump':
+                newStep = {
+                    id: tempId,
+                    type: 'jump',
+                    targetId: '',
+                };
+                break;
+
+            case 'choice':
+                newStep = {
+                    id: tempId,
+                    type: 'choice',
+                    name: '',
+                    text: '',
+                    menuRequest: {
+                        id: `temp-menu-${Date.now()}`,
+                        name: null,
+                        text: null,
+                        choices: [
+                            {
+                                id: `temp-choice-${Date.now()}`,
+                                name: '',
+                                text: '',
+                                targetLabelId: '',
+                            },
+                        ],
+                    },
+                };
+                break;
+        }
+        // const createStep = async (e) => {
+        //     e.defaultPrevented();
+        //     try {
+        //         const {data: newNovel} = await api.post<Step>('/novels', {
+        //             title: 'Новая новелла'
+        //         })
+        //         setIsOpen(false);
+        //     } catch (error) {
+        //         console.error(error);
+        //         alert('Не удалось создать новеллу. Попробуйте еще раз.');
+        //     }
+        // }
+        // setSteps((prevSteps) => {
+        //     const updatedSteps = [...prevSteps, newStep];
+        //     setSelectedStepIndex(updatedSteps.length - 1);
+        //     return updatedSteps;
+        // });
+    };
+    const deleteStep = (index: number) => {
+        const newSteps = steps.filter((_, i) => i !== index);
+        setSteps(newSteps);
+        if (selectedStepIndex >= newSteps.length) {
+            setSelectedStepIndex(newSteps.length - 1);
+        }
+    }
+    const renderStepForm = () => {
+        if (!currentStep) return <div>Выберите шаг</div>;
+
+        const formProps = {control, errors, register};
+
+        switch (currentStep.type) {
+            case 'hide':
+                return <HideStepForm {...formProps} />;
+            case 'jump':
+                return <JumpStepForm {...formProps} />;
+            case 'show':
+                return <ShowStepForm {...formProps} />;
+            case 'background':
+                return <BackgroundStepForm {...formProps} />;
+            case 'replica':
+                return <ReplicaStepForm {...formProps} />;
+            case 'choice':
+                return <ChoiceStepForm {...formProps} />;
+            default:
+                return null;
+        }
+    };
+
+    const changeLabel = (labelId) => {
+        setSelectedLabelId(labelId);
+    }
+
+    const createLabel = async () => {
+        try {
+            const {data: newLabel} = await api.post<Label>(`/novels/0/labels`, {
+                name: 'Новая сцена'
+            })
+            setLabels([...labels, newLabel]);
+            setSelectedLabelId(newLabel.id);
+        } catch (error) {
+            console.error(error);
+            alert('Не удалось создать сцену. Попробуйте еще раз.');
+        }
+    }
+
     return (
         <div className={css({
             bg: '#775D68',
             minHeight: '100vh',
             color: 'text',
         })}>
-            <Header active="editor" />
+            <Header active="editor"/>
             <main className={css({
                 pt: '90px',
                 pb: '0px',
-                px: '8px',
+                px: '0px',
             })}>
-                <EditorContainer></EditorContainer>
+                <div className={css({
+                    minHeight: '100vh',
+                    background: '#775D68',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    gap: '0px',
+                })}>
+                    <div className={css({
+                        display: 'flex',
+                        minHeight: '0',
+                        flex: 1,
+                        gap: '20px',
+                        width: '100%',
+                    })}>
+                        <div className={css({
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '100%',
+                            gap: '0px',
+                        })}>
+                            <EditorHeader active="editor"/>
+                            <div className={css({
+                                backgroundColor: 'white',
+                                color: 'black',
+                                width: '100%',
+                                height: '100%',
+                                paddingTop: '20px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: '20px',
+                                flex: 4,
+                            })}>
+                                <div className={css({
+                                    backgroundColor: '#DFC6D1',
+                                    borderRadius: '5px',
+                                    flex: 1,
+                                    display:'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                })}>
+                                    <div className={css({
+                                        fontWeight: 'bold',
+                                        fontSize: '20px',
+                                        marginTop: '15px',
+                                    })}>
+                                        Сцены
+                                    </div>
+                                    <div className={css({
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '10px',
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        marginTop: '20px',
+                                    })}>
+                                        {labels.map(label => (
+                                            <button
+                                                key={label}
+                                                onClick={() => changeLabel(label.id)}
+                                                className={css({
+                                                    padding: '3px',
+                                                    width: '80%',
+                                                    borderRadius: '8px',
+                                                    backgroundColor: selectedLabelId === label.id ? '#775D68' :'white',
+                                                    _hover: {
+                                                        bg: '#775D68',
+                                                        color: 'background',
+                                                        borderColor: '#775D68',
+                                                        transform: 'translateY(-2px)',
+                                                        boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)',
+                                                    },
+                                                })}
+                                            >
+                                                <div className={vstack({gap: '1px', alignItems: 'stretch', flex: 1})}>
+                                                    <p className={css({
+                                                        fontWeight: 'bold',
+                                                        minW: '0',
+                                                        fontSize: '20px',
+                                                        padding: '10px',
+                                                        backgroundColor: 'white',
+                                                        borderRadius: '12px',
+                                                        w: 'full',
+                                                    })}>
+                                                        {label.name}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <button
+                                        onClick={createLabel}
+                                        className={css({
+                                            bg: 'white',
+                                            width: '80%',
+                                            height: '5%',
+                                            padding: '10px',
+                                            margin: '20px auto',
+                                            _hover: {
+                                                bg: '#705661', color: 'white',
+                                                boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)'
+                                            },
+                                            borderRadius: '12px',
+                                            fontWeight: 'medium',
+                                        })}>
+                                        + Добавить сцену
+                                    </button>
+                                </div>
+                                <div className={css({
+                                    backgroundColor: 'white',
+                                    color: 'black',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px',
+                                    flex: 4,
+                                })}>
+                                    <Preview image="src\assets\img.png"></Preview>
+                                    <BlockPanel
+                                        steps={steps}
+                                        selectedStepIndex={selectedStepIndex}
+                                        onSelectStep={setSelectedStepIndex}
+                                        onAddClick={() => setIsOpen(true)}
+                                        onDeleteStep={deleteStep}
+                                    />
+                                </div>
+                            </div>
+                            <Modal active={isOpen} setActive={setIsOpen}>
+                                <div className={css({
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px',
+                                })}>
+                                    <div className={css({
+                                        fontSize: '18px',
+                                        fontWeight: 'bold',
+                                    })}>
+                                        Выберите тип блока
+                                    </div>
+                                    {Object.values(StepType).map((type) => {
+                                        return (
+                                            <button
+                                                key={type}
+                                                onClick={() => {
+                                                    addStep(type);
+                                                    setIsOpen(false);
+                                                }}
+                                                className={css({
+                                                    padding: '10px',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid #ccc',
+                                                    backgroundColor: '#F8EDEB',
+                                                    _hover: {bg: '#DFC6D1'},
+                                                })}
+                                            >
+                                                {stepDisplayNames[type]}
+                                            </button>
+                                        );
+                                    })}</div>
+                            </Modal>
+                        </div>
+                        <div className={css({
+                            backgroundColor: '#DFC6D1',
+                            color: 'black',
+                            flex: 1,
+                            minWidth: '400px',
+                            borderRadius: '12px',
+                        })}>
+                            {currentStep ? (
+                                <form onSubmit={handleSubmit(onSave)} className={css({
+                                    padding: '20px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px'
+                                })}>
+                                    <h2 className={css({
+                                        fontSize: '20px',
+                                        fontWeight: 'bold',
+                                        borderBottom: '2px solid #705661'
+                                    })}>
+                                        {stepDisplayNames[currentStep.type as StepType]}
+                                    </h2>
+                                    {renderStepForm()}
+                                    <button
+                                        type="submit"
+                                        className={css({
+                                            alignSelf: 'flex-start',
+                                            padding: '10px 20px',
+                                            borderRadius: '8px',
+                                            border: 'none',
+                                            backgroundColor: '#705661',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            margin: '0 auto',
+                                            width: '300px',
+                                            _hover: {bg: '#A87383'},
+                                        })}
+                                    >
+                                        Сохранить
+                                    </button>
+                                </form>
+                            ) : (
+                                <div className={css({padding: '20px'})}>Выберите шаг для редактирования</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     )

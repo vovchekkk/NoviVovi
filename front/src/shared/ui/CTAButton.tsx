@@ -1,14 +1,18 @@
 import { css } from '../../../styled-system/css'
-export default function CTAButton() {
+interface CTAButtonProps {
+    onClick?: () => void;
+}
+export default function CTAButton({onClick}: CTAButtonProps) {
     return (
         <button
+            onClick={onClick}
             className={css({
                 display: 'block',
                 margin: '80px auto 0',
                 px: '52px',
                 py: '20px',
                 bg: 'transparent',
-                color: 'white',                    // тёмный текст для контраста
+                color: 'white',
                 border: '3px solid #FADCD4',
                 borderRadius: '9999px',
                 fontSize: '19px',
