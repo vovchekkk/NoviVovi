@@ -48,9 +48,12 @@ export default function Selector({ title, options }: SelectorProps) {
         <div className={css({
             display: "flex",
             flexDirection: "column",
+            gap: '10px',
+            width: '300px',
+            margin: '0 auto',
         })}>
             <div style={{ fontSize:'18px', textAlign:'left' }}>{title}</div>
-            <div style={{ width: 300, margin: '0 auto' }}>
+            <div style={{ width: '100%' }}>
                 <ReactSelect
                     options={selectOptions}
                     value={selectedOption}

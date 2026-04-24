@@ -1,7 +1,11 @@
 import { css } from '../../../styled-system/css'
-export default function CTAButton() {
+interface CTAButtonProps {
+    onClick?: () => void;
+}
+export default function CTAButton({onClick}: CTAButtonProps) {
     return (
         <button
+            onClick={onClick}
             className={css({
                 display: 'block',
                 margin: '80px auto 0',
