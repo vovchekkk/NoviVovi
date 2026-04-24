@@ -164,6 +164,22 @@ const initialEdges = [
     {id: 'e1-2', source: 'start-1', target: '2', style: {stroke: 'black', strokeWidth: 3}},
 ];
 
+type Node = {
+    id: string;
+    name: string;
+}
+
+type Edge = {
+    type:string,
+    id: string;
+    sourceLabelId: string;
+    targetLabelId: string;
+}
+
+type GraphData = {
+    nodes: Node[];
+    edges: Edge[];
+}
 
 export default function InfiniteCanvas() {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -172,23 +188,26 @@ export default function InfiniteCanvas() {
         (params) => setEdges((eds) => addEdge(params, eds)),
         [setEdges]
     );
-    // useEffect(() => {
-    //     const fetchLabels = async () => {
-    //         try {
-    //             // setLoading(true);
-    //             const {data} = await api.get<Label[]>('/novels/1/labels');
-    //             if (data)
-    //             setNodes(data);
-    //         } catch (error) {
-    //             console.error(error);
-    //             alert('Не удалось загрузить шаги');
-    //         } finally {
-    //             // setLoading(false);
-    //         }
-    //     };
-    //
-    //     fetchLabels();
-    // }, []);
+    useEffect(() => {
+        const fetchLabels = async () => {
+            try {
+                // setLoading(true);
+                const {data} = await api.get<GraphData>('/novels/1/graph');
+                if (data.nodes) {
+                    for(const node of data.nodes) {
+                        if (node.type === 'jump')
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Не удалось загрузить шаги');
+            } finally {
+                // setLoading(false);
+            }
+        };
+
+        fetchLabels();
+    }, []);
     const nodeTypes = useMemo(() => ({
         start: StartNode,
         custom: CustomNode,
