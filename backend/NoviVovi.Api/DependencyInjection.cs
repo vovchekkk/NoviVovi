@@ -42,9 +42,7 @@ public static class DependencyInjection
         
         services.AddSingleton<NovelCommandMapper>();
         
-        services.AddSingleton<ChoiceEdgeResponseMapper>();
         services.AddSingleton<EdgeResponseMapper>();
-        services.AddSingleton<JumpEdgeResponseMapper>();
         services.AddSingleton<NodeResponseMapper>();
         services.AddSingleton<NovelGraphResponseMapper>();
         services.AddSingleton<NovelResponseMapper>();

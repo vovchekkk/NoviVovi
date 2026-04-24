@@ -1,6 +1,9 @@
-﻿using NoviVovi.Domain.Novels;
+﻿using NoviVovi.Application.Menu.Mappers;
+using NoviVovi.Application.Novels.Models.Edges;
+using NoviVovi.Application.Novels.Models.Nodes;
+using NoviVovi.Domain.Labels;
+using NoviVovi.Domain.Novels;
 using NoviVovi.Domain.Steps;
-using NoviVovi.Domain.Transitions;
 
 namespace NoviVovi.Application.Novels.Models;
 
@@ -13,15 +16,19 @@ public class NovelGraphBuilder
 
         foreach (var label in novel.Labels)
         {
-            nodes.Add(new Node 
-            { 
-                Id = label.Id, 
-                Name = label.Name
-            });
-            
-            foreach (var step in label.Steps)
+            var step = DetermineLabelTypeStep(label);
+
+            switch (step)
             {
-                ProcessStep(label.Id, step, edges);
+                case ShowMenuStep menuStep:
+                    BuildMenuNode(label, menuStep, nodes, edges);
+                    break;
+                case JumpStep jumpStep:
+                    BuildJumpNode(label, jumpStep, nodes, edges);
+                    break;
+                default:
+                    BuildDefaultNode(label, nodes);
+                    break;
             }
         }
 
@@ -32,33 +39,60 @@ public class NovelGraphBuilder
         };
     }
 
-    private void ProcessStep(Guid sourceLabelId, Step step, List<Edge> edges)
+    private Step? DetermineLabelTypeStep(Label label)
     {
-        if (step is JumpStep jump)
+        foreach (var step in label.Steps)
         {
-            if (jump.Transition is JumpTransition jumpTransition)
-            {
-                edges.Add(new JumpEdge 
-                { 
-                    Id = step.Id,
-                    SourceLabelId = sourceLabelId,
-                    TargetLabelId = jumpTransition.TargetLabel.Id
-                });
-            }
+            if (step is ShowMenuStep or JumpStep)
+                return step;
         }
-        else if (step is ShowMenuStep menuStep)
+
+        return null;
+    }
+
+    private void BuildMenuNode(Label label, ShowMenuStep menuStep, List<Node> nodes, List<Edge> edges)
+    {
+        nodes.Add(new MenuNode
         {
-            foreach (var choice in menuStep.Menu.Choices)
+            LabelId = label.Id,
+            LabelName = label.Name,
+            Choices = menuStep.Menu.Choices
+        });
+
+        foreach (var choice in menuStep.Menu.Choices)
+        {
+            edges.Add(new ChoiceEdge
             {
-                edges.Add(new ChoiceEdge 
-                { 
-                    Id = choice.Id,
-                    SourceLabelId = sourceLabelId,
-                    TargetLabelId = choice.Transition.TargetLabel.Id,
-                    Choice = choice,
-                    Text = choice.Text
-                });
-            }
+                StepId = menuStep.Id,
+                SourceLabelId = label.Id,
+                TargetLabelId = choice.Transition.TargetLabel.Id,
+                SourceChoiceId = choice.Id
+            });
         }
+    }
+
+    private void BuildJumpNode(Label label, JumpStep jumpStep, List<Node> nodes, List<Edge> edges)
+    {
+        nodes.Add(new JumpNode
+        {
+            LabelId = label.Id,
+            LabelName = label.Name
+        });
+        
+        edges.Add(new JumpEdge
+        {
+            StepId = jumpStep.Id,
+            SourceLabelId = label.Id,
+            TargetLabelId = jumpStep.Transition.TargetLabel.Id
+        });
+    }
+
+    private void BuildDefaultNode(Label label, List<Node> nodes)
+    {
+        nodes.Add(new Node
+        {
+            LabelId = label.Id,
+            LabelName = label.Name
+        });
     }
 }

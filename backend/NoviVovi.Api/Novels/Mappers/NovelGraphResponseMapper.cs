@@ -1,5 +1,7 @@
 ﻿using NoviVovi.Api.Novels.Responses;
+using NoviVovi.Api.Novels.Responses.Edges;
 using NoviVovi.Application.Novels.Dtos;
+using NoviVovi.Application.Novels.Dtos.Edges;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Novels.Mappers;

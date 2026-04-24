@@ -1,4 +1,7 @@
-﻿namespace NoviVovi.Application.Novels.Models;
+﻿using NoviVovi.Application.Novels.Models.Edges;
+using NoviVovi.Application.Novels.Models.Nodes;
+
+namespace NoviVovi.Application.Novels.Models;
 
 public class NovelGraph
 {

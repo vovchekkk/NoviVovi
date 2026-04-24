@@ -29,9 +29,7 @@ public static class DependencyInjection
         services.AddSingleton<ChoiceDtoMapper>();
         services.AddSingleton<MenuDtoMapper>();
         
-        services.AddSingleton<ChoiceEdgeDtoMapper>();
         services.AddSingleton<EdgeDtoMapper>();
-        services.AddSingleton<JumpEdgeDtoMapper>();
         services.AddSingleton<NodeDtoMapper>();
         services.AddSingleton<NovelDtoMapper>();
         services.AddSingleton<NovelGraphDtoMapper>();

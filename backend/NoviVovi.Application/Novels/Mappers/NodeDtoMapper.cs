@@ -1,5 +1,6 @@
 ﻿using NoviVovi.Application.Novels.Dtos;
-using NoviVovi.Application.Novels.Models;
+using NoviVovi.Application.Novels.Dtos.Nodes;
+using NoviVovi.Application.Novels.Models.Nodes;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Application.Novels.Mappers;
@@ -7,7 +8,11 @@ namespace NoviVovi.Application.Novels.Mappers;
 [Mapper]
 public partial class NodeDtoMapper
 {
+    [MapDerivedType(typeof(MenuNode), typeof(MenuNodeDto))]
+    [MapDerivedType(typeof(JumpNode), typeof(JumpNodeDto))]
     public partial NodeDto ToDto(Node source);
     
-    public partial IEnumerable<NodeDto> ToDtos(IEnumerable<Node> sources);
+    public partial MenuNodeDto ToDto(MenuNode source);
+    
+    public partial JumpNodeDto ToDto(JumpNode source);
 }

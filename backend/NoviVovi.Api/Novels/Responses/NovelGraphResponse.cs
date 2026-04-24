@@ -1,4 +1,7 @@
-﻿namespace NoviVovi.Api.Novels.Responses;
+﻿using NoviVovi.Api.Novels.Responses.Edges;
+using NoviVovi.Api.Novels.Responses.Nodes;
+
+namespace NoviVovi.Api.Novels.Responses;
 
 public record NovelGraphResponse
 {
