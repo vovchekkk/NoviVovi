@@ -6,6 +6,7 @@ using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels;
 using NoviVovi.Application.Novels.Abstractions;
+using NoviVovi.Domain.Common;
 
 namespace NoviVovi.Application.Characters.Features.Patch;
 
@@ -32,10 +33,14 @@ public class PatchCharacterHandler(
         
         if (request.Name is not null)
             character.UpdateName(request.Name);
-        
+
         if (request.NameColor is not null)
-            character.UpdateNameColor(request.NameColor);
-        
+        {
+            var nameColor = Color.FromHex(request.NameColor);
+            
+            character.UpdateNameColor(nameColor);
+        }
+
         if (request.Description is not null)
             character.UpdateDescription(request.Description);
 

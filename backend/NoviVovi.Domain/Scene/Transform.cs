@@ -10,7 +10,7 @@ public class Transform : Entity
     public double Rotation { get; init; }
     public int ZIndex { get; init; }
 
-    private Transform(
+    public Transform(
         Guid id,
         Position position,
         Size size,

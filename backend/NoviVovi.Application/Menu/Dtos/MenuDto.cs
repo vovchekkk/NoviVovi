@@ -2,8 +2,5 @@
 
 public record MenuDto(
     Guid Id,
-    string Name,
-    string? Description,
-    string Text,
     List<ChoiceDto> Choices
 );

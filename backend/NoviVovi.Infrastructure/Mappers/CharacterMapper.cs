@@ -1,4 +1,5 @@
 using NoviVovi.Domain.Characters;
+using NoviVovi.Domain.Common;
 using NoviVovi.Domain.Scene;
 using NoviVovi.Infrastructure.DatabaseObjects.Characters;
 using Riok.Mapperly.Abstractions;
@@ -13,7 +14,7 @@ public partial class CharacterMapper(
 {
     public Character ToDomain(CharacterDbO dbo)
     {
-        var res = new Character(dbo.Id, dbo.Name, dbo.NameColor, dbo.Description);
+        var res = new Character(dbo.Id, dbo.Name, Color.FromHex(dbo.NameColor), dbo.Description);
         foreach (var state in dbo.States)
             res.AddCharacterState(ToDomain(state));
         return res;
@@ -25,6 +26,7 @@ public partial class CharacterMapper(
         {
             Id = character.Id,
             Name = character.Name,
+            NameColor = character.NameColor.ToString().TrimStart('#'),
             NovelId = novelId,
             Description = character.Description,
             States = ToDbO(character.CharacterStates, character.Id, novelId)

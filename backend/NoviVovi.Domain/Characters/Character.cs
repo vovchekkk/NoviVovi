@@ -6,28 +6,28 @@ namespace NoviVovi.Domain.Characters;
 public class Character : Entity
 {
     public string Name { get; private set; }
-    public string NameColor { get; private set; }
+    public Color NameColor { get; private set; }
     public string? Description { get; private set; }
     private readonly List<CharacterState> _characterStates = new();
 
     public IReadOnlyList<CharacterState> CharacterStates => _characterStates.AsReadOnly();
 
-    public Character(Guid id, string name, string nameColor, string? description) : base(id)
+    public Character(Guid id, string name, Color nameColor, string? description) : base(id)
     {
         Name = name;
         NameColor = nameColor;
         Description = description;
     }
 
-    public static Character Create(string? name, string? nameColor, string? description = null)
+    public static Character Create(string? name, Color? nameColorHex = null, string? description = null)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException($"Name cannot be empty");
         
-        if (string.IsNullOrWhiteSpace(nameColor))
-            throw new DomainException($"NameColor cannot be empty");
+        if (nameColorHex is null)
+            throw new DomainException($"NameColor cannot be null");
 
-        return new Character(Guid.NewGuid(), name, nameColor, description);
+        return new Character(Guid.NewGuid(), name, nameColorHex, description);
     }
 
     public void UpdateName(string? name)
@@ -38,12 +38,12 @@ public class Character : Entity
         Name = name;
     }
 
-    public void UpdateNameColor(string? nameColor)
+    public void UpdateNameColor(Color? nameColorHex)
     {
-        if (string.IsNullOrWhiteSpace(nameColor))
-            throw new DomainException($"NameColor cannot be empty");
-
-        NameColor = nameColor;
+        if (nameColorHex is null)
+            throw new DomainException($"NameColor cannot be null");
+        
+        NameColor = nameColorHex;
     }
 
     public void UpdateDescription(string? description)

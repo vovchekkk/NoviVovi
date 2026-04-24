@@ -2,25 +2,15 @@
 
 namespace NoviVovi.Domain.Menu;
 
-public class Menu : Entity
+public class Menu(Guid id) : Entity(id)
 {
-    public string? Name { get; private set; }
-    public string? Description { get; private set; }
-    public string? Text { get; private set; }
     private readonly List<Choice> _choices = new();
     
     public IReadOnlyList<Choice> Choices => _choices.AsReadOnly();
 
-    public Menu(Guid id, string? name, string? description, string? text) : base(id)
+    public static Menu Create()
     {
-        Name = name;
-        Description = description;
-        Text = text;
-    }
-
-    public static Menu Create(string? name, string? description, string? text)
-    {
-        return new Menu(Guid.NewGuid(), name, description, text);
+        return new Menu(Guid.NewGuid());
     }
 
     public void AddChoice(Choice? choice)

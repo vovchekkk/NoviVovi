@@ -93,7 +93,7 @@ public class MenuRepoTest : IAsyncLifetime
         {
             Id = Guid.NewGuid(),
             Description = "choch",
-            Name = menuName,
+            Text = menuName,
             Text = "whatever"
         };
         TrackId("Menus", menu.Id);

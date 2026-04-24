@@ -16,9 +16,6 @@ namespace NoviVovi.Application.Steps.Features.Add;
 
 public record AddShowMenuStepCommand : AddStepCommand
 {
-    public required string Name { get; init; }
-    public required string? Description { get; init; }
-    public required string Text { get; init; }
     public required IEnumerable<ChoiceDto> Choices { get; init; }
 }
 
@@ -39,7 +36,7 @@ public class AddShowMenuStepHandler(
         
         var labelLookup = targetLabels.ToDictionary(l => l.Id);
         
-        var menu = Domain.Menu.Menu.Create(request.Name, request.Description, request.Text);
+        var menu = Domain.Menu.Menu.Create();
         
         foreach (var choiceDto in request.Choices)
         {
@@ -47,10 +44,8 @@ public class AddShowMenuStepHandler(
                 throw new NotFoundException($"Целевая метка {choiceDto.Transition.TargetLabelId} не найдена");
 
             var choice = Choice.Create(
-                ChoiceTransition.Create(targetLabel),
-                choiceDto.Name,
-                choiceDto.Description,
-                choiceDto.Text
+                choiceDto.Text,
+                ChoiceTransition.Create(targetLabel)
             );
             
             menu.AddChoice(choice);

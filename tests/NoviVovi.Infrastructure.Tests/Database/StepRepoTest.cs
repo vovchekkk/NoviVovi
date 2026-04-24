@@ -126,7 +126,7 @@ public class StepRepoTest : IAsyncLifetime
         {
             Id = Guid.NewGuid(),
             Description = "test_description",
-            Name = menuName,
+            Text = menuName,
             Text = "test_text"
         };
         TrackId("Menus", menu.Id);

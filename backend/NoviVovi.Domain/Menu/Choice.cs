@@ -6,31 +6,23 @@ namespace NoviVovi.Domain.Menu;
 
 public class Choice : Entity
 {
-    public string Name { get; private set; }
-    public string? Description { get; private set; }
-    public string? Text { get; private set; }
+    public string Text { get; private set; }
     public ChoiceTransition Transition { get; private set; }
 
-    public Choice(Guid id, string name, string? description, string? text, ChoiceTransition transition) : base(id)
+    public Choice(Guid id, string text, ChoiceTransition transition) : base(id)
     {
-        Name = name;
-        Description = description;
         Text = text;
         Transition = transition;
     }
 
     public static Choice Create(
-        ChoiceTransition transition,
-        string? name,
-        string? description = null,
-        string? text = null)
+        string text,
+        ChoiceTransition transition
+    )
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException($"Name cannot be empty");
-        
         if (transition is null)
             throw new DomainException($"Transition cannot be null");
 
-        return new Choice(Guid.NewGuid(), name, description, text, transition);
+        return new Choice(Guid.NewGuid(), text, transition);
     }
 }

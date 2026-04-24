@@ -61,7 +61,7 @@ public class MenuMapperTests
         var menu = new MenuDbO
         {
             Id = Guid.NewGuid(),
-            Name = "Menu",
+            Text = "Menu",
             Choices = new List<ChoiceDbO>
             {
                 new ChoiceDbO

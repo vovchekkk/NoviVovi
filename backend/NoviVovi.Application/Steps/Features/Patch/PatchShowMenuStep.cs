@@ -16,9 +16,6 @@ namespace NoviVovi.Application.Steps.Features.Patch;
 
 public record PatchShowMenuStepCommand : PatchStepCommand
 {
-    public string? Name { get; init; }
-    public string? Description { get; init; }
-    public string? Text { get; init; }
     public required IEnumerable<ChoiceDto>? Choices { get; init; }
 }
 
@@ -45,7 +42,7 @@ public class PatchShowMenuStepHandler(
 
             var labelLookup = targetLabels.ToDictionary(l => l.Id);
 
-            menu = Domain.Menu.Menu.Create(request.Name, request.Description, request.Text);
+            menu = Domain.Menu.Menu.Create();
 
             foreach (var choiceDto in request.Choices)
             {
@@ -53,10 +50,8 @@ public class PatchShowMenuStepHandler(
                     throw new NotFoundException($"Целевая метка {choiceDto.Transition.TargetLabelId} не найдена");
 
                 var choice = Choice.Create(
-                    ChoiceTransition.Create(targetLabel),
-                    choiceDto.Name,
-                    choiceDto.Description,
-                    choiceDto.Text
+                    choiceDto.Text,
+                    ChoiceTransition.Create(targetLabel)
                 );
 
                 menu.AddChoice(choice);

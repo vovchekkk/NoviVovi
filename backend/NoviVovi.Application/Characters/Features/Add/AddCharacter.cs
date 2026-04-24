@@ -7,6 +7,7 @@ using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels;
 using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Domain.Characters;
+using NoviVovi.Domain.Common;
 
 namespace NoviVovi.Application.Characters.Features.Add;
 
@@ -29,7 +30,9 @@ public class AddCharacterHandler(
         var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
                     ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 
-        var character = Character.Create(request.Name, request.NameColor, request.Description);
+        var colorName = Color.FromHex(request.NameColor);
+
+        var character = Character.Create(request.Name, colorName, request.Description);
 
         novel.AddCharacter(character);
 

@@ -15,8 +15,6 @@ public partial class MenuMapper(
         var res = new MenuDbO
         {
             Id = stepMenu.Id,
-            Name = stepMenu.Name,
-            Description = stepMenu.Description,
             Choices = stepMenu.Choices.Select(choice => ToDbO(choice, novelId, stepMenu.Id, new MappingContext())).ToList(),
         };
         return res;
@@ -24,7 +22,7 @@ public partial class MenuMapper(
 
     public Menu ToDomain(MenuDbO menu)
     {
-        var res = new Menu(menu.Id, menu.Name, menu.Description, menu.Text);
+        var res = new Menu(menu.Id);
         foreach (var choice in menu.Choices)
         {
             res.AddChoice(ToDomain(choice, new MappingContext()));
@@ -38,7 +36,6 @@ public partial class MenuMapper(
         return new ChoiceDbO
         {
             Id = choice.Id,
-            Name = choice.Name,
             Text = choice.Text,
             MenuId = menuId,
             NextLabelId = choice.Transition.TargetLabel.Id,
@@ -53,8 +50,6 @@ public partial class MenuMapper(
 
         return new Choice(
             choice.Id,
-            choice.Name,
-            null,
             choice.Text,
             new ChoiceTransition(labelMapper.Value.ToDomain(choice.NextLabel, ctx))
         );
