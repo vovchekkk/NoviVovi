@@ -20,14 +20,13 @@ public partial class TransformDtoMapper
 
     public partial IEnumerable<TransformDto> ToDtos(IEnumerable<Transform> sources);
     
-    public Transform ToDomainModel(TransformDto source) => new()
-    {
-        Position = new Position(source.X, source.Y),
-        Size = new Size(source.Width, source.Height),
-        Scale = source.Scale,
-        Rotation = source.Rotation,
-        ZIndex = source.ZIndex
-    };
+    public Transform ToDomainModel(TransformDto source) => Transform.Create(
+        new Position(source.X, source.Y),
+        new Size(source.Width, source.Height),
+        source.Scale,
+        source.Rotation,
+        source.ZIndex
+    );
     
     public partial IEnumerable<Transform> ToDomainModels(IEnumerable<TransformDto> sources);
     
