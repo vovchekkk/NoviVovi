@@ -11,7 +11,8 @@ import {z} from "zod";
 import Modal from "../shared/ui/Modal.tsx";
 import api from "../api.tsx";
 import {useParams} from "react-router-dom";
-import {vstack} from '../../styled-system/patterns';
+import {vstack, hstack} from '../../styled-system/patterns';
+import {LabelItem} from "../shared/ui/LabelItem.tsx";
 
 export enum StepType {
     BACKGROUND = 'background',
@@ -274,12 +275,15 @@ export default function Editor() {
     const {novelId} = useParams<{ novelId: string }>() ?? 0;
     const [isOpen, setIsOpen] = useState(false);
     const [steps, setSteps] = useState<Step[]>([]);
-    const [labels, setLabels] = useState<Label[]>([{id: '1', name: 'label1'}, {id: '2', name: 'label2'}]);
+    const [labels, setLabels] = useState<Label[]>([]);
+    const [imageUrl, setImageUrl] = useState('');
     const [selectedLabelId, setSelectedLabelId] = useState<string | null>(labels[0]?.id ?? null);
     const [selectedStepIndex, setSelectedStepIndex] = useState(0);
     const [selectedId, setSelectedId] = useState<string | null>(steps[0]?.id ?? null);
     const currentStep = steps[selectedStepIndex];
     const [loading, setLoading] = useState(true);
+    const [labelName, setLabelName] = useState(' ');
+    const [isLabelOpen, setIsLabelOpen] = useState(false);
     const {
         register,
         handleSubmit,
@@ -372,7 +376,7 @@ export default function Editor() {
         const fetchSteps = async () => {
             try {
                 setLoading(true);
-                const {data} = await api.get<Step[]>('/steps');
+                const {data} = await api.get<Step[]>('novels/0/labels/0/steps');
                 setSteps(data);
 
                 if (data.length > 0) {
@@ -393,15 +397,12 @@ export default function Editor() {
         newSteps[selectedStepIndex] = formData;
         setSteps(newSteps);
     };
-    const addStep = (type: StepType) => {
-        const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-
-        let newStep: Step;
+    const addStep = async (type: StepType) => {
+        let newStep;
 
         switch (type) {
             case 'hide':
                 newStep = {
-                    id: tempId,
                     type: 'hide',
                     characterId: '',
                 };
@@ -409,7 +410,6 @@ export default function Editor() {
 
             case 'show':
                 newStep = {
-                    id: tempId,
                     type: 'show',
                     characterId: '',
                     characterStateId: '',
@@ -419,7 +419,6 @@ export default function Editor() {
 
             case 'background':
                 newStep = {
-                    id: tempId,
                     type: 'background',
                     imageId: '',
                     transform: {x: 0, y: 0, width: 0, height: 0, scale: 1, rotation: 0, zIndex: 0},
@@ -428,7 +427,6 @@ export default function Editor() {
 
             case 'replica':
                 newStep = {
-                    id: tempId,
                     type: 'replica',
                     characterId: '',
                     text: '',
@@ -437,7 +435,6 @@ export default function Editor() {
 
             case 'jump':
                 newStep = {
-                    id: tempId,
                     type: 'jump',
                     targetId: '',
                 };
@@ -445,7 +442,6 @@ export default function Editor() {
 
             case 'choice':
                 newStep = {
-                    id: tempId,
                     type: 'choice',
                     name: '',
                     text: '',
@@ -465,23 +461,26 @@ export default function Editor() {
                 };
                 break;
         }
-        // const createStep = async (e) => {
-        //     e.defaultPrevented();
-        //     try {
-        //         const {data: newNovel} = await api.post<Step>('/novels', {
-        //             title: 'Новая новелла'
-        //         })
-        //         setIsOpen(false);
-        //     } catch (error) {
-        //         console.error(error);
-        //         alert('Не удалось создать новеллу. Попробуйте еще раз.');
-        //     }
-        // }
-        // setSteps((prevSteps) => {
-        //     const updatedSteps = [...prevSteps, newStep];
-        //     setSelectedStepIndex(updatedSteps.length - 1);
-        //     return updatedSteps;
-        // });
+        try {
+            const { data: serverStep } = await api.post<Step>('/novels/0/labels/0/steps', newStep);
+            setSteps((prevSteps) => {
+                const insertionIndex = (selectedStepIndex !== null && selectedStepIndex !== -1)
+                    ? selectedStepIndex + 1
+                    : prevSteps.length;
+                const updatedSteps = [
+                    ...prevSteps.slice(0, insertionIndex),
+                    serverStep,
+                    ...prevSteps.slice(insertionIndex)
+                ];
+                setSelectedStepIndex(insertionIndex);
+
+                return updatedSteps;
+            });
+
+        } catch (error) {
+            console.error('Ошибка создания:', error);
+            alert('Не удалось создать шаг');
+        }
     };
     const deleteStep = (index: number) => {
         const newSteps = steps.filter((_, i) => i !== index);
@@ -517,18 +516,83 @@ export default function Editor() {
         setSelectedLabelId(labelId);
     }
 
-    const createLabel = async () => {
+    useEffect(() => {
+        const fetchLabels = async () => {
+            try {
+                setLoading(true);
+                const {data} = await api.get<Label[]>('/novels/0/labels');
+                setLabels(data);
+
+                if (data.length > 0) {
+                    setSelectedLabelId(data[0].id);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Не удалось загрузить персонажей');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchLabels()
+    }, []);
+    const createLabel = async (e) => {
+        e.preventDefault();
         try {
             const {data: newLabel} = await api.post<Label>(`/novels/0/labels`, {
-                name: 'Новая сцена'
+                name: labelName || 'Новая сцена'
             })
             setLabels([...labels, newLabel]);
             setSelectedLabelId(newLabel.id);
         } catch (error) {
             console.error(error);
             alert('Не удалось создать сцену. Попробуйте еще раз.');
+        } finally {
+            setIsLabelOpen(false);
         }
     }
+
+    const deleteLabel = async (id: string) => {
+        try {
+            await api.delete<Label>(`novels/0/labels/${id}`, {
+                data: {
+                    labelId: id,
+                    novelId: '0',
+                }
+            });
+            const newLabels = labels.filter(lab => lab.id !== id);
+            setLabels(newLabels);
+            if (selectedLabelId === id) {
+                setSelectedLabelId(newLabels[0].id);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const patchLabel = async (label:Label) => {
+        try {
+            await api.patch<Label>(`/novels/0/labels/${label.id}`, {
+                novelId: '0',
+                labelId: label.id,
+                name:label.name,
+            })
+            setLabels((prevLabels) =>
+                prevLabels.map((lab) =>
+                    lab.id === label.id ? { ...label, name: label.name } : lab
+                )
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const changePreview = async() => {
+        try {
+            //тут будет больно
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div className={css({
@@ -579,7 +643,7 @@ export default function Editor() {
                                     backgroundColor: '#DFC6D1',
                                     borderRadius: '5px',
                                     flex: 1,
-                                    display:'flex',
+                                    display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
                                 })}>
@@ -599,41 +663,20 @@ export default function Editor() {
                                         marginTop: '20px',
                                     })}>
                                         {labels.map(label => (
-                                            <button
-                                                key={label}
-                                                onClick={() => changeLabel(label.id)}
-                                                className={css({
-                                                    padding: '3px',
-                                                    width: '80%',
-                                                    borderRadius: '8px',
-                                                    backgroundColor: selectedLabelId === label.id ? '#775D68' :'white',
-                                                    _hover: {
-                                                        bg: '#775D68',
-                                                        color: 'background',
-                                                        borderColor: '#775D68',
-                                                        transform: 'translateY(-2px)',
-                                                        boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)',
-                                                    },
-                                                })}
+                                            <LabelItem
+                                                changeLabel={changeLabel}
+                                                label={label}
+                                                selectedId={selectedLabelId}
+                                                onDelete={deleteLabel}
+                                                onPatch={patchLabel}
+                                                labelName={labelName}
+                                                setLabelName={setLabelName}
                                             >
-                                                <div className={vstack({gap: '1px', alignItems: 'stretch', flex: 1})}>
-                                                    <p className={css({
-                                                        fontWeight: 'bold',
-                                                        minW: '0',
-                                                        fontSize: '20px',
-                                                        padding: '10px',
-                                                        backgroundColor: 'white',
-                                                        borderRadius: '12px',
-                                                        w: 'full',
-                                                    })}>
-                                                        {label.name}
-                                                    </p>
-                                                </div>
-                                            </button>
+                                            </LabelItem>
                                         ))}
                                     </div>
                                     <button
-                                        onClick={createLabel}
+                                        onClick={() => setIsLabelOpen(true)}
                                         className={css({
                                             bg: 'white',
                                             width: '80%',
@@ -668,6 +711,56 @@ export default function Editor() {
                                     />
                                 </div>
                             </div>
+                            <Modal active={isLabelOpen} setActive={setIsLabelOpen}>
+                                <div className={css({
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px',
+                                })}>
+
+                                    <form onSubmit={createLabel} className={css({
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '20px',
+                                    })}>
+                                        <div className={css({
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: '10px',
+                                            width: '300px',
+                                            margin: '0 auto',
+                                        })}>
+                                            <label
+                                                className={css({fontSize: '18px', textAlign: 'left'})}>Название</label>
+                                            <input value={labelName}
+                                                   onChange={(e) => setLabelName(e.target.value)}
+                                                   required
+                                                   className={css({
+                                                       width: '100%',
+                                                       padding: '10px',
+                                                       borderRadius: '8px',
+                                                       backgroundColor: 'white',
+                                                       border: '1px solid black'
+                                                   })}
+                                            />
+                                        </div>
+                                        <button type="submit" className={css({
+                                            alignSelf: 'flex-start',
+                                            padding: '10px 20px',
+                                            borderRadius: '8px',
+                                            border: 'none',
+                                            backgroundColor: '#705661',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            margin: '0 auto',
+                                            width: '300px',
+                                            _hover: {bg: '#A87383'},
+                                        })}>
+                                            Создать
+                                        </button>
+                                    </form>
+                                </div>
+                            </Modal>
                             <Modal active={isOpen} setActive={setIsOpen}>
                                 <div className={css({
                                     display: 'flex',

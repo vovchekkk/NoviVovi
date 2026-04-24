@@ -33,11 +33,18 @@ let mockEmotionsStore = {
     '3': []
 };
 
+let mockLabels = [
+    { id:'1', name:'Label1'},
+    { id:'2', name:'Label2'},
+    { id:'3', name:'Label3'},
+]
+
 // === ОБРАБОТЧИКИ ===
 
 // Получение списка персонажей
 mock.onGet('/characters').reply(200, mockCharacters);
-mock.onGet('/steps').reply(200, mockSteps);
+mock.onGet('/novels/0/labels').reply(200, mockLabels);
+mock.onGet('/novels/0/labels/0/steps').reply(200, mockSteps);
 
 // Получение персонажа по ID
 mock.onGet(/\/characters\/\d+$/).reply((config) => {
@@ -79,6 +86,21 @@ mock.onPatch(/\/characters\/.+/).reply((config) => {
     return [200, { message: "Данные успешно сохранены" }];
 });
 
+mock.onPatch(/\/labels\/.+/).reply((config) => {
+    const charId = config.url.split('/').pop();
+    const updatedData = JSON.parse(config.data);
+
+    console.log('📦 Мок получил данные для сохранения:', updatedData);
+
+    mockLabels = mockLabels.map(c =>
+        c.id === charId
+            ? { ...c, name: updatedData.name}
+            : c
+    );
+
+    return [200, { message: "Данные успешно сохранены" }];
+});
+
 // Создание нового персонажа
 mock.onPost('/characters').reply((config) => {
     const body = JSON.parse(config.data);
@@ -89,9 +111,35 @@ mock.onPost('/characters').reply((config) => {
     };
 
     mockCharacters.push(newChar);
-    mockEmotionsStore[newChar.id] = []; // Инициализируем пустой список эмоций
+    mockEmotionsStore[newChar.id] = [];
 
     return [201, newChar];
+});
+
+mock.onPost('/novels/0/labels/0/steps').reply((config) => {
+    const body = JSON.parse(config.data);
+    const newStep = {
+        id: String(Date.now()),
+        type: 'hide',
+    };
+
+    mockSteps.push(newStep);
+
+    return [201, newStep];
+});
+mock.onDelete(/\/labels\/.+/).reply((config) => {
+    const urlParts = config.url.split('/');
+    const id = urlParts[urlParts.length - 1];
+
+    const charIndex = mockLabels.findIndex(char => char.id === id);
+    if (charIndex !== -1) {
+        mockLabels.splice(charIndex, 1);
+
+        console.log(`Персонаж с ID ${id} удален из моков`);
+        return [200, { success: true }];
+    } else {
+        return [404, { message: 'Персонаж не найден' }];
+    }
 });
 
 mock.onPost('/novels/0/labels').reply((config) => {
