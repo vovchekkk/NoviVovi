@@ -5,7 +5,7 @@ import EditorHeader from "../shared/ui/EditorHeader.tsx";
 import Preview from "../shared/ui/Preview.tsx";
 import BlockPanel from "../shared/ui/BlockPanel.tsx";
 import Selector from "../shared/ui/Selector.tsx";
-import {Controller, useForm} from "react-hook-form";
+import {Controller, useFieldArray, useForm, useFormContext, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import Modal from "../shared/ui/Modal.tsx";
@@ -13,6 +13,8 @@ import api from "../api.tsx";
 import {useParams} from "react-router-dom";
 import {vstack, hstack} from '../../styled-system/patterns';
 import {LabelItem} from "../shared/ui/LabelItem.tsx";
+import type {Character} from "../shared/ui/AssetsContainer.tsx";
+import axios from "axios";
 
 export enum StepType {
     BACKGROUND = 'background',
@@ -23,17 +25,6 @@ export enum StepType {
     CHOICE = 'choice',
 }
 
-export const stepDisplayNames: Record<StepType, string> = {
-    [StepType.BACKGROUND]: 'Фон',
-    [StepType.SHOW]: 'Появление',
-    [StepType.HIDE]: 'Исчезновение',
-    [StepType.REPLICA]: 'Реплика',
-    [StepType.JUMP]: 'Переход',
-    [StepType.CHOICE]: 'Выбор',
-};
-const baseStepSchema = z.object({
-    id: z.string().min(1),
-});
 const transformSchema = z.object({
     x: z.number(),
     y: z.number(),
@@ -42,6 +33,33 @@ const transformSchema = z.object({
     scale: z.number(),
     rotation: z.number(),
     zIndex: z.number(),
+});
+export const stepDisplayNames: Record<StepType, string> = {
+    [StepType.BACKGROUND]: 'Фон',
+    [StepType.SHOW]: 'Появление',
+    [StepType.HIDE]: 'Исчезновение',
+    [StepType.REPLICA]: 'Реплика',
+    [StepType.JUMP]: 'Переход',
+    [StepType.CHOICE]: 'Выбор',
+};
+const backgroundStateSchema = z.object({
+    imageId: z.string(),
+    transform: transformSchema,
+});
+
+const characterStateSchema = z.object({
+    characterId: z.string(),
+    characterStateId: z.string(),
+    transform: transformSchema,
+});
+
+const sceneStateSchema = z.object({
+    background: backgroundStateSchema.nullable(),
+    characters: z.array(characterStateSchema),
+});
+const baseStepSchema = z.object({
+    id: z.string().min(1),
+    state: sceneStateSchema,
 });
 
 const hideStepSchema = baseStepSchema.extend({
@@ -105,81 +123,305 @@ export type Label = {
     name: string;
 }
 
+type CharacterOption = {
+    id:string,
+    name:string,
+    states:string[],
+}
 const CHARACTERS = ['Анна', 'Мария', 'Борис'];
 const SCENES = ['Парк', 'Улица', 'Дом'];
 type StepFormProps = {
     control: any;
     errors: any;
     register: any;
+    characterOptions: CharacterOption[];
+    labelOptions: string[];
+    setValue:any;
 };
 
-function HideStepForm({control, errors}: StepFormProps) {
+function HideStepForm({control, errors, characterOptions}: StepFormProps) {
+    const options = characterOptions.map(ch => ch.name);
     return (
         <div>
             <Controller
                 control={control}
                 name="characterId"
-                render={({field}) => <Selector title="Персонаж" options={CHARACTERS} {...field} />}
+                render={({field}) => <Selector title="Персонаж" options={options} {...field} />}
             />
             {errors.characterId && <p className={css({color: 'red'})}>{errors.characterId.message}</p>}
         </div>
     );
 }
 
-function JumpStepForm({control, errors}: StepFormProps) {
+function JumpStepForm({control, errors, labelOptions}: StepFormProps) {
     return (
         <div>
             <Controller
                 control={control}
                 name="targetId"
-                render={({field}) => <Selector title="Сцена" options={SCENES} {...field} />}
+                render={({field}) => <Selector title="Сцена" options={labelOptions} {...field} />}
             />
             {errors.targetId && <p className={css({color: 'red'})}>{errors.targetId.message}</p>}
         </div>
     );
 }
 
-function ShowStepForm({control, errors}: StepFormProps) {
+function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
+    const selectedCharacterId = useWatch({ control, name: 'characterId' });
+    const selectedCharacter = characterOptions.find(ch => ch.id === selectedCharacterId);
+    const availableStates = selectedCharacter ? selectedCharacter.states : [];
+    const options = characterOptions.map(ch => ch.name);
+
     return (
-        <div className={css({display: 'flex', flexDirection: 'column', gap: '16px'})}>
-            <div>
+        <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
+
+            {/* Выбор персонажа и состояния */}
+            <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px' })}>
                 <Controller
                     control={control}
                     name="characterId"
-                    render={({field}) => <Selector title="Персонаж" options={CHARACTERS} {...field} />}
+                    render={({ field }) => <Selector title="Персонаж" options={options} {...field} />}
                 />
-                {errors.characterId &&
-                    <p className={css({color: 'red', fontSize: '13px'})}>{errors.characterId.message}</p>}
-            </div>
-            <div>
-                <label className={css({fontWeight: 'bold', display: 'block'})}>Состояние персонажа</label>
                 <Controller
                     control={control}
                     name="characterStateId"
-                    render={({field}) => <Selector title="Состояние" options={['normal', 'happy', 'sad']} {...field} />}
+                    render={({ field }) => (
+                        <Selector
+                            title="Состояние"
+                            options={availableStates}
+                            {...field}
+                            disabled={!selectedCharacterId}
+                        />
+                    )}
                 />
-                {errors.characterStateId &&
-                    <p className={css({color: 'red', fontSize: '13px'})}>{errors.characterStateId.message}</p>}
             </div>
-            {/* Transform можно вынести в отдельный компонент позже */}
-            <div className={css({fontSize: '13px', color: '#666'})}>
-                Transform (x, y, scale и т.д.) — можно добавить позже
+
+            {/* Секция Transform — всегда открыта */}
+            <div className={css({
+                padding: '12px',
+                border: '1px solid #eee',
+                borderRadius: '8px',
+                backgroundColor: '#fafafa'
+            })}>
+                <div className={css({
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    marginBottom: '10px',
+                    color: '#555',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                })}>
+                    Трансформация
+                </div>
+
+                <div className={css({
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr', // Две колонки
+                    gap: '8px 12px'
+                })}>
+                    <CompactInput label="X" name="transform.x" control={control} />
+                    <CompactInput label="Y" name="transform.y" control={control} />
+
+                    <CompactInput label="W" name="transform.width" control={control} />
+                    <CompactInput label="H" name="transform.height" control={control} />
+
+                    <CompactInput label="Scale" name="transform.scale" control={control} step="0.1" />
+                    <CompactInput label="Rot°" name="transform.rotation" control={control} />
+
+                    <div className={css({ gridColumn: 'span 2' })}>
+                        <CompactInput label="Z-Index" name="transform.zIndex" control={control} />
+                    </div>
+                </div>
             </div>
+
+            {/* Ошибки валидации (общие) */}
+            {(errors.characterId || errors.characterStateId) && (
+                <p className={css({ color: 'red', fontSize: '12px' })}>Заполните обязательные поля</p>
+            )}
         </div>
     );
 }
 
-function BackgroundStepForm({control, errors}: StepFormProps) {
+// Вспомогательный сверхкомпактный инпут
+function CompactInput({ label, name, control, step = "1" }: any) {
     return (
-        <div>
-            <Controller
-                control={control}
-                name="imageId"
-                render={({field}) => <Selector title="Фон" options={['bg_park', 'bg_street', 'bg_room']} {...field} />}
-            />
-            {errors.imageId && <p className={css({color: 'red', fontSize: '13px'})}>{errors.imageId.message}</p>}
-            <div className={css({fontSize: '13px', color: '#666', marginTop: '8px'})}>
-                Transform (x, y, scale и т.д.) — можно добавить позже
+        <Controller
+            name={name}
+            control={control}
+            render={({ field }) => (
+                <div className={css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '6px'
+                })}>
+                    <span className={css({
+                        color: '#888',
+                        fontSize: '11px',
+                        fontWeight: '500',
+                        width: '30px'
+                    })}>
+                        {label}
+                    </span>
+                    <input
+                        type="number"
+                        step={step}
+                        className={css({
+                            width: '100%',
+                            padding: '4px 6px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            outline: 'none',
+                            ':focus': { borderColor: '#007bff' }
+                        })}
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                </div>
+            )}
+        />
+    );
+}
+
+function BackgroundStepForm({ control, errors, setValue }: StepFormProps) {
+    const [isUploading, setIsUploading] = useState(false);
+
+    // 1. Изменяем путь слежения: теперь 'background.imageId'
+    const currentImageId = useWatch({
+        control,
+        name: 'background.imageId'
+    });
+
+    const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => resolve({ width: img.width, height: img.height });
+                img.src = e.target?.result as string;
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+
+        try {
+            const dimensions = await getImageDimensions(file);
+
+            const request = {
+                name: file.name,
+                type: 'Background',
+                format: file.type.split('/')[1],
+                width: dimensions.width.toString(),
+                height: dimensions.height.toString(),
+            };
+
+            const response = await api.post('images/upload-url', request);
+            const { imageId, uploadUrl } = response.data;
+
+            if (uploadUrl) {
+                await api.put(uploadUrl, file, {
+                    headers: { 'Content-Type': file.type }
+                });
+            }
+
+            if (imageId) {
+                setValue('background.imageId', imageId);
+                alert('Изображение загружено и сохранено в облако!');
+            }
+
+        } catch (error) {
+            console.error("Ошибка загрузки:", error);
+            alert('Ошибка при передаче файла в облако.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    return (
+        <div className={css({ display: 'flex', flexDirection: 'column', gap: '16px' })}>
+
+            {/* Блок загрузки */}
+            <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px' })}>
+                <label className={css({ fontWeight: 'bold', fontSize: '14px' })}>Изображение фона</label>
+
+                <div className={css({
+                    padding: '20px',
+                    border: '2px dashed #ccc',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    backgroundColor: '#fafafa',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '10px'
+                })}>
+                    {currentImageId ? (
+                        <div className={css({ fontSize: '12px', color: '#28a745' })}>
+                            ✅ ID в базе: {currentImageId}
+                        </div>
+                    ) : (
+                        <div className={css({ fontSize: '12px', color: '#666' })}>
+                            Фон еще не загружен
+                        </div>
+                    )}
+
+                    <label className={css({
+                        padding: '8px 16px',
+                        backgroundColor: '#333',
+                        color: 'white',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        cursor: isUploading ? 'not-allowed' : 'pointer',
+                        '&:hover': { backgroundColor: '#000' }
+                    })}>
+                        {isUploading ? 'Загрузка...' : 'Выбрать и загрузить'}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileUpload}
+                            disabled={isUploading}
+                            className={css({ display: 'none' })}
+                        />
+                    </label>
+                </div>
+
+                {/* Путь к ошибке тоже изменился */}
+                {errors.background?.imageId && (
+                    <p className={css({ color: 'red', fontSize: '12px' })}>
+                        {errors.background.imageId.message || 'Нужно загрузить фон'}
+                    </p>
+                )}
+            </div>
+
+            {/* Блок Трансформации — теперь все пути начинаются с background.transform */}
+            <div className={css({
+                padding: '12px',
+                border: '1px solid #eee',
+                borderRadius: '8px',
+                backgroundColor: '#fff'
+            })}>
+                <div className={css({ fontSize: '11px', fontWeight: 'bold', marginBottom: '10px', color: '#888', textTransform: 'uppercase' })}>
+                    Позиция фона
+                </div>
+
+                <div className={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 12px' })}>
+                    <CompactInput label="X" name="background.transform.x" control={control} />
+                    <CompactInput label="Y" name="background.transform.y" control={control} />
+                    <CompactInput label="W" name="background.transform.width" control={control} />
+                    <CompactInput label="H" name="background.transform.height" control={control} />
+                    <CompactInput label="Scale" name="background.transform.scale" control={control} step="0.1" />
+                    <CompactInput label="Rot°" name="background.transform.rotation" control={control} />
+                    <div className={css({ gridColumn: 'span 2' })}>
+                        <CompactInput label="Z-Index" name="background.transform.zIndex" control={control} />
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -221,55 +463,143 @@ function ReplicaStepForm({control, errors, register}: StepFormProps) {
     );
 }
 
-function ChoiceStepForm({control, errors}: StepFormProps) {
+function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "choices"
+    });
+
     return (
-        <div className={css({display: 'flex', flexDirection: 'column', gap: '16px'})}>
-            <div className={css({
-                display: "flex",
-                flexDirection: "column",
-                gap: '10px',
-                width: '300px',
-                margin: '0 auto',
-            })}>
-                <label className={css({fontSize: '18px', textAlign: 'left'})}>Название</label>
+        <div className={css({ display: 'flex', flexDirection: 'column', gap: '20px', width: '350px', margin: '0 auto' })}>
+
+            {/* Поле Название */}
+            <div className={css({ display: "flex", flexDirection: "column", gap: '8px' })}>
+                <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Название шага</label>
                 <input
                     {...control.register('name')}
-                    className={css({
-                        width: '100%',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        backgroundColor: 'white',
-                        border: '1px solid black'
-                    })}
+                    className={inputStyle} // вынес стиль вниз для чистоты
+                    placeholder="Введите название..."
                 />
             </div>
 
-            <div className={css({
-                display: "flex",
-                flexDirection: "column",
-                gap: '10px',
-                width: '300px',
-                margin: '0 auto',
-            })}>
-                <label className={css({fontSize: '18px', textAlign: 'left'})}>Текст</label>
-                <input
+            {/* Поле Текст вопроса */}
+            <div className={css({ display: "flex", flexDirection: "column", gap: '8px' })}>
+                <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Текст вопроса</label>
+                <textarea
                     {...control.register('text')}
-                    className={css({
-                        width: '100%',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        backgroundColor: 'white',
-                        border: '1px solid black'
-                    })}
+                    className={inputStyle}
+                    placeholder="Что увидит игрок?"
+                    rows={2}
                 />
             </div>
 
-            <div className={css({fontSize: '13px', color: '#666', marginTop: '20px'})}>
-                Выборы (menuRequest.choices) — будет отдельно с useFieldArray позже
+            <hr className={css({ width: '100%', border: '0.5px solid #ccc' })} />
+
+            {/* Секция Выборов */}
+            <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
+                <div className={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' })}>
+                    <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Варианты ответов</label>
+                    <button
+                        type="button"
+                        onClick={() => append({ text: '', transition: { targetLabelId: '' } })}
+                        className={css({
+                            padding: '4px 12px',
+                            backgroundColor: '#28a745',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '12px'
+                        })}
+                    >
+                        + Добавить
+                    </button>
+                </div>
+
+                {fields.map((field, index) => (
+                    <div key={field.id} className={css({
+                        padding: '12px',
+                        border: '1px solid #ddd',
+                        borderRadius: '8px',
+                        backgroundColor: '#fefefe',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                        position: 'relative'
+                    })}>
+                        {/* Кнопка удаления варианта */}
+                        <button
+                            type="button"
+                            onClick={() => remove(index)}
+                            className={css({
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px',
+                                border: 'none',
+                                background: 'none',
+                                cursor: 'pointer',
+                                color: 'red',
+                                fontWeight: 'bold'
+                            })}
+                        >
+                            ✕
+                        </button>
+
+                        {/* Текст выбора */}
+                        <div>
+                            <label className={css({ fontSize: '12px', color: '#666' })}>Текст кнопки</label>
+                            <input
+                                {...control.register(`choices.${index}.text` as const)}
+                                className={compactInputStyle}
+                                placeholder="Текст ответа"
+                            />
+                        </div>
+
+                        {/* Переход (targetLabelId) */}
+                        <div>
+                            <label className={css({ fontSize: '12px', color: '#666' })}>Переход на сцену</label>
+                            <Controller
+                                control={control}
+                                name={`choices.${index}.transition.targetLabelId` as const}
+                                render={({ field: selectField }) => (
+                                    <Selector
+                                        title="Выберите сцену"
+                                        options={labelOptions}
+                                        {...selectField}
+                                    />
+                                )}
+                            />
+                        </div>
+                    </div>
+                ))}
+
+                {fields.length === 0 && (
+                    <p className={css({ fontSize: '12px', color: '#999', textAlign: 'center' })}>
+                        Добавьте хотя бы один вариант выбора
+                    </p>
+                )}
             </div>
         </div>
     );
 }
+
+// Стили для переиспользования
+const inputStyle = css({
+    width: '100%',
+    padding: '10px',
+    borderRadius: '8px',
+    backgroundColor: 'white',
+    border: '1px solid black',
+    fontSize: '14px'
+});
+
+const compactInputStyle = css({
+    width: '100%',
+    padding: '6px 8px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+    fontSize: '13px'
+});
 
 export default function Editor() {
     const {novelId} = useParams<{ novelId: string }>() ?? 0;
@@ -284,16 +614,48 @@ export default function Editor() {
     const [loading, setLoading] = useState(true);
     const [labelName, setLabelName] = useState(' ');
     const [isLabelOpen, setIsLabelOpen] = useState(false);
+    const [characterOptions, setCharacterOptions] = useState<CharacterOption[]>([]);
     const {
         register,
         handleSubmit,
         reset,
         control,
+        setValue,
         formState: {errors},
     } = useForm<Step>({
         resolver: zodResolver(stepSchema),
         mode: 'onChange',
+        defaultValues: {
+            imageId: '',
+            characterId: '',
+            characterStateId: '',
+            transform: {
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                scale: 1,
+                rotation: 0,
+                zIndex: 1
+            }
+        }
     });
+
+    useEffect(() => {
+        const fetchCharacterNames = async () => {
+            try {
+                const {data} = await api.get<Character[]>('novels/0/characters');
+                setCharacterOptions(data.map(ch => ({
+                    id:ch.id,
+                    name:ch.name,
+                    states:ch.characterStates.map(st => st.name),
+                })))
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchCharacterNames();
+    }, []);
 
     useEffect(() => {
         if (currentStep) {
@@ -392,10 +754,23 @@ export default function Editor() {
 
         fetchSteps();
     }, []);
-    const onSave = (formData: Step) => {
-        const newSteps = [...steps];
-        newSteps[selectedStepIndex] = formData;
-        setSteps(newSteps);
+    const onSave = async (formData: Step) => {
+        try {
+            const { data: updatedStep } = await api.patch<Step>(`/novels/0/labels/0/steps/${formData.id}`, {
+                ...formData,
+                novelId: '0',
+                labelId: '0',
+            })
+            setSteps((prevSteps) =>
+                prevSteps.map((step) =>
+                    step.id === formData.id ? updatedStep : step
+                )
+            );
+
+            console.log('Сохранено успешно');
+        } catch (error) {
+            console.error(error);
+        }
     };
     const addStep = async (type: StepType) => {
         let newStep;
@@ -492,7 +867,15 @@ export default function Editor() {
     const renderStepForm = () => {
         if (!currentStep) return <div>Выберите шаг</div>;
 
-        const formProps = {control, errors, register};
+        const labelNames = labels.map(lab => lab.name);
+        const formProps = {
+            control,
+            errors,
+            register,
+            setValue,
+            characterOptions: characterOptions,
+            labelOptions: labelNames
+        };
 
         switch (currentStep.type) {
             case 'hide':
@@ -701,7 +1084,7 @@ export default function Editor() {
                                     gap: '20px',
                                     flex: 4,
                                 })}>
-                                    <Preview image="src\assets\img.png"></Preview>
+                                    <Preview image="src\assets\img.png" control={control}></Preview>
                                     <BlockPanel
                                         steps={steps}
                                         selectedStepIndex={selectedStepIndex}

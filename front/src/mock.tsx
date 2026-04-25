@@ -10,9 +10,9 @@ const mock = new MockAdapter(api, {
 
 // 1. Расширенное хранилище данных
 let mockCharacters = [
-    { id: '1', name: 'Анна', color: '#3b82f6' },
-    { id: '2', name: 'Мария', color: '#ef4444' },
-    { id: '3', name: 'Борис', color: '#10b981' },
+    { id: '1', name: 'Анна', color: '#3b82f6', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
+    { id: '2', name: 'Мария', color: '#ef4444', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
+    { id: '3', name: 'Борис', color: '#10b981', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
 ];
 
 let mockSteps = [
@@ -42,7 +42,8 @@ let mockLabels = [
 // === ОБРАБОТЧИКИ ===
 
 // Получение списка персонажей
-mock.onGet('/characters').reply(200, mockCharacters);
+mock.onGet('novels/0/characters').reply(200, mockCharacters);
+mock.onGet(/\/images\/\d+$/).reply(200, {url:'src/assets/img.png'});
 mock.onGet('/novels/0/labels').reply(200, mockLabels);
 mock.onGet('/novels/0/labels/0/steps').reply(200, mockSteps);
 
@@ -74,8 +75,6 @@ mock.onPatch(/\/characters\/.+/).reply((config) => {
             : c
     );
 
-    // 2. Обновляем список эмоций в нашем хранилище
-    // Если в объекте пришли эмоции, сохраняем их (присваивая ID новым, если их нет)
     if (updatedData.emotions) {
         mockEmotionsStore[charId] = updatedData.emotions.map(e => ({
             ...e,
@@ -120,7 +119,7 @@ mock.onPost('/novels/0/labels/0/steps').reply((config) => {
     const body = JSON.parse(config.data);
     const newStep = {
         id: String(Date.now()),
-        type: 'hide',
+        type: 'show',
     };
 
     mockSteps.push(newStep);
@@ -150,6 +149,28 @@ mock.onPost('/novels/0/labels').reply((config) => {
     };
 
     return [201, newChar];
+});
+
+mock.onPost(/\/characters\/\d+$/).reply((config) => {
+    const body = JSON.parse(config.data);
+    const response = {
+        imageId: '1',
+        uploadUrl: '',
+        viewUrl:'src/assets/upload.jpg'
+    }
+    return [201, response];
+});
+
+mock.onPost('images/upload-url').reply(200, {
+    imageId: "mock_image_123",
+    uploadUrl: "https://fake-cloud-storage.com/upload"
+});
+
+mock.onPut("https://fake-cloud-storage.com/upload").reply(200);
+
+// 3. Мок для получения URL в Preview
+mock.onGet("/images/mock_image_123").reply(200, {
+    url: "src/assets/upload.jpg" // реальное фото из интернета
 });
 
 export default mock;

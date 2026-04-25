@@ -21,10 +21,11 @@ const characterSchema = z.object({
 });
 type CharacterSchema = z.infer<typeof characterSchema>;
 
-type Character = {
+export type Character = {
     id: string;
     name: string;
     color?: string;
+    characterStates:Emotion[],
 };
 type Emotion = {
     id: string;
@@ -73,7 +74,7 @@ export default function AssetsContainer() {
         const fetchCharacters = async () => {
             try {
                 setLoading(true);
-                const {data} = await api.get<Character[]>('/characters');
+                const {data} = await api.get<Character[]>('novels/0/characters');
                 setCharacters(data);
 
                 if (data.length > 0) {
