@@ -1,6 +1,6 @@
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Models;
 
-namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Script;
 
 /// <summary>
 /// Renders RenPy statements to string representation.

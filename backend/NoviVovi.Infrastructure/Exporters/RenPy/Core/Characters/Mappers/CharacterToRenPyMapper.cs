@@ -1,5 +1,5 @@
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Characters.Models;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Utilities;
 
 namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Characters.Mappers;
 

@@ -22,9 +22,12 @@ public class S3StorageService : IStorageService
         throw new NotImplementedException();
     }
 
-    public async Task<byte[]> DownloadFileAsync(string storagePath, CancellationToken ct)
+    public async Task<Stream> DownloadFileStreamAsync(string storagePath, CancellationToken ct)
     {
         // TODO: Implement actual S3 download logic
+        // Example implementation:
+        // var response = await s3Client.GetObjectAsync(bucketName, storagePath, ct);
+        // return response.ResponseStream;
         throw new NotImplementedException("S3 file download not yet implemented");
     }
 }

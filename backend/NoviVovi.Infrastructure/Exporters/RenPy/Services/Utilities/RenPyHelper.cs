@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Infrastructure.Exporters.RenPy.Services;
+﻿namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Utilities;
 
 public class RenPyHelper
 {

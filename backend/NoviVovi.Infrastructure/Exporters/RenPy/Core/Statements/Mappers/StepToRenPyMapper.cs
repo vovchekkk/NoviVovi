@@ -3,7 +3,7 @@ using NoviVovi.Infrastructure.Exporters.RenPy.Core.Menu.Models;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Scene.Mappers;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Scene.Models;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Models;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Utilities;
 
 namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Mappers;
 
@@ -33,13 +33,14 @@ public class StepToRenPyMapper(
             
             ShowCharacterStep charStep => new RenPyShowCharacterStatement(
                 idGenerator.GenerateForCharacter(charStep.CharacterObject.Character.Id),
-                idGenerator.GenerateForCharacterState(charStep.CharacterObject.State.Image.Id),
+                idGenerator.GenerateForCharacterState(charStep.CharacterObject.State.Id),
                 transformMapper.Map(charStep.CharacterObject.Transform)
             ),
             
-            ShowMenuStep menuStep => new RenPyMenu(
+            ShowMenuStep menuStep => new RenPyShowMenuStatement(
                 menuStep.Menu.Choices.Select(choice => new RenPyChoice(
-                    RenPyHelper.EscapeString(choice.Text)
+                    RenPyHelper.EscapeString(choice.Text),
+                    idGenerator.GenerateForLabel(choice.Transition.TargetLabel.Id)
                 )).ToList()
             ),
             

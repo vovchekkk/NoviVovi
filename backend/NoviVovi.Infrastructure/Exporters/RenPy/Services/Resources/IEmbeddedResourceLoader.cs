@@ -1,4 +1,4 @@
-namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Resources;
 
 /// <summary>
 /// Loads embedded resources from assembly.

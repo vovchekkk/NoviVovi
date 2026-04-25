@@ -1,6 +1,6 @@
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Labels.Models;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Mappers;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Utilities;
 
 namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Labels.Mappers;
 

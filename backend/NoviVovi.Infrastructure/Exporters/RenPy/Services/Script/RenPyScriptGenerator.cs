@@ -1,9 +1,9 @@
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Novels.Models;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Resources;
 using Scriban;
 using Scriban.Runtime;
 
-namespace NoviVovi.Infrastructure.Exporters.RenPy.Services;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Script;
 
 /// <summary>
 /// Generates script.rpy content using Scriban templates.

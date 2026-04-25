@@ -1,7 +1,6 @@
 using System.Reflection;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
 
-namespace NoviVovi.Infrastructure.Exporters.RenPy.Services;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Resources;
 
 /// <summary>
 /// Loads embedded resources from assembly.

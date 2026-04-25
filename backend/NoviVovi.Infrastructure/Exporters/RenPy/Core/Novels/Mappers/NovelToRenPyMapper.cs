@@ -2,7 +2,7 @@
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Characters.Mappers;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Labels.Mappers;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Novels.Models;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Utilities;
 
 namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Novels.Mappers;
 

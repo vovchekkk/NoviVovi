@@ -1,3 +1,10 @@
-﻿namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Models;
+﻿using NoviVovi.Infrastructure.Exporters.RenPy.Core.Menu.Models;
 
-public record RenPyShowMenuStatement : RenPyStatement;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Models;
+
+/// <summary>
+/// Represents a Ren'Py menu statement with choices
+/// </summary>
+public record RenPyShowMenuStatement(
+    List<RenPyChoice> Choices
+) : RenPyStatement;

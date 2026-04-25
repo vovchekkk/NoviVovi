@@ -2,9 +2,8 @@ using System.Text;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Menu.Models;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Scene.Models;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Models;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
 
-namespace NoviVovi.Infrastructure.Exporters.RenPy.Services;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Script;
 
 /// <summary>
 /// Renders RenPy statements to their string representation.
@@ -26,7 +25,7 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
                 RenderShowCharacter(showChar, indent),
             
             RenPyHideCharacterStatement hideChar => 
-                $"{indent}hide {hideChar.ImageName}",
+                $"{indent}hide {hideChar.CharacterName}",
             
             RenPyReplicaStatement replica => 
                 $"{indent}{replica.CharacterVar} \"{replica.Text}\"",
@@ -37,7 +36,7 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
             RenPyReturnStatement => 
                 $"{indent}return",
             
-            RenPyMenu menu => 
+            RenPyShowMenuStatement menu => 
                 RenderMenu(menu, indentLevel),
             
             _ => $"{indent}# Unknown statement: {statement.GetType().Name}"
@@ -55,18 +54,19 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
         return $"{indent}show {showChar.CharacterName} {showChar.CharacterStateName}";
     }
 
-    private string RenderMenu(RenPyMenu menu, int indentLevel)
+    private string RenderMenu(RenPyShowMenuStatement menu, int indentLevel)
     {
         var sb = new StringBuilder();
         var indent = new string(' ', indentLevel * 4);
         var choiceIndent = new string(' ', (indentLevel + 1) * 4);
+        var actionIndent = new string(' ', (indentLevel + 2) * 4);
 
         sb.AppendLine($"{indent}menu:");
         
         foreach (var choice in menu.Choices)
         {
             sb.AppendLine($"{choiceIndent}\"{choice.Text}\":");
-            // TODO: Add choice actions when RenPyChoice model is extended
+            sb.AppendLine($"{actionIndent}jump {choice.TargetLabel}");
         }
 
         return sb.ToString().TrimEnd();

@@ -4,5 +4,5 @@ namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Models;
 /// Hide character sprite: hide sprite_id
 /// </summary>
 public record RenPyHideCharacterStatement(
-    string ImageName
+    string CharacterName
 ) : RenPyStatement;

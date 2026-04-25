@@ -3,7 +3,9 @@ using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Export.Abstractions;
 using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Novels.Mappers;
-using NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Archive;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Images;
+using NoviVovi.Infrastructure.Exporters.RenPy.Services.Script;
 
 namespace NoviVovi.Infrastructure.Exporters.RenPy.Services;
 
@@ -40,8 +42,8 @@ public class RenPyExporter(
             archiveBuilder.AddTextFile(archive, "game/script.rpy", scriptContent);
 
             // Collect and export images
-            var imageIds = imageCollector.CollectImageIds(novel);
-            await imageExporter.ExportAsync(archive, imageIds, ct);
+            var images = imageCollector.CollectImages(novel);
+            await imageExporter.ExportAsync(archive, images, ct);
 
             // Add base project files
             await archiveBuilder.AddBaseProjectFilesAsync(archive, ct);

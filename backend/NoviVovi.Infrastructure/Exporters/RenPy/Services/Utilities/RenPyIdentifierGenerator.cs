@@ -1,4 +1,4 @@
-﻿namespace NoviVovi.Infrastructure.Exporters.RenPy.Services;
+﻿namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Utilities;
 
 /// <summary>
 /// Generates unique Python-compatible identifiers for Ren'Py export.

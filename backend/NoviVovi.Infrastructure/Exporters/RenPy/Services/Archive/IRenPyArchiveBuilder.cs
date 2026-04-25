@@ -1,6 +1,6 @@
 using System.IO.Compression;
 
-namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Archive;
 
 /// <summary>
 /// Builds RenPy project ZIP archive.

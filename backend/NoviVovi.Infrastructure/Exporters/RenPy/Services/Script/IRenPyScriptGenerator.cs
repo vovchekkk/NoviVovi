@@ -1,6 +1,6 @@
 using NoviVovi.Infrastructure.Exporters.RenPy.Core.Novels.Models;
 
-namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Abstractions;
+namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Script;
 
 /// <summary>
 /// Generates script.rpy content from RenPy novel model.
