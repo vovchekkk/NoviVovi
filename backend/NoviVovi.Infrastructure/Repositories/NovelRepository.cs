@@ -16,7 +16,7 @@ public class NovelRepository(INovelDbORepository dbORepository, ICharacterDbORep
         return dbo == null ? null : mapper.ToDomain(dbo);
     }
 
-    public async Task AddAsync(Novel novel, CancellationToken ct)
+    public async Task AddOrUpdateAsync(Novel novel, CancellationToken ct)
     {
         var dbo = mapper.ToDbO(novel);
         await dbORepository.AddOrUpdateFullAsync(dbo);

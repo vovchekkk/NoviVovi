@@ -33,7 +33,7 @@ public class AddLabelHandler(
         
         novel.AddLabel(label);
         
-        await labelRepository.AddAsync(label, ct);
+        await labelRepository.AddOrUpdateAsync(label, ct);
         
         await unitOfWork.SaveChangesAsync(ct);
         

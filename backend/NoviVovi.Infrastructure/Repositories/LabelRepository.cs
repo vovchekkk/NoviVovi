@@ -21,7 +21,7 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
         return dbos.Select(dbo => mapper.ToDomain(dbo, new MappingContext()));
     }
 
-    public async Task AddAsync(Label label, CancellationToken ct)
+    public async Task AddOrUpdateAsync(Label label, CancellationToken ct)
     {
         var dbo = mapper.ToDbO(label, new MappingContext());
         await dboRepo.AddOrUpdateFullAsync(dbo);
