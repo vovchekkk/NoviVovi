@@ -17,7 +17,11 @@ public partial class NovelMapper(
         
         var result = new Novel(dbo.Id, dbo.Title, labelMapper.ToDomain(dbo.StartLabel, new MappingContext()));
         foreach (var label in dbo.Labels)
+        {
+            if(label.Id == dbo.StartLabelId)
+                continue;
             result.AddLabel(labelMapper.ToDomain(label, new MappingContext()));
+        }
         
         foreach (var character in dbo.Characters)
             result.AddCharacter(characterMapper.ToDomain(character));

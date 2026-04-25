@@ -45,7 +45,7 @@ public class AddCharacterStateHandler(
         var state = CharacterState.Create(request.Name, image, transform, request.Description);
 
         character.AddCharacterState(state);
-
+        
         await unitOfWork.SaveChangesAsync(ct);
 
         return mapper.ToDto(state);

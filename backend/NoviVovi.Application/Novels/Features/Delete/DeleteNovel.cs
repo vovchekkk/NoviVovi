@@ -23,6 +23,6 @@ public class DeleteNovelHandler(
         
         await novelRepository.DeleteAsync(novel, ct);
         
-        await unitOfWork.SaveChangesAsync(ct);
+        // await unitOfWork.SaveChangesAsync(ct);
     }
 }

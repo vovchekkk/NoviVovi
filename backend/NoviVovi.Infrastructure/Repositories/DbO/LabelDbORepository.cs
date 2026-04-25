@@ -67,6 +67,7 @@ public class LabelDbORepository(
 
         var labels = await QueryAsync<LabelDbO>(sql, new { NovelIds = novelIds }); 
         var ctx = new LoadContext();
+        
         return await GetFull(labels, ctx);
     }
 
