@@ -38,7 +38,7 @@ public class TestStorageController : ControllerBase
     [HttpGet("download/{*path}")]
     public async Task<IActionResult> DownloadFile(string path)
     {
-        var stream = await _storage.DownloadFileAsync(path, CancellationToken.None);
+        var stream = await _storage.DownloadFileStreamAsync(path, CancellationToken.None);
         stream.Position = 0;
     
         var fileName = Path.GetFileName(Uri.UnescapeDataString(path));

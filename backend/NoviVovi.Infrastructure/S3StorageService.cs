@@ -64,7 +64,7 @@ public class S3StorageService : IStorageService
         await _s3Client.DeleteObjectAsync(request, ct);
     }
     
-    public async Task<MemoryStream> DownloadFileAsync(string storagePath, CancellationToken ct)
+    public async Task<Stream> DownloadFileStreamAsync(string storagePath, CancellationToken ct)
     {
         try
         {
@@ -88,14 +88,5 @@ public class S3StorageService : IStorageService
         {
             throw new FileNotFoundException($"File {storagePath} not found in bucket {_bucketName}", ex);
         }
-    }
-
-    public async Task<Stream> DownloadFileStreamAsync(string storagePath, CancellationToken ct)
-    {
-        // TODO: Implement actual S3 download logic
-        // Example implementation:
-        // var response = await s3Client.GetObjectAsync(bucketName, storagePath, ct);
-        // return response.ResponseStream;
-        throw new NotImplementedException("S3 file download not yet implemented");
     }
 }
