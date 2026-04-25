@@ -644,7 +644,7 @@ export default function Editor() {
     useEffect(() => {
         const fetchCharacterNames = async () => {
             try {
-                const {data} = await api.get<Character[]>('novels/0/characters');
+                const {data} = await api.get<Character[]>(`novels/${novelId}/characters`);
                 setCharacterOptions(data.map(ch => ({
                     id:ch.id,
                     name:ch.name,
@@ -735,10 +735,29 @@ export default function Editor() {
         loadStepData();
     }, [selectedId, reset]);
     useEffect(() => {
+        const fetchLabels = async () => {
+            try {
+                setLoading(true);
+                const {data} = await api.get<Label[]>(`/novels/${novelId}/labels`);
+                setLabels(data);
+
+                if (data.length > 0) {
+                    setSelectedLabelId(data[0].id);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Не удалось загрузить персонажей');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchLabels()
+    }, [novelId]);
+    useEffect(() => {
         const fetchSteps = async () => {
             try {
                 setLoading(true);
-                const {data} = await api.get<Step[]>('novels/0/labels/0/steps');
+                const {data} = await api.get<Step[]>(`novels/${novelId}/labels/${selectedLabelId}/steps`);
                 setSteps(data);
 
                 if (data.length > 0) {
@@ -753,10 +772,10 @@ export default function Editor() {
         };
 
         fetchSteps();
-    }, []);
+    }, [selectedLabelId, novelId]);
     const onSave = async (formData: Step) => {
         try {
-            const { data: updatedStep } = await api.patch<Step>(`/novels/0/labels/0/steps/${formData.id}`, {
+            const { data: updatedStep } = await api.patch<Step>(`/novels/${novelId}/labels/${selectedLabelId}/steps/${formData.id}`, {
                 ...formData,
                 novelId: '0',
                 labelId: '0',
@@ -837,7 +856,7 @@ export default function Editor() {
                 break;
         }
         try {
-            const { data: serverStep } = await api.post<Step>('/novels/0/labels/0/steps', newStep);
+            const { data: serverStep } = await api.post<Step>(`/novels/${novelId}/labels/${selectedLabelId}/steps`, newStep);
             setSteps((prevSteps) => {
                 const insertionIndex = (selectedStepIndex !== null && selectedStepIndex !== -1)
                     ? selectedStepIndex + 1
@@ -899,29 +918,10 @@ export default function Editor() {
         setSelectedLabelId(labelId);
     }
 
-    useEffect(() => {
-        const fetchLabels = async () => {
-            try {
-                setLoading(true);
-                const {data} = await api.get<Label[]>('/novels/0/labels');
-                setLabels(data);
-
-                if (data.length > 0) {
-                    setSelectedLabelId(data[0].id);
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Не удалось загрузить персонажей');
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchLabels()
-    }, []);
     const createLabel = async (e) => {
         e.preventDefault();
         try {
-            const {data: newLabel} = await api.post<Label>(`/novels/0/labels`, {
+            const {data: newLabel} = await api.post<Label>(`/novels/${novelId}/labels`, {
                 name: labelName || 'Новая сцена'
             })
             setLabels([...labels, newLabel]);
@@ -936,7 +936,7 @@ export default function Editor() {
 
     const deleteLabel = async (id: string) => {
         try {
-            await api.delete<Label>(`novels/0/labels/${id}`, {
+            await api.delete<Label>(`novels/${novelId}/labels/${id}`, {
                 data: {
                     labelId: id,
                     novelId: '0',
@@ -954,7 +954,7 @@ export default function Editor() {
 
     const patchLabel = async (label:Label) => {
         try {
-            await api.patch<Label>(`/novels/0/labels/${label.id}`, {
+            await api.patch<Label>(`/novels/${novelId}/labels/${label.id}`, {
                 novelId: '0',
                 labelId: label.id,
                 name:label.name,

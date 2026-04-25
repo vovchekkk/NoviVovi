@@ -16,10 +16,6 @@ export const router = createBrowserRouter([
         element: <Novels />,
     },
     {
-        path: '/editor',
-        element: <Editor />,
-    },
-    {
         path: '/editor/assets',
         element: <Assets />,
     },

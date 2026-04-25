@@ -45,7 +45,9 @@ let mockLabels = [
 mock.onGet('novels/0/characters').reply(200, mockCharacters);
 mock.onGet(/\/images\/\d+$/).reply(200, {url:'src/assets/img.png'});
 mock.onGet('/novels/0/labels').reply(200, mockLabels);
-mock.onGet('/novels/0/labels/0/steps').reply(200, mockSteps);
+mock.onGet('/novels/0/labels/1/steps').reply(200, mockSteps);
+mock.onGet('/novels/0/labels/2/steps').reply(200, mockSteps);
+mock.onGet('/novels/0/labels/3/steps').reply(200, mockSteps);
 
 // Получение персонажа по ID
 mock.onGet(/\/characters\/\d+$/).reply((config) => {
@@ -115,7 +117,7 @@ mock.onPost('/characters').reply((config) => {
     return [201, newChar];
 });
 
-mock.onPost('/novels/0/labels/0/steps').reply((config) => {
+mock.onPost('/novels/0/labels/1/steps').reply((config) => {
     const body = JSON.parse(config.data);
     const newStep = {
         id: String(Date.now()),
