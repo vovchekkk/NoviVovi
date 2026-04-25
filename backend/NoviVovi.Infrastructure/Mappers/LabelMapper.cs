@@ -25,8 +25,11 @@ public partial class LabelMapper(
         return res;
     }
 
-    public LabelDbO ToDbO(Label label, MappingContext ctx)
+    public LabelDbO? ToDbO(Label label, MappingContext ctx)
     {
+        if(label == null)
+            return null;
+        
         if (ctx.LabelDbOs.TryGetValue(label.Id, out var cached))
             return cached;
 

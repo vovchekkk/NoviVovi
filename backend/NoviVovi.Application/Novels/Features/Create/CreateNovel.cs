@@ -27,11 +27,11 @@ public class CreateNovelHandler(
     {
         const string startLabelName = "StartLabel";
         
-        var novel = Novel.Create(request.Title, startLabelName);
-        
-        await labelRepository.AddAsync(novel.StartLabel, ct);
+        var novel = Novel.Create(request.Title);
         await novelRepository.AddAsync(novel, ct);
-        
+        var label = novel.AddStartLabel(startLabelName);
+        await labelRepository.AddAsync(label, ct);
+        await novelRepository.AddAsync(novel, ct);
         await unitOfWork.SaveChangesAsync(ct);
         
         return mapper.ToDto(novel);

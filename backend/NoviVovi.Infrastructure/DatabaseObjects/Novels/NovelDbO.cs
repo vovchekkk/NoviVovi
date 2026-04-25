@@ -16,5 +16,5 @@ public class NovelDbO
     
     public List<CharacterDbO> Characters { get; set; } = new();
     public List<LabelDbO> Labels { get; set; } = new();
-    public LabelDbO? StartLabel { get; set; } = new();
+    public LabelDbO? StartLabel { get; set; }
 }

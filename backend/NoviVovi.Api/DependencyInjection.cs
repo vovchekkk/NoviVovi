@@ -1,4 +1,5 @@
-﻿using NoviVovi.Api.Characters.CommandMappers;
+﻿using MediatR;
+using NoviVovi.Api.Characters.CommandMappers;
 using NoviVovi.Api.Characters.Mappers;
 using NoviVovi.Api.Dialogue.Mappers;
 using NoviVovi.Api.Images.CommandMappers;
@@ -13,6 +14,7 @@ using NoviVovi.Api.Scene.Mappers;
 using NoviVovi.Api.Steps.CommandMappers;
 using NoviVovi.Api.Steps.Mappers;
 using NoviVovi.Api.Transitions.Mappers;
+using NoviVovi.Application.Novels.Models;
 
 namespace NoviVovi.Api;
 
@@ -20,6 +22,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApi(this IServiceCollection services)
     {
+        services.AddMediatR(cfg => {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => a.FullName?.StartsWith("NoviVovi") ?? false)
+                .ToArray();
+            cfg.RegisterServicesFromAssemblies(assemblies);
+        });
+        
         services.AddSingleton<CharacterCommandMapper>();
         services.AddSingleton<CharacterStateCommandMapper>();
         
@@ -59,7 +68,7 @@ public static class DependencyInjection
         services.AddSingleton<StepCommandMapper>();
         
         services.AddSingleton<StepResponseMapper>();
-        
+        services.AddSingleton<NovelGraphBuilder>();
         services.AddSingleton<TransitionResponseMapper>();
         
         return services;

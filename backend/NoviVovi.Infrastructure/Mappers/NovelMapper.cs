@@ -30,12 +30,12 @@ public partial class NovelMapper(
         var result = new NovelDbO
         {
             Id = domain.Id,
-            StartLabelId = domain.StartLabel.Id,
+            StartLabelId = domain.StartLabel?.Id,
             Title = domain.Title,
             IsPublic = true,
             Characters = domain.Characters.Select(c => characterMapper.ToDbO(c, domain.Id)).ToList(),
             Labels = domain.Labels.Select(l => labelMapper.ToDbO(l, new MappingContext())).ToList(),
-            StartLabel = labelMapper.ToDbO(domain.StartLabel, new MappingContext())
+            StartLabel = domain.StartLabel == null ? null : labelMapper.ToDbO(domain.StartLabel, new MappingContext())
         };
         return result;
     }
