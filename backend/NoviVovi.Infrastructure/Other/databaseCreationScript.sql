@@ -91,10 +91,7 @@ CREATE TABLE "Labels" (
 -- MENUS
 -- =========================
 CREATE TABLE "Menus" (
-    "id" UUID PRIMARY KEY,
-    "name" VARCHAR(100),
-    "text" TEXT,
-    "description" TEXT
+    "id" UUID PRIMARY KEY
 );
 
 -- =========================
@@ -104,7 +101,6 @@ CREATE TABLE "Choices" (
     "id" UUID PRIMARY KEY,
     "menu_id" UUID NOT NULL,
     "next_label_id" UUID,
-    "name" VARCHAR(100) NOT NULL,
     "text" TEXT
 );
 

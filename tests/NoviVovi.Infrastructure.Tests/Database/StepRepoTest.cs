@@ -120,26 +120,22 @@ public class StepRepoTest : IAsyncLifetime
         return label;
     }
 
-    private MenuDbO CreateMenu(string menuName = "test_menu")
+    private MenuDbO CreateMenu()
     {
         var menu = new MenuDbO
         {
-            Id = Guid.NewGuid(),
-            Description = "test_description",
-            Text = menuName,
-            Text = "test_text"
+            Id = Guid.NewGuid()
         };
         TrackId("Menus", menu.Id);
         return menu;
     }
 
-    private ChoiceDbO CreateChoice(Guid menuId, LabelDbO nextLabel, string choiceName = "test_choice")
+    private ChoiceDbO CreateChoice(Guid menuId, LabelDbO nextLabel)
     {
         var choice = new ChoiceDbO
         {
             Id = Guid.NewGuid(),
             MenuId = menuId,
-            Name = choiceName,
             NextLabel = nextLabel,
             NextLabelId = nextLabel.Id,
             Text = "test_choice_text"
@@ -389,10 +385,10 @@ public class StepRepoTest : IAsyncLifetime
         var label = CreateLabel("menu_step_label");
         await labelRepo.AddOrUpdateFullAsync(label);
         
-        var menu = CreateMenu("test menu");
+        var menu = CreateMenu();
         var choiceLabel = CreateLabel("choice_label");
         await labelRepo.AddOrUpdateFullAsync(choiceLabel);
-        var choice = CreateChoice(menu.Id, choiceLabel, "choice1");
+        var choice = CreateChoice(menu.Id, choiceLabel);
         menu.Choices = [choice];
         
         var step = CreateStep(label.Id, 1, "menu", menu: menu);
@@ -406,10 +402,11 @@ public class StepRepoTest : IAsyncLifetime
         Assert.Equal(menu.Id, dbStep.menuId);
         
         // Обновляем меню
-        menu.Name = "updated menu";
+        choice.Text = "aboba";
         await stepRepo.AddOrUpdateFullAsync(step, new LoadContext());
-        var dbMenuName = await conn.ExecuteScalarAsync<string>("SELECT name FROM \"Menus\" WHERE id = @Id", new { Id = menu.Id });
-        Assert.Equal("updated menu", dbMenuName);
+        var choiceText =
+            await conn.ExecuteScalarAsync<string>("SELECT text FROM \"Choices\" WHERE id = @Id", new { Id = choice.Id });
+        Assert.Equal("aboba", choiceText);
         
         // Удаляем степ — меню не удаляется
         await stepRepo.DeleteAsync(step.Id);

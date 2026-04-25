@@ -29,7 +29,7 @@ public class LabelMapperTests
             LabelId = labelId,
             StepType = "jump",
             NextLabelId = labelId,
-            NextLabel = label // 🔥 цикл
+            NextLabel = label
         };
 
         label.Steps.Add(step);
@@ -61,13 +61,11 @@ public class MenuMapperTests
         var menu = new MenuDbO
         {
             Id = Guid.NewGuid(),
-            Text = "Menu",
             Choices = new List<ChoiceDbO>
             {
                 new ChoiceDbO
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Choice",
                     Text = "Go",
                     NextLabel = label,
                     NextLabelId = label.Id

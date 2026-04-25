@@ -1,5 +1,4 @@
 using NoviVovi.Infrastructure.DatabaseObjects.Choices;
-using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.DbO;
@@ -15,7 +14,7 @@ public class MenuDbORepository(
         if (ctx.Menus.TryGetValue(menuId, out var cached))
             return cached;
 
-        const string menuSql = @"SELECT id AS Id, name AS Name, text AS Text, description AS Description
+        const string menuSql = @"SELECT id AS Id
                              FROM ""Menus"" WHERE id = @MenuId";
 
         var menu = await QueryFirstOrDefaultAsync<MenuDbO>(menuSql, new { MenuId = menuId });
@@ -23,9 +22,8 @@ public class MenuDbORepository(
 
         ctx.Menus[menuId] = menu;
 
-        const string choicesSql = @"SELECT id AS Id, menu_id AS MenuId, next_label_id AS NextLabelId,
-                                      name AS Name, text AS Text
-                               FROM ""Choices"" WHERE menu_id = @MenuId ORDER BY name";
+        const string choicesSql = @"SELECT id AS Id, menu_id AS MenuId, next_label_id AS NextLabelId, text AS Text
+                               FROM ""Choices"" WHERE menu_id = @MenuId ORDER BY Id";
 
         var choices = (await QueryAsync<ChoiceDbO>(choicesSql, new { MenuId = menuId })).ToList();
 
@@ -38,24 +36,22 @@ public class MenuDbORepository(
         return menu;
     }
 
-    public async Task<Guid> AddAsync(MenuDbO menu)
+    private async Task AddAsync(MenuDbO menu)
     {
         const string sql = @"
-            INSERT INTO ""Menus"" (id, name, text, description)
-            VALUES (@Id, @Name, @Text, @Description)";
+            INSERT INTO ""Menus"" (id)
+            VALUES (@Id)";
 
         await ExecuteAsync(sql, menu);
-        return menu.Id;
     }
 
-    public async Task<Guid> AddChoiceAsync(ChoiceDbO choice)
+    private async Task AddChoiceAsync(ChoiceDbO choice)
     {
         const string sql = @"
-            INSERT INTO ""Choices"" (id, menu_id, next_label_id, name, text)
-            VALUES (@Id, @MenuId, @NextLabelId, @Name, @Text)";
+            INSERT INTO ""Choices"" (id , menu_id, next_label_id, text)
+            VALUES (@Id, @MenuId, @NextLabelId, @Text)";
 
         await ExecuteAsync(sql, choice);
-        return choice.Id;
     }
 
     public async Task DeleteChoiceAsync(Guid choiceId)
@@ -69,39 +65,38 @@ public class MenuDbORepository(
         const string sql = @"
             UPDATE ""Choices""
             SET next_label_id = @NextLabelId,
-                name = @Name,
                 text = @Text
             WHERE id = @Id";
 
         await ExecuteAsync(sql, choice);
     }
 
-    public async Task UpdateAsync(MenuDbO menu)
-    {
-        const string sql = @"
-            UPDATE ""Menus""
-            SET name = @Name,
-                text = @Text,
-                description = @Description
-            WHERE id = @Id";
-
-        await ExecuteAsync(sql, menu);
-    }
+    // public async Task UpdateAsync(MenuDbO menu)
+    // {
+    //     const string sql = @"
+    //         UPDATE ""Menus""
+    //         SET name = @Name,
+    //             text = @Text,
+    //             description = @Description
+    //         WHERE id = @Id";
+    //
+    //     await ExecuteAsync(sql, menu);
+    // }
 
     public async Task DeleteAsync(Guid id)
     {
         const string sql = @"DELETE FROM ""Menus"" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
-    
-    public async Task<bool> CheckIfExistsAsync(Guid id)
+
+    private async Task<bool> CheckIfExistsAsync(Guid id)
     {
         const string sql = @"SELECT 1 FROM ""Menus"" WHERE id = @Id LIMIT 1";
         var result = await QueryFirstOrDefaultAsync<int?>(sql, new { Id = id });
         return result.HasValue;
     }
-    
-    public async Task<bool> CheckChoiceExistsAsync(Guid id)
+
+    private async Task<bool> CheckChoiceExistsAsync(Guid id)
     {
         const string sql = @"SELECT 1 FROM ""Choices"" WHERE id = @Id LIMIT 1";
         var result = await QueryFirstOrDefaultAsync<int?>(sql, new { Id = id });
@@ -112,20 +107,16 @@ public class MenuDbORepository(
     {
         ctx ??= new LoadContext();
         
-        if (ctx.Menus.ContainsKey(menu.Id))
+        if (!ctx.Menus.TryAdd(menu.Id, menu))
             return menu.Id;
-
-        ctx.Menus[menu.Id] = menu;
 
         var exists = await CheckIfExistsAsync(menu.Id);
 
-        if (exists)
-            await UpdateAsync(menu);
-        else
+        if (!exists)
             await AddAsync(menu);
         
         var existingChoiceIds = await GetChoiceIdsByMenuIdAsync(menu.Id);
-        var newChoiceIds = menu.Choices?.Select(c => c.Id).ToHashSet() ?? new HashSet<Guid>();
+        var newChoiceIds = menu.Choices.Select(c => c.Id).ToHashSet();
         
         var choiceIdsToDelete = existingChoiceIds.Except(newChoiceIds).ToList();
     
@@ -134,7 +125,7 @@ public class MenuDbORepository(
             await DeleteChoiceAsync(choiceId);
         }
         
-        if (menu.Choices != null && menu.Choices.Any())
+        if (menu.Choices.Count != 0)
         {
             foreach (var choice in menu.Choices)
             {

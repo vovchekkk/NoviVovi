@@ -15,9 +15,10 @@ public class LabelRepository(ILabelDbORepository dboRepo, LabelMapper mapper) : 
         return  dbo == null ? null : mapper.ToDomain(dbo, new MappingContext());
     }
 
-    public Task<IEnumerable<Label>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct)
+    public async Task<IEnumerable<Label>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var dbos = await dboRepo.GetFullByIdsAsync(ids);
+        return dbos.Select(dbo => mapper.ToDomain(dbo, new MappingContext()));
     }
 
     public async Task AddAsync(Label label, CancellationToken ct)

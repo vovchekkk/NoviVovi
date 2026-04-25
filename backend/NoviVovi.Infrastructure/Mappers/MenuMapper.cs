@@ -10,12 +10,12 @@ public partial class MenuMapper(
     Lazy<LabelMapper> labelMapper
 )
 {
-    public MenuDbO ToDbO(Menu stepMenu, Guid novelId)
+    public MenuDbO ToDbO(Menu stepMenu)
     {
         var res = new MenuDbO
         {
             Id = stepMenu.Id,
-            Choices = stepMenu.Choices.Select(choice => ToDbO(choice, novelId, stepMenu.Id, new MappingContext())).ToList(),
+            Choices = stepMenu.Choices.Select(choice => ToDbO(choice, stepMenu.Id, new MappingContext())).ToList(),
         };
         return res;
     }
@@ -30,8 +30,8 @@ public partial class MenuMapper(
 
         return res;
     }
-    
-    public ChoiceDbO ToDbO(Choice choice, Guid novelId, Guid menuId, MappingContext ctx)
+
+    private ChoiceDbO ToDbO(Choice choice, Guid menuId, MappingContext ctx)
     {
         return new ChoiceDbO
         {

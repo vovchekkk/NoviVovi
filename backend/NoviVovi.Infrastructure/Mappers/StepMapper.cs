@@ -74,7 +74,7 @@ public partial class StepMapper(
         return res;
     }
 
-    public StepDbO ToDbO(ShowMenuStep step, Guid labelId, Guid novelId, int stepOrder)
+    public StepDbO ToDbO(ShowMenuStep step, Guid labelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -85,7 +85,7 @@ public partial class StepMapper(
             MenuId = step.Menu.Id
         };
 
-        res.Menu = menuMapper.Value.ToDbO(step.Menu, novelId);
+        res.Menu = menuMapper.Value.ToDbO(step.Menu);
         return res;
     }
     
@@ -204,7 +204,7 @@ public partial class StepMapper(
         if (type == typeof(ShowBackgroundStep))
             return ToDbO((ShowBackgroundStep)step, labelId, novelId, stepOrder);
         if (type == typeof(ShowMenuStep))
-            return ToDbO((ShowMenuStep)step, labelId, novelId, stepOrder);
+            return ToDbO((ShowMenuStep)step, labelId, stepOrder);
         if (type == typeof(ShowReplicaStep))
             return ToDbO((ShowReplicaStep)step, labelId, novelId, stepOrder);
         if (type == typeof(ShowCharacterStep))

@@ -8,22 +8,6 @@ public class LabelDbORepository(
     Lazy<IStepDbORepository> stepRepo
 ) : BaseRepository(options), ILabelDbORepository
 {
-    private async Task<IEnumerable<LabelDbO>> GetByNovelIdsAsync(IEnumerable<Guid> novelIds)
-    {
-        if (!novelIds?.Any() ?? true)
-            return Enumerable.Empty<LabelDbO>();
-
-        const string sql = @"
-            SELECT
-                id AS Id,
-                novel_id AS NovelId,
-                label_name AS LabelName
-            FROM ""Labels""
-            WHERE novel_id = ANY(@NovelIds)
-            ORDER BY novel_id, label_name";
-
-        return await QueryAsync<LabelDbO>(sql, new { NovelIds = novelIds.ToArray() });
-    }
 
     private async Task<LabelDbO?> GetByIdAsync(Guid id)
     {
@@ -37,7 +21,23 @@ public class LabelDbORepository(
         return await QueryFirstOrDefaultAsync<LabelDbO>(sql, new { Id = id });
     }
 
-    private async Task<IEnumerable<LabelDbO>> GetByNovelIdAsync(Guid novelId)
+    // private async Task<IEnumerable<LabelDbO>> GetByNovelIdAsync(Guid novelId)
+    // {
+    //     const string sql = @"
+    //         SELECT
+    //             id AS Id,
+    //             novel_id AS NovelId,
+    //             label_name AS LabelName
+    //         FROM ""Labels""
+    //         WHERE novel_id = @NovelId
+    //         ORDER BY label_name";
+    //
+    //     return await QueryAsync<LabelDbO>(sql, new { NovelId = novelId });
+    // }
+    
+    
+
+    public async Task<IEnumerable<LabelDbO?>> GetFullByNovelIdAsync(Guid novelId)
     {
         const string sql = @"
             SELECT
@@ -46,27 +46,52 @@ public class LabelDbORepository(
                 label_name AS LabelName
             FROM ""Labels""
             WHERE novel_id = @NovelId
-            ORDER BY label_name";
+            ORDER BY novel_id, label_name";
 
-        return await QueryAsync<LabelDbO>(sql, new { NovelId = novelId });
+        var labels = await QueryAsync<LabelDbO>(sql, new { NovelId = novelId }); 
+        var ctx = new LoadContext();
+        
+        return await GetFull(labels, ctx);
     }
-    
-    
 
-    public async Task<IEnumerable<LabelDbO?>> GetFullByNovelIdAsync(Guid novelId)
-    {
-        return await GetFullByNovelIdsAsync([novelId]);
-    }
-    
     public async Task<IEnumerable<LabelDbO>> GetFullByNovelIdsAsync(IEnumerable<Guid> novelIds)
     {
-        if (!novelIds?.Any() ?? true)
-            return Enumerable.Empty<LabelDbO>();
+        const string sql = @"
+            SELECT
+                id AS Id,
+                novel_id AS NovelId,
+                label_name AS LabelName
+            FROM ""Labels""
+            WHERE novel_id = ANY(@NovelIds)
+            ORDER BY novel_id, label_name";
 
+        var labels = await QueryAsync<LabelDbO>(sql, new { NovelIds = novelIds }); 
         var ctx = new LoadContext();
+        return await GetFull(labels, ctx);
+    }
 
-        var labels = (await GetByNovelIdsAsync(novelIds)).ToList();
+    public async Task<IEnumerable<LabelDbO>> GetFullByIdsAsync(IEnumerable<Guid> ids)
+    {
+        if (!ids?.Any() ?? true)
+            return Enumerable.Empty<LabelDbO>();
+        
+        const string sql = @"
+            SELECT
+                id AS Id,
+                novel_id AS NovelId,
+                label_name AS LabelName
+            FROM ""Labels""
+            WHERE id = ANY(@Ids)
+            ORDER BY novel_id, label_name";
 
+        var labels = await QueryAsync<LabelDbO>(sql, new { Ids = ids.ToArray() });
+        var ctx = new LoadContext();
+        
+        return await GetFull(labels, ctx);
+    }
+
+    private async Task<IEnumerable<LabelDbO>> GetFull(IEnumerable<LabelDbO> labels, LoadContext ctx)
+    {
         foreach (var label in labels)
         {
             if (ctx.Labels.ContainsKey(label.Id))

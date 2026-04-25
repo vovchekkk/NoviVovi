@@ -87,26 +87,22 @@ public class MenuRepoTest : IAsyncLifetime
         return label;
     }
 
-    private MenuDbO CreateMenu(string menuName = "test_menu")
+    private MenuDbO CreateMenu()
     {
         var menu = new MenuDbO
         {
             Id = Guid.NewGuid(),
-            Description = "choch",
-            Text = menuName,
-            Text = "whatever"
         };
         TrackId("Menus", menu.Id);
         return menu;
     }
 
-    private ChoiceDbO CreateChoice(Guid menuId, LabelDbO nextLabel, string choiceName = "test_choice")
+    private ChoiceDbO CreateChoice(Guid menuId, LabelDbO nextLabel)
     {
         var choice = new ChoiceDbO
         {
             Id = Guid.NewGuid(),
             MenuId = menuId,
-            Name = choiceName,
             NextLabel = nextLabel,
             NextLabelId = nextLabel.Id,
             Text = "abobiki"
@@ -133,11 +129,11 @@ public class MenuRepoTest : IAsyncLifetime
     [Fact]
     public async Task TestGetMenuById()
     {
-        var menu = CreateMenu("get_test_menu");
+        var menu = CreateMenu();
         
         const string insertSql = @"
-            INSERT INTO ""Menus"" (id, name, text, description)
-            VALUES (@Id, @Name, @Text, @Description)";
+            INSERT INTO ""Menus"" (id)
+            VALUES (@Id)";
         
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.ExecuteAsync(insertSql, menu);
@@ -147,15 +143,12 @@ public class MenuRepoTest : IAsyncLifetime
         
         Assert.NotNull(result);
         Assert.Equal(menu.Id, result.Id);
-        Assert.Equal(menu.Name, result.Name);
-        Assert.Equal(menu.Text, result.Text);
-        Assert.Equal(menu.Description, result.Description);
     }
     
     [Fact]
     public async Task TestCreateMenu()
     {
-        var menu = CreateMenu("brand_new_menu");
+        var menu = CreateMenu();
         
         var result = await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
@@ -165,41 +158,12 @@ public class MenuRepoTest : IAsyncLifetime
         await using var conn = new NpgsqlConnection(connectionString);
         var count = await conn.ExecuteScalarAsync<int>(sql, new { Id = menu.Id });
         Assert.Equal(1, count);
-        
-        const string selectSql = @"
-            SELECT name, text, description FROM ""Menus"" WHERE id = @Id";
-        var dbMenu = await conn.QueryFirstOrDefaultAsync<(string name, string text, string description)>(selectSql, new { Id = menu.Id });
-        
-        Assert.Equal(menu.Name, dbMenu.name);
-        Assert.Equal(menu.Text, dbMenu.text);
-        Assert.Equal(menu.Description, dbMenu.description);
-    }
-    
-    [Fact]
-    public async Task TestUpdateMenu()
-    {
-        var menu = CreateMenu("original_name");
-        await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
-        
-        menu.Name = "updated_name";
-        menu.Text = "updated_text";
-        menu.Description = "updated_description";
-        await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
-        
-        const string sql = @"
-            SELECT name, text, description FROM ""Menus"" WHERE id = @Id";
-        await using var conn = new NpgsqlConnection(connectionString);
-        var dbMenu = await conn.QueryFirstOrDefaultAsync<(string name, string text, string description)>(sql, new { Id = menu.Id });
-        
-        Assert.Equal("updated_name", dbMenu.name);
-        Assert.Equal("updated_text", dbMenu.text);
-        Assert.Equal("updated_description", dbMenu.description);
     }
     
     [Fact]
     public async Task TestDeleteMenu()
     {
-        var menu = CreateMenu("to_be_deleted");
+        var menu = CreateMenu();
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
         const string countSql = "SELECT COUNT(*) FROM \"Menus\" WHERE id = @Id";
@@ -218,7 +182,7 @@ public class MenuRepoTest : IAsyncLifetime
     [Fact]
     public async Task TestGetChoiceById()
     {
-        var menu = CreateMenu("menu_for_get_choice");
+        var menu = CreateMenu();
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
         var label = CreateLabel("choice_label_for_get");
@@ -227,18 +191,11 @@ public class MenuRepoTest : IAsyncLifetime
         var choice = CreateChoice(menu.Id, label);
         
         const string insertSql = @"
-            INSERT INTO ""Choices"" (id, menu_id, next_label_id, name, text)
-            VALUES (@Id, @MenuId, @NextLabelId, @Name, @Text)";
+            INSERT INTO ""Choices"" (id, menu_id, next_label_id, text)
+            VALUES (@Id, @MenuId, @NextLabelId, @Text)";
         
         await using var conn = new NpgsqlConnection(connectionString);
-        await conn.ExecuteAsync(insertSql, new
-        {
-            Id = choice.Id,
-            MenuId = choice.MenuId,
-            NextLabelId = choice.NextLabelId,
-            Name = choice.Name,
-            Text = choice.Text
-        });
+        await conn.ExecuteAsync(insertSql, choice);
         
         var ctx = new LoadContext();
         var resultMenu = await menuRepo.GetFullByIdAsync(menu.Id, ctx);
@@ -249,7 +206,6 @@ public class MenuRepoTest : IAsyncLifetime
         var resultChoice = resultMenu.Choices[0];
         Assert.Equal(choice.Id, resultChoice.Id);
         Assert.Equal(choice.MenuId, resultChoice.MenuId);
-        Assert.Equal(choice.Name, resultChoice.Name);
         Assert.Equal(choice.Text, resultChoice.Text);
         Assert.NotNull(resultChoice.NextLabel);
         Assert.Equal(label.Id, resultChoice.NextLabel.Id);
@@ -258,11 +214,10 @@ public class MenuRepoTest : IAsyncLifetime
     [Fact]
     public async Task TestCreateChoice()
     {
-        var menu = CreateMenu("menu_for_choice");
+        var menu = CreateMenu();
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
         var label = CreateLabel("choice_label");
-        // await labelRepo.AddOrUpdateFullAsync(label); //важно было убрать эту хуйню
         
         var choice = CreateChoice(menu.Id, label);
         
@@ -272,24 +227,23 @@ public class MenuRepoTest : IAsyncLifetime
         
         const string countSql = "SELECT COUNT(*) FROM \"Choices\" WHERE id = @Id";
         await using var conn = new NpgsqlConnection(connectionString);
-        var count = await conn.ExecuteScalarAsync<int>(countSql, new { Id = choice.Id });
+        var count = await conn.ExecuteScalarAsync<int>(countSql, new { choice.Id });
         Assert.Equal(1, count);
         
         const string selectSql = @"
-            SELECT menu_id, next_label_id, name, text FROM ""Choices"" WHERE id = @Id";
-        var dbChoice = await conn.QueryFirstOrDefaultAsync<(Guid menuId, Guid nextLabelId, string name, string text)>(
-            selectSql, new { Id = choice.Id });
+            SELECT menu_id, next_label_id, text FROM ""Choices"" WHERE id = @Id";
+        var dbChoice = await conn.QueryFirstOrDefaultAsync<(Guid menuId, Guid nextLabelId, string text)>(
+            selectSql, new { choice.Id });
         
         Assert.Equal(choice.MenuId, dbChoice.menuId);
         Assert.Equal(choice.NextLabelId, dbChoice.nextLabelId);
-        Assert.Equal(choice.Name, dbChoice.name);
         Assert.Equal(choice.Text, dbChoice.text);
     }
 
     [Fact]
     public async Task TestUpdateChoice()
     {
-        var menu = CreateMenu("menu_for_choice_update");
+        var menu = CreateMenu();
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
 
         var originalLabel = CreateLabel("original_label_for_choice");
@@ -297,33 +251,30 @@ public class MenuRepoTest : IAsyncLifetime
         await labelRepo.AddOrUpdateFullAsync(originalLabel);
         await labelRepo.AddOrUpdateFullAsync(newLabel);
 
-        var choice = CreateChoice(menu.Id, originalLabel, "original_choice_name");
+        var choice = CreateChoice(menu.Id, originalLabel);
         choice.Text = "original_choice_text";
 
         menu.Choices = [choice];
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
         await using var conn = new NpgsqlConnection(connectionString);
-        var before = await conn.QueryFirstOrDefaultAsync<(string name, string text, Guid nextLabelId)>(
-            "SELECT name, text, next_label_id FROM \"Choices\" WHERE id = @Id",
-            new { Id = choice.Id });
-
-        Assert.Equal("original_choice_name", before.name);
+        var before = await conn.QueryFirstOrDefaultAsync<(string text, Guid nextLabelId)>(
+            "SELECT text, next_label_id FROM \"Choices\" WHERE id = @Id",
+            new { choice.Id });
+        
         Assert.Equal("original_choice_text", before.text);
         Assert.Equal(originalLabel.Id, before.nextLabelId);
         
-        choice.Name = "updated_choice_name";
         choice.Text = "updated_choice_text";
         choice.NextLabel = newLabel;
         choice.NextLabelId = newLabel.Id;
 
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
-        var after = await conn.QueryFirstOrDefaultAsync<(string name, string text, Guid nextLabelId)>(
-            "SELECT name, text, next_label_id FROM \"Choices\" WHERE id = @Id",
-            new { Id = choice.Id });
-
-        Assert.Equal("updated_choice_name", after.name);
+        var after = await conn.QueryFirstOrDefaultAsync<(string text, Guid nextLabelId)>(
+            "SELECT text, next_label_id FROM \"Choices\" WHERE id = @Id",
+            new { choice.Id });
+        
         Assert.Equal("updated_choice_text", after.text);
         Assert.Equal(newLabel.Id, after.nextLabelId);
         
@@ -336,7 +287,7 @@ public class MenuRepoTest : IAsyncLifetime
     [Fact]
     public async Task TestDeleteChoice()
     {
-        var menu = CreateMenu("menu_for_delete_choice");
+        var menu = CreateMenu();
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
         var label = CreateLabel("choice_label_for_delete");
@@ -348,19 +299,19 @@ public class MenuRepoTest : IAsyncLifetime
         const string countSql = "SELECT COUNT(*) FROM \"Choices\" WHERE id = @Id";
         await using var conn = new NpgsqlConnection(connectionString);
         
-        var before = await conn.ExecuteScalarAsync<int>(countSql, new { Id = choice.Id });
+        var before = await conn.ExecuteScalarAsync<int>(countSql, new { choice.Id });
         Assert.Equal(1, before);
         
         await menuRepo.DeleteChoiceAsync(choice.Id);
         
-        var after = await conn.ExecuteScalarAsync<int>(countSql, new { Id = choice.Id });
+        var after = await conn.ExecuteScalarAsync<int>(countSql, new { choice.Id });
         Assert.Equal(0, after);
     }
     
     [Fact]
     public async Task TestGetMenuWithChoices()
     {
-        var menu = CreateMenu("menu_with_choices");
+        var menu = CreateMenu();
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
         var label1 = CreateLabel("label_1");
@@ -368,8 +319,8 @@ public class MenuRepoTest : IAsyncLifetime
         await labelRepo.AddOrUpdateFullAsync(label1);
         await labelRepo.AddOrUpdateFullAsync(label2);
         
-        var choice1 = CreateChoice(menu.Id, label1, "choice_1");
-        var choice2 = CreateChoice(menu.Id, label2, "choice_2");
+        var choice1 = CreateChoice(menu.Id, label1);
+        var choice2 = CreateChoice(menu.Id, label2);
         
         await menuRepo.AddOrUpdateChoiceAsync(choice1, new LoadContext());
         await menuRepo.AddOrUpdateChoiceAsync(choice2, new LoadContext());
@@ -391,15 +342,17 @@ public class MenuRepoTest : IAsyncLifetime
     [Fact]
     public async Task TestCreateMenuWithChoices()
     {
-        var menu = CreateMenu("menu_with_new_choices");
+        var menu = CreateMenu();
         var label1 = CreateLabel("new_label_1");
         var label2 = CreateLabel("new_label_2");
         
         await labelRepo.AddOrUpdateFullAsync(label1);
         await labelRepo.AddOrUpdateFullAsync(label2);
         
-        var choice1 = CreateChoice(menu.Id, label1, "new_choice_1");
-        var choice2 = CreateChoice(menu.Id, label2, "new_choice_2");
+        var choice1 = CreateChoice(menu.Id, label1);
+        choice1.Text = "aboba1";
+        var choice2 = CreateChoice(menu.Id, label2);
+        choice2.Text = "aboba2";
         menu.Choices = [choice1, choice2];
         
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
@@ -410,22 +363,22 @@ public class MenuRepoTest : IAsyncLifetime
         Assert.Equal(2, count);
         
         const string selectSql = @"
-            SELECT name, text, next_label_id FROM ""Choices"" WHERE menu_id = @MenuId ORDER BY name";
-        var dbChoices = await conn.QueryAsync<(string name, string text, Guid nextLabelId)>(selectSql, new { MenuId = menu.Id });
+            SELECT text, next_label_id FROM ""Choices"" WHERE menu_id = @MenuId";
+        var dbChoices = await conn.QueryAsync<(string text, Guid nextLabelId)>(selectSql, new { MenuId = menu.Id });
         var choicesList = dbChoices.ToList();
         
-        Assert.Contains(choicesList, c => c.name == "new_choice_1");
-        Assert.Contains(choicesList, c => c.name == "new_choice_2");
+        Assert.Contains(choicesList, c => c.text == "aboba1");
+        Assert.Contains(choicesList, c => c.text == "aboba2");
     }
     
     [Fact]
     public async Task TestUpdateMenuWithChoices()
     {
-        var menu = CreateMenu("original_menu");
+        var menu = CreateMenu();
         var originalLabel = CreateLabel("original_label");
         await labelRepo.AddOrUpdateFullAsync(originalLabel);
         
-        var originalChoice = CreateChoice(menu.Id, originalLabel, "original_choice");
+        var originalChoice = CreateChoice(menu.Id, originalLabel);
         menu.Choices = [originalChoice];
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
@@ -434,40 +387,35 @@ public class MenuRepoTest : IAsyncLifetime
         
         await using var conn = new NpgsqlConnection(connectionString);
         
-        originalChoice.Name = "updated_choice";
         originalChoice.Text = "updated_text";
         originalChoice.NextLabel = newLabel;
         originalChoice.NextLabelId = newLabel.Id;
         
-        var newChoice = CreateChoice(menu.Id, originalLabel, "brand_new_choice");
+        var newChoice = CreateChoice(menu.Id, originalLabel);
+        newChoice.Text = "brand_new_choice";
         menu.Choices.Add(newChoice);
-        menu.Name = "updated_menu_name";
         
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         
-        const string menuSql = "SELECT name FROM \"Menus\" WHERE id = @Id";
-        var menuName = await conn.ExecuteScalarAsync<string>(menuSql, new { Id = menu.Id });
-        Assert.Equal("updated_menu_name", menuName);
-        
         const string choicesSql = @"
-            SELECT name, text, next_label_id FROM ""Choices"" WHERE menu_id = @MenuId";
-        var dbChoices = await conn.QueryAsync<(string name, string text, Guid nextLabelId)>(choicesSql, new { MenuId = menu.Id });
+            SELECT text, next_label_id FROM ""Choices"" WHERE menu_id = @MenuId";
+        var dbChoices = await conn.QueryAsync<(string text, Guid nextLabelId)>(choicesSql, new { MenuId = menu.Id });
         var choicesList = dbChoices.ToList();
         
         Assert.Equal(2, choicesList.Count);
-        Assert.Contains(choicesList, c => c is { name: "updated_choice", text: "updated_text" } && c.nextLabelId == newLabel.Id);
-        Assert.Contains(choicesList, c => c.name == "brand_new_choice");
+        Assert.Contains(choicesList, c => c is { text: "updated_text" } && c.nextLabelId == newLabel.Id);
+        Assert.Contains(choicesList, c => c.text == "brand_new_choice");
     }
     
     [Fact]
     public async Task TestDeleteMenuWithChoices()
     {
-        var menu = CreateMenu("menu_to_delete_with_choices");
+        var menu = CreateMenu();
         var label = CreateLabel("label_for_choices");
         await labelRepo.AddOrUpdateFullAsync(label);
         
-        var choice1 = CreateChoice(menu.Id, label, "choice_1");
-        var choice2 = CreateChoice(menu.Id, label, "choice_2");
+        var choice1 = CreateChoice(menu.Id, label);
+        var choice2 = CreateChoice(menu.Id, label);
         
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
         await menuRepo.AddOrUpdateChoiceAsync(choice1, new LoadContext());
@@ -496,15 +444,15 @@ public class MenuRepoTest : IAsyncLifetime
     [Fact]
     public async Task TestUpdateMenuRemovesObsoleteChoices()
     {
-        var menu = CreateMenu("menu_with_choices");
+        var menu = CreateMenu();
         var label1 = CreateLabel("label_1");
         var label2 = CreateLabel("label_2");
         await labelRepo.AddOrUpdateFullAsync(label1);
         await labelRepo.AddOrUpdateFullAsync(label2);
 
-        var choice1 = CreateChoice(menu.Id, label1, "choice_to_keep");
-        var choice2 = CreateChoice(menu.Id, label2, "choice_to_remove");
-        var choice3 = CreateChoice(menu.Id, label1, "choice_to_keep_too");
+        var choice1 = CreateChoice(menu.Id, label1);
+        var choice2 = CreateChoice(menu.Id, label2);
+        var choice3 = CreateChoice(menu.Id, label1);
 
         menu.Choices = [choice1, choice2, choice3];
         await menuRepo.AddOrUpdateFullAsync(menu, new LoadContext());
