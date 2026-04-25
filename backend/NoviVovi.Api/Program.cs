@@ -22,7 +22,19 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Info = new()
+        {
+            Title = "NoviVovi API",
+            Version = "v1",
+            Description = "Visual Novel Engine API with polymorphic graph support"
+        };
+        return Task.CompletedTask;
+    });
+});
 
 var app = builder.Build();
 

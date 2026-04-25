@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NoviVovi.Application.Common.Abstractions;
-using NoviVovi.Application.Export.Abstractions;
 using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels.Abstractions;

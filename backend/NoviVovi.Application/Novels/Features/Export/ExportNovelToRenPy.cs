@@ -1,8 +1,7 @@
-﻿using System.IO.Compression;
-using MediatR;
-using NoviVovi.Application.Export.Abstractions;
+﻿using MediatR;
+using NoviVovi.Application.Novels.Abstractions;
 
-namespace NoviVovi.Application.Export.Features.Export;
+namespace NoviVovi.Application.Novels.Features.Export;
 
 public record ExportNovelToRenPyCommand(
     Guid NovelId

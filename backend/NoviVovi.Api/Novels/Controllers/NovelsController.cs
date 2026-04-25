@@ -4,8 +4,10 @@ using NoviVovi.Api.Novels.CommandMappers;
 using NoviVovi.Api.Novels.Mappers;
 using NoviVovi.Api.Novels.Requests;
 using NoviVovi.Api.Novels.Responses;
+using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Novels.Features.Create;
 using NoviVovi.Application.Novels.Features.Delete;
+using NoviVovi.Application.Novels.Features.Export;
 using NoviVovi.Application.Novels.Features.Get;
 using NoviVovi.Application.Novels.Features.GetGraph;
 using NoviVovi.Application.Novels.Features.Patch;
@@ -83,5 +85,18 @@ public class NovelsController(
         var graph = await mediator.Send(new GetNovelGraphQuery(novelId));
 
         return Ok(novelGraphMapper.ToResponse(graph));
+    }
+    
+    [HttpGet("{novelId:guid}/export/renpy")]
+    [Produces("application/zip")]
+    [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ExportToRenPy(
+        [FromRoute] Guid novelId
+    )
+    {
+        var bytes = await mediator.Send(new ExportNovelToRenPyCommand(novelId));
+        
+        return File(bytes, "application/zip", "project.zip");
     }
 }
