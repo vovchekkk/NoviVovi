@@ -25,11 +25,8 @@ public class RenPyScriptGenerator(
         var scriptObject = new ScriptObject();
         scriptObject.Import("render_statement",
             new Func<object, string>(s => statementRenderer.Render((Core.Statements.Models.RenPyStatement)s)));
-
-        var context = new TemplateContext();
-        context.PushGlobal(scriptObject);
-
-        var model = new
+        
+        scriptObject.Import(new
         {
             title = novel.Title,
             characters = novel.Characters.Select(c => new
@@ -44,8 +41,11 @@ public class RenPyScriptGenerator(
                 statements = l.Statements
             }),
             start_label_id = novel.StartLabelId
-        };
+        });
 
-        return await template.RenderAsync(model, member => member.Name);
+        var context = new TemplateContext();
+        context.PushGlobal(scriptObject);
+
+        return await template.RenderAsync(context);
     }
 }
