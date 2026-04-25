@@ -31,9 +31,23 @@ public class RenPyArchiveBuilder(
         }
 
         using var baseArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+        
         foreach (var entry in baseArchive.Entries)
         {
-            var newEntry = archive.CreateEntry(entry.FullName);
+            // Убираем префикс "BaseProject/" из пути
+            var entryPath = entry.FullName;
+            if (entryPath.StartsWith("BaseProject/"))
+            {
+                entryPath = entryPath.Substring("BaseProject/".Length);
+            }
+            
+            // Пропускаем пустые записи (папки)
+            if (string.IsNullOrEmpty(entryPath))
+                continue;
+            
+            // Просто копируем все файлы из BaseProject.zip
+            // BaseProject.zip НЕ содержит game/script.rpy и game/images/*
+            var newEntry = archive.CreateEntry(entryPath);
             await using var sourceStream = entry.Open();
             await using var destStream = newEntry.Open();
             await sourceStream.CopyToAsync(destStream, ct);

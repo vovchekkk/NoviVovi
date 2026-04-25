@@ -36,6 +36,10 @@ public class RenPyExporter(
         using var memoryStream = new MemoryStream();
         using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
         {
+            // ВАЖНО: Порядок добавления файлов!
+            // 1. Сначала добавляем НАШИ файлы (script.rpy и images)
+            // 2. Потом добавляем BaseProject (пропуская уже существующие)
+            
             // Generate and add script.rpy
             var scriptContent = await scriptGenerator.GenerateAsync(renPyNovel, ct);
             archiveBuilder.AddTextFile(archive, "game/script.rpy", scriptContent);
@@ -44,7 +48,7 @@ public class RenPyExporter(
             var images = imageCollector.CollectImages(novel);
             await imageExporter.ExportAsync(archive, images, ct);
 
-            // Add base project files
+            // Add base project files (will skip existing entries)
             await archiveBuilder.AddBaseProjectFilesAsync(archive, ct);
         }
 

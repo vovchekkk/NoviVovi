@@ -5,5 +5,6 @@ namespace NoviVovi.Infrastructure.Exporters.RenPy.Services.Images;
 /// </summary>
 public record ImageExportInfo(
     Guid ImageId,
+    string StoragePath,
     string RenPyImageName
 );

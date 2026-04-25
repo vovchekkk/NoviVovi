@@ -22,6 +22,7 @@ public class NovelImageCollector : INovelImageCollector
                     case ShowBackgroundStep bgStep:
                         images.Add(new ImageExportInfo(
                             bgStep.BackgroundObject.Image.Id,
+                            bgStep.BackgroundObject.Image.StoragePath,
                             $"bg_{bgStep.BackgroundObject.Image.Id:N}"
                         ));
                         break;
@@ -31,7 +32,8 @@ public class NovelImageCollector : INovelImageCollector
                         var stateId = charStep.CharacterObject.State.Id;
                         images.Add(new ImageExportInfo(
                             charStep.CharacterObject.State.Image.Id,
-                            $"char_{charId:N} state_{stateId:N}"
+                            charStep.CharacterObject.State.Image.StoragePath,
+                            $"char_{charId:N}_state_{stateId:N}"
                         ));
                         break;
                 }

@@ -18,8 +18,9 @@ public class RenPyImageExporter(
         {
             try
             {
+                // Use StoragePath from Image entity, not just ImageId
                 await using var imageStream = await storageService.DownloadFileStreamAsync(
-                    image.ImageId.ToString(), ct);
+                    image.StoragePath, ct);
                 
                 var entry = archive.CreateEntry($"game/images/{image.RenPyImageName}.png");
                 await using var entryStream = entry.Open();
