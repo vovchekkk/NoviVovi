@@ -24,4 +24,13 @@
     <ProjectReference Include="..\NoviVovi.Domain\NoviVovi.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Exporters\RenPy\Core\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Exporters\RenPy\Templates\script.rpy.sbn" />
+    <EmbeddedResource Include="Exporters\RenPy\Resources\BaseProject.zip" />
+  </ItemGroup>
+
 </Project>

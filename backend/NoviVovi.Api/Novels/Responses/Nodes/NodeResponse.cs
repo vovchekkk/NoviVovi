@@ -3,6 +3,7 @@
 namespace NoviVovi.Api.Novels.Responses.Nodes;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(NodeResponse), "default")]
 [JsonDerivedType(typeof(JumpNodeResponse), "jump")]
 [JsonDerivedType(typeof(MenuNodeResponse), "choice")]
 public record NodeResponse
