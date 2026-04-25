@@ -65,7 +65,10 @@ public static class DependencyInjection
         services.AddScoped<IImageRepository, ImageRepository>();
 
         services.AddSingleton<IStorageService, S3StorageService>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        
+        // UnitOfWork - Scoped lifetime (one per HTTP request)
+        services.AddScoped<IUnitOfWork>(sp => 
+            new UnitOfWork(connectionString));
 
         // RenPy Exporter - SOLID compliant decomposition
         services.AddScoped<RenPyIdentifierGenerator>();
