@@ -64,15 +64,9 @@ public class Transform : Entity
     public static Transform operator +(Transform a, Transform b)
     {
         return new Transform(
-            Guid.Empty,
-            new Position(
-                a.Position.X + b.Position.X, 
-                a.Position.Y + b.Position.Y
-            ),
-            new Size(
-                a.Size.Width + b.Size.Width, 
-                a.Size.Height + b.Size.Height
-            ),
+            Guid.NewGuid(), // ИСПРАВЛЕНО: используем новый GUID вместо Empty
+            new Position(a.Position.X + b.Position.X, a.Position.Y + b.Position.Y),
+            new Size(a.Size.Width + b.Size.Width, a.Size.Height + b.Size.Height),
             a.Scale * b.Scale,
             a.Rotation + b.Rotation,
             a.ZIndex + b.ZIndex
