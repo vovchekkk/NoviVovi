@@ -7,6 +7,6 @@ public class UnitOfWork : IUnitOfWork
 {
     public Task SaveChangesAsync(CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }

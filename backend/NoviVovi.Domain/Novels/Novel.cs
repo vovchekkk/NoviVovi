@@ -8,7 +8,7 @@ namespace NoviVovi.Domain.Novels;
 public class Novel : Entity
 {
     public string Title { get; private set; }
-    public Label StartLabel { get; private set; }
+    public Label? StartLabel { get; set; }
 
     private readonly List<Label> _labels = new();
     private readonly List<Character> _characters = new();
@@ -21,6 +21,29 @@ public class Novel : Entity
         Title = title;
         StartLabel = startLabel;
         AddLabel(startLabel);
+    }
+
+    private Novel(Guid id, string title) : base(id)
+    {
+        Title = title;
+    }
+
+    public Label AddStartLabel(string startLabelName)
+    {
+        var startLabel = Label.Create(startLabelName, Id);
+        StartLabel = startLabel;
+        AddLabel(startLabel);
+        return startLabel;
+    }
+    
+    public static Novel Create(string? title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            throw new DomainException("Title cannot be empty");
+        
+        var novelId = Guid.NewGuid();
+
+        return new Novel(novelId, title);
     }
 
     public static Novel Create(string? title, string startLabelName)
