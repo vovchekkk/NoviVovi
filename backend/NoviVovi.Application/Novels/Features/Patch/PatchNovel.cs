@@ -40,8 +40,9 @@ public class PatchNovelHandler(
              
              novel.SetStartLabel(label);
         }
-
-        await unitOfWork.SaveChangesAsync(ct);
+        
+        await novelRepository.AddOrUpdateAsync(novel, ct);
+        // await unitOfWork.SaveChangesAsync(ct);
         
         return mapper.ToDto(novel);
     }

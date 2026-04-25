@@ -41,8 +41,15 @@ public class NovelDbORepository(
     private async Task<IEnumerable<NovelDbO>> GetAllAsync(bool onlyPublic = true)
     {
         var sql = @"
-            SELECT id, title, description, start_label_id, cover_image_id,
-                   is_public, created_at, edited_at
+            SELECT
+                id AS Id,
+                title AS Title,
+                description AS Description,
+                start_label_id AS StartLabelId,
+                cover_image_id AS CoverImageId,
+                is_public AS IsPublic,
+                created_at AS CreatedAt,
+                edited_at AS EditedAt
             FROM ""Novels""";
 
         if (onlyPublic)
@@ -75,6 +82,7 @@ public class NovelDbORepository(
         foreach (var novel in novels)
         {
             novel.Labels = labelsByNovel.TryGetValue(novel.Id, out var lbl) ? lbl : [];
+            novel.StartLabel = novel.Labels.FirstOrDefault(l => l.Id == novel.StartLabelId);
             novel.Characters = charsByNovel.TryGetValue(novel.Id, out var ch) ? ch : [];
         }
         
