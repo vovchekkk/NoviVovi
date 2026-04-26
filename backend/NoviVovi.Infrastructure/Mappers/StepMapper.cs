@@ -163,7 +163,7 @@ public partial class StepMapper(
     public ShowReplicaStep ToShowReplicaStep(StepDbO step)
     {
         if (step.Replica == null)
-            throw new ArgumentException();
+            throw new ArgumentException($"ShowReplicaStep (ID: {step.Id}) не имеет связанной реплики в БД");
 
         return new ShowReplicaStep(
             step.Id,

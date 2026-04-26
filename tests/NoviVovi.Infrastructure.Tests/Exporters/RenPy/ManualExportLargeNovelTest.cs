@@ -168,7 +168,8 @@ public class ManualExportLargeNovelTest
 
     private Novel CreateLargeNovel()
     {
-        var novel = Novel.Create("Большая Приключенческая Новелла", "start");
+        var novel = Novel.Create("Большая Приключенческая Новелла");
+        novel.InitializeStartLabel("start");
 
         // === ПЕРСОНАЖИ ===
         
@@ -413,6 +414,8 @@ label {{ label.identifier }}:
 {{~ end ~}}";
     }
 }
+
+
 
 
 

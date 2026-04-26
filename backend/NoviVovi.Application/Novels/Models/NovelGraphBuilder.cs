@@ -61,6 +61,13 @@ public class NovelGraphBuilder
 
         foreach (var choice in menuStep.Menu.Choices)
         {
+            if (choice.Transition?.TargetLabel == null)
+            {
+                throw new InvalidOperationException(
+                    $"Choice (ID: {choice.Id}) в меню степа (ID: {menuStep.Id}) не имеет TargetLabel. " +
+                    $"Label: {label.Name} (ID: {label.Id})");
+            }
+            
             edges.Add(new ChoiceEdge
             {
                 StepId = menuStep.Id,
@@ -78,6 +85,13 @@ public class NovelGraphBuilder
             LabelId = label.Id,
             LabelName = label.Name
         });
+        
+        if (jumpStep.Transition?.TargetLabel == null)
+        {
+            throw new InvalidOperationException(
+                $"JumpStep (ID: {jumpStep.Id}) не имеет TargetLabel. " +
+                $"Label: {label.Name} (ID: {label.Id})");
+        }
         
         edges.Add(new JumpEdge
         {

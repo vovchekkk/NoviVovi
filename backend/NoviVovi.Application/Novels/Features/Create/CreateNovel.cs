@@ -6,7 +6,6 @@ using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Novels.Dtos;
 using NoviVovi.Application.Novels.Mappers;
-using NoviVovi.Domain.Labels;
 using NoviVovi.Domain.Novels;
 
 namespace NoviVovi.Application.Novels.Features.Create;
@@ -29,16 +28,17 @@ public class CreateNovelHandler(
         
         try
         {
-            const string startLabelName = "StartLabel";
+            const string startLabelName = "start";
             
+            // 1. Создаем Novel БЕЗ StartLabel
             var novel = Novel.Create(request.Title);
-            
             await novelRepository.AddOrUpdateAsync(novel, ct);
             
-            var label = novel.SetStartLabel(startLabelName);
-            
+            // 2. Инициализируем StartLabel (теперь Novel уже есть в БД)
+            var label = novel.InitializeStartLabel(startLabelName);
             await labelRepository.AddOrUpdateAsync(label, ct);
             
+            // 3. Обновляем Novel с StartLabelId
             await novelRepository.AddOrUpdateAsync(novel, ct);
             
             await unitOfWork.CommitAsync(ct);

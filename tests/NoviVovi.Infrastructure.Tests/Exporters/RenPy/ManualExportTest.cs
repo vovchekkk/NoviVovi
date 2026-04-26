@@ -159,7 +159,7 @@ public class ManualExportTest
     private Novel CreateMicroNovel()
     {
         // Создаем новеллу
-        var novel = Novel.Create("Моя Первая Новелла", "start");
+        var novel = Novel.Create("Моя Первая Новелла");       var startLabel = novel.InitializeStartLabel("start");
 
         // Создаем персонажа
         var alice = Character.Create("Алиса", Guid.NewGuid(), Color.FromHex("#ff69b4"), "Главная героиня");
@@ -298,4 +298,5 @@ label {{ label.identifier }}:
 {{~ end ~}}";
     }
 }
+
 
