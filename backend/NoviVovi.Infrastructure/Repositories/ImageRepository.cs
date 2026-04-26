@@ -17,7 +17,7 @@ public class ImageRepository(IImageDbORepository dboRepo, ImageMapper mapper) : 
 
     public async Task AddOrUpdateAsync(Image image, CancellationToken ct)
     {
-        var dbo = mapper.ToDbO(image, image.Id);
+        var dbo = mapper.ToDbO(image);
         await dboRepo.AddOrUpdateImageAsync(dbo);
     }
 

@@ -16,11 +16,11 @@ public partial class ReplicaMapper(
         throw new ArgumentException("Incorrect replica");
     }
 
-    public ReplicaDbO ToDbO(Replica rep, Guid novelId)
+    public ReplicaDbO ToDbO(Replica rep)
     {
         return new ReplicaDbO
         {
-            Speaker = charMapper.ToDbO(rep.Speaker, novelId),
+            Speaker = charMapper.ToDbO(rep.Speaker),
             Text = rep.Text,
             Id = rep.Id,
             SpeakerId = rep.Speaker.Id

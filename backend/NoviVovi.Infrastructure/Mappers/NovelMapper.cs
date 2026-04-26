@@ -37,7 +37,7 @@ public partial class NovelMapper(
             StartLabelId = domain.StartLabel?.Id,
             Title = domain.Title,
             IsPublic = true,
-            Characters = domain.Characters.Select(c => characterMapper.ToDbO(c, domain.Id)).ToList(),
+            Characters = domain.Characters.Select(c => characterMapper.ToDbO(c)).ToList(),
             Labels = domain.Labels.Select(l => labelMapper.ToDbO(l, new MappingContext())).ToList(),
             StartLabel = domain.StartLabel == null ? null : labelMapper.ToDbO(domain.StartLabel, new MappingContext())
         };

@@ -61,7 +61,6 @@ public class ImageDbORepository : BaseRepository, IImageDbORepository
     {
         const string sql = @"
             UPDATE ""Images"" SET
-                novel_id = @NovelId,
                 name = @Name,
                 url = @Url,
                 format = @Format,
@@ -148,7 +147,6 @@ public class ImageDbORepository : BaseRepository, IImageDbORepository
         (id, novel_id, name, url, format, img_type, height, width, size)
         VALUES (@Id, @NovelId, @Name, @Url, @Format, @ImgType, @Height, @Width, @Size)
         ON CONFLICT (id) DO UPDATE SET
-            novel_id = EXCLUDED.novel_id,
             name = EXCLUDED.name,
             url = EXCLUDED.url,
             format = EXCLUDED.format,

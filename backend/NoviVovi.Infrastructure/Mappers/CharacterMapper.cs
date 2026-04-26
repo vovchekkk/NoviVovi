@@ -20,21 +20,21 @@ public partial class CharacterMapper(
         return res;
     }
 
-    public CharacterDbO ToDbO(Character character, Guid novelId)
+    public CharacterDbO ToDbO(Character character)
     {
         var res = new CharacterDbO
         {
             Id = character.Id,
             Name = character.Name,
             NameColor = character.NameColor.ToString().TrimStart('#'),
-            NovelId = novelId,
+            NovelId = character.NovelId,
             Description = character.Description,
-            States = ToDbO(character.CharacterStates, character.Id, novelId)
+            States = ToDbO(character.CharacterStates, character.Id)
         };
         return res;
     }
 
-    public CharacterStateDbO ToDbO(CharacterState character, Guid characterId, Guid novelId)
+    public CharacterStateDbO ToDbO(CharacterState character, Guid characterId)
     {
         var res = new CharacterStateDbO
         {
@@ -43,14 +43,14 @@ public partial class CharacterMapper(
             Description = character.Description,
             ImageId = character.Image.Id,
             StateName = character.Name,
-            Image = imageMapper.ToDbO(character.Image, novelId),
+            Image = imageMapper.ToDbO(character.Image),
         };
         return res;
     }
 
-    public List<CharacterStateDbO> ToDbO(IEnumerable<CharacterState> character, Guid characterId, Guid novelId)
+    public List<CharacterStateDbO> ToDbO(IEnumerable<CharacterState> character, Guid characterId)
     {
-        return character.Select(characterState => ToDbO(characterState, characterId, novelId)).ToList();
+        return character.Select(characterState => ToDbO(characterState, characterId)).ToList();
     }
 
     public CharacterState ToDomain(CharacterStateDbO dbo)
@@ -65,16 +65,16 @@ public partial class CharacterMapper(
         throw new ArgumentException("Invalid character state");
     }
 
-    public StepCharacterDbO ToDbO(CharacterObject stepCharacterObject, Guid novelId)
+    public StepCharacterDbO ToDbO(CharacterObject stepCharacterObject)
     {
         var res = new StepCharacterDbO
         {
             Id = stepCharacterObject.Id,
             CharacterStateId = stepCharacterObject.State.Id,
-            CharacterState = ToDbO(stepCharacterObject.State, stepCharacterObject.Character.Id, novelId),
+            CharacterState = ToDbO(stepCharacterObject.State, stepCharacterObject.Character.Id),
             TransformId = Guid.Empty,
             Transform = transformMapper.ToDbO(stepCharacterObject.Transform),
-            Character = ToDbO(stepCharacterObject.Character, novelId)
+            Character = ToDbO(stepCharacterObject.Character)
         };
         return res;
     }

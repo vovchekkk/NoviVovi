@@ -25,7 +25,7 @@ public partial class ImageMapper(
         return img;
     }
 
-    public ImageDbO ToDbO(Image img, Guid novelId)
+    public ImageDbO ToDbO(Image img)
     {
         var result = new ImageDbO
         {
@@ -36,7 +36,7 @@ public partial class ImageMapper(
             Width = img.Size.Width,
             Height = img.Size.Height,
             Format = img.Format,
-            NovelId = novelId
+            NovelId = img.NovelId
         };
         return result;
     }
@@ -63,8 +63,8 @@ public partial class ImageMapper(
             Id = bg.Id,
             Img = bg.Image.Id,
             Transform = mapper.ToDbO(bg.Transform),
-            TransformId = Guid.Empty, //TODO: саня, выпили Id из трансформов 
-            Image = ToDbO(bg.Image, novelId)
+            TransformId = bg.Transform.Id,
+            Image = ToDbO(bg.Image)
         };
         return result;
     }

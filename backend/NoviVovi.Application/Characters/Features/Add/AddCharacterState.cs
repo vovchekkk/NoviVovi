@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
@@ -27,6 +28,7 @@ public record AddCharacterStateCommand : IRequest<CharacterStateDto>
 public class AddCharacterStateHandler(
     INovelRepository novelRepository,
     IImageRepository imageRepository,
+    ICharacterRepository characterRepository,
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
     CharacterStateDtoMapper mapper
@@ -49,7 +51,7 @@ public class AddCharacterStateHandler(
             var state = CharacterState.Create(request.Name, image, transform, request.Description);
 
             character.AddCharacterState(state);
-            
+            characterRepository.AddOrUpdateAsync(character, ct);
             await unitOfWork.CommitAsync(ct);
 
             return mapper.ToDto(state);
