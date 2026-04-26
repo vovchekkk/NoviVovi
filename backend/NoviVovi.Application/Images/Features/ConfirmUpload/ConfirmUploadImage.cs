@@ -20,13 +20,23 @@ public class ConfirmUploadImageHandler(
 {
     public async Task<ImageDto> Handle(ConfirmUploadImageCommand request, CancellationToken ct)
     {
-        var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
-                    ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+        unitOfWork.BeginTransaction();
         
-        image.ConfirmUpload();
-        
-        await unitOfWork.SaveChangesAsync(ct);
-        
-        return mapper.ToDto(image);
+        try
+        {
+            var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
+                        ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+            
+            image.ConfirmUpload();
+            
+            await unitOfWork.CommitAsync(ct);
+            
+            return mapper.ToDto(image);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

@@ -29,26 +29,36 @@ public class PatchShowReplicaStepHandler(
 {
     public async Task<StepDto> Handle(PatchShowReplicaStepCommand request, CancellationToken ct)
     {
-        var step = await GetStepContextOrThrow(request, ct);
+        unitOfWork.BeginTransaction();
         
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-
-        if (step is not ShowReplicaStep showReplicaStep)
-            throw new BadRequestException($"Step {step.Id} is not {typeof(ShowReplicaStep)}");
-
-        Character? character = null;
-        if (request.CharacterId.HasValue)
+        try
         {
-            character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            var step = await GetStepContextOrThrow(request, ct);
+            
+            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+
+            if (step is not ShowReplicaStep showReplicaStep)
+                throw new BadRequestException($"Step {step.Id} is not {typeof(ShowReplicaStep)}");
+
+            Character? character = null;
+            if (request.CharacterId.HasValue)
+            {
+                character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            }
+
+            var replica = Replica.Create(character, request.Text);
+
+            showReplicaStep.Update(replica);
+
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(step);
         }
-
-        var replica = Replica.Create(character, request.Text);
-
-        showReplicaStep.Update(replica);
-
-        await unitOfWork.SaveChangesAsync(ct);
-
-        return mapper.ToDto(step);
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

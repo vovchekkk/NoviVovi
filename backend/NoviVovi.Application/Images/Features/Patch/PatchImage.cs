@@ -26,20 +26,30 @@ public class PatchImageHandler(
 {
     public async Task<ImageDto> Handle(PatchImageCommand request, CancellationToken ct)
     {
-        var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
-                    ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+        unitOfWork.BeginTransaction();
         
-        if (request.Name is not null)
-            image.UpdateName(request.Name);
-        
-        if (request.Description is not null)
-            image.UpdateDescription(request.Description);
-        
-        if (request.Type.HasValue)
-            image.UpdateType(request.Type.Value);
+        try
+        {
+            var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
+                        ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+            
+            if (request.Name is not null)
+                image.UpdateName(request.Name);
+            
+            if (request.Description is not null)
+                image.UpdateDescription(request.Description);
+            
+            if (request.Type.HasValue)
+                image.UpdateType(request.Type.Value);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.CommitAsync(ct);
 
-        return mapper.ToDto(image);
+            return mapper.ToDto(image);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

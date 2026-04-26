@@ -27,23 +27,33 @@ public class PatchNovelHandler(
 {
     public async Task<NovelDto> Handle(PatchNovelCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        unitOfWork.BeginTransaction();
         
-        if (request.Title != null)
-            novel.UpdateTitle(request.Title);
-        
-        if (request.StartLabelId != null)
+        try
         {
-             var label = await labelRepository.GetByIdAsync(request.StartLabelId.Value, ct)
-                         ?? throw new NotFoundException($"Метка '{request.StartLabelId}' не найдена");
-             
-             novel.SetStartLabel(label);
+            var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                        ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+            
+            if (request.Title != null)
+                novel.UpdateTitle(request.Title);
+            
+            if (request.StartLabelId != null)
+            {
+                 var label = await labelRepository.GetByIdAsync(request.StartLabelId.Value, ct)
+                             ?? throw new NotFoundException($"Метка '{request.StartLabelId}' не найдена");
+                 
+                 novel.SetStartLabel(label);
+            }
+            
+            await novelRepository.AddOrUpdateAsync(novel, ct);
+            await unitOfWork.CommitAsync(ct);
+            
+            return mapper.ToDto(novel);
         }
-        
-        await novelRepository.AddOrUpdateAsync(novel, ct);
-        // await unitOfWork.SaveChangesAsync(ct);
-        
-        return mapper.ToDto(novel);
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

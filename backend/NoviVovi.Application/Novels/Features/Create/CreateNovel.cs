@@ -25,15 +25,25 @@ public class CreateNovelHandler(
 {
     public async Task<NovelDto> Handle(CreateNovelCommand request, CancellationToken ct)
     {
-        const string startLabelName = "StartLabel";
+        unitOfWork.BeginTransaction();
         
-        var novel = Novel.Create(request.Title);
-        await novelRepository.AddOrUpdateAsync(novel, ct);
-        var label = novel.AddStartLabel(startLabelName);
-        await labelRepository.AddOrUpdateAsync(label, ct);
-        await novelRepository.AddOrUpdateAsync(novel, ct);
-        // await unitOfWork.SaveChangesAsync(ct);
-        
-        return mapper.ToDto(novel);
+        try
+        {
+            const string startLabelName = "StartLabel";
+            
+            var novel = Novel.Create(request.Title);
+            await novelRepository.AddOrUpdateAsync(novel, ct);
+            var label = novel.AddStartLabel(startLabelName);
+            await labelRepository.AddOrUpdateAsync(label, ct);
+            await novelRepository.AddOrUpdateAsync(novel, ct);
+            await unitOfWork.CommitAsync(ct);
+            
+            return mapper.ToDto(novel);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

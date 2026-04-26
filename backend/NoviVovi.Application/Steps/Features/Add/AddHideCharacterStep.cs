@@ -30,18 +30,28 @@ public class AddHideCharacterStepHandler(
 {
     public async Task<StepDto> Handle(AddHideCharacterStepCommand request, CancellationToken ct)
     {
-        var label = await GetStepContextOrThrow(request, ct);
+        unitOfWork.BeginTransaction();
+        
+        try
+        {
+            var label = await GetStepContextOrThrow(request, ct);
 
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
-        var step = HideCharacterStep.Create(character);
+            var step = HideCharacterStep.Create(character);
 
-        label.AddStep(step);
+            label.AddStep(step);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.CommitAsync(ct);
 
-        return mapper.ToDto(step);
+            return mapper.ToDto(step);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

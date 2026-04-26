@@ -34,20 +34,30 @@ public class AddCharacterStateHandler(
 {
     public async Task<CharacterStateDto> Handle(AddCharacterStateCommand request, CancellationToken ct)
     {
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
-
-        var image = await imageRepository.GetByIdAsync(request.ImageId, ct);
-
-        var transform = transformMapper.ToDomainModel(request.LocalTransform);
-
-        var state = CharacterState.Create(request.Name, image, transform, request.Description);
-
-        character.AddCharacterState(state);
+        unitOfWork.BeginTransaction();
         
-        await unitOfWork.SaveChangesAsync(ct);
+        try
+        {
+            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
-        return mapper.ToDto(state);
+            var image = await imageRepository.GetByIdAsync(request.ImageId, ct);
+
+            var transform = transformMapper.ToDomainModel(request.LocalTransform);
+
+            var state = CharacterState.Create(request.Name, image, transform, request.Description);
+
+            character.AddCharacterState(state);
+            
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(state);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

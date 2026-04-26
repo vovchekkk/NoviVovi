@@ -19,13 +19,22 @@ public class DeleteImageHandler(
 {
     public async Task Handle(DeleteImageCommand request, CancellationToken ct)
     {
-        var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
-                    ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+        unitOfWork.BeginTransaction();
         
-        await imageRepository.DeleteAsync(image, ct);
-        
-        await unitOfWork.SaveChangesAsync(ct);
-        
-        await storageService.DeleteFileAsync(image.StoragePath, ct);
+        try
+        {
+            var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
+                        ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+            
+            await imageRepository.DeleteAsync(image, ct);
+            await unitOfWork.CommitAsync(ct);
+            
+            await storageService.DeleteFileAsync(image.StoragePath, ct);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

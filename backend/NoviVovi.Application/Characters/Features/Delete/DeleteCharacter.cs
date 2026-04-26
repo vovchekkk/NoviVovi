@@ -19,11 +19,21 @@ public class DeleteCharacterHandler(
 {
     public async Task Handle(DeleteCharacterCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        unitOfWork.BeginTransaction();
         
-        novel.RemoveCharacterById(request.CharacterId);
+        try
+        {
+            var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                        ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+            
+            novel.RemoveCharacterById(request.CharacterId);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.CommitAsync(ct);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

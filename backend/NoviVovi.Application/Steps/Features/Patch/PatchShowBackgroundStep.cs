@@ -32,25 +32,36 @@ public class PatchShowBackgroundStepHandler(
 {
     public async Task<StepDto> Handle(PatchShowBackgroundStepCommand request, CancellationToken ct)
     {
-        var step = await GetStepContextOrThrow(request, ct);
-
-        if (step is not ShowBackgroundStep showBackgroundStep)
-            throw new BadRequestException($"Step {step.Id} is not {typeof(ShowBackgroundStep)}");
-
-        Image? image = null;
-        if (request.ImageId.HasValue)
+        unitOfWork.BeginTransaction();
+        
+        try
         {
-            image = await imageRepository.GetByIdAsync(request.ImageId.Value, ct)
-                    ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+            var step = await GetStepContextOrThrow(request, ct);
+
+            if (step is not ShowBackgroundStep showBackgroundStep)
+                throw new BadRequestException($"Step {step.Id} is not {typeof(ShowBackgroundStep)}");
+
+            Image? image = null;
+            if (request.ImageId.HasValue)
+            {
+                image = await imageRepository.GetByIdAsync(request.ImageId.Value, ct)
+                        ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+            }
+
+            var transformPatch = request.Transform is not null 
+                ? transformMapper.ToDomainPatch(request.Transform) 
+                : null;
+
+            showBackgroundStep.Update(image, transformPatch);
+
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(step);
         }
-
-        var transformPatch = request.Transform != null 
-            ? transformMapper.ToDomainPatch(request.Transform) 
-            : null;
-
-        showBackgroundStep.Update(image, transformPatch);
-
-        await unitOfWork.SaveChangesAsync(ct);
-        return mapper.ToDto(step);
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

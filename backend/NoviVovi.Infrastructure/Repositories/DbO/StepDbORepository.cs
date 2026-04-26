@@ -1,16 +1,29 @@
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
-public class StepDbORepository(
-    DatabaseOptions options,
-    IMenuDbORepository menuRepo,
-    ICharacterDbORepository characterRepository,
-    ILabelDbORepository labelRepo,
-    IImageDbORepository imageRepository
-) : BaseRepository(options), IStepDbORepository
+public class StepDbORepository : BaseRepository, IStepDbORepository
 {
+    private readonly IMenuDbORepository menuRepo;
+    private readonly ICharacterDbORepository characterRepository;
+    private readonly ILabelDbORepository labelRepo;
+    private readonly IImageDbORepository imageRepository;
+
+    public StepDbORepository(
+        IUnitOfWork unitOfWork,
+        IMenuDbORepository menuRepo,
+        ICharacterDbORepository characterRepository,
+        ILabelDbORepository labelRepo,
+        IImageDbORepository imageRepository
+    ) : base(unitOfWork)
+    {
+        this.menuRepo = menuRepo;
+        this.characterRepository = characterRepository;
+        this.labelRepo = labelRepo;
+        this.imageRepository = imageRepository;
+    }
     public async Task<IEnumerable<StepDbO>> GetOrderedByLabelIdAsync(Guid labelId, LoadContext ctx)
     {
         const string sql = @"SELECT

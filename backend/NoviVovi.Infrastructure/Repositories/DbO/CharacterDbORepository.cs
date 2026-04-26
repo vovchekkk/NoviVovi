@@ -1,13 +1,20 @@
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Infrastructure.DatabaseObjects.Characters;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
-public class CharacterDbORepository(
-    DatabaseOptions options,
-    IImageDbORepository imageDbORepository
-) : BaseRepository(options), ICharacterDbORepository
+public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
 {
+    private readonly IImageDbORepository imageDbORepository;
+
+    public CharacterDbORepository(
+        IUnitOfWork unitOfWork,
+        IImageDbORepository imageDbORepository
+    ) : base(unitOfWork)
+    {
+        this.imageDbORepository = imageDbORepository;
+    }
     public async Task<IEnumerable<CharacterDbO>> GetByNovelIdsAsync(IEnumerable<Guid> novelIds)
     {
         if (!novelIds?.Any() ?? true) return Enumerable.Empty<CharacterDbO>();

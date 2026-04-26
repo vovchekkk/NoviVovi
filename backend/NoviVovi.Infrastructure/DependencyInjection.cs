@@ -37,8 +37,14 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("NovelDatabase") ??
-                               throw new ArgumentNullException("No such connection string");
+        // Choose database connection string based on configuration
+        var useLocalDatabase = configuration["UseLocalDatabase"];
+        var connectionString = (string.IsNullOrEmpty(useLocalDatabase) || useLocalDatabase.ToLower() == "true")
+            ? configuration.GetConnectionString("LocalDatabase")
+            : configuration.GetConnectionString("CloudDatabase");
+        
+        if (string.IsNullOrEmpty(connectionString))
+            throw new ArgumentNullException("Database connection string is not configured");
         
         services.AddScoped(typeof(Lazy<>), typeof(LazyResolver<>));
 
@@ -64,8 +70,13 @@ public static class DependencyInjection
         services.AddScoped<ILabelRepository, LabelRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
 
-        services.AddSingleton<IStorageService, S3StorageService>();
-        
+        // Use LocalStorageService for development, S3StorageService for production
+        var useLocalStorage = configuration["UseLocalStorage"];
+        if (string.IsNullOrEmpty(useLocalStorage) || useLocalStorage.ToLower() == "true")
+            services.AddSingleton<IStorageService, LocalStorageService>();
+        else
+            services.AddSingleton<IStorageService, S3StorageService>();
+
         // UnitOfWork - Scoped lifetime (one per HTTP request)
         services.AddScoped<IUnitOfWork>(sp => 
             new UnitOfWork(connectionString));

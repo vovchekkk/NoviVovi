@@ -1,14 +1,23 @@
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Infrastructure.DatabaseObjects.Novels;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
-public class NovelDbORepository(
-    DatabaseOptions options,
-    ILabelDbORepository labelRepository,
-    ICharacterDbORepository characterRepository
-) : BaseRepository(options), INovelDbORepository
+public class NovelDbORepository : BaseRepository, INovelDbORepository
 {
+    private readonly ILabelDbORepository labelRepository;
+    private readonly ICharacterDbORepository characterRepository;
+
+    public NovelDbORepository(
+        IUnitOfWork unitOfWork,
+        ILabelDbORepository labelRepository,
+        ICharacterDbORepository characterRepository
+    ) : base(unitOfWork)
+    {
+        this.labelRepository = labelRepository;
+        this.characterRepository = characterRepository;
+    }
     public async Task<NovelDbO?> GetByIdAsync(Guid id)
     {
         const string sql = @"
@@ -68,15 +77,14 @@ public class NovelDbORepository(
         
         var novelIds = novels.Select(n => n.Id).ToArray();
         
-        var labelsTask = labelRepository.GetFullByNovelIdsAsync(novelIds);
-        var charactersTask = characterRepository.GetFullByNovelIdsAsync(novelIds);
+        // Execute sequentially - Dapper doesn't support parallel queries on same connection
+        var labels = await labelRepository.GetFullByNovelIdsAsync(novelIds);
+        var characters = await characterRepository.GetFullByNovelIdsAsync(novelIds);
         
-        await Task.WhenAll(labelsTask, charactersTask);
-        
-        var labelsByNovel = (await labelsTask).GroupBy(l => l.NovelId)
+        var labelsByNovel = labels.GroupBy(l => l.NovelId)
             .ToDictionary(g => g.Key, g => g.ToList());
         
-        var charsByNovel = (await charactersTask).GroupBy(c => c.NovelId)
+        var charsByNovel = characters.GroupBy(c => c.NovelId)
             .ToDictionary(g => g.Key, g => g.ToList());
         
         foreach (var novel in novels)

@@ -18,11 +18,20 @@ public class DeleteNovelHandler(
 {
     public async Task Handle(DeleteNovelCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        unitOfWork.BeginTransaction();
         
-        await novelRepository.DeleteAsync(novel, ct);
-        
-        // await unitOfWork.SaveChangesAsync(ct);
+        try
+        {
+            var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                        ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+            
+            await novelRepository.DeleteAsync(novel, ct);
+            await unitOfWork.CommitAsync(ct);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

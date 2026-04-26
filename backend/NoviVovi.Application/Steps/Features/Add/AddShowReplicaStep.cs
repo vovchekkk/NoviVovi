@@ -29,20 +29,30 @@ public class AddShowReplicaStepHandler(
 {
     public async Task<StepDto> Handle(AddShowReplicaStepCommand request, CancellationToken ct)
     {
-        var label = await GetStepContextOrThrow(request, ct);
-
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+        unitOfWork.BeginTransaction();
         
-        var replica = Replica.Create(character, request.Text);
+        try
+        {
+            var label = await GetStepContextOrThrow(request, ct);
 
-        var step = ShowReplicaStep.Create(replica);
+            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            
+            var replica = Replica.Create(character, request.Text);
 
-        label.AddStep(step);
+            var step = ShowReplicaStep.Create(replica);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            label.AddStep(step);
 
-        return mapper.ToDto(step);
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(step);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

@@ -32,25 +32,35 @@ public class AddShowCharacterStepHandler(
 {
     public async Task<StepDto> Handle(AddShowCharacterStepCommand request, CancellationToken ct)
     {
-        var label = await GetStepContextOrThrow(request, ct);
-
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+        unitOfWork.BeginTransaction();
         
-        var state = character.CharacterStates.FirstOrDefault(c => c.Id == request.CharacterStateId)
-                    ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterId}' не найдено");
+        try
+        {
+            var label = await GetStepContextOrThrow(request, ct);
 
-        var transform = transformMapper.ToDomainModel(request.Transform);
-        
-        var characterObject = CharacterObject.Create(character, state, transform);
+            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            
+            var state = character.CharacterStates.FirstOrDefault(c => c.Id == request.CharacterStateId)
+                        ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterId}' не найдено");
 
-        var step = ShowCharacterStep.Create(characterObject);
+            var transform = transformMapper.ToDomainModel(request.Transform);
+            
+            var characterObject = CharacterObject.Create(character, state, transform);
 
-        label.AddStep(step);
+            var step = ShowCharacterStep.Create(characterObject);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            label.AddStep(step);
 
-        return mapper.ToDto(step);
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(step);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

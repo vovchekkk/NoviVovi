@@ -27,17 +27,27 @@ public class AddCharacterHandler(
 {
     public async Task<CharacterDto> Handle(AddCharacterCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        unitOfWork.BeginTransaction();
+        
+        try
+        {
+            var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                        ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
 
-        var colorName = Color.FromHex(request.NameColor);
+            var colorName = Color.FromHex(request.NameColor);
 
-        var character = Character.Create(request.Name, colorName, request.Description);
+            var character = Character.Create(request.Name, colorName, request.Description);
 
-        novel.AddCharacter(character);
-        novelRepository.AddOrUpdateAsync(novel, ct);
-        // await unitOfWork.SaveChangesAsync(ct);
+            novel.AddCharacter(character);
+            await novelRepository.AddOrUpdateAsync(novel, ct);
+            await unitOfWork.CommitAsync(ct);
 
-        return mapper.ToDto(character);
+            return mapper.ToDto(character);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

@@ -27,22 +27,32 @@ public class PatchJumpStepHandler(
 
     public async Task<StepDto> Handle(PatchJumpStepCommand request, CancellationToken ct)
     {
-        var step = await GetStepContextOrThrow(request, ct);
-
-        if (step is not JumpStep jumpStep)
-            throw new BadRequestException($"Step {step.Id} is not {typeof(JumpStep)}");
-
-        Label? targetLabel = null;
-        if (request.TargetLabelId.HasValue)
-        {
-            targetLabel = await _labelRepository.GetByIdAsync(request.TargetLabelId.Value, ct)
-                              ?? throw new NotFoundException($"Метка '{request.TargetLabelId}' не найдена");
-        }
+        unitOfWork.BeginTransaction();
         
-        jumpStep.Update(targetLabel);
+        try
+        {
+            var step = await GetStepContextOrThrow(request, ct);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            if (step is not JumpStep jumpStep)
+                throw new BadRequestException($"Step {step.Id} is not {typeof(JumpStep)}");
 
-        return mapper.ToDto(step);
+            Label? targetLabel = null;
+            if (request.TargetLabelId.HasValue)
+            {
+                targetLabel = await _labelRepository.GetByIdAsync(request.TargetLabelId.Value, ct)
+                                  ?? throw new NotFoundException($"Метка '{request.TargetLabelId}' не найдена");
+            }
+            
+            jumpStep.Update(targetLabel);
+
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(step);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

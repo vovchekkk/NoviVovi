@@ -1,12 +1,14 @@
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Infrastructure.DatabaseObjects.Images;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
-public class ImageDbORepository(
-    DatabaseOptions options
-) : BaseRepository(options), IImageDbORepository
+public class ImageDbORepository : BaseRepository, IImageDbORepository
 {
+    public ImageDbORepository(IUnitOfWork unitOfWork) : base(unitOfWork)
+    {
+    }
     public async Task<ImageDbO?> GetImageByIdAsync(Guid id)
     {
         const string imageSql = @"

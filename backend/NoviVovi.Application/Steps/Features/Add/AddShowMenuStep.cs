@@ -29,34 +29,41 @@ public class AddShowMenuStepHandler(
 
     public async Task<StepDto> Handle(AddShowMenuStepCommand request, CancellationToken ct)
     {
-        var label = await GetStepContextOrThrow(request, ct);
-
-        var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
-        var targetLabels = await _labelRepository.GetByIdsAsync(targetIds, ct);
+        unitOfWork.BeginTransaction();
         
-        var labelLookup = targetLabels.ToDictionary(l => l.Id);
-        
-        var menu = Domain.Menu.Menu.Create();
-        
-        foreach (var choiceDto in request.Choices)
+        try
         {
-            if (!labelLookup.TryGetValue(choiceDto.Transition.TargetLabelId, out var targetLabel))
-                throw new NotFoundException($"Целевая метка {choiceDto.Transition.TargetLabelId} не найдена");
+            var label = await GetStepContextOrThrow(request, ct);
 
-            var choice = Choice.Create(
-                choiceDto.Text,
-                ChoiceTransition.Create(targetLabel)
-            );
+            var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
+            var targetLabels = await _labelRepository.GetByIdsAsync(targetIds, ct);
             
-            menu.AddChoice(choice);
+            var labelLookup = targetLabels.ToDictionary(l => l.Id);
+            
+            var menu = Domain.Menu.Menu.Create();
+            
+            foreach (var choiceDto in request.Choices)
+            {
+                if (!labelLookup.TryGetValue(choiceDto.Transition.TargetLabelId, out var targetLabel))
+                    throw new NotFoundException($"Целевая метка {choiceDto.Transition.TargetLabelId} не найдена");
+
+                var transition = ChoiceTransition.Create(targetLabel);
+                var choice = Choice.Create(choiceDto.Text, transition);
+                menu.AddChoice(choice);
+            }
+
+            var step = ShowMenuStep.Create(menu);
+
+            label.AddStep(step);
+
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(step);
         }
-        
-        var step = ShowMenuStep.Create(menu);
-
-        label.AddStep(step);
-
-        await unitOfWork.SaveChangesAsync(ct);
-
-        return mapper.ToDto(step);
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

@@ -25,17 +25,27 @@ public class PatchLabelHandler(
 {
     public async Task<LabelDto> Handle(PatchLabelCommand request, CancellationToken ct)
     {
-        var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
-                    ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
+        unitOfWork.BeginTransaction();
         
-        if (label.NovelId != request.NovelId)
-            throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
-        
-        if (request.Name != null)
-            label.UpdateName(request.Name);
-        
-        await unitOfWork.SaveChangesAsync(ct);
-        
-        return mapper.ToDto(label);
+        try
+        {
+            var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
+                        ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
+            
+            if (label.NovelId != request.NovelId)
+                throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
+            
+            if (request.Name != null)
+                label.UpdateName(request.Name);
+            
+            await unitOfWork.CommitAsync(ct);
+            
+            return mapper.ToDto(label);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

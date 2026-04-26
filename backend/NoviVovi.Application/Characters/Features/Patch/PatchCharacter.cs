@@ -27,25 +27,35 @@ public class PatchCharacterHandler(
 {
     public async Task<CharacterDto> Handle(PatchCharacterCommand request, CancellationToken ct)
     {
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+        unitOfWork.BeginTransaction();
         
-        if (request.Name is not null)
-            character.UpdateName(request.Name);
-
-        if (request.NameColor is not null)
+        try
         {
-            var nameColor = Color.FromHex(request.NameColor);
+            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
             
-            character.UpdateNameColor(nameColor);
+            if (request.Name is not null)
+                character.UpdateName(request.Name);
+
+            if (request.NameColor is not null)
+            {
+                var nameColor = Color.FromHex(request.NameColor);
+                
+                character.UpdateNameColor(nameColor);
+            }
+
+            if (request.Description is not null)
+                character.UpdateDescription(request.Description);
+
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(character);
         }
-
-        if (request.Description is not null)
-            character.UpdateDescription(request.Description);
-
-        await unitOfWork.SaveChangesAsync(ct);
-        
-        return mapper.ToDto(character);
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

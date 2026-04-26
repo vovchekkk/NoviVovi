@@ -20,12 +20,22 @@ public class DeleteCharacterStateHandler(
 {
     public async Task Handle(DeleteCharacterStateCommand request, CancellationToken ct)
     {
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+        unitOfWork.BeginTransaction();
         
-        character.RemoveCharacterStateById(request.StateId);
+        try
+        {
+            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
+            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            
+            character.RemoveCharacterStateById(request.StateId);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.CommitAsync(ct);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

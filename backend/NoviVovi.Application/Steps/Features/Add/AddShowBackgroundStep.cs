@@ -33,21 +33,31 @@ public class AddShowBackgroundStepHandler(
 {
     public async Task<StepDto> Handle(AddShowBackgroundStepCommand request, CancellationToken ct)
     {
-        var label = await GetStepContextOrThrow(request, ct);
+        unitOfWork.BeginTransaction();
         
-        var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
-                    ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
-        
-        var transform = transformMapper.ToDomainModel(request.Transform);
-        
-        var background = BackgroundObject.Create(image, transform);
-        
-        var step = ShowBackgroundStep.Create(background);
+        try
+        {
+            var label = await GetStepContextOrThrow(request, ct);
+            
+            var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
+                        ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
+            
+            var transform = transformMapper.ToDomainModel(request.Transform);
+            
+            var background = BackgroundObject.Create(image, transform);
+            
+            var step = ShowBackgroundStep.Create(background);
 
-        label.AddStep(step);
+            label.AddStep(step);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.CommitAsync(ct);
 
-        return mapper.ToDto(step);
+            return mapper.ToDto(step);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

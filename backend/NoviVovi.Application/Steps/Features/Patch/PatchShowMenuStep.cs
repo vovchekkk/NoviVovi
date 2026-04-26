@@ -29,39 +29,49 @@ public class PatchShowMenuStepHandler(
 
     public async Task<StepDto> Handle(PatchShowMenuStepCommand request, CancellationToken ct)
     {
-        var step = await GetStepContextOrThrow(request, ct);
-
-        if (step is not ShowMenuStep showMenuStep)
-            throw new BadRequestException($"Step {step.Id} is not {typeof(ShowMenuStep)}");
-
-        Domain.Menu.Menu? menu = null;
-        if (request.Choices is not null)
+        unitOfWork.BeginTransaction();
+        
+        try
         {
-            var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
-            var targetLabels = await _labelRepository.GetByIdsAsync(targetIds, ct);
+            var step = await GetStepContextOrThrow(request, ct);
 
-            var labelLookup = targetLabels.ToDictionary(l => l.Id);
+            if (step is not ShowMenuStep showMenuStep)
+                throw new BadRequestException($"Step {step.Id} is not {typeof(ShowMenuStep)}");
 
-            menu = Domain.Menu.Menu.Create();
-
-            foreach (var choiceDto in request.Choices)
+            Domain.Menu.Menu? menu = null;
+            if (request.Choices is not null)
             {
-                if (!labelLookup.TryGetValue(choiceDto.Transition.TargetLabelId, out var targetLabel))
-                    throw new NotFoundException($"Целевая метка {choiceDto.Transition.TargetLabelId} не найдена");
+                var targetIds = request.Choices.Select(c => c.Transition.TargetLabelId).Distinct();
+                var targetLabels = await _labelRepository.GetByIdsAsync(targetIds, ct);
 
-                var choice = Choice.Create(
-                    choiceDto.Text,
-                    ChoiceTransition.Create(targetLabel)
-                );
+                var labelLookup = targetLabels.ToDictionary(l => l.Id);
 
-                menu.AddChoice(choice);
+                menu = Domain.Menu.Menu.Create();
+
+                foreach (var choiceDto in request.Choices)
+                {
+                    if (!labelLookup.TryGetValue(choiceDto.Transition.TargetLabelId, out var targetLabel))
+                        throw new NotFoundException($"Целевая метка {choiceDto.Transition.TargetLabelId} не найдена");
+
+                    var choice = Choice.Create(
+                        choiceDto.Text,
+                        ChoiceTransition.Create(targetLabel)
+                    );
+
+                    menu.AddChoice(choice);
+                }
             }
+
+            showMenuStep.Update(menu);
+
+            await unitOfWork.CommitAsync(ct);
+
+            return mapper.ToDto(step);
         }
-
-        showMenuStep.Update(menu);
-
-        await unitOfWork.SaveChangesAsync(ct);
-
-        return mapper.ToDto(step);
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

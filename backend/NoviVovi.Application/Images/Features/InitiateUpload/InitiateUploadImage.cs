@@ -30,36 +30,43 @@ public class InitiateUploadImageHandler(
 {
     public async Task<UploadInfoImageDto> Handle(InitiateUploadImageCommand request, CancellationToken ct)
     {
-        var imageId = Guid.NewGuid();
-        var storagePath = $"novels/images/{imageId}.{request.Format}";
-        var size = new Size(request.Size.Width, request.Size.Height);
-
-        // 2. Создаем запись в БД (Status = Pending)
-        var image = Image.CreatePending(
-            request.Name,
-            storagePath,
-            request.Format,
-            request.Type,
-            size,
-            request.Description
-        );
-
-        await imageRepository.AddAsync(image, ct);
-
-        await unitOfWork.SaveChangesAsync(ct);
+        unitOfWork.BeginTransaction();
         
-        // 1. Просим S3 сгенерировать временную ссылку на PUT
-        var uploadUrl = await storageService.GetPresignedUploadUrlAsync(storagePath, ct);
-
-        var viewUrl = storageService.GetViewUrl(storagePath);
-
-        var uploadInfo = new UploadInfoImage
+        try
         {
-            ImageId = imageId,
-            UploadUrl = uploadUrl,
-            ViewUrl = viewUrl,
-        };
+            var imageId = Guid.NewGuid();
+            var storagePath = $"novels/images/{imageId}.{request.Format}";
 
-        return mapper.ToDto(uploadInfo);
+            // 2. Создаем запись в БД (Status = Pending)
+            var image = Image.CreatePending(
+                request.Name,
+                storagePath,
+                request.Format,
+                request.Type,
+                new Size(request.Size.Width, request.Size.Height),
+                request.Description
+            );
+
+            await imageRepository.AddAsync(image, ct);
+            await unitOfWork.CommitAsync(ct);
+            
+            // 3. Генерируем presigned URL для загрузки
+            var uploadUrl = await storageService.GetPresignedUploadUrlAsync(storagePath, ct);
+            var viewUrl = storageService.GetViewUrl(storagePath);
+
+            var uploadInfo = new UploadInfoImage
+            {
+                ImageId = imageId,
+                UploadUrl = uploadUrl,
+                ViewUrl = viewUrl,
+            };
+
+            return mapper.ToDto(uploadInfo);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

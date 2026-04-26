@@ -1,13 +1,20 @@
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Infrastructure.DatabaseObjects.Choices;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.DbO;
 
-public class MenuDbORepository(
-    DatabaseOptions options,
-    Lazy<ILabelDbORepository> labelRepo
-) : BaseRepository(options), IMenuDbORepository
+public class MenuDbORepository : BaseRepository, IMenuDbORepository
 {
+    private readonly Lazy<ILabelDbORepository> labelRepo;
+
+    public MenuDbORepository(
+        IUnitOfWork unitOfWork,
+        Lazy<ILabelDbORepository> labelRepo
+    ) : base(unitOfWork)
+    {
+        this.labelRepo = labelRepo;
+    }
     
     public async Task<MenuDbO?> GetFullByIdAsync(Guid menuId, LoadContext ctx)
     {

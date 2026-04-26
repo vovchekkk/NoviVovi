@@ -1,6 +1,364 @@
-@NoviVovi.Api_HostAddress = http://localhost:5136
+@host = http://localhost:5136
 
-GET {{NoviVovi.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+# Переменные для хранения ID (заполняй после каждого запроса)
+@novelId = 1c2a2229-5c1c-458e-8fa0-ff9791358728
+@labelId = 9a17dba5-fe0c-4331-a61d-994094fd206e
+@characterId = 4299f222-27c0-4498-b3c7-9a146054544b
+@characterStateId = PUT_CHARACTER_STATE_ID_HERE
+@imageId = PUT_IMAGE_ID_HERE
+@stepId = PUT_STEP_ID_HERE
+
+###############################################
+# 1. NOVELS - Управление новеллами
+###############################################
+
+### Создать новеллу
+POST {{host}}/api/novels
+Content-Type: application/json
+
+{
+  "title": "Моя тестовая новелла"
+}
+
+### Получить все новеллы
+GET {{host}}/api/novels
+
+### Получить новеллу по ID
+GET {{host}}/api/novels/{{novelId}}
+
+### Обновить новеллу
+PATCH {{host}}/api/novels/{{novelId}}
+Content-Type: application/json
+
+{
+  "title": "Обновленное название"
+}
+
+### Получить граф новеллы (визуализация структуры)
+GET {{host}}/api/novels/{{novelId}}/graph
+
+### Экспортировать новеллу в Ren'Py (скачать ZIP)
+GET {{host}}/api/novels/{{novelId}}/export/renpy
+
+### Удалить новеллу
+DELETE {{host}}/api/novels/{{novelId}}
+
+###############################################
+# 2. LABELS - Метки (сцены/главы)
+###############################################
+
+### Создать метку
+POST {{host}}/api/novels/{{novelId}}/labels
+Content-Type: application/json
+
+{
+  "name": "chapter1"
+}
+
+### Получить все метки новеллы
+GET {{host}}/api/novels/{{novelId}}/labels
+
+### Получить метку по ID
+GET {{host}}/api/novels/{{novelId}}/labels/{{labelId}}
+
+### Обновить метку
+PATCH {{host}}/api/novels/{{novelId}}/labels/{{labelId}}
+Content-Type: application/json
+
+{
+  "name": "chapter1_updated"
+}
+
+### Удалить метку
+DELETE {{host}}/api/novels/{{novelId}}/labels/{{labelId}}
+
+###############################################
+# 3. CHARACTERS - Персонажи
+###############################################
+
+### Создать персонажа
+POST {{host}}/api/novels/{{novelId}}/characters
+Content-Type: application/json
+
+{
+  "name": "Алиса",
+  "nameColor": "FF5733",
+  "description": "Главная героиня"
+}
+
+### Получить всех персонажей новеллы
+GET {{host}}/api/novels/{{novelId}}/characters
+
+### Получить персонажа по ID
+GET {{host}}/api/novels/{{novelId}}/characters/{{characterId}}
+
+### Обновить персонажа
+PATCH {{host}}/api/novels/{{novelId}}/characters/{{characterId}}
+Content-Type: application/json
+
+{
+  "name": "Алиса (обновлено)",
+  "nameColor": "00FF00"
+}
+
+### Удалить персонажа
+DELETE {{host}}/api/novels/{{novelId}}/characters/{{characterId}}
+
+###############################################
+# 4. CHARACTER STATES - Состояния персонажей
+###############################################
+
+### Создать состояние персонажа
+POST {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states
+Content-Type: application/json
+
+{
+  "name": "happy",
+  "description": "Счастливое выражение лица",
+  "imageId": "{{imageId}}",
+  "localTransform": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": 512,
+    "height": 512,
+    "scale": 1.0,
+    "rotation": 0.0,
+    "zIndex": 0
+  }
+}
+
+### Получить все состояния персонажа
+GET {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states
+
+### Получить состояние по ID
+GET {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states/{{characterStateId}}
+
+### Обновить состояние персонажа
+PATCH {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states/{{characterStateId}}
+Content-Type: application/json
+
+{
+  "name": "very_happy",
+  "description": "Очень счастливое выражение"
+}
+
+### Удалить состояние персонажа
+DELETE {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states/{{characterStateId}}
+
+###############################################
+# 5. IMAGES - Изображения
+###############################################
+
+### Шаг 1: Инициировать загрузку изображения (получить presigned URL)
+POST {{host}}/api/images/upload-url
+Content-Type: application/json
+
+{
+  "name": "background.png",
+  "description": "Фон для первой сцены",
+  "format": "png",
+  "type": "Background",
+  "size": {
+    "width": 1920,
+    "height": 1080
+  }
+}
+
+### Шаг 2: Подтвердить загрузку изображения (после PUT на presigned URL)
+POST {{host}}/api/images/{{imageId}}/confirm
+
+### Получить изображение по ID
+GET {{host}}/api/images/{{imageId}}
+
+### Обновить метаданные изображения
+PATCH {{host}}/api/images/{{imageId}}
+Content-Type: application/json
+
+{
+  "name": "background_updated.png",
+  "description": "Обновленное описание"
+}
+
+### Удалить изображение
+DELETE {{host}}/api/images/{{imageId}}
+
+###############################################
+# 6. STEPS - Шаги (действия в сценах)
+###############################################
+
+### Создать шаг: Показать реплику
+POST {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+Content-Type: application/json
+
+{
+  "type": "replica",
+  "characterId": "{{characterId}}",
+  "text": "Привет! Как дела?"
+}
+
+### Создать шаг: Показать персонажа
+POST {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+Content-Type: application/json
+
+{
+  "type": "show_character",
+  "characterId": "{{characterId}}",
+  "characterStateId": "{{characterStateId}}",
+  "transform": {
+    "x": 0.5,
+    "y": 0.5,
+    "width": 512,
+    "height": 512,
+    "scale": 1.0,
+    "rotation": 0.0,
+    "zIndex": 1
+  }
+}
+
+### Создать шаг: Показать фон
+POST {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+Content-Type: application/json
+
+{
+  "type": "show_background",
+  "imageId": "{{imageId}}",
+  "transform": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": 1920,
+    "height": 1080,
+    "scale": 1.0,
+    "rotation": 0.0,
+    "zIndex": 0
+  }
+}
+
+### Создать шаг: Скрыть персонажа
+POST {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+Content-Type: application/json
+
+{
+  "type": "hide_character",
+  "characterId": "{{characterId}}"
+}
+
+### Создать шаг: Прыжок на другую метку
+POST {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+Content-Type: application/json
+
+{
+  "type": "jump",
+  "targetLabelId": "{{labelId}}"
+}
+
+### Создать шаг: Показать меню с выборами
+POST {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+Content-Type: application/json
+
+{
+  "type": "menu",
+  "name": "Выбор пути",
+  "description": "Важное решение",
+  "text": "Что делать дальше?",
+  "choices": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "text": "Пойти налево",
+      "transition": {
+        "targetLabelId": "{{labelId}}"
+      }
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "text": "Пойти направо",
+      "transition": {
+        "targetLabelId": "{{labelId}}"
+      }
+    }
+  ]
+}
+
+### Получить все шаги метки
+GET {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+
+### Получить шаг по ID
+GET {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+
+### Обновить шаг: Реплика
+PATCH {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+Content-Type: application/json
+
+{
+  "type": "replica",
+  "text": "Обновленный текст реплики"
+}
+
+### Обновить шаг: Показать персонажа
+PATCH {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+Content-Type: application/json
+
+{
+  "type": "show_character",
+  "characterStateId": "{{characterStateId}}",
+  "transform": {
+    "x": 0.7,
+    "y": 0.5,
+    "width": 512,
+    "height": 512,
+    "scale": 1.2,
+    "rotation": 0.0,
+    "zIndex": 2
+  }
+}
+
+### Удалить шаг
+DELETE {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+
+###############################################
+# 7. PREVIEW - Предпросмотр сцены
+###############################################
+
+### Получить предпросмотр сцены на конкретном шаге
+GET {{host}}/preview/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+
+###############################################
+# ПОЛНЫЙ ПРИМЕР WORKFLOW
+###############################################
+
+### 1. Создать новеллу
+# POST {{host}}/api/novels
+# Скопируй novelId из ответа
+
+### 2. Создать метку (сцену)
+# POST {{host}}/api/novels/{{novelId}}/labels
+# Скопируй labelId из ответа
+
+### 3. Создать персонажа
+# POST {{host}}/api/novels/{{novelId}}/characters
+# Скопируй characterId из ответа
+
+### 4. Инициировать загрузку изображения
+# POST {{host}}/api/images/upload-url
+# Скопируй imageId и uploadUrl из ответа
+
+### 5. Загрузить файл на presigned URL (через curl или Postman)
+# PUT <uploadUrl> с файлом
+
+### 6. Подтвердить загрузку
+# POST {{host}}/api/images/{{imageId}}/confirm
+
+### 7. Создать состояние персонажа с изображением
+# POST {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states
+# Скопируй characterStateId из ответа
+
+### 8. Создать шаги в метке
+# POST {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps
+# Создай несколько шагов: фон, персонаж, реплики
+
+### 9. Получить предпросмотр
+# GET {{host}}/preview/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+
+### 10. Экспортировать в Ren'Py
+# GET {{host}}/api/novels/{{novelId}}/export/renpy
 
 ###

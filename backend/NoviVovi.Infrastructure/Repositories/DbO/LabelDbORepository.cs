@@ -1,13 +1,20 @@
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories.New;
 
-public class LabelDbORepository(
-    DatabaseOptions options,
-    Lazy<IStepDbORepository> stepRepo
-) : BaseRepository(options), ILabelDbORepository
+public class LabelDbORepository : BaseRepository, ILabelDbORepository
 {
+    private readonly Lazy<IStepDbORepository> stepRepo;
+
+    public LabelDbORepository(
+        IUnitOfWork unitOfWork,
+        Lazy<IStepDbORepository> stepRepo
+    ) : base(unitOfWork)
+    {
+        this.stepRepo = stepRepo;
+    }
 
     private async Task<LabelDbO?> GetByIdAsync(Guid id)
     {

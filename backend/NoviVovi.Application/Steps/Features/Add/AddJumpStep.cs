@@ -26,17 +26,27 @@ public class AddJumpStepHandler(
 
     public async Task<StepDto> Handle(AddJumpStepCommand request, CancellationToken ct)
     {
-        var label = await GetStepContextOrThrow(request, ct);
+        unitOfWork.BeginTransaction();
         
-        var targetLabel = await _labelRepository.GetByIdAsync(request.TargetLabelId, ct)
-                            ?? throw new NotFoundException($"Метка '{request.TargetLabelId}' не найдена");
-        
-        var step = JumpStep.Create(targetLabel);
+        try
+        {
+            var label = await GetStepContextOrThrow(request, ct);
+            
+            var targetLabel = await _labelRepository.GetByIdAsync(request.TargetLabelId, ct)
+                                ?? throw new NotFoundException($"Метка '{request.TargetLabelId}' не найдена");
+            
+            var step = JumpStep.Create(targetLabel);
 
-        label.AddStep(step);
+            label.AddStep(step);
 
-        await unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.CommitAsync(ct);
 
-        return mapper.ToDto(step);
+            return mapper.ToDto(step);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

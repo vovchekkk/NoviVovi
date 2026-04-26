@@ -26,17 +26,26 @@ public class AddLabelHandler(
 {
     public async Task<LabelDto> Handle(AddLabelCommand request, CancellationToken ct)
     {
-        var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
-                    ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+        unitOfWork.BeginTransaction();
         
-        var label = Label.Create(request.Name, request.NovelId);
-        
-        novel.AddLabel(label);
-        
-        await labelRepository.AddOrUpdateAsync(label, ct);
-        
-        await unitOfWork.SaveChangesAsync(ct);
-        
-        return mapper.ToDto(label);
+        try
+        {
+            var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
+                        ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
+            
+            var label = Label.Create(request.Name, request.NovelId);
+            
+            novel.AddLabel(label);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
+            await unitOfWork.CommitAsync(ct);
+            
+            return mapper.ToDto(label);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

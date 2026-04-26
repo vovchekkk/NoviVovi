@@ -1,96 +1,60 @@
 using System.Data;
 using Dapper;
-using Npgsql;
+using NoviVovi.Application.Common.Abstractions;
 
 namespace NoviVovi.Infrastructure.Repositories;
 
-// Мы используем IAsyncDisposable, так как работаем с асинхронными ресурсами БД
-public abstract class BaseRepository(DatabaseOptions options) : IDisposable, IAsyncDisposable
+/// <summary>
+/// Base repository for all DbO repositories.
+/// Uses UnitOfWork for connection and transaction management.
+/// All repositories share the same connection and transaction from UnitOfWork.
+/// </summary>
+public abstract class BaseRepository
 {
-    private NpgsqlConnection? _connection;
-    private NpgsqlTransaction? _transaction;
+    private readonly IUnitOfWork _unitOfWork;
 
-    protected async Task<NpgsqlConnection> GetConnectionAsync(CancellationToken ct = default)
+    protected BaseRepository(IUnitOfWork unitOfWork)
     {
-        // 1. Используем строку из объекта настроек, который мы внедрили через DI
-        if (_connection == null)
-        {
-            _connection = new NpgsqlConnection(options.ConnectionString);
-        }
-
-        if (_connection.State != ConnectionState.Open)
-        {
-            await _connection.OpenAsync(ct);
-        }
-
-        return _connection;
+        _unitOfWork = unitOfWork;
     }
 
-    protected async Task<NpgsqlTransaction> BeginTransactionAsync(CancellationToken ct = default)
-    {
-        var conn = await GetConnectionAsync(ct);
-        _transaction = await conn.BeginTransactionAsync(ct);
-        return _transaction;
-    }
+    /// <summary>
+    /// Gets the database connection from UnitOfWork.
+    /// All repositories use the same connection.
+    /// </summary>
+    protected IDbConnection Connection => _unitOfWork.Connection;
 
-    protected async Task CommitTransactionAsync(CancellationToken ct = default)
-    {
-        if (_transaction != null)
-        {
-            await _transaction.CommitAsync(ct);
-            await _transaction.DisposeAsync();
-            _transaction = null;
-        }
-    }
+    /// <summary>
+    /// Gets the current transaction from UnitOfWork.
+    /// All repositories use the same transaction.
+    /// </summary>
+    protected IDbTransaction? Transaction => _unitOfWork.Transaction;
 
-    protected async Task RollbackTransactionAsync(CancellationToken ct = default)
-    {
-        if (_transaction != null)
-        {
-            await _transaction.RollbackAsync(ct);
-            await _transaction.DisposeAsync();
-            _transaction = null;
-        }
-    }
-
-    // ВАЖНО: Мы НЕ используем 'await using' внутри методов, 
-    // так как соединением управляет жизненный цикл самого репозитория (Scoped)
     protected async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, CancellationToken ct = default)
     {
-        var conn = await GetConnectionAsync(ct);
-        return await conn.QueryFirstOrDefaultAsync<T>(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
+        return await Connection.QueryFirstOrDefaultAsync<T>(
+            new CommandDefinition(sql, param, Transaction, cancellationToken: ct)
+        );
     }
 
     protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? param = null, CancellationToken ct = default)
     {
-        var conn = await GetConnectionAsync(ct);
-        return await conn.QueryAsync<T>(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
+        return await Connection.QueryAsync<T>(
+            new CommandDefinition(sql, param, Transaction, cancellationToken: ct)
+        );
     }
 
     protected async Task<int> ExecuteAsync(string sql, object? param = null, CancellationToken ct = default)
     {
-        var conn = await GetConnectionAsync(ct);
-        return await conn.ExecuteAsync(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
+        return await Connection.ExecuteAsync(
+            new CommandDefinition(sql, param, Transaction, cancellationToken: ct)
+        );
     }
 
-    // Исправил generic-параметр: не называй его <Guid>, чтобы не путать с типом Guid
     protected async Task<T?> ExecuteScalarAsync<T>(string sql, object? param = null, CancellationToken ct = default)
     {
-        var conn = await GetConnectionAsync(ct);
-        return await conn.ExecuteScalarAsync<T>(new CommandDefinition(sql, param, _transaction, cancellationToken: ct));
-    }
-
-    public void Dispose()
-    {
-        _transaction?.Dispose();
-        _connection?.Dispose();
-        GC.SuppressFinalize(this);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_transaction != null) await _transaction.DisposeAsync();
-        if (_connection != null) await _connection.DisposeAsync();
-        GC.SuppressFinalize(this);
+        return await Connection.ExecuteScalarAsync<T>(
+            new CommandDefinition(sql, param, Transaction, cancellationToken: ct)
+        );
     }
 }
