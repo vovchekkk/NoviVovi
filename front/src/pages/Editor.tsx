@@ -827,37 +827,47 @@ export default function Editor() {
                 break;
 
             case 'show':
-                newStep.type = 'show';
-                newStep.characterId = '';
-                newStep.characterStateId = '';
-                newStep.transform = { x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10 };
+                newStep = {
+                    type: 'show_character',
+                    characterId: '',
+                    characterStateId: '',
+                    transform : { x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10 }
+                };
                 break;
 
             case 'hide':
-                newStep.type = 'hide';
-                newStep.characterId = '';
+                newStep = {
+                    type: 'hide_character',
+                    characterId: '',
+                };
                 break;
 
             case 'replica':
-                newStep.type = 'replica';
-                newStep.characterId = '';
-                newStep.text = '';
+                newStep = {
+                    type: 'replica',
+                    characterId: '',
+                    text: '',
+                };
                 break;
 
             case 'jump':
-                newStep.type = 'jump';
-                newStep.targetId = '';
+                newStep = {
+                    type: 'jump',
+                    targetId: ''
+                };
                 break;
 
             case 'choice':
-                newStep.type = 'choice';
-                newStep.name = '';
-                newStep.text = '';
-                newStep.menuRequest = {
-                    id: `temp-menu-${Date.now()}`,
-                    name: null,
-                    text: null,
-                    choices: [{ id: `temp-choice-${Date.now()}`, name: '', text: '', targetLabelId: '' }],
+                newStep ={
+                    type: 'menu',
+                    name: '',
+                    text: '',
+                    menuRequest: {
+                        id: `temp-menu-${Date.now()}`,
+                        name: null,
+                        text: null,
+                        choices: [{ id: `temp-choice-${Date.now()}`, name: '', text: '', targetLabelId: '' }],
+                    },
                 };
                 break;
         }
