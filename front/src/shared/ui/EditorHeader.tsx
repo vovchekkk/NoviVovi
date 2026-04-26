@@ -1,10 +1,11 @@
 import {css} from '../../../styled-system/css'
-import { Link } from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 
 interface EditorHeaderProps {
     active?: 'scenes' | 'editor' | 'assets'
 }
 export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) {
+    const { novelId } = useParams<{ novelId: string }>();
     return (
         <header className={css({
             display: 'flex',
@@ -19,7 +20,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
             })}>
 
                 <Link
-                    to="/editor"
+                    to={`/editor/${novelId}`}
                     className={css({
                         color: 'black',
                         position: 'relative',
@@ -61,7 +62,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
                 </Link>
 
                 <Link
-                    to="/editor/assets"
+                    to={`/editor/assets/${novelId}`}
                     className={css({
                         color: 'black',
                         position: 'relative',

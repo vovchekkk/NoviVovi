@@ -4,7 +4,10 @@ import {css} from '../../../styled-system/css'
 
 interface SelectorProps {
     title: string;
-    options: string[];
+    options: Option[];
+    value?: string;
+    onChange?: (val: string | null) => void;
+    onBlur?: () => void;
 }
 
 type Option = {
@@ -12,13 +15,9 @@ type Option = {
     label: string;
 };
 
-export default function Selector({ title, options }: SelectorProps) {
-    const selectOptions: Option[] = options.map(option => ({
-        value: option,
-        label: option,
-    }));
+export default function Selector({ title, options, value, onChange, onBlur }: SelectorProps) {
 
-    const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+    const currentOption = options.find(o => o.value === value) || null;
     const customStyles = {
         control: (base: any, state: any) => ({
             ...base,
@@ -45,22 +44,18 @@ export default function Selector({ title, options }: SelectorProps) {
     };
 
     return (
-        <div className={css({
-            display: "flex",
-            flexDirection: "column",
-            gap: '10px',
-            width: '300px',
-            margin: '0 auto',
-        })}>
+        <div className={css({ display: "flex", flexDirection: "column", gap: '10px', width: '300px', margin: '0 auto' })}>
             <div style={{ fontSize:'18px', textAlign:'left' }}>{title}</div>
             <div style={{ width: '100%' }}>
                 <ReactSelect
-                    options={selectOptions}
-                    value={selectedOption}
-                    onChange={setSelectedOption}
+                    options={options}
+                    value={currentOption} // Важно: передаем объект
+                    onChange={(val: Option | null) => onChange?.(val ? val.value : null)} // Важно: отдаем только ID
+                    onBlur={onBlur}
                     isClearable={true}
                     isSearchable={true}
                     styles={customStyles}
+                    placeholder="Выберите..."
                 />
             </div>
         </div>

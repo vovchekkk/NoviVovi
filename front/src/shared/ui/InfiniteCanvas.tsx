@@ -16,18 +16,9 @@ import startImage from '../../assets/img_1.png';
 import previewImage from '../../assets/img.png';
 import api from "../../api.tsx";
 import type {Label, Step} from "../../pages/Editor.tsx";
+import {data} from "react-router-dom";
 
-const nodeStyles = css({
-    height: '100px',
-    padding: '12px 16px',
-    fontSize: '16px',
-    border: '2px solid token(colors.blue.600)',
-    borderRadius: '8px',
-    backgroundColor: 'white',
-    boxShadow: '0 4px 12px -2px token(colors.gray.200)',
-    minWidth: '180px',
-    _hover: {borderColor: 'token(colors.blue.500)'},
-});
+
 const choiceNodeStyles = css({
     bg: 'white',
     border: '3px solid black',
@@ -58,20 +49,34 @@ const optionStyles = css({
     alignItems: 'center',
 });
 
-const ChoiceNode = ({data}: any) => {
+const ChoiceNode = ({data, selected}: any) => {
     return (
-        <div className={choiceNodeStyles}>
+        <div className={css({
+            bg: 'white',
+            border: selected ? '3px solid #DFC6D1':'3px solid black',
+            borderRadius: '24px',
+            padding: '12px',
+            width: '320px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            shadow: selected ? '0 0 20px rgba(219, 132, 170, 0.5)' : 'none',
+        })}>
             {/* Вход слева */}
             <Handle
                 type="target"
                 position={Position.Left}
                 style={{background: 'black', width: '12px', height: '12px', left: '-6px'}}
             />
-            <Handle
-                type="source"
-                position={Position.Right}
-                style={{background: 'black', width: '12px', height: '12px', right: '-6px'}}
-            />
+            {/*<Handle*/}
+            {/*    type="source"*/}
+            {/*    position={Position.Right}*/}
+            {/*    style={{background: 'black', width: '12px', height: '12px', right: '-6px'}}*/}
+            {/*/>*/}
+            <div className={css({
+                fontWeight: 'bold',
+                textAlign: 'center',
+            })}>{data.labelName}</div>
             <img src={data.previewUrl} className={imageStyles} alt="preview"/>
             <div className={css({display: 'flex', flexDirection: 'column', gap: '8px'})}>
                 {data.choices.map((choice: any, index: number) => (
@@ -95,14 +100,34 @@ const ChoiceNode = ({data}: any) => {
     );
 };
 
-const CustomNode = ({data}: any) => {
+const RegularNode = ({data, selected}: any) => {
     return (
-        <div className={nodeStyles}>
-            <Handle type="target" position={Position.Left}
-                    style={{background: '#3b82f6', width: '8px', height: '8px'}}/>
-            <div>{data.label}</div>
-            <Handle type="source" position={Position.Right}
-                    style={{background: '#3b82f6', width: '8px', height: '8px'}}/>
+        <div className={css({
+            bg: 'white',
+            border: selected ? '3px solid #DFC6D1':'3px solid black',
+            borderRadius: '24px',
+            padding: '12px',
+            width: '320px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            shadow: selected ? '0 0 20px rgba(219, 132, 170, 0.5)' : 'none',
+        })}>
+            <Handle
+                type="target"
+                position={Position.Left}
+                style={{background: 'black', width: '12px', height: '12px', left: '-6px'}}
+            />
+            <Handle
+                type="source"
+                position={Position.Right}
+                style={{background: 'black', width: '12px', height: '12px', right: '-6px'}}
+            />
+            <div className={css({
+                fontWeight: 'bold',
+                textAlign: 'center',
+            })}>{data.labelName}</div>
+            <img src={data.previewUrl} className={imageStyles} alt="preview"/>
         </div>
     );
 };
@@ -138,6 +163,19 @@ const StartNode = ({data}: any) => {
     );
 };
 
+type StartNodeData = {
+    imageUrl: string;
+    labelName: string;
+};
+
+type ChoiceNodeData = {
+    previewUrl: string;
+    choices: { text: string }[];
+};
+
+type AppNodeData = StartNodeData | ChoiceNodeData;
+
+type AppNode = Node<AppNodeData>;
 const initialNodes = [
     {
         id: 'start-1',
@@ -150,6 +188,7 @@ const initialNodes = [
         type: 'choice',
         position: {x: 250, y: 50},
         data: {
+            labelName: 'Сцена 1',
             previewUrl: previewImage,
             choices: [
                 {text: 'Пойти в парк'},
@@ -170,10 +209,12 @@ type Node = {
 }
 
 type Edge = {
-    type:string,
+    type: string,
     id: string;
     sourceLabelId: string;
     targetLabelId: string;
+    choiceId?: string;
+    text?: string;
 }
 
 type GraphData = {
@@ -182,40 +223,67 @@ type GraphData = {
 }
 
 export default function InfiniteCanvas() {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
         [setEdges]
     );
-    useEffect(() => {
-        const fetchLabels = async () => {
-            try {
-                // setLoading(true);
-                const {data} = await api.get<GraphData>('/novels/1/graph');
-                if (data.nodes) {
-                    for(const node of data.nodes) {
-                        if (node.type === 'jump')
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Не удалось загрузить шаги');
-            } finally {
-                // setLoading(false);
-            }
-        };
-
-        fetchLabels();
-    }, []);
+    // useEffect(() => {
+    //     const fetchLabels = async () => {
+    //         try {
+    //             // setLoading(true);
+    //             const {data} = await api.get<GraphData>('/novels/1/graph');
+    //             if (data.nodes) {
+    //                 for(const node of data.nodes) {
+    //
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             console.error(error);
+    //             alert('Не удалось загрузить шаги');
+    //         } finally {
+    //             // setLoading(false);
+    //         }
+    //     };
+    //
+    //     fetchLabels();
+    // }, []);
     const nodeTypes = useMemo(() => ({
         start: StartNode,
-        custom: CustomNode,
+        regular: RegularNode,
         choice: ChoiceNode,
     }), []);
-    const createLabel = () => {
-        alert('создание новой сцены');
+    const createLabel = async () => {
+        try {
+            // const {data: newLabel} = await api.post<Label>('/novels/1/labels', {
+            //     name: 'Новая нода',
+            // })
+            const node = {
+                type: 'regular',
+                id: String(Date.now()),
+                position: {x: 100, y: 100},
+                data: {
+                    labelName: 'newLabel.name',
+                    previewUrl: previewImage,
+                    choices: [
+                        {text: 'Пойти в парк'},
+                        {text: 'Уйти'}
+                    ]
+                },
+            }
+            setNodes(prev => [...prev, node]);
+        } catch (error) {
+            console.error(error);
+            alert('Не удалось создать сцену');
+        }
     }
+    const onNodesDelete = useCallback(
+        (deleted) => {
+            console.log('Удалены ноды:', deleted);
+        },
+        []
+    );
     return (
         <div className={css({
             flex: 1,
@@ -232,6 +300,8 @@ export default function InfiniteCanvas() {
                 nodesDraggable
                 nodesConnectable
                 elementsSelectable
+                onNodesDelete={onNodesDelete}
+                deleteKeyCode={['Backspace', 'Delete']}
             >
                 <Background/>
                 <Controls/>
@@ -250,6 +320,20 @@ export default function InfiniteCanvas() {
                                 },
                             })}>
                             + Добавить сцену
+                        </button>
+                        <button
+                            onClick={onNodesDelete}
+                            className={css({
+                                border: '2px solid #775D68',
+                                padding: '10px',
+                                backgroundColor: 'white',
+                                borderRadius: '8px',
+                                _hover: {
+                                    bg: '#DFC6D1',
+                                    boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)'
+                                },
+                            })}>
+                            Удалить сцену
                         </button>
                     </div>
                 </Panel>

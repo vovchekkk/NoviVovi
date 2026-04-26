@@ -1,5 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 import api from "./api.tsx";
+import cat from "./assets/cat.png";
 
 console.log('🚀 Axios Mock Adapter (Emotions Edition) загружен');
 
@@ -10,9 +11,9 @@ const mock = new MockAdapter(api, {
 
 // 1. Расширенное хранилище данных
 let mockCharacters = [
-    { id: '1', name: 'Анна', color: '#3b82f6' },
-    { id: '2', name: 'Мария', color: '#ef4444' },
-    { id: '3', name: 'Борис', color: '#10b981' },
+    { id: '1', name: 'Анна', color: '#3b82f6', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
+    { id: '2', name: 'Мария', color: '#ef4444', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
+    { id: '3', name: 'Борис', color: '#10b981', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
 ];
 
 let mockSteps = [
@@ -33,11 +34,21 @@ let mockEmotionsStore = {
     '3': []
 };
 
+let mockLabels = [
+    { id:'1', name:'Label1'},
+    { id:'2', name:'Label2'},
+    { id:'3', name:'Label3'},
+]
+
 // === ОБРАБОТЧИКИ ===
 
 // Получение списка персонажей
-mock.onGet('/characters').reply(200, mockCharacters);
-mock.onGet('/steps').reply(200, mockSteps);
+mock.onGet('novels/0/characters').reply(200, mockCharacters);
+mock.onGet(/\/images\/.+$/).reply(200, {url:cat});
+mock.onGet('/novels/0/labels').reply(200, mockLabels);
+mock.onGet('/novels/0/labels/1/steps').reply(200, mockSteps);
+mock.onGet('/novels/0/labels/2/steps').reply(200, mockSteps);
+mock.onGet('/novels/0/labels/3/steps').reply(200, mockSteps);
 
 // Получение персонажа по ID
 mock.onGet(/\/characters\/\d+$/).reply((config) => {
@@ -67,14 +78,27 @@ mock.onPatch(/\/characters\/.+/).reply((config) => {
             : c
     );
 
-    // 2. Обновляем список эмоций в нашем хранилище
-    // Если в объекте пришли эмоции, сохраняем их (присваивая ID новым, если их нет)
     if (updatedData.emotions) {
         mockEmotionsStore[charId] = updatedData.emotions.map(e => ({
             ...e,
             id: e.id || 'e_new_' + Date.now() + Math.random()
         }));
     }
+
+    return [200, { message: "Данные успешно сохранены" }];
+});
+
+mock.onPatch(/\/labels\/.+/).reply((config) => {
+    const charId = config.url.split('/').pop();
+    const updatedData = JSON.parse(config.data);
+
+    console.log('📦 Мок получил данные для сохранения:', updatedData);
+
+    mockLabels = mockLabels.map(c =>
+        c.id === charId
+            ? { ...c, name: updatedData.name}
+            : c
+    );
 
     return [200, { message: "Данные успешно сохранены" }];
 });
@@ -89,9 +113,35 @@ mock.onPost('/characters').reply((config) => {
     };
 
     mockCharacters.push(newChar);
-    mockEmotionsStore[newChar.id] = []; // Инициализируем пустой список эмоций
+    mockEmotionsStore[newChar.id] = [];
 
     return [201, newChar];
+});
+
+mock.onPost('/novels/0/labels/1/steps').reply((config) => {
+    const body = JSON.parse(config.data);
+    const newStep = {
+        id: String(Date.now()),
+        type: 'show',
+    };
+
+    mockSteps.push(newStep);
+
+    return [201, newStep];
+});
+mock.onDelete(/\/labels\/.+/).reply((config) => {
+    const urlParts = config.url.split('/');
+    const id = urlParts[urlParts.length - 1];
+
+    const charIndex = mockLabels.findIndex(char => char.id === id);
+    if (charIndex !== -1) {
+        mockLabels.splice(charIndex, 1);
+
+        console.log(`Персонаж с ID ${id} удален из моков`);
+        return [200, { success: true }];
+    } else {
+        return [404, { message: 'Персонаж не найден' }];
+    }
 });
 
 mock.onPost('/novels/0/labels').reply((config) => {
@@ -102,6 +152,27 @@ mock.onPost('/novels/0/labels').reply((config) => {
     };
 
     return [201, newChar];
+});
+
+mock.onPost(/\/characters\/\d+$/).reply((config) => {
+    const body = JSON.parse(config.data);
+    const response = {
+        imageId: '1',
+        uploadUrl: '',
+        viewUrl:'src/assets/upload.jpg'
+    }
+    return [201, response];
+});
+
+mock.onPost('images/upload-url').reply(200, {
+    imageId: "mock_image_123",
+    uploadUrl: "https://fake-cloud-storage.com/upload"
+});
+
+mock.onPut("https://fake-cloud-storage.com/upload").reply(200);
+
+mock.onGet("/images/mock_image_123").reply(200, {
+    url: "src/assets/upload.jpg"
 });
 
 export default mock;

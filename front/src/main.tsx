@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
-import "./mock.tsx";
 
 import './index.css'
 import { router } from './routes'
