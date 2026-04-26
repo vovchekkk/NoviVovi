@@ -3,16 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { css } from '../../styled-system/css';
 import Modal from '../shared/ui/Modal';
 import Header from '../shared/ui/Header';
+import { getLastNovelId, setLastNovelId } from '../shared/lib/novelSession.ts';
 
 export default function EditorEntry() {
     const navigate = useNavigate();
-    const [novelId, setNovelId] = useState('');
+    const [novelId, setNovelId] = useState(getLastNovelId() ?? '');
     const [isOpen, setIsOpen] = useState(true);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (novelId.trim()) {
-            navigate(`/editor/${novelId}`);
+        const trimmedNovelId = novelId.trim();
+        if (trimmedNovelId) {
+            setLastNovelId(trimmedNovelId);
+            navigate(`/editor/${trimmedNovelId}`);
             setIsOpen(false);
         }
     };

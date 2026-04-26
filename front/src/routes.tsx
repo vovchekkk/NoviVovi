@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
         element: <EditorEntry />,
     },
     {
-        path: '/editor/scenes',
+        path: '/editor/:novelId/scenes',
         element: <Scenes />,
     },
     {

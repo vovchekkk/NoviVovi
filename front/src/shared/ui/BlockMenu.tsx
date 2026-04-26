@@ -6,6 +6,12 @@ interface BlockMenuProps {
     title: string;
 }
 export default function BlockMenu({title}: BlockMenuProps) {
+    const characterOptions = [
+        { value: 'fon', label: 'fon' },
+        { value: 'fonk', label: 'fonk' },
+        { value: 'fenk', label: 'fenk' },
+    ];
+
     return (
         <div className={css({
             backgroundColor: '#DFC6D1',
@@ -28,7 +34,7 @@ export default function BlockMenu({title}: BlockMenuProps) {
                 alignItems: 'center',
                 justifyContent: 'center',
             })}>
-                <Selector title={'Персонаж'} options={['fon', 'fonk', 'fenk']}></Selector>
+                <Selector title={'Персонаж'} options={characterOptions}></Selector>
                 <MenuTextarea title={'Текст'}></MenuTextarea>
             </div>
         </div>

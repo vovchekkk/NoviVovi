@@ -5,16 +5,15 @@ import EditorHeader from "../shared/ui/EditorHeader.tsx";
 import Preview from "../shared/ui/Preview.tsx";
 import BlockPanel from "../shared/ui/BlockPanel.tsx";
 import Selector from "../shared/ui/Selector.tsx";
-import {Controller, useFieldArray, useForm, useFormContext, useWatch} from "react-hook-form";
+import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import Modal from "../shared/ui/Modal.tsx";
 import api from "../api.tsx";
 import {useParams} from "react-router-dom";
-import {vstack, hstack} from '../../styled-system/patterns';
 import {LabelItem} from "../shared/ui/LabelItem.tsx";
 import type {Character} from "../shared/ui/AssetsContainer.tsx";
-import axios from "axios";
+import { setLastNovelId } from "../shared/lib/novelSession.ts";
 
 export enum StepType {
     BACKGROUND = 'background',
@@ -93,17 +92,13 @@ const replicaStepSchema = baseStepSchema.extend({
 
 const choiceStepSchema = baseStepSchema.extend({
     type: z.literal('choice'),
-    name: z.string(),
-    text: z.string(),
     menuRequest: z.object({
-        id: z.string(),
-        name: z.string().nullable(),
-        text: z.string().nullable(),
+        id: z.string().min(1),
         choices: z.array(z.object({
-            id: z.string(),
-            name: z.string(),
-            text: z.string(),
-            targetLabelId: z.string(),
+            id: z.string().min(1),
+            name: z.string().optional(),
+            text: z.string().min(1, 'Введите текст варианта'),
+            targetLabelId: z.string().min(1, 'Выберите сцену'),
         })),
     }),
 });
@@ -128,19 +123,34 @@ type CharacterOption = {
     name:string,
     states:string[],
 }
-const CHARACTERS = ['Анна', 'Мария', 'Борис'];
-const SCENES = ['Парк', 'Улица', 'Дом'];
+type SelectorOption = {
+    value: string;
+    label: string;
+};
 type StepFormProps = {
     control: any;
     errors: any;
     register: any;
     characterOptions: CharacterOption[];
-    labelOptions: string[];
+    labelOptions: SelectorOption[];
     setValue:any;
 };
 
+const normalizeIncomingStep = (step: any): Step => {
+    if (step?.type === 'menu') {
+        return {
+            ...step,
+            type: 'choice',
+        };
+    }
+    return step as Step;
+};
+
 function HideStepForm({control, errors, characterOptions}: StepFormProps) {
-    const options = characterOptions.map(ch => ch.name);
+    const options = characterOptions.map(ch => ({
+        value: ch.id,
+        label: ch.name,
+    }));
     return (
         <div>
             <Controller
@@ -173,10 +183,6 @@ function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
         value: ch.id,
         label: ch.name
     }));
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "characters"
-    });
     const stateOptions = (selectedCharacter?.states || []).map(stateName => ({
         value: stateName,
         label: stateName
@@ -425,13 +431,17 @@ function BackgroundStepForm({ control, errors, setValue }: StepFormProps) {
     );
 }
 
-function ReplicaStepForm({control, errors, register}: StepFormProps) {
+function ReplicaStepForm({control, errors, register, characterOptions}: StepFormProps) {
+    const characterSelectOptions = characterOptions.map((character) => ({
+        value: character.id,
+        label: character.name,
+    }));
     return (
         <div className={css({display: 'flex', flexDirection: 'column', gap: '16px'})}>
             <Controller
                 control={control}
                 name="characterId"
-                render={({field}) => <Selector title="Персонаж" options={CHARACTERS} {...field} />}
+                render={({field}) => <Selector title="Персонаж" options={characterSelectOptions} {...field} />}
             />
             {errors.characterId &&
                 <p className={css({color: 'red', fontSize: '13px'})}>{errors.characterId.message}</p>}
@@ -461,43 +471,27 @@ function ReplicaStepForm({control, errors, register}: StepFormProps) {
     );
 }
 
-function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
+function ChoiceStepForm({ control, labelOptions, register }: StepFormProps) {
     const { fields, append, remove } = useFieldArray({
         control,
-        name: "choices"
+        name: "menuRequest.choices"
     });
 
     return (
         <div className={css({ display: 'flex', flexDirection: 'column', gap: '20px', width: '350px', margin: '0 auto' })}>
-            <div className={css({ display: "flex", flexDirection: "column", gap: '8px' })}>
-                <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Название шага</label>
-                <input
-                    {...control.register('name')}
-                    className={inputStyle}
-                    placeholder="Введите название..."
-                />
-            </div>
-
-            {/* Поле Текст вопроса */}
-            <div className={css({ display: "flex", flexDirection: "column", gap: '8px' })}>
-                <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Текст вопроса</label>
-                <textarea
-                    {...control.register('text')}
-                    className={inputStyle}
-                    placeholder="Что увидит игрок?"
-                    rows={2}
-                />
-            </div>
-
-            <hr className={css({ width: '100%', border: '0.5px solid #ccc' })} />
-
-            {/* Секция Выборов */}
             <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
                 <div className={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' })}>
                     <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Варианты ответов</label>
                     <button
                         type="button"
-                        onClick={() => append({ text: '', transition: { targetLabelId: '' } })}
+                        onClick={() =>
+                            append({
+                                id: `temp-choice-${Date.now()}`,
+                                name: '',
+                                text: '',
+                                targetLabelId: '',
+                            })
+                        }
                         className={css({
                             padding: '4px 12px',
                             backgroundColor: '#28a745',
@@ -523,6 +517,10 @@ function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
                         gap: '8px',
                         position: 'relative'
                     })}>
+                        <input
+                            type="hidden"
+                            {...register(`menuRequest.choices.${index}.id` as const)}
+                        />
                         {/* Кнопка удаления варианта */}
                         <button
                             type="button"
@@ -545,18 +543,17 @@ function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
                         <div>
                             <label className={css({ fontSize: '12px', color: '#666' })}>Текст кнопки</label>
                             <input
-                                {...control.register(`choices.${index}.text` as const)}
+                                {...register(`menuRequest.choices.${index}.text` as const)}
                                 className={compactInputStyle}
                                 placeholder="Текст ответа"
                             />
                         </div>
 
-                        {/* Переход (targetLabelId) */}
                         <div>
                             <label className={css({ fontSize: '12px', color: '#666' })}>Переход на сцену</label>
                             <Controller
                                 control={control}
-                                name={`choices.${index}.transition.targetLabelId` as const}
+                                name={`menuRequest.choices.${index}.targetLabelId` as const}
                                 render={({ field: selectField }) => (
                                     <Selector
                                         title="Выберите сцену"
@@ -579,16 +576,6 @@ function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
     );
 }
 
-// Стили для переиспользования
-const inputStyle = css({
-    width: '100%',
-    padding: '10px',
-    borderRadius: '8px',
-    backgroundColor: 'white',
-    border: '1px solid black',
-    fontSize: '14px'
-});
-
 const compactInputStyle = css({
     width: '100%',
     padding: '6px 8px',
@@ -598,16 +585,15 @@ const compactInputStyle = css({
 });
 
 export default function Editor() {
-    const {novelId} = useParams<{ novelId: string }>() ?? 0;
+    const {novelId} = useParams<{ novelId: string }>();
     const [isOpen, setIsOpen] = useState(false);
     const [steps, setSteps] = useState<Step[]>([]);
     const [labels, setLabels] = useState<Label[]>([]);
-    const [imageUrl, setImageUrl] = useState('');
     const [selectedLabelId, setSelectedLabelId] = useState<string | null>(labels[0]?.id ?? null);
     const [selectedStepIndex, setSelectedStepIndex] = useState(0);
     const [selectedId, setSelectedId] = useState<string | null>(steps[0]?.id ?? null);
     const currentStep = steps[selectedStepIndex];
-    const [loading, setLoading] = useState(true);
+    const [, setLoading] = useState(true);
     const [labelName, setLabelName] = useState(' ');
     const [isLabelOpen, setIsLabelOpen] = useState(false);
     const [characterOptions, setCharacterOptions] = useState<CharacterOption[]>([]);
@@ -624,6 +610,10 @@ export default function Editor() {
         defaultValues: {
             characterId: '',
             characterStateId: '',
+            menuRequest: {
+                id: 'temp-menu-default',
+                choices: [],
+            },
             background: {
                 imageId: '',
                 transform: {
@@ -639,6 +629,12 @@ export default function Editor() {
             characters: []
         }
     });
+
+    useEffect(() => {
+        if (novelId) {
+            setLastNovelId(novelId);
+        }
+    }, [novelId]);
 
     useEffect(() => {
         const fetchCharacterNames = async () => {
@@ -667,7 +663,8 @@ export default function Editor() {
 
             try {
                 setLoading(true);
-                const {data} = await api.get<Step>(`/steps/${selectedId}`);
+                const {data: rawStep} = await api.get<any>(`/steps/${selectedId}`);
+                const data = normalizeIncomingStep(rawStep);
                 const baseData = ({
                     id: data.id,
                     type: data.type,
@@ -715,9 +712,10 @@ export default function Editor() {
                     case 'choice':
                         reset({
                             ...baseData,
-                            name: data.name,
-                            text: data.text,
-                            menuRequest: data.menuRequest,
+                            menuRequest: data.menuRequest ?? {
+                                id: `temp-menu-${data.id}`,
+                                choices: [],
+                            },
                         });
                         break;
 
@@ -756,15 +754,19 @@ export default function Editor() {
         const fetchSteps = async () => {
             if (!selectedLabelId || selectedLabelId === 'null') {
                 setSteps([]);
+                setSelectedId(null);
                 return;
             }
             try {
                 setLoading(true);
-                const {data} = await api.get<Step[]>(`novels/${novelId}/labels/${selectedLabelId}/steps`);
-                setSteps(data);
+                const {data} = await api.get<any[]>(`novels/${novelId}/labels/${selectedLabelId}/steps`);
+                const normalizedSteps = data.map((step) => normalizeIncomingStep(step));
+                setSteps(normalizedSteps);
 
-                if (data.length > 0) {
-                    setSelectedId(data[0].id);
+                if (normalizedSteps.length > 0) {
+                    setSelectedId(normalizedSteps[0].id);
+                } else {
+                    setSelectedId(null);
                 }
             } catch (error) {
                 console.error(error);
@@ -776,7 +778,7 @@ export default function Editor() {
 
         fetchSteps();
     }, [selectedLabelId, novelId]);
-    const onSave = (data: any) => {   // лучше типизировать Step
+    const onSave = async (data: any) => {   // лучше типизировать Step
         const finalState = { ... (data.state || {}) };
 
         if (data.type === 'background' && data.background) {
@@ -801,21 +803,23 @@ export default function Editor() {
             ...data,
             state: finalState
         };
+
+        if (finalData.type === 'choice' && finalData.menuRequest?.choices) {
+            finalData.menuRequest = {
+                ...finalData.menuRequest,
+                choices: finalData.menuRequest.choices.map((choice: any) => ({
+                    ...choice,
+                    name: choice.name?.trim() || choice.text,
+                })),
+            };
+        }
+
         const newSteps = [...steps];
         newSteps[selectedStepIndex] = finalData;
         setSteps(newSteps);
-        api.patch(`/steps/${data.id}`, finalData);
+        await api.patch(`/steps/${data.id}`, finalData);
     };
     const addStep = async (type: StepType) => {
-        const prevStep = selectedStepIndex !== null ? steps[selectedStepIndex] : steps[steps.length - 1];
-        const baseVisuals = {
-            background: prevStep?.state?.background || {
-                imageId: '',
-                transform: { x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0 }
-            },
-            characters: prevStep?.state?.characters || []
-        };
-
         let newStep;
 
         switch (type) {
@@ -859,13 +863,9 @@ export default function Editor() {
 
             case 'choice':
                 newStep ={
-                    type: 'menu',
-                    name: '',
-                    text: '',
+                    type: 'choice',
                     menuRequest: {
                         id: `temp-menu-${Date.now()}`,
-                        name: null,
-                        text: null,
                         choices: [{ id: `temp-choice-${Date.now()}`, name: '', text: '', targetLabelId: '' }],
                     },
                 };
@@ -890,6 +890,7 @@ export default function Editor() {
                 ];
 
                 setSelectedStepIndex(insertionIndex);
+                setSelectedId(serverStep.id);
                 return updatedSteps;
             });
 
@@ -898,24 +899,45 @@ export default function Editor() {
             alert('Не удалось создать шаг');
         }
     };
-    const deleteStep = (index: number) => {
-        const newSteps = steps.filter((_, i) => i !== index);
-        setSteps(newSteps);
-        if (selectedStepIndex >= newSteps.length) {
-            setSelectedStepIndex(newSteps.length - 1);
+    const deleteStep = async (index: number) => {
+        const stepToDelete = steps[index];
+        if (!stepToDelete) {
+            return;
+        }
+
+        try {
+            await api.delete(`/steps/${stepToDelete.id}`);
+            const newSteps = steps.filter((_, i) => i !== index);
+            setSteps(newSteps);
+
+            if (newSteps.length === 0) {
+                setSelectedStepIndex(0);
+                setSelectedId(null);
+                return;
+            }
+
+            const nextIndex = Math.min(selectedStepIndex, newSteps.length - 1);
+            setSelectedStepIndex(nextIndex);
+            setSelectedId(newSteps[nextIndex].id);
+        } catch (error) {
+            console.error(error);
+            alert('Не удалось удалить шаг');
         }
     }
     const renderStepForm = () => {
         if (!currentStep) return <div>Выберите шаг</div>;
 
-        const labelNames = labels.map(lab => lab.name);
+        const labelOptions = labels.map((label) => ({
+            value: label.id,
+            label: label.name,
+        }));
         const formProps = {
             control,
             errors,
             register,
             setValue,
             characterOptions: characterOptions,
-            labelOptions: labelNames
+            labelOptions,
         };
 
         switch (currentStep.type) {
@@ -934,6 +956,11 @@ export default function Editor() {
             default:
                 return null;
         }
+    };
+
+    const handleSelectStep = (index: number) => {
+        setSelectedStepIndex(index);
+        setSelectedId(steps[index]?.id ?? null);
     };
 
     const changeLabel = (labelId) => {
@@ -990,14 +1017,6 @@ export default function Editor() {
             console.error(error);
         }
     }
-
-    const changePreview = async() => {
-        try {
-            //тут будет больно
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     return (
         <div className={css({
@@ -1086,8 +1105,8 @@ export default function Editor() {
                                         className={css({
                                             bg: 'white',
                                             width: '80%',
-                                            height: '5%',
-                                            padding: '10px',
+                                            minHeight: '44px',
+                                            padding: '10px 14px',
                                             margin: '20px auto',
                                             _hover: {
                                                 bg: '#705661', color: 'white',
@@ -1095,6 +1114,7 @@ export default function Editor() {
                                             },
                                             borderRadius: '12px',
                                             fontWeight: 'medium',
+                                            flexShrink: 0,
                                         })}>
                                         + Добавить сцену
                                     </button>
@@ -1111,7 +1131,7 @@ export default function Editor() {
                                     <BlockPanel
                                         steps={steps}
                                         selectedStepIndex={selectedStepIndex}
-                                        onSelectStep={setSelectedStepIndex}
+                                        onSelectStep={handleSelectStep}
                                         onAddClick={() => setIsOpen(true)}
                                         onDeleteStep={deleteStep}
                                     />
