@@ -27,6 +27,8 @@ public class DeleteCharacterHandler(
                         ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
             
             novel.RemoveCharacterById(request.CharacterId);
+            
+            await novelRepository.AddOrUpdateAsync(novel, ct);
 
             await unitOfWork.CommitAsync(ct);
         }

@@ -39,7 +39,9 @@ public class AddCharacterHandler(
             var character = Character.Create(request.Name, colorName, request.Description);
 
             novel.AddCharacter(character);
+            
             await novelRepository.AddOrUpdateAsync(novel, ct);
+            
             await unitOfWork.CommitAsync(ct);
 
             return mapper.ToDto(character);

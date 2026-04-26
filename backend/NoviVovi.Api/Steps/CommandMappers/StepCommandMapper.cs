@@ -8,6 +8,23 @@ namespace NoviVovi.Api.Steps.CommandMappers;
 [Mapper]
 public partial class StepCommandMapper
 {
+    /// <summary>
+    /// Маппит AddStepRequest в соответствующую команду без использования dynamic.
+    /// </summary>
+    public AddStepCommand ToAddCommand(AddStepRequest request, Guid novelId, Guid labelId)
+    {
+        return request switch
+        {
+            AddHideCharacterStepRequest r => ToCommand(r, novelId, labelId),
+            AddJumpStepRequest r => ToCommand(r, novelId, labelId),
+            AddShowBackgroundStepRequest r => ToCommand(r, novelId, labelId),
+            AddShowCharacterStepRequest r => ToCommand(r, novelId, labelId),
+            AddShowMenuStepRequest r => ToCommand(r, novelId, labelId),
+            AddShowReplicaStepRequest r => ToCommand(r, novelId, labelId),
+            _ => throw new ArgumentException($"Unknown request type: {request.GetType().Name}")
+        };
+    }
+    
     public partial AddHideCharacterStepCommand ToCommand(AddHideCharacterStepRequest source, Guid novelId, Guid labelId);
     
     public partial AddJumpStepCommand ToCommand(AddJumpStepRequest source, Guid novelId, Guid labelId);

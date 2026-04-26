@@ -5,6 +5,7 @@ using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Api.Steps.Mappers;
 using NoviVovi.Api.Steps.Requests;
 using NoviVovi.Api.Steps.Responses;
+using NoviVovi.Application.Steps.Features.Add;
 using NoviVovi.Application.Steps.Features.Delete;
 using NoviVovi.Application.Steps.Features.Get;
 
@@ -26,9 +27,9 @@ public class StepsController(
         AddStepRequest request
     )
     {
-        var command = commandMapper.ToCommand((dynamic)request, novelId, labelId);
+        var command = commandMapper.ToAddCommand(request, novelId, labelId);
         
-        var step = await mediator.Send((dynamic) command);
+        var step = await mediator.Send(command);
 
         return Ok(mapper.ToResponse(step));
     }

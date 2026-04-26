@@ -44,6 +44,8 @@ public class AddShowReplicaStepHandler(
             var step = ShowReplicaStep.Create(replica);
 
             label.AddStep(step);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 
