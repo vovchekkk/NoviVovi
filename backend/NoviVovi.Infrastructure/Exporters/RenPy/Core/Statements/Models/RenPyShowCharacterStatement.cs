@@ -8,5 +8,5 @@ namespace NoviVovi.Infrastructure.Exporters.RenPy.Core.Statements.Models;
 public record RenPyShowCharacterStatement(
     string CharacterName,
     string CharacterStateName,
-    RenPyTransform? Transform = null
+    RenPyTransform Transform
 ) : RenPyStatement;

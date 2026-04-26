@@ -13,81 +13,158 @@ public class RenPyStatementRendererTests
     public void Render_SceneStatement_ReturnsCorrectSyntax()
     {
         // Arrange
-        var statement = new RenPySceneStatement("bg_classroom");
+        var transform = new RenPyTransform(XPos: 0.0, YPos: 0.0, Zoom: 1.0, XZoom: 1.0, YZoom: 1.0, Rotate: 0.0, ZOrder: 0);
+        var statement = new RenPySceneStatement("bg_classroom", transform);
 
         // Act
         var result = _renderer.Render(statement);
 
         // Assert
-        Assert.Equal("    scene bg_classroom", result);
+        var expected = """
+    scene bg_classroom:
+        xpos 0.00
+        ypos 0.00
+        zoom 1.00
+        xzoom 1.00
+        yzoom 1.00
+        zorder 0
+""";
+        Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
 
     [Fact]
     public void Render_SceneStatement_WithCustomIndent_ReturnsCorrectIndentation()
     {
         // Arrange
-        var statement = new RenPySceneStatement("bg_park");
+        var transform = new RenPyTransform(XPos: 0.0, YPos: 0.0, Zoom: 1.0, XZoom: 1.0, YZoom: 1.0, Rotate: 0.0, ZOrder: 0);
+        var statement = new RenPySceneStatement("bg_park", transform);
 
         // Act
         var result = _renderer.Render(statement, indentLevel: 2);
 
         // Assert
-        Assert.Equal("        scene bg_park", result);
+        var expected = """
+        scene bg_park:
+            xpos 0.00
+            ypos 0.00
+            zoom 1.00
+            xzoom 1.00
+            yzoom 1.00
+            zorder 0
+""";
+        Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
 
     [Fact]
-    public void Render_ShowCharacterStatement_WithoutTransform_ReturnsCorrectSyntax()
+    public void Render_ShowCharacterStatement_UsesInlineATL()
     {
         // Arrange
-        var statement = new RenPyShowCharacterStatement("eileen", "happy");
-
-        // Act
-        var result = _renderer.Render(statement);
-
-        // Assert
-        Assert.Equal("    show eileen happy", result);
-    }
-
-    [Fact]
-    public void Render_ShowCharacterStatement_WithLeftTransform_ReturnsCorrectSyntax()
-    {
-        // Arrange
-        var transform = new RenPyTransform(XPos: 200, YPos: 0, Zoom: 1.0, Rotate: 0.0, ZOrder: 0);
+        var transform = new RenPyTransform(XPos: 0.5, YPos: 0.5, Zoom: 1.0, XZoom: 1.0, YZoom: 1.0, Rotate: 0.0, ZOrder: 0);
         var statement = new RenPyShowCharacterStatement("alice", "neutral", transform);
 
         // Act
         var result = _renderer.Render(statement);
 
         // Assert
-        Assert.Equal("    show alice neutral at left", result);
+        var expected = """
+    show alice neutral:
+        xpos 0.50
+        ypos 0.50
+        zoom 1.00
+        xzoom 1.00
+        yzoom 1.00
+        zorder 0
+""";
+        Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
 
     [Fact]
-    public void Render_ShowCharacterStatement_WithCenterTransform_ReturnsCorrectSyntax()
+    public void Render_ShowCharacterStatement_WithRotation_IncludesRotateProperty()
     {
         // Arrange
-        var transform = new RenPyTransform(XPos: 640, YPos: 0, Zoom: 1.0, Rotate: 0.0, ZOrder: 0);
+        var transform = new RenPyTransform(XPos: 0.6, YPos: 0.3, Zoom: 1.5, XZoom: 1.0, YZoom: 1.0, Rotate: 45.0, ZOrder: 1);
         var statement = new RenPyShowCharacterStatement("bob", "surprised", transform);
 
         // Act
         var result = _renderer.Render(statement);
 
         // Assert
-        Assert.Equal("    show bob surprised at center", result);
+        var expected = """
+    show bob surprised:
+        xpos 0.60
+        ypos 0.30
+        zoom 1.50
+        xzoom 1.00
+        yzoom 1.00
+        rotate 45.00
+        zorder 1
+""";
+        Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
 
     [Fact]
-    public void Render_ShowCharacterStatement_WithRightTransform_ReturnsCorrectSyntax()
+    public void Render_ShowCharacterStatement_WithZeroRotation_OmitsRotateProperty()
     {
         // Arrange
-        var transform = new RenPyTransform(XPos: 1000, YPos: 0, Zoom: 1.0, Rotate: 0.0, ZOrder: 0);
-        var statement = new RenPyShowCharacterStatement("charlie", "angry", transform);
+        var transform = new RenPyTransform(XPos: 0.25, YPos: 0.75, Zoom: 0.8, XZoom: 1.5, YZoom: 0.5, Rotate: 0.0, ZOrder: 2);
+        var statement = new RenPyShowCharacterStatement("charlie", "happy", transform);
 
         // Act
         var result = _renderer.Render(statement);
 
         // Assert
-        Assert.Equal("    show charlie angry at right", result);
+        Assert.DoesNotContain("rotate", result);
+        Assert.Contains("show charlie happy:", result);
+        Assert.Contains("xpos 0.25", result);
+        Assert.Contains("ypos 0.75", result);
+        Assert.Contains("zoom 0.80", result);
+        Assert.Contains("xzoom 1.50", result);
+        Assert.Contains("yzoom 0.50", result);
+        Assert.Contains("zorder 2", result);
+    }
+
+    [Fact]
+    public void Render_ShowCharacterStatement_WithComplexTransform_FormatsCorrectly()
+    {
+        // Arrange
+        var transform = new RenPyTransform(XPos: 0.9, YPos: 0.1, Zoom: 2.5, XZoom: 2.0, YZoom: 1.5, Rotate: 180.0, ZOrder: 10);
+        var statement = new RenPyShowCharacterStatement("dave", "angry", transform);
+
+        // Act
+        var result = _renderer.Render(statement);
+
+        // Assert
+        Assert.Contains("show dave angry:", result);
+        Assert.Contains("xpos 0.90", result);
+        Assert.Contains("ypos 0.10", result);
+        Assert.Contains("zoom 2.50", result);
+        Assert.Contains("xzoom 2.00", result);
+        Assert.Contains("yzoom 1.50", result);
+        Assert.Contains("rotate 180.00", result);
+        Assert.Contains("zorder 10", result);
+    }
+
+    [Fact]
+    public void Render_ShowCharacterStatement_WithCustomIndent_ReturnsCorrectIndentation()
+    {
+        // Arrange
+        var transform = new RenPyTransform(XPos: 0.1, YPos: 0.2, Zoom: 1.0, XZoom: 1.0, YZoom: 1.0, Rotate: 0.0, ZOrder: 0);
+        var statement = new RenPyShowCharacterStatement("eve", "neutral", transform);
+
+        // Act
+        var result = _renderer.Render(statement, indentLevel: 2);
+
+        // Assert
+        var expected = """
+        show eve neutral:
+            xpos 0.10
+            ypos 0.20
+            zoom 1.00
+            xzoom 1.00
+            yzoom 1.00
+            zorder 0
+""";
+        Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
 
     [Fact]
@@ -272,13 +349,16 @@ public class RenPyStatementRendererTests
     public void Render_IndentLevel0_ReturnsNoIndentation()
     {
         // Arrange
-        var statement = new RenPySceneStatement("bg_test");
+        var transform = new RenPyTransform(XPos: 0.0, YPos: 0.0, Zoom: 1.0, XZoom: 1.0, YZoom: 1.0, Rotate: 0.0, ZOrder: 0);
+        var statement = new RenPySceneStatement("bg_test", transform);
 
         // Act
         var result = _renderer.Render(statement, indentLevel: 0);
 
         // Assert
-        Assert.Equal("scene bg_test", result);
+        Assert.StartsWith("scene bg_test:", result);
+        Assert.Contains("xpos 0.00", result);
+        Assert.Contains("xzoom 1.00", result);
     }
 
     [Fact]
@@ -292,47 +372,5 @@ public class RenPyStatementRendererTests
 
         // Assert
         Assert.Equal("            jump label_test", result);
-    }
-
-    [Fact]
-    public void Render_TransformBoundaryLeft_ReturnsLeftPosition()
-    {
-        // Arrange - XPos = 399 (just below 400 threshold)
-        var transform = new RenPyTransform(XPos: 399, YPos: 0, Zoom: 1.0, Rotate: 0.0, ZOrder: 0);
-        var statement = new RenPyShowCharacterStatement("char", "state", transform);
-
-        // Act
-        var result = _renderer.Render(statement);
-
-        // Assert
-        Assert.Contains("at left", result);
-    }
-
-    [Fact]
-    public void Render_TransformBoundaryRight_ReturnsRightPosition()
-    {
-        // Arrange - XPos = 881 (just above 880 threshold)
-        var transform = new RenPyTransform(XPos: 881, YPos: 0, Zoom: 1.0, Rotate: 0.0, ZOrder: 0);
-        var statement = new RenPyShowCharacterStatement("char", "state", transform);
-
-        // Act
-        var result = _renderer.Render(statement);
-
-        // Assert
-        Assert.Contains("at right", result);
-    }
-
-    [Fact]
-    public void Render_TransformBoundaryCenter_ReturnsCenterPosition()
-    {
-        // Arrange - XPos = 400 (at lower center boundary)
-        var transform = new RenPyTransform(XPos: 400, YPos: 0, Zoom: 1.0, Rotate: 0.0, ZOrder: 0);
-        var statement = new RenPyShowCharacterStatement("char", "state", transform);
-
-        // Act
-        var result = _renderer.Render(statement);
-
-        // Assert
-        Assert.Contains("at center", result);
     }
 }

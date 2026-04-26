@@ -19,7 +19,7 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
         return statement switch
         {
             RenPySceneStatement scene => 
-                $"{indent}scene {scene.BackgroundName}",
+                RenderScene(scene, indent),
             
             RenPyShowCharacterStatement showChar => 
                 RenderShowCharacter(showChar, indent),
@@ -43,15 +43,40 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
         };
     }
 
+    private string RenderScene(RenPySceneStatement scene, string indent)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"{indent}scene {scene.BackgroundName}:");
+        sb.AppendLine($"{indent}    xpos {FormatPosition(scene.Transform.XPos)}");
+        sb.AppendLine($"{indent}    ypos {FormatPosition(scene.Transform.YPos)}");
+        sb.AppendLine($"{indent}    zoom {scene.Transform.Zoom.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        sb.AppendLine($"{indent}    xzoom {scene.Transform.XZoom.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        sb.AppendLine($"{indent}    yzoom {scene.Transform.YZoom.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        
+        if (scene.Transform.Rotate != 0)
+            sb.AppendLine($"{indent}    rotate {scene.Transform.Rotate.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        
+        sb.AppendLine($"{indent}    zorder {scene.Transform.ZOrder}");
+        
+        return sb.ToString().TrimEnd();
+    }
+
     private string RenderShowCharacter(RenPyShowCharacterStatement showChar, string indent)
     {
-        if (showChar.Transform != null)
-        {
-            var position = FormatTransform(showChar.Transform);
-            return $"{indent}show {showChar.CharacterName} {showChar.CharacterStateName} at {position}";
-        }
+        var sb = new StringBuilder();
+        sb.AppendLine($"{indent}show {showChar.CharacterName} {showChar.CharacterStateName}:");
+        sb.AppendLine($"{indent}    xpos {FormatPosition(showChar.Transform.XPos)}");
+        sb.AppendLine($"{indent}    ypos {FormatPosition(showChar.Transform.YPos)}");
+        sb.AppendLine($"{indent}    zoom {showChar.Transform.Zoom.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        sb.AppendLine($"{indent}    xzoom {showChar.Transform.XZoom.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        sb.AppendLine($"{indent}    yzoom {showChar.Transform.YZoom.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
         
-        return $"{indent}show {showChar.CharacterName} {showChar.CharacterStateName}";
+        if (showChar.Transform.Rotate != 0)
+            sb.AppendLine($"{indent}    rotate {showChar.Transform.Rotate.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
+        
+        sb.AppendLine($"{indent}    zorder {showChar.Transform.ZOrder}");
+        
+        return sb.ToString().TrimEnd();
     }
 
     private string RenderMenu(RenPyShowMenuStatement menu, int indentLevel)
@@ -72,14 +97,14 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
         return sb.ToString().TrimEnd();
     }
 
-    private string FormatTransform(RenPyTransform transform)
+    /// <summary>
+    /// Formats position value for Ren'Py.
+    /// Since frontend always sends relative coordinates (0.0-1.0),
+    /// we always format as float with 2 decimal places.
+    /// Ren'Py interprets float values as relative positions (percentage of screen size).
+    /// </summary>
+    private string FormatPosition(double position)
     {
-        // For now, use predefined positions based on X coordinate
-        // TODO: Generate custom ATL transforms for complex positioning
-        if (transform.XPos < 400)
-            return "left";
-        if (transform.XPos > 880)
-            return "right";
-        return "center";
+        return position.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
     }
 }

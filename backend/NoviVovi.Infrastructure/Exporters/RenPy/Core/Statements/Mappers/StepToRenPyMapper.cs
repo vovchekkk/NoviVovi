@@ -28,13 +28,14 @@ public class StepToRenPyMapper(
             ),
             
             ShowBackgroundStep bgStep => new RenPySceneStatement(
-                idGenerator.GenerateForImage(bgStep.BackgroundObject.Image.Id)
+                idGenerator.GenerateForImage(bgStep.BackgroundObject.Image.Id),
+                transformMapper.Map(bgStep.BackgroundObject.Transform, bgStep.BackgroundObject.Image.Size)
             ),
             
             ShowCharacterStep charStep => new RenPyShowCharacterStatement(
                 idGenerator.GenerateForCharacter(charStep.CharacterObject.Character.Id),
                 idGenerator.GenerateForCharacterState(charStep.CharacterObject.State.Id),
-                transformMapper.Map(charStep.CharacterObject.Transform)
+                transformMapper.Map(charStep.CharacterObject.Transform, charStep.CharacterObject.State.Image.Size)
             ),
             
             ShowMenuStep menuStep => new RenPyShowMenuStatement(
@@ -51,19 +52,5 @@ public class StepToRenPyMapper(
 
             _ => throw new NotSupportedException($"Step type {step.GetType().Name} is not supported for RenPy export")
         };
-    }
-
-    private RenPyTransform? ToPosition(NoviVovi.Domain.Scene.Transform? transform)
-    {
-        if (transform == null)
-            return null;
-
-        return new RenPyTransform(
-            (int)transform.Position.X,
-            (int)transform.Position.Y,
-            transform.Scale,
-            transform.Rotation,
-            transform.ZIndex
-        );
     }
 }

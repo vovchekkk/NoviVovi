@@ -29,9 +29,11 @@ public class TransformToRenPyMapperTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(100, result.XPos);
-        Assert.Equal(200, result.YPos);
+        Assert.Equal(100.5, result.XPos, precision: 1);
+        Assert.Equal(200.7, result.YPos, precision: 1);
         Assert.Equal(1.5, result.Zoom);
+        Assert.Equal(1.0, result.XZoom); // Default when no image size provided
+        Assert.Equal(1.0, result.YZoom); // Default when no image size provided
         Assert.Equal(45.0, result.Rotate);
         Assert.Equal(10, result.ZOrder);
     }
@@ -49,9 +51,11 @@ public class TransformToRenPyMapperTests
         var result = _mapper.Map(transform);
 
         // Assert
-        Assert.Equal(0, result.XPos);
-        Assert.Equal(0, result.YPos);
+        Assert.Equal(0.0, result.XPos);
+        Assert.Equal(0.0, result.YPos);
         Assert.Equal(1.0, result.Zoom);
+        Assert.Equal(1.0, result.XZoom);
+        Assert.Equal(1.0, result.YZoom);
         Assert.Equal(0.0, result.Rotate);
         Assert.Equal(0, result.ZOrder);
     }
@@ -72,15 +76,17 @@ public class TransformToRenPyMapperTests
         var result = _mapper.Map(transform);
 
         // Assert
-        Assert.Equal(-50, result.XPos);
-        Assert.Equal(-100, result.YPos);
+        Assert.Equal(-50.8, result.XPos, precision: 1);
+        Assert.Equal(-100.2, result.YPos, precision: 1);
         Assert.Equal(0.5, result.Zoom);
+        Assert.Equal(1.0, result.XZoom);
+        Assert.Equal(1.0, result.YZoom);
         Assert.Equal(-90.0, result.Rotate);
         Assert.Equal(-5, result.ZOrder);
     }
 
     [Fact]
-    public void Map_TransformWithDecimalPositions_TruncatesToInt()
+    public void Map_TransformWithDecimalPositions_PreservesDecimals()
     {
         // Arrange
         var transform = Transform.Create(
@@ -92,8 +98,10 @@ public class TransformToRenPyMapperTests
         var result = _mapper.Map(transform);
 
         // Assert
-        Assert.Equal(123, result.XPos);
-        Assert.Equal(456, result.YPos);
+        Assert.Equal(123.9, result.XPos, precision: 1);
+        Assert.Equal(456.1, result.YPos, precision: 1);
+        Assert.Equal(1.0, result.XZoom);
+        Assert.Equal(1.0, result.YZoom);
     }
 
     [Fact]
@@ -112,11 +120,67 @@ public class TransformToRenPyMapperTests
         var result = _mapper.Map(transform);
 
         // Assert
-        Assert.Equal(10000, result.XPos);
-        Assert.Equal(20000, result.YPos);
+        Assert.Equal(10000.0, result.XPos);
+        Assert.Equal(20000.0, result.YPos);
         Assert.Equal(10.0, result.Zoom);
+        Assert.Equal(1.0, result.XZoom);
+        Assert.Equal(1.0, result.YZoom);
         Assert.Equal(360.0, result.Rotate);
         Assert.Equal(1000, result.ZOrder);
+    }
+
+    [Fact]
+    public void Map_TransformWithImageSize_CalculatesXZoomAndYZoom()
+    {
+        // Arrange
+        var transform = Transform.Create(
+            new Position(0, 0),
+            new Size(800, 600) // Transform size
+        );
+        var imageSize = new Size(400, 300); // Original image size
+
+        // Act
+        var result = _mapper.Map(transform, imageSize);
+
+        // Assert
+        Assert.Equal(2.0, result.XZoom); // 800 / 400 = 2.0
+        Assert.Equal(2.0, result.YZoom); // 600 / 300 = 2.0
+    }
+
+    [Fact]
+    public void Map_TransformWithDifferentAspectRatio_CalculatesIndependentZoom()
+    {
+        // Arrange
+        var transform = Transform.Create(
+            new Position(0, 0),
+            new Size(1600, 600) // Transform size (wide)
+        );
+        var imageSize = new Size(400, 300); // Original image size
+
+        // Act
+        var result = _mapper.Map(transform, imageSize);
+
+        // Assert
+        Assert.Equal(4.0, result.XZoom); // 1600 / 400 = 4.0
+        Assert.Equal(2.0, result.YZoom); // 600 / 300 = 2.0
+    }
+
+    [Fact]
+    public void Map_TransformWithZeroImageSize_ReturnsDefaultZoom()
+    {
+        // Arrange
+        var transform = Transform.Create(
+            new Position(0, 0),
+            new Size(800, 600)
+        );
+        var imageSize = new Size(0, 0); // Invalid image size
+
+        // Act
+        var result = _mapper.Map(transform, imageSize);
+
+        // Assert
+        Assert.Equal(1.0, result.XZoom); // Default to 1.0 when image size is 0
+        Assert.Equal(1.0, result.YZoom); // Default to 1.0 when image size is 0
     }
 
     [Fact]

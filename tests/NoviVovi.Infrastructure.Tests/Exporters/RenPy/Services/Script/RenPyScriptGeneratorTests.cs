@@ -22,6 +22,10 @@ public class RenPyScriptGeneratorTests
         _generator = new RenPyScriptGenerator(_mockResourceLoader.Object, _statementRenderer);
     }
 
+    // Helper method to create default transform for backgrounds
+    private static RenPyTransform DefaultBackgroundTransform() => 
+        new(XPos: 0, YPos: 0, Zoom: 1.0, XZoom: 1.0, YZoom: 1.0, Rotate: 0.0, ZOrder: 0);
+
     [Fact]
     public async Task GenerateAsync_SimpleNovel_GeneratesValidScript()
     {
@@ -78,7 +82,7 @@ label {{ label.identifier }}:
                     Identifier = "label_start",
                     Statements = new List<RenPyStatement>
                     {
-                        new RenPySceneStatement("bg_room"),
+                        new RenPySceneStatement("bg_room", DefaultBackgroundTransform()),
                         new RenPyReplicaStatement("char_alice", "Hello!")
                     }
                 }
@@ -190,7 +194,7 @@ label {{ label.identifier }}:
                     Identifier = "label_chapter1",
                     Statements = new List<RenPyStatement>
                     {
-                        new RenPySceneStatement("bg_chapter1")
+                        new RenPySceneStatement("bg_chapter1", DefaultBackgroundTransform())
                     }
                 },
                 new()
@@ -198,7 +202,7 @@ label {{ label.identifier }}:
                     Identifier = "label_chapter2",
                     Statements = new List<RenPyStatement>
                     {
-                        new RenPySceneStatement("bg_chapter2")
+                        new RenPySceneStatement("bg_chapter2", DefaultBackgroundTransform())
                     }
                 }
             }
@@ -344,8 +348,8 @@ label {{ label.identifier }}:
                     Identifier = "label_start",
                     Statements = new List<RenPyStatement>
                     {
-                        new RenPySceneStatement("bg_room"),
-                        new RenPyShowCharacterStatement("alice", "happy", new RenPyTransform(640, 0, 1.0, 0.0, 0)),
+                        new RenPySceneStatement("bg_room", DefaultBackgroundTransform()),
+                        new RenPyShowCharacterStatement("alice", "happy", new RenPyTransform(640, 0, 1.0, 1.0, 1.0, 0.0, 0)),
                         new RenPyReplicaStatement("char_alice", "Hello, world!"),
                         new RenPyJumpStatement("label_end")
                     }
@@ -366,8 +370,8 @@ label {{ label.identifier }}:
         Assert.Contains("define char_alice = Character(\"Alice\", color=\"#FF5733\")", result);
         Assert.Contains("label start:", result);
         Assert.Contains("label label_end:", result);
-        Assert.Contains("scene bg_room", result);
-        Assert.Contains("show alice happy at center", result);
+        Assert.Contains("scene bg_room:", result);
+        Assert.Contains("show alice happy:", result);
         Assert.Contains("char_alice \"Hello, world!\"", result);
         Assert.Contains("jump label_end", result);
     }
@@ -503,3 +507,5 @@ label start:
         Assert.Contains("Test \"Novel\" with 'Quotes'", result);
     }
 }
+
+

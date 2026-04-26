@@ -76,6 +76,7 @@ public class StepToRenPyMapperTests
         Assert.IsType<RenPySceneStatement>(result);
         var sceneStatement = (RenPySceneStatement)result;
         Assert.StartsWith("sprite_", sceneStatement.BackgroundName);
+        Assert.NotNull(sceneStatement.Transform);
     }
 
     // NOTE: Tests for ShowCharacterStep are skipped due to a domain bug in Transform operator (+)
