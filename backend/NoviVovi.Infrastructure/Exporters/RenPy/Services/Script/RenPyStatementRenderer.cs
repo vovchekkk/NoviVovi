@@ -56,15 +56,19 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
         if (scene.Transform.Rotate != 0)
             sb.AppendLine($"{indent}    rotate {scene.Transform.Rotate.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
         
-        sb.AppendLine($"{indent}    zorder {scene.Transform.ZOrder}");
-        
         return sb.ToString().TrimEnd();
     }
 
     private string RenderShowCharacter(RenPyShowCharacterStatement showChar, string indent)
     {
         var sb = new StringBuilder();
-        sb.AppendLine($"{indent}show {showChar.CharacterName} {showChar.CharacterStateName}:");
+        
+        // zorder указывается как параметр команды show, не внутри ATL
+        var zorderParam = showChar.Transform.ZOrder != 0 
+            ? $" zorder {showChar.Transform.ZOrder}" 
+            : "";
+        
+        sb.AppendLine($"{indent}show {showChar.CharacterName} {showChar.CharacterStateName}{zorderParam}:");
         sb.AppendLine($"{indent}    xpos {FormatPosition(showChar.Transform.XPos)}");
         sb.AppendLine($"{indent}    ypos {FormatPosition(showChar.Transform.YPos)}");
         sb.AppendLine($"{indent}    zoom {showChar.Transform.Zoom.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
@@ -73,8 +77,6 @@ public class RenPyStatementRenderer : IRenPyStatementRenderer
         
         if (showChar.Transform.Rotate != 0)
             sb.AppendLine($"{indent}    rotate {showChar.Transform.Rotate.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}");
-        
-        sb.AppendLine($"{indent}    zorder {showChar.Transform.ZOrder}");
         
         return sb.ToString().TrimEnd();
     }

@@ -56,7 +56,15 @@ public class ManualExportLargeNovelTest
         var mockStorage = new Mock<IStorageService>();
         mockStorage
             .Setup(x => x.DownloadFileStreamAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(() => new MemoryStream(CreateFakePngBytes()));
+            .ReturnsAsync((string path, CancellationToken ct) =>
+            {
+                // Определяем тип изображения по пути
+                var fileName = path.Contains("bg-") || path.Contains("background") 
+                    ? "background.png" 
+                    : "character.png";
+                var imageBytes = LoadTestImage(fileName);
+                return new MemoryStream(imageBytes);
+            });
 
         var mockResourceLoader = new Mock<IEmbeddedResourceLoader>();
         mockResourceLoader
@@ -170,7 +178,7 @@ public class ManualExportLargeNovelTest
         
         var aliceImage = CreateImage("alice_neutral.png", "alice-neutral-001.png");
         var aliceNeutral = CharacterState.Create("neutral", aliceImage, 
-            Transform.Create(new Position(0, 0), new Size(500, 1000), 1.0, 0.0, 0), "Нейтральная");
+            Transform.Create(new Position(0, 0), new Size(0, 0), 1.0, 0.0, 0), "Нейтральная");
         alice.AddCharacterState(aliceNeutral);
 
         // Боб - друг
@@ -179,7 +187,7 @@ public class ManualExportLargeNovelTest
         
         var bobImage = CreateImage("bob_happy.png", "bob-happy-001.png");
         var bobHappy = CharacterState.Create("happy", bobImage,
-            Transform.Create(new Position(0, 0), new Size(500, 1000), 1.0, 0.0, 0), "Счастливый");
+            Transform.Create(new Position(0, 0), new Size(0, 0), 1.0, 0.0, 0), "Счастливый");
         bob.AddCharacterState(bobHappy);
 
         // Кэт - загадочная незнакомка
@@ -188,7 +196,7 @@ public class ManualExportLargeNovelTest
         
         var catImage = CreateImage("cat_mysterious.png", "cat-mysterious-001.png");
         var catMysterious = CharacterState.Create("mysterious", catImage,
-            Transform.Create(new Position(0, 0), new Size(500, 1000), 1.0, 0.0, 0), "Загадочная");
+            Transform.Create(new Position(0, 0), new Size(0, 0), 1.0, 0.0, 0), "Загадочная");
         cat.AddCharacterState(catMysterious);
 
         // === ФОНЫ ===
@@ -205,7 +213,7 @@ public class ManualExportLargeNovelTest
         novel.StartLabel.AddStep(showRoomStep);
 
         // Алиса появляется
-        var aliceTransform = Transform.Create(new Position(500, 200), new Size(500, 1000));
+        var aliceTransform = Transform.Create(new Position(0.3, 0.1), new Size(500, 1000));
         var aliceObject = CharacterObject.Create(alice, aliceNeutral, aliceTransform);
         var showAliceStep = ShowCharacterStep.Create(aliceObject);
         novel.StartLabel.AddStep(showAliceStep);
@@ -215,7 +223,7 @@ public class ManualExportLargeNovelTest
         AddReplica(novel.StartLabel, alice, "Интересно, что меня ждет сегодня?");
 
         // Боб появляется
-        var bobTransform = Transform.Create(new Position(1000, 200), new Size(500, 1000));
+        var bobTransform = Transform.Create(new Position(0.7, 0.1), new Size(500, 1000));
         var bobObject = CharacterObject.Create(bob, bobHappy, bobTransform);
         var showBobStep = ShowCharacterStep.Create(bobObject);
         novel.StartLabel.AddStep(showBobStep);
@@ -251,7 +259,7 @@ public class ManualExportLargeNovelTest
         AddReplica(parkLabel, bob, "Смотри, там кто-то стоит...");
 
         // Кэт появляется
-        var catTransform = Transform.Create(new Position(750, 200), new Size(500, 1000));
+        var catTransform = Transform.Create(new Position(0.5, 0.1), new Size(500, 1000));
         var catObject = CharacterObject.Create(cat, catMysterious, catTransform);
         var showCatStep = ShowCharacterStep.Create(catObject);
         parkLabel.AddStep(showCatStep);
@@ -342,6 +350,35 @@ public class ManualExportLargeNovelTest
         };
     }
 
+    /// <summary>
+    /// Загружает реальное изображение из TestData/Images или возвращает fake PNG.
+    /// Поддерживает форматы: .png, .jpg, .jpeg
+    /// </summary>
+    private byte[] LoadTestImage(string fileName)
+    {
+        // Ищем папку TestData относительно сборки
+        var baseDir = AppContext.BaseDirectory; // bin/Debug/net10.0/
+        var imagesDir = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "TestData", "Images"));
+        
+        // Пробуем разные расширения
+        var baseName = Path.GetFileNameWithoutExtension(fileName);
+        var extensions = new[] { ".png", ".jpg", ".jpeg" };
+        
+        foreach (var ext in extensions)
+        {
+            var testDataPath = Path.Combine(imagesDir, baseName + ext);
+            if (File.Exists(testDataPath))
+            {
+                _output.WriteLine($"✅ Используется реальное изображение: {testDataPath}");
+                return File.ReadAllBytes(testDataPath);
+            }
+        }
+
+        _output.WriteLine($"⚠️ Файл {fileName} не найден (искали .png, .jpg, .jpeg), используется fake PNG");
+        _output.WriteLine($"   Положите реальное изображение в: {imagesDir}");
+        return CreateFakePngBytes();
+    }
+
     private string GetScriptTemplate()
     {
         return @"## Generated by NoviVovi - {{ title }}
@@ -375,3 +412,5 @@ label {{ label.identifier }}:
 {{~ end ~}}";
     }
 }
+
+

@@ -47,16 +47,16 @@ public class RenPyIdentifierGenerator
     }
 
     /// <summary>
-    /// Generates a unique identifier for a Character sprite image.
-    /// Format: sprite_{guid} (e.g., sprite_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6)
+    /// Generates a unique identifier for an Image (background).
+    /// Format: bg_{guid} (e.g., bg_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6)
     /// </summary>
-    public string GenerateForImage(Guid spriteId)
+    public string GenerateForImage(Guid imageId)
     {
-        if (_cache.TryGetValue(spriteId, out var cached))
+        if (_cache.TryGetValue(imageId, out var cached))
             return cached;
 
-        var identifier = $"sprite_{spriteId:N}";
-        _cache[spriteId] = identifier;
+        var identifier = $"bg_{imageId:N}";
+        _cache[imageId] = identifier;
         return identifier;
     }
 }

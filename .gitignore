@@ -34,6 +34,12 @@ appsettings.Local.json
 # Test results
 TestResults/
 
+# Test data images (each developer uses their own)
+tests/**/TestData/Images/*.png
+tests/**/TestData/Images/*.jpg
+tests/**/TestData/Images/*.jpeg
+tests/**/TestData/Images/*.gif
+
 ####################################
 # Logs
 ####################################
