@@ -8,13 +8,13 @@ public static class DbExtensions
     {
         return stepType switch
         {
-            "replica" => StepType.ShowReplica,
-            "menu" => StepType.ShowMenu,
-            "background" => StepType.ShowBackground,
+            "show_replica" => StepType.ShowReplica,
+            "show_menu" => StepType.ShowMenu,
+            "show_background" => StepType.ShowBackground,
             "jump" => StepType.Jump,
             "show_character" => StepType.ShowCharacter,
             "hide_character" => StepType.HideCharacter,
-            _ => throw new ArgumentException("такого в энуме быть не должно"),
+            _ => throw new ArgumentException($"Неизвестный тип степа: '{stepType}'"),
         };
     }
 

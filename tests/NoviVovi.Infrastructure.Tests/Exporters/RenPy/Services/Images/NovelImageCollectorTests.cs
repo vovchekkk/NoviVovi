@@ -30,7 +30,8 @@ public class NovelImageCollectorTests
         var backgroundObject = BackgroundObject.Create(image, transform);
         var step = ShowBackgroundStep.Create(backgroundObject);
 
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         novel.StartLabel.AddStep(step);
 
         // Act
@@ -65,7 +66,8 @@ public class NovelImageCollectorTests
         var characterObject = CharacterObject.Create(character, state, transform);
         var step = ShowCharacterStep.Create(characterObject);
 
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         novel.StartLabel.AddStep(step);
 
         // Act
@@ -93,7 +95,8 @@ public class NovelImageCollectorTests
         var step2 = ShowBackgroundStep.Create(backgroundObject);
         var step3 = ShowBackgroundStep.Create(backgroundObject);
 
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         novel.StartLabel.AddStep(step1);
         novel.StartLabel.AddStep(step2);
         novel.StartLabel.AddStep(step3);
@@ -110,7 +113,8 @@ public class NovelImageCollectorTests
     public void CollectImages_WithEmptyNovel_ReturnsEmptyCollection()
     {
         // Arrange
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
 
         // Act
         var result = _collector.CollectImages(novel).ToList();
@@ -139,7 +143,8 @@ public class NovelImageCollectorTests
         var step1 = ShowBackgroundStep.Create(backgroundObject1);
         var step2 = ShowBackgroundStep.Create(backgroundObject2);
 
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         novel.StartLabel.AddStep(step1);
 
         var label2 = Label.Create("chapter2", novel.Id);
@@ -168,7 +173,8 @@ public class NovelImageCollectorTests
         var showBgStep = ShowBackgroundStep.Create(backgroundObject);
         
         // Use JumpStep instead of DialogueStep
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         var jumpStep = JumpStep.Create(novel.StartLabel);
 
         novel.StartLabel.AddStep(jumpStep);
@@ -213,7 +219,8 @@ public class NovelImageCollectorTests
         var bgStep = ShowBackgroundStep.Create(backgroundObject);
         var charStep = ShowCharacterStep.Create(characterObject);
 
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         novel.StartLabel.AddStep(bgStep);
         novel.StartLabel.AddStep(charStep);
 
@@ -259,7 +266,8 @@ public class NovelImageCollectorTests
         var step1 = ShowCharacterStep.Create(characterObject1);
         var step2 = ShowCharacterStep.Create(characterObject2);
 
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         novel.StartLabel.AddStep(step1);
         novel.StartLabel.AddStep(step2);
 
@@ -272,6 +280,8 @@ public class NovelImageCollectorTests
         Assert.Contains(result, r => r.ImageId == imageId2 && r.RenPyImageName == $"char_{charId:N} state_{stateId2:N}");
     }
 }
+
+
 
 
 

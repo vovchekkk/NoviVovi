@@ -42,7 +42,7 @@ public class PatchNovelHandler(
                  var label = await labelRepository.GetByIdAsync(request.StartLabelId.Value, ct)
                              ?? throw new NotFoundException($"Метка '{request.StartLabelId}' не найдена");
                  
-                 novel.SetStartLabel(label);
+                 novel.ChangeStartLabel(label);
             }
             
             await novelRepository.AddOrUpdateAsync(novel, ct);

@@ -37,7 +37,8 @@ public class NovelToRenPyMapperTests
     public void Map_ValidNovel_ReturnsRenPyNovel()
     {
         // Arrange
-        var novel = Novel.Create("My Visual Novel", "start");
+        var novel = Novel.Create("My Visual Novel");
+        novel.InitializeStartLabel("start");
 
         // Act
         var result = _mapper.Map(novel);
@@ -54,7 +55,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithoutCharacters_ReturnsEmptyCharactersList()
     {
         // Arrange
-        var novel = Novel.Create("Empty Novel", "start");
+        var novel = Novel.Create("Empty Novel");
+        novel.InitializeStartLabel("start");
 
         // Act
         var result = _mapper.Map(novel);
@@ -67,7 +69,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithCharacters_MapsAllCharacters()
     {
         // Arrange
-        var novel = Novel.Create("Novel with Characters", "start");
+        var novel = Novel.Create("Novel with Characters");
+        novel.InitializeStartLabel("start");
         var char1 = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#FF5733"), null);
         var char2 = Character.Create("Bob", Guid.NewGuid(), Color.FromHex("#00FF00"), null);
         novel.AddCharacter(char1);
@@ -86,7 +89,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithLabels_MapsAllLabels()
     {
         // Arrange
-        var novel = Novel.Create("Novel with Labels", "start");
+        var novel = Novel.Create("Novel with Labels");
+        novel.InitializeStartLabel("start");
         var label1 = Label.Create("chapter1", novel.Id);
         var label2 = Label.Create("chapter2", novel.Id);
         novel.AddLabel(label1);
@@ -103,7 +107,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithStartLabel_MapsStartLabelIdCorrectly()
     {
         // Arrange
-        var novel = Novel.Create("Test Novel", "beginning");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("beginning");
 
         // Act
         var result = _mapper.Map(novel);
@@ -117,10 +122,11 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithCustomStartLabel_UsesCustomStartLabel()
     {
         // Arrange
-        var novel = Novel.Create("Custom Start Novel", "start");
+        var novel = Novel.Create("Custom Start Novel");
+        novel.InitializeStartLabel("start");
         var customStart = Label.Create("custom_start", novel.Id);
         novel.AddLabel(customStart);
-        novel.SetStartLabel(customStart);
+        novel.ChangeStartLabel(customStart);
 
         // Act
         var result = _mapper.Map(novel);
@@ -134,7 +140,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithComplexStructure_MapsEverything()
     {
         // Arrange
-        var novel = Novel.Create("Complex Novel", "start");
+        var novel = Novel.Create("Complex Novel");
+        novel.InitializeStartLabel("start");
         
         // Add characters
         var character = Character.Create("Protagonist", Guid.NewGuid(), Color.FromHex("#FFFFFF"), "Main character");
@@ -164,7 +171,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithSpecialCharactersInTitle_PreservesTitle()
     {
         // Arrange
-        var novel = Novel.Create("Моя Визуальная Новелла: Часть 1", "start");
+        var novel = Novel.Create("Моя Визуальная Новелла: Часть 1");
+        novel.InitializeStartLabel("start");
 
         // Act
         var result = _mapper.Map(novel);
@@ -178,7 +186,8 @@ public class NovelToRenPyMapperTests
     {
         // Arrange
         var longTitle = new string('A', 500);
-        var novel = Novel.Create(longTitle, "start");
+        var novel = Novel.Create(longTitle);
+        novel.InitializeStartLabel("start");
 
         // Act
         var result = _mapper.Map(novel);
@@ -191,7 +200,8 @@ public class NovelToRenPyMapperTests
     public void Map_SameNovelTwice_ReturnsConsistentIdentifiers()
     {
         // Arrange
-        var novel = Novel.Create("Consistent Novel", "start");
+        var novel = Novel.Create("Consistent Novel");
+        novel.InitializeStartLabel("start");
         var character = Character.Create("Test", Guid.NewGuid(), Color.FromHex("#123456"), null);
         novel.AddCharacter(character);
 
@@ -208,7 +218,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithMultipleCharactersAndLabels_PreservesOrder()
     {
         // Arrange
-        var novel = Novel.Create("Ordered Novel", "start");
+        var novel = Novel.Create("Ordered Novel");
+        novel.InitializeStartLabel("start");
         
         var char1 = Character.Create("First", Guid.NewGuid(), Color.FromHex("#111111"), null);
         var char2 = Character.Create("Second", Guid.NewGuid(), Color.FromHex("#222222"), null);
@@ -237,7 +248,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelWithCharactersWithStates_MapsSuccessfully()
     {
         // Arrange
-        var novel = Novel.Create("Novel with States", "start");
+        var novel = Novel.Create("Novel with States");
+        novel.InitializeStartLabel("start");
         var character = Character.Create("Hero", Guid.NewGuid(), Color.FromHex("#FF0000"), null);
         
         var image = Image.CreatePending("sprite1", Guid.NewGuid(), "/path/to/sprite.png", "png", ImageType.Character, new Size(500, 800));
@@ -259,7 +271,8 @@ public class NovelToRenPyMapperTests
     public void Map_MinimalNovel_MapsSuccessfully()
     {
         // Arrange
-        var novel = Novel.Create("Minimal", "start");
+        var novel = Novel.Create("Minimal");
+        novel.InitializeStartLabel("start");
 
         // Act
         var result = _mapper.Map(novel);
@@ -275,7 +288,8 @@ public class NovelToRenPyMapperTests
     public void Map_NovelStartLabelId_MatchesStartLabelIdentifier()
     {
         // Arrange
-        var novel = Novel.Create("Test", "start");
+        var novel = Novel.Create("Test");
+        novel.InitializeStartLabel("start");
 
         // Act
         var result = _mapper.Map(novel);
@@ -285,4 +299,6 @@ public class NovelToRenPyMapperTests
         Assert.NotNull(startLabel);
     }
 }
+
+
 

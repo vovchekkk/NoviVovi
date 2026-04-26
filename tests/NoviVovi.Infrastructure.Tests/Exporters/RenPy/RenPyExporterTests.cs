@@ -114,7 +114,8 @@ label {{ label.identifier }}:
     public async Task ExportToRenPyAsync_MinimalNovel_ReturnsValidZip()
     {
         // Arrange
-        var novel = Novel.Create("Test Novel", "start");
+        var novel = Novel.Create("Test Novel");
+        novel.InitializeStartLabel("start");
         var character = Character.Create("Narrator", Guid.NewGuid(), Color.FromHex("#ffffff"), null);
         novel.AddCharacter(character);
         
@@ -168,7 +169,8 @@ label {{ label.identifier }}:
     public async Task ExportToRenPyAsync_NovelWithMultipleCharacters_IncludesAllCharacters()
     {
         // Arrange
-        var novel = Novel.Create("Multi Character Novel", "start");
+        var novel = Novel.Create("Multi Character Novel");
+        novel.InitializeStartLabel("start");
         
         var char1 = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#ff0000"), null);
         var char2 = Character.Create("Bob", Guid.NewGuid(), Color.FromHex("#00ff00"), null);
@@ -208,7 +210,8 @@ label {{ label.identifier }}:
     public async Task ExportToRenPyAsync_NovelWithMultipleLabels_IncludesAllLabels()
     {
         // Arrange
-        var novel = Novel.Create("Multi Label Novel", "intro");
+        var novel = Novel.Create("Multi Label Novel");
+        novel.InitializeStartLabel("intro");
         var character = Character.Create("Guide", Guid.NewGuid(), Color.FromHex("#ffcc00"), null);
         novel.AddCharacter(character);
         
@@ -248,7 +251,8 @@ label {{ label.identifier }}:
     public async Task ExportToRenPyAsync_CyrillicNovel_PreservesEncoding()
     {
         // Arrange
-        var novel = Novel.Create("Тестовая Новелла", "начало");
+        var novel = Novel.Create("Тестовая Новелла");
+        novel.InitializeStartLabel("начало");
         var character = Character.Create("Алиса", Guid.NewGuid(), Color.FromHex("#ff69b4"), null);
         novel.AddCharacter(character);
         
@@ -281,7 +285,8 @@ label {{ label.identifier }}:
     public async Task ExportToRenPyAsync_ZipContainsGameDirectory()
     {
         // Arrange
-        var novel = Novel.Create("Test", "start");
+        var novel = Novel.Create("Test");
+        novel.InitializeStartLabel("start");
         var character = Character.Create("Test", Guid.NewGuid(), Color.FromHex("#ffffff"), null);
         novel.AddCharacter(character);
 
@@ -305,7 +310,8 @@ label {{ label.identifier }}:
     public async Task ExportToRenPyAsync_CallsRepositoryOnce()
     {
         // Arrange
-        var novel = Novel.Create("Test", "start");
+        var novel = Novel.Create("Test");
+        novel.InitializeStartLabel("start");
         var character = Character.Create("Test", Guid.NewGuid(), Color.FromHex("#ffffff"), null);
         novel.AddCharacter(character);
 
@@ -323,4 +329,6 @@ label {{ label.identifier }}:
         );
     }
 }
+
+
 
