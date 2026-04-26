@@ -1,11 +1,13 @@
 import {css} from '../../../styled-system/css'
 import {Link, useParams} from 'react-router-dom'
+import { getLastNovelId } from '../lib/novelSession.ts';
 
 interface EditorHeaderProps {
     active?: 'scenes' | 'editor' | 'assets'
 }
 export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) {
     const { novelId } = useParams<{ novelId: string }>();
+    const currentNovelId = novelId ?? getLastNovelId() ?? '0';
     return (
         <header className={css({
             display: 'flex',
@@ -20,7 +22,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
             })}>
 
                 <Link
-                    to={`/editor/${novelId}`}
+                    to={`/editor/${currentNovelId}`}
                     className={css({
                         color: 'black',
                         position: 'relative',
@@ -41,7 +43,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
                 </Link>
 
                 <Link
-                    to="/editor/scenes"
+                    to={`/editor/${currentNovelId}/scenes`}
                     className={css({
                         color: 'black',
                         position: 'relative',
@@ -62,7 +64,7 @@ export default function EditorHeader({ active  = 'editor' }: EditorHeaderProps) 
                 </Link>
 
                 <Link
-                    to={`/editor/assets/${novelId}`}
+                    to={`/editor/assets/${currentNovelId}`}
                     className={css({
                         color: 'black',
                         position: 'relative',

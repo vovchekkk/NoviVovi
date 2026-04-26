@@ -373,6 +373,22 @@ const findStepLocation = (stepId: string): StepLocation | null => {
     return null;
 };
 
+const removeStepById = (stepId: string): boolean => {
+    const location = findStepLocation(stepId);
+    if (!location) {
+        return false;
+    }
+
+    const steps = stepsByNovelId[location.novelId]?.[location.labelId];
+    if (!steps?.[stepId]) {
+        return false;
+    }
+
+    delete steps[stepId];
+    delete stepLocationById[stepId];
+    return true;
+};
+
 ensureNovelContext('0', 'Демо-новелла');
 ensureNovelContext('1', 'Учебная новелла');
 
@@ -564,6 +580,17 @@ mock.onPatch(stepItemPattern).reply((config) => {
     putStep(location.novelId, location.labelId, step);
 
     return [200, clone(step)];
+});
+
+mock.onDelete(stepItemPattern).reply((config) => {
+    const match = matchUrl(config.url, stepItemPattern);
+    if (!match) return [404, { message: 'Step not found' }];
+
+    const stepId = match[1];
+    const removed = removeStepById(stepId);
+    if (!removed) return [404, { message: 'Step not found' }];
+
+    return [200, { success: true }];
 });
 
 mock.onGet(charactersCollectionPattern).reply((config) => {

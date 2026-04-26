@@ -2,7 +2,18 @@ import Header from "../shared/ui/Header.tsx";
 import { css } from '../../styled-system/css'
 import EditorHeader from "../shared/ui/EditorHeader.tsx";
 import InfiniteCanvas from "../shared/ui/InfiniteCanvas.tsx";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { setLastNovelId } from "../shared/lib/novelSession.ts";
 export default function Scenes() {
+    const { novelId } = useParams<{ novelId: string }>();
+
+    useEffect(() => {
+        if (novelId) {
+            setLastNovelId(novelId);
+        }
+    }, [novelId]);
+
     return (
         <div className={css({
             bg: '#775D68',
@@ -31,7 +42,19 @@ export default function Scenes() {
                         display: 'flex',
                         flexDirection: 'column',
                     })}>
-                        <InfiniteCanvas></InfiniteCanvas>
+                        {novelId ? (
+                            <InfiniteCanvas novelId={novelId} />
+                        ) : (
+                            <div className={css({
+                                flex: 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '16px',
+                            })}>
+                                Не найден ID новеллы в URL.
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>
