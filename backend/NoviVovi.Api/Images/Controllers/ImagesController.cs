@@ -12,7 +12,7 @@ namespace NoviVovi.Api.Images.Controllers;
 
 [ApiController]
 [Tags("Images")]
-[Route("api/images")]
+[Route("api/novels/{novelId:guid}/images")]
 public class ImagesController(
     IMediator mediator,
     ImageCommandMapper commandMapper,
@@ -38,10 +38,11 @@ public class ImagesController(
     /// </summary>
     [HttpPost("upload-url")]
     public async Task<ActionResult<UploadInfoImageResponse>> InitiateUpload(
+        [FromRoute] Guid novelId,
         [FromBody] InitiateUploadImageRequest request
     )
     {
-        var command = commandMapper.ToCommand(request);
+        var command = commandMapper.ToCommand(request, novelId);
         var uploadInfo = await mediator.Send(command);
 
         // Мапим техническую инфу (ID и URL на загрузку)

@@ -173,7 +173,7 @@ public class ManualExportLargeNovelTest
         // === ПЕРСОНАЖИ ===
         
         // Алиса - главная героиня
-        var alice = Character.Create("Алиса", Color.FromHex("#ff69b4"), "Главная героиня");
+        var alice = Character.Create("Алиса", Guid.NewGuid(), Color.FromHex("#ff69b4"), "Главная героиня");
         novel.AddCharacter(alice);
         
         var aliceImage = CreateImage("alice_neutral.png", "alice-neutral-001.png");
@@ -182,7 +182,7 @@ public class ManualExportLargeNovelTest
         alice.AddCharacterState(aliceNeutral);
 
         // Боб - друг
-        var bob = Character.Create("Боб", Color.FromHex("#4169e1"), "Лучший друг");
+        var bob = Character.Create("Боб", Guid.NewGuid(), Color.FromHex("#4169e1"), "Лучший друг");
         novel.AddCharacter(bob);
         
         var bobImage = CreateImage("bob_happy.png", "bob-happy-001.png");
@@ -191,7 +191,7 @@ public class ManualExportLargeNovelTest
         bob.AddCharacterState(bobHappy);
 
         // Кэт - загадочная незнакомка
-        var cat = Character.Create("Кэт", Color.FromHex("#9370db"), "Загадочная незнакомка");
+        var cat = Character.Create("Кэт", Guid.NewGuid(), Color.FromHex("#9370db"), "Загадочная незнакомка");
         novel.AddCharacter(cat);
         
         var catImage = CreateImage("cat_mysterious.png", "cat-mysterious-001.png");
@@ -312,6 +312,7 @@ public class ManualExportLargeNovelTest
     {
         var image = Image.CreatePending(
             name,
+            Guid.NewGuid(),
             $"novels/images/{storagePath}",
             "png",
             ImageType.Background,
@@ -412,5 +413,6 @@ label {{ label.identifier }}:
 {{~ end ~}}";
     }
 }
+
 
 

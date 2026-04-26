@@ -15,6 +15,7 @@ public partial class ImageMapper(
         var img = new Image(
             imgDbo.Id,
             imgDbo.Name,
+            imgDbo.NovelId,
             imgDbo.Url,
             imgDbo.Format,
             imgDbo.ImgType.ToImageType(),

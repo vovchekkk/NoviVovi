@@ -23,7 +23,7 @@ public class NovelImageCollectorTests
     {
         // Arrange
         var imageId = Guid.NewGuid();
-        var image = Image.CreatePending("bg.png", "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
+        var image = Image.CreatePending("bg.png", Guid.NewGuid(), "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image, imageId);
 
         var transform = Transform.Create(new Position(0, 0), new Size(1920, 1080));
@@ -51,11 +51,11 @@ public class NovelImageCollectorTests
         var charId = Guid.NewGuid();
         var stateId = Guid.NewGuid();
 
-        var image = Image.CreatePending("char.png", "/path/char.png", "png", ImageType.Character, new Size(1920, 1080));
+        var image = Image.CreatePending("char.png", Guid.NewGuid(), "/path/char.png", "png", ImageType.Character, new Size(1920, 1080));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image, imageId);
 
         var localTransform = Transform.Create(new Position(0, 0), new Size(500, 1000));
-        var character = Character.Create("Alice", Color.FromHex("#FF5733"), null);
+        var character = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#FF5733"), null);
         typeof(Character).GetProperty(nameof(Character.Id))!.SetValue(character, charId);
 
         var state = CharacterState.Create("happy", image, localTransform);
@@ -83,7 +83,7 @@ public class NovelImageCollectorTests
     {
         // Arrange
         var imageId = Guid.NewGuid();
-        var image = Image.CreatePending("bg.png", "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
+        var image = Image.CreatePending("bg.png", Guid.NewGuid(), "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image, imageId);
 
         var transform = Transform.Create(new Position(0, 0), new Size(1920, 1080));
@@ -126,10 +126,10 @@ public class NovelImageCollectorTests
         var imageId1 = Guid.NewGuid();
         var imageId2 = Guid.NewGuid();
 
-        var image1 = Image.CreatePending("bg1.png", "/path/bg1.png", "png", ImageType.Background, new Size(1920, 1080));
+        var image1 = Image.CreatePending("bg1.png", Guid.NewGuid(), "/path/bg1.png", "png", ImageType.Background, new Size(1920, 1080));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image1, imageId1);
 
-        var image2 = Image.CreatePending("bg2.png", "/path/bg2.png", "png", ImageType.Background, new Size(1920, 1080));
+        var image2 = Image.CreatePending("bg2.png", Guid.NewGuid(), "/path/bg2.png", "png", ImageType.Background, new Size(1920, 1080));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image2, imageId2);
 
         var transform = Transform.Create(new Position(0, 0), new Size(1920, 1080));
@@ -160,7 +160,7 @@ public class NovelImageCollectorTests
     {
         // Arrange
         var imageId = Guid.NewGuid();
-        var image = Image.CreatePending("bg.png", "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
+        var image = Image.CreatePending("bg.png", Guid.NewGuid(), "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image, imageId);
 
         var transform = Transform.Create(new Position(0, 0), new Size(1920, 1080));
@@ -191,17 +191,17 @@ public class NovelImageCollectorTests
         var charId = Guid.NewGuid();
         var stateId = Guid.NewGuid();
 
-        var bgImage = Image.CreatePending("bg.png", "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
+        var bgImage = Image.CreatePending("bg.png", Guid.NewGuid(), "/path/bg.png", "png", ImageType.Background, new Size(1920, 1080));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(bgImage, bgImageId);
 
-        var charImage = Image.CreatePending("char.png", "/path/char.png", "png", ImageType.Character, new Size(500, 1000));
+        var charImage = Image.CreatePending("char.png", Guid.NewGuid(), "/path/char.png", "png", ImageType.Character, new Size(500, 1000));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(charImage, charImageId);
 
         var bgTransform = Transform.Create(new Position(0, 0), new Size(1920, 1080));
         var backgroundObject = BackgroundObject.Create(bgImage, bgTransform);
 
         var localTransform = Transform.Create(new Position(0, 0), new Size(500, 1000));
-        var character = Character.Create("Alice", Color.FromHex("#FF5733"), null);
+        var character = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#FF5733"), null);
         typeof(Character).GetProperty(nameof(Character.Id))!.SetValue(character, charId);
 
         var state = CharacterState.Create("happy", charImage, localTransform);
@@ -236,14 +236,14 @@ public class NovelImageCollectorTests
         var stateId1 = Guid.NewGuid();
         var stateId2 = Guid.NewGuid();
 
-        var image1 = Image.CreatePending("char_happy.png", "/path/happy.png", "png", ImageType.Character, new Size(500, 1000));
+        var image1 = Image.CreatePending("char_happy.png", Guid.NewGuid(), "/path/happy.png", "png", ImageType.Character, new Size(500, 1000));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image1, imageId1);
 
-        var image2 = Image.CreatePending("char_sad.png", "/path/sad.png", "png", ImageType.Character, new Size(500, 1000));
+        var image2 = Image.CreatePending("char_sad.png", Guid.NewGuid(), "/path/sad.png", "png", ImageType.Character, new Size(500, 1000));
         typeof(Image).GetProperty(nameof(Image.Id))!.SetValue(image2, imageId2);
 
         var localTransform = Transform.Create(new Position(0, 0), new Size(500, 1000));
-        var character = Character.Create("Alice", Color.FromHex("#FF5733"), null);
+        var character = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#FF5733"), null);
         typeof(Character).GetProperty(nameof(Character.Id))!.SetValue(character, charId);
 
         var state1 = CharacterState.Create("happy", image1, localTransform);
@@ -272,5 +272,7 @@ public class NovelImageCollectorTests
         Assert.Contains(result, r => r.ImageId == imageId2 && r.RenPyImageName == $"char_{charId:N} state_{stateId2:N}");
     }
 }
+
+
 
 

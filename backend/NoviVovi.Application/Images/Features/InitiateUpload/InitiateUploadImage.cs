@@ -14,6 +14,7 @@ namespace NoviVovi.Application.Images.Features.InitiateUpload;
 
 public class InitiateUploadImageCommand : IRequest<UploadInfoImageDto>
 {
+    public required Guid NovelId { get; init; }
     public required string Name { get; init; }
     public string? Description { get; init; }
     public required string Format { get; init; }
@@ -40,6 +41,7 @@ public class InitiateUploadImageHandler(
             // 2. Создаем запись в БД (Status = Pending)
             var image = Image.CreatePending(
                 request.Name,
+                request.NovelId,
                 storagePath,
                 request.Format,
                 request.Type,

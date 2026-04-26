@@ -115,7 +115,7 @@ label {{ label.identifier }}:
     {
         // Arrange
         var novel = Novel.Create("Test Novel", "start");
-        var character = Character.Create("Narrator", Color.FromHex("#ffffff"), null);
+        var character = Character.Create("Narrator", Guid.NewGuid(), Color.FromHex("#ffffff"), null);
         novel.AddCharacter(character);
         
         var replica = Replica.Create(character, "Hello World");
@@ -170,8 +170,8 @@ label {{ label.identifier }}:
         // Arrange
         var novel = Novel.Create("Multi Character Novel", "start");
         
-        var char1 = Character.Create("Alice", Color.FromHex("#ff0000"), null);
-        var char2 = Character.Create("Bob", Color.FromHex("#00ff00"), null);
+        var char1 = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#ff0000"), null);
+        var char2 = Character.Create("Bob", Guid.NewGuid(), Color.FromHex("#00ff00"), null);
         novel.AddCharacter(char1);
         novel.AddCharacter(char2);
         
@@ -209,7 +209,7 @@ label {{ label.identifier }}:
     {
         // Arrange
         var novel = Novel.Create("Multi Label Novel", "intro");
-        var character = Character.Create("Guide", Color.FromHex("#ffcc00"), null);
+        var character = Character.Create("Guide", Guid.NewGuid(), Color.FromHex("#ffcc00"), null);
         novel.AddCharacter(character);
         
         var introReplica = Replica.Create(character, "Welcome!");
@@ -249,7 +249,7 @@ label {{ label.identifier }}:
     {
         // Arrange
         var novel = Novel.Create("Тестовая Новелла", "начало");
-        var character = Character.Create("Алиса", Color.FromHex("#ff69b4"), null);
+        var character = Character.Create("Алиса", Guid.NewGuid(), Color.FromHex("#ff69b4"), null);
         novel.AddCharacter(character);
         
         var replica = Replica.Create(character, "Привет, мир!");
@@ -282,7 +282,7 @@ label {{ label.identifier }}:
     {
         // Arrange
         var novel = Novel.Create("Test", "start");
-        var character = Character.Create("Test", Color.FromHex("#ffffff"), null);
+        var character = Character.Create("Test", Guid.NewGuid(), Color.FromHex("#ffffff"), null);
         novel.AddCharacter(character);
 
         _mockRepository
@@ -306,7 +306,7 @@ label {{ label.identifier }}:
     {
         // Arrange
         var novel = Novel.Create("Test", "start");
-        var character = Character.Create("Test", Color.FromHex("#ffffff"), null);
+        var character = Character.Create("Test", Guid.NewGuid(), Color.FromHex("#ffffff"), null);
         novel.AddCharacter(character);
 
         _mockRepository
@@ -323,3 +323,4 @@ label {{ label.identifier }}:
         );
     }
 }
+

@@ -14,7 +14,7 @@ public partial class CharacterMapper(
 {
     public Character ToDomain(CharacterDbO dbo)
     {
-        var res = new Character(dbo.Id, dbo.Name, Color.FromHex(dbo.NameColor), dbo.Description);
+        var res = new Character(dbo.Id, dbo.Name, dbo.NovelId, Color.FromHex(dbo.NameColor), dbo.Description);
         foreach (var state in dbo.States)
             res.AddCharacterState(ToDomain(state));
         return res;

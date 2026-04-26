@@ -48,7 +48,7 @@ public class StepToRenPyMapperTests
     public void Map_HideCharacterStep_ReturnsRenPyHideCharacterStatement()
     {
         // Arrange
-        var character = Character.Create("Alice", Color.FromHex("#FF5733"), null);
+        var character = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#FF5733"), null);
         var hideStep = HideCharacterStep.Create(character);
 
         // Act
@@ -64,7 +64,7 @@ public class StepToRenPyMapperTests
     public void Map_ShowBackgroundStep_ReturnsRenPySceneStatement()
     {
         // Arrange
-        var image = Image.CreatePending("bg1", "/path/to/bg.png", "png", ImageType.Background, new Size(1920, 1080));
+        var image = Image.CreatePending("bg1", Guid.NewGuid(), "/path/to/bg.png", "png", ImageType.Background, new Size(1920, 1080));
         var transform = Transform.Create(new Position(0, 0), new Size(1920, 1080));
         var bgObject = BackgroundObject.Create(image, transform);
         var bgStep = ShowBackgroundStep.Create(bgObject);
@@ -87,7 +87,7 @@ public class StepToRenPyMapperTests
     public void Map_ShowReplicaStep_ReturnsRenPyReplicaStatement()
     {
         // Arrange
-        var character = Character.Create("Charlie", Color.FromHex("#0000FF"), null);
+        var character = Character.Create("Charlie", Guid.NewGuid(), Color.FromHex("#0000FF"), null);
         var replica = Replica.Create(character, "Hello, world!");
         var replicaStep = ShowReplicaStep.Create(replica);
 
@@ -105,7 +105,7 @@ public class StepToRenPyMapperTests
     public void Map_ShowReplicaStepWithSpecialCharacters_EscapesText()
     {
         // Arrange
-        var character = Character.Create("Dave", Color.FromHex("#FFFF00"), null);
+        var character = Character.Create("Dave", Guid.NewGuid(), Color.FromHex("#FFFF00"), null);
         var replica = Replica.Create(character, "He said: \"Hello!\"\nNew line");
         var replicaStep = ShowReplicaStep.Create(replica);
 
@@ -189,7 +189,7 @@ public class StepToRenPyMapperTests
     public void Map_ReplicaWithBackslash_EscapesCorrectly()
     {
         // Arrange
-        var character = Character.Create("Frank", Color.FromHex("#00FFFF"), null);
+        var character = Character.Create("Frank", Guid.NewGuid(), Color.FromHex("#00FFFF"), null);
         var replica = Replica.Create(character, @"Path: C:\Users\Test");
         var replicaStep = ShowReplicaStep.Create(replica);
 
@@ -216,3 +216,5 @@ public class StepToRenPyMapperTests
         Assert.Empty(menuStatement.Choices);
     }
 }
+
+

@@ -36,7 +36,7 @@ public class AddCharacterHandler(
 
             var colorName = Color.FromHex(request.NameColor);
 
-            var character = Character.Create(request.Name, colorName, request.Description);
+            var character = Character.Create(request.Name, request.NovelId, colorName, request.Description);
 
             novel.AddCharacter(character);
             

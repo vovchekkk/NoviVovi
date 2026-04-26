@@ -10,5 +10,5 @@ public partial class ImageCommandMapper
 {
     public partial PatchImageCommand ToCommand(PatchImageRequest request, Guid imageId);
     
-    public partial InitiateUploadImageCommand ToCommand(InitiateUploadImageRequest request);
+    public partial InitiateUploadImageCommand ToCommand(InitiateUploadImageRequest request, Guid novelId);
 }

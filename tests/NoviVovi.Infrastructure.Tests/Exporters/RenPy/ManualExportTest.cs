@@ -162,25 +162,17 @@ public class ManualExportTest
         var novel = Novel.Create("Моя Первая Новелла", "start");
 
         // Создаем персонажа
-        var alice = Character.Create("Алиса", Color.FromHex("#ff69b4"), "Главная героиня");
+        var alice = Character.Create("Алиса", Guid.NewGuid(), Color.FromHex("#ff69b4"), "Главная героиня");
         novel.AddCharacter(alice);
 
         // Создаем изображение для фона
-        var bgImage = Image.CreatePending(
-            "room.png",
-            "novels/images/bg-room-001.png",
-            "png",
-            ImageType.Background,
+        var bgImage = Image.CreatePending("room.png", Guid.NewGuid(), "novels/images/bg-room-001.png", "png", ImageType.Background,
             new Size(1920, 1080)
         );
         SetImageId(bgImage, Guid.Parse("11111111-2222-3333-4444-555555555555"));
 
         // Создаем изображение для персонажа (РЕАЛЬНЫЙ размер твоего character.png)
-        var aliceImage = Image.CreatePending(
-            "alice_happy.png",
-            "novels/images/alice-happy-001.png",
-            "png",
-            ImageType.Character,
+        var aliceImage = Image.CreatePending("alice_happy.png", Guid.NewGuid(), "novels/images/alice-happy-001.png", "png", ImageType.Character,
             new Size(250, 500) // ← Измени на РЕАЛЬНЫЙ размер твоего изображения!
         );
         SetImageId(aliceImage, Guid.Parse("66666666-7777-8888-9999-000000000000"));
@@ -306,3 +298,4 @@ label {{ label.identifier }}:
 {{~ end ~}}";
     }
 }
+

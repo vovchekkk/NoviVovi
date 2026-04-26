@@ -6,6 +6,7 @@ namespace NoviVovi.Domain.Images;
 public class Image : Entity
 {
     public string Name { get; private set; }
+    public Guid? NovelId { get; private set; }
     public string? Description { get; private set; }
     public string StoragePath { get; private set; } 
     public string Format { get; private set; }
@@ -16,6 +17,7 @@ public class Image : Entity
     public Image(
         Guid id,
         string name,
+        Guid novelId,
         string storagePath,
         string format,
         ImageType type,
@@ -25,6 +27,7 @@ public class Image : Entity
     ) : base(id)
     {
         Name = name;
+        NovelId = novelId;
         StoragePath = storagePath;
         Format = format;
         Type = type;
@@ -34,16 +37,20 @@ public class Image : Entity
     }
     
     public static Image CreatePending(
-        string name,
-        string storagePath,
-        string format,
+        string? name,
+        Guid novelId,
+        string? storagePath,
+        string? format,
         ImageType type,
-        Size size,
+        Size? size,
         string? description = null
     )
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException($"Name cannot be empty");
+        
+        if (novelId == Guid.Empty)
+            throw new DomainException($"NovelId cannot be empty");
         
         if (string.IsNullOrWhiteSpace(storagePath))
             throw new DomainException($"StoragePath cannot be empty");
@@ -60,6 +67,7 @@ public class Image : Entity
         return new Image(
             Guid.NewGuid(),
             name,
+            novelId,
             storagePath,
             format,
             type,

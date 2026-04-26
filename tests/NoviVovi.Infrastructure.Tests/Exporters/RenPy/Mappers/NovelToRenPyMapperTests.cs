@@ -68,8 +68,8 @@ public class NovelToRenPyMapperTests
     {
         // Arrange
         var novel = Novel.Create("Novel with Characters", "start");
-        var char1 = Character.Create("Alice", Color.FromHex("#FF5733"), null);
-        var char2 = Character.Create("Bob", Color.FromHex("#00FF00"), null);
+        var char1 = Character.Create("Alice", Guid.NewGuid(), Color.FromHex("#FF5733"), null);
+        var char2 = Character.Create("Bob", Guid.NewGuid(), Color.FromHex("#00FF00"), null);
         novel.AddCharacter(char1);
         novel.AddCharacter(char2);
 
@@ -137,7 +137,7 @@ public class NovelToRenPyMapperTests
         var novel = Novel.Create("Complex Novel", "start");
         
         // Add characters
-        var character = Character.Create("Protagonist", Color.FromHex("#FFFFFF"), "Main character");
+        var character = Character.Create("Protagonist", Guid.NewGuid(), Color.FromHex("#FFFFFF"), "Main character");
         novel.AddCharacter(character);
         
         // Add labels with steps
@@ -192,7 +192,7 @@ public class NovelToRenPyMapperTests
     {
         // Arrange
         var novel = Novel.Create("Consistent Novel", "start");
-        var character = Character.Create("Test", Color.FromHex("#123456"), null);
+        var character = Character.Create("Test", Guid.NewGuid(), Color.FromHex("#123456"), null);
         novel.AddCharacter(character);
 
         // Act
@@ -210,9 +210,9 @@ public class NovelToRenPyMapperTests
         // Arrange
         var novel = Novel.Create("Ordered Novel", "start");
         
-        var char1 = Character.Create("First", Color.FromHex("#111111"), null);
-        var char2 = Character.Create("Second", Color.FromHex("#222222"), null);
-        var char3 = Character.Create("Third", Color.FromHex("#333333"), null);
+        var char1 = Character.Create("First", Guid.NewGuid(), Color.FromHex("#111111"), null);
+        var char2 = Character.Create("Second", Guid.NewGuid(), Color.FromHex("#222222"), null);
+        var char3 = Character.Create("Third", Guid.NewGuid(), Color.FromHex("#333333"), null);
         
         novel.AddCharacter(char1);
         novel.AddCharacter(char2);
@@ -238,9 +238,9 @@ public class NovelToRenPyMapperTests
     {
         // Arrange
         var novel = Novel.Create("Novel with States", "start");
-        var character = Character.Create("Hero", Color.FromHex("#FF0000"), null);
+        var character = Character.Create("Hero", Guid.NewGuid(), Color.FromHex("#FF0000"), null);
         
-        var image = Image.CreatePending("sprite1", "/path/to/sprite.png", "png", ImageType.Character, new Size(500, 800));
+        var image = Image.CreatePending("sprite1", Guid.NewGuid(), "/path/to/sprite.png", "png", ImageType.Character, new Size(500, 800));
         var transform = Transform.Create(new Position(0, 0), new Size(500, 800));
         var state = CharacterState.Create("happy", image, transform);
         
@@ -285,3 +285,4 @@ public class NovelToRenPyMapperTests
         Assert.NotNull(startLabel);
     }
 }
+
