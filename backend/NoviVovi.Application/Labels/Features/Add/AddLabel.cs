@@ -38,6 +38,7 @@ public class AddLabelHandler(
             novel.AddLabel(label);
             
             await labelRepository.AddOrUpdateAsync(label, ct);
+            
             await unitOfWork.CommitAsync(ct);
             
             return mapper.ToDto(label);

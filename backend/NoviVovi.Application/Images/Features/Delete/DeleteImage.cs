@@ -27,6 +27,9 @@ public class DeleteImageHandler(
                         ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
             
             await imageRepository.DeleteAsync(image, ct);
+            
+            await imageRepository.AddOrUpdateAsync(image, ct);
+            
             await unitOfWork.CommitAsync(ct);
             
             await storageService.DeleteFileAsync(image.StoragePath, ct);

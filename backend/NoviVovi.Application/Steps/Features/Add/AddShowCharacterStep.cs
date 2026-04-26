@@ -52,6 +52,8 @@ public class AddShowCharacterStepHandler(
             var step = ShowCharacterStep.Create(characterObject);
 
             label.AddStep(step);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

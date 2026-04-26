@@ -38,6 +38,8 @@ public class PatchLabelHandler(
             if (request.Name != null)
                 label.UpdateName(request.Name);
             
+            await labelRepository.AddOrUpdateAsync(label, ct);
+            
             await unitOfWork.CommitAsync(ct);
             
             return mapper.ToDto(label);

@@ -41,7 +41,9 @@ public class PatchImageHandler(
             
             if (request.Type.HasValue)
                 image.UpdateType(request.Type.Value);
-
+            
+            await imageRepository.AddOrUpdateAsync(image, ct);
+            
             await unitOfWork.CommitAsync(ct);
 
             return mapper.ToDto(image);

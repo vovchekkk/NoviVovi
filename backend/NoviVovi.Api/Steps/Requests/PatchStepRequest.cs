@@ -33,9 +33,6 @@ public record PatchShowCharacterStepRequest(
 ) : PatchStepRequest;
 
 public record PatchShowMenuStepRequest(
-    string? Name = null,
-    string? Description = null,
-    string? Text = null,
     IEnumerable<ChoiceRequest>? Choices = null
 ) : PatchStepRequest;
 

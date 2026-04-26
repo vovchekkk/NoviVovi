@@ -38,6 +38,8 @@ public class AddJumpStepHandler(
             var step = JumpStep.Create(targetLabel);
 
             label.AddStep(step);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

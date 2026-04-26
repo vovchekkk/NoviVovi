@@ -20,7 +20,7 @@ public abstract record PatchStepCommand : IRequest<StepDto>
 public abstract class BasePatchStepHandler(
     ILabelRepository labelRepository)
 {
-    protected async Task<Step> GetStepContextOrThrow(PatchStepCommand request, CancellationToken ct)
+    protected async Task<(Label, Step)> GetStepContextOrThrow(PatchStepCommand request, CancellationToken ct)
     {
         var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
                     ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
@@ -31,6 +31,6 @@ public abstract class BasePatchStepHandler(
         var step = label.Steps.FirstOrDefault(s => s.Id == request.StepId)
                    ?? throw new NotFoundException($"Шаг '{request.StepId}' не найден в метке");
 
-        return step;
+        return (label, step);
     }
 }

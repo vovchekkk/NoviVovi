@@ -33,9 +33,6 @@ public record AddShowCharacterStepRequest(
 ) : AddStepRequest;
 
 public record AddShowMenuStepRequest(
-    string Name,
-    string? Description,
-    string Text,
     List<ChoiceRequest> Choices
 ) : AddStepRequest;
 

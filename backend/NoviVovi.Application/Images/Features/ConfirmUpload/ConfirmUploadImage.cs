@@ -29,6 +29,8 @@ public class ConfirmUploadImageHandler(
             
             image.ConfirmUpload();
             
+            await imageRepository.AddOrUpdateAsync(image, ct);
+            
             await unitOfWork.CommitAsync(ct);
             
             return mapper.ToDto(image);

@@ -28,7 +28,7 @@ public class Novel : Entity
         Title = title;
     }
 
-    public Label AddStartLabel(string startLabelName)
+    public Label SetStartLabel(string startLabelName)
     {
         var startLabel = Label.Create(startLabelName, Id);
         StartLabel = startLabel;

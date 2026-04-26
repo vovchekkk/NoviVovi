@@ -55,6 +55,8 @@ public class AddShowMenuStepHandler(
             var step = ShowMenuStep.Create(menu);
 
             label.AddStep(step);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

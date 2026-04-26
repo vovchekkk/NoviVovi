@@ -49,6 +49,8 @@ public class AddShowBackgroundStepHandler(
             var step = ShowBackgroundStep.Create(background);
 
             label.AddStep(step);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

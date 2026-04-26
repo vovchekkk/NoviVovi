@@ -26,6 +26,7 @@ public class DeleteNovelHandler(
                         ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
             
             await novelRepository.DeleteAsync(novel, ct);
+            
             await unitOfWork.CommitAsync(ct);
         }
         catch

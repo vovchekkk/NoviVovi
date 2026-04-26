@@ -46,6 +46,7 @@ public class PatchNovelHandler(
             }
             
             await novelRepository.AddOrUpdateAsync(novel, ct);
+            
             await unitOfWork.CommitAsync(ct);
             
             return mapper.ToDto(novel);

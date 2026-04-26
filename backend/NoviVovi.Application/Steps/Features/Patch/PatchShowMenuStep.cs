@@ -33,7 +33,7 @@ public class PatchShowMenuStepHandler(
         
         try
         {
-            var step = await GetStepContextOrThrow(request, ct);
+            var (label, step) = await GetStepContextOrThrow(request, ct);
 
             if (step is not ShowMenuStep showMenuStep)
                 throw new BadRequestException($"Step {step.Id} is not {typeof(ShowMenuStep)}");
@@ -63,6 +63,8 @@ public class PatchShowMenuStepHandler(
             }
 
             showMenuStep.Update(menu);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

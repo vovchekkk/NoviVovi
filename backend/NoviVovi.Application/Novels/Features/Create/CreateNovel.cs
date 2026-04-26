@@ -32,10 +32,15 @@ public class CreateNovelHandler(
             const string startLabelName = "StartLabel";
             
             var novel = Novel.Create(request.Title);
+            
             await novelRepository.AddOrUpdateAsync(novel, ct);
-            var label = novel.AddStartLabel(startLabelName);
+            
+            var label = novel.SetStartLabel(startLabelName);
+            
             await labelRepository.AddOrUpdateAsync(label, ct);
+            
             await novelRepository.AddOrUpdateAsync(novel, ct);
+            
             await unitOfWork.CommitAsync(ct);
             
             return mapper.ToDto(novel);

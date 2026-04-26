@@ -11,7 +11,7 @@ public partial class StepCommandMapper
     /// <summary>
     /// Маппит AddStepRequest в соответствующую команду без использования dynamic.
     /// </summary>
-    public AddStepCommand ToAddCommand(AddStepRequest request, Guid novelId, Guid labelId)
+    public AddStepCommand ToCommand(AddStepRequest request, Guid novelId, Guid labelId)
     {
         return request switch
         {
@@ -36,6 +36,20 @@ public partial class StepCommandMapper
     public partial AddShowMenuStepCommand ToCommand(AddShowMenuStepRequest source, Guid novelId, Guid labelId);
     
     public partial AddShowReplicaStepCommand ToCommand(AddShowReplicaStepRequest source, Guid novelId, Guid labelId);
+    
+    public PatchStepCommand ToCommand(PatchStepRequest request, Guid novelId, Guid labelId, Guid stepId)
+    {
+        return request switch
+        {
+            PatchHideCharacterStepRequest r => ToCommand(r, novelId, labelId, stepId),
+            PatchJumpStepRequest r => ToCommand(r, novelId, labelId, stepId),
+            PatchShowBackgroundStepRequest r => ToCommand(r, novelId, labelId, stepId),
+            PatchShowCharacterStepRequest r => ToCommand(r, novelId, labelId, stepId),
+            PatchShowMenuStepRequest r => ToCommand(r, novelId, labelId, stepId),
+            PatchShowReplicaStepRequest r => ToCommand(r, novelId, labelId, stepId),
+            _ => throw new ArgumentException($"Unknown request type: {request.GetType().Name}")
+        };
+    }
     
     public partial PatchHideCharacterStepCommand ToCommand(PatchHideCharacterStepRequest source, Guid novelId, Guid labelId, Guid stepId);
     

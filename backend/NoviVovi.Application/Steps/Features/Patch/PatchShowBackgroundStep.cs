@@ -36,7 +36,7 @@ public class PatchShowBackgroundStepHandler(
         
         try
         {
-            var step = await GetStepContextOrThrow(request, ct);
+            var (label, step) = await GetStepContextOrThrow(request, ct);
 
             if (step is not ShowBackgroundStep showBackgroundStep)
                 throw new BadRequestException($"Step {step.Id} is not {typeof(ShowBackgroundStep)}");
@@ -53,6 +53,8 @@ public class PatchShowBackgroundStepHandler(
                 : null;
 
             showBackgroundStep.Update(image, transformPatch);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

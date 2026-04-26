@@ -44,6 +44,8 @@ public class AddHideCharacterStepHandler(
 
             label.AddStep(step);
 
+            await labelRepository.AddOrUpdateAsync(label, ct);
+
             await unitOfWork.CommitAsync(ct);
 
             return mapper.ToDto(step);

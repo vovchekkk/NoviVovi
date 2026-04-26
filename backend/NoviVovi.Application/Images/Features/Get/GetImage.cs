@@ -23,8 +23,6 @@ public class GetImageHandler(
         var image = await imageRepository.GetByIdAsync(request.ImageId, ct)
                     ?? throw new NotFoundException($"Изображение '{request.ImageId}' не найдено");
         
-        var viewUrl = storageService.GetViewUrl(image.StoragePath);
-        
         return mapper.ToDto(image);
     }
 }

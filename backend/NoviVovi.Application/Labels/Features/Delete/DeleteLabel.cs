@@ -37,9 +37,12 @@ public class DeleteLabelHandler(
             if (label.NovelId != request.NovelId)
                 throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
             
-            novel.RemoveLabelById(label.NovelId);
+            novel.RemoveLabelById(request.LabelId);
             
             await labelRepository.DeleteAsync(label, ct);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
+            
             await unitOfWork.CommitAsync(ct);
         }
         catch

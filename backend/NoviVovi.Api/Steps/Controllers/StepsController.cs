@@ -27,7 +27,7 @@ public class StepsController(
         AddStepRequest request
     )
     {
-        var command = commandMapper.ToAddCommand(request, novelId, labelId);
+        var command = commandMapper.ToCommand(request, novelId, labelId);
         
         var step = await mediator.Send(command);
 
@@ -59,9 +59,9 @@ public class StepsController(
         [FromBody] PatchStepRequest request
     )
     {
-        var command = commandMapper.ToCommand((dynamic)request, novelId, labelId, stepId);
+        var command = commandMapper.ToCommand(request, novelId, labelId, stepId);
 
-        var step = await mediator.Send((dynamic)command);
+        var step = await mediator.Send(command);
 
         return Ok(mapper.ToResponse(step));
     }

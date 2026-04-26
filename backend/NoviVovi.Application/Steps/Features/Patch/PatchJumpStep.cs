@@ -31,7 +31,7 @@ public class PatchJumpStepHandler(
         
         try
         {
-            var step = await GetStepContextOrThrow(request, ct);
+            var (label, step) = await GetStepContextOrThrow(request, ct);
 
             if (step is not JumpStep jumpStep)
                 throw new BadRequestException($"Step {step.Id} is not {typeof(JumpStep)}");
@@ -44,6 +44,8 @@ public class PatchJumpStepHandler(
             }
             
             jumpStep.Update(targetLabel);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

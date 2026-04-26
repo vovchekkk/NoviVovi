@@ -37,7 +37,7 @@ public class PatchShowCharacterStepHandler(
         
         try
         {
-            var step = await GetStepContextOrThrow(request, ct);
+            var (label, step) = await GetStepContextOrThrow(request, ct);
             
             var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
 
@@ -66,6 +66,8 @@ public class PatchShowCharacterStepHandler(
                 : null;
             
             showCharacterStep.Update(character, state, transformPatch);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

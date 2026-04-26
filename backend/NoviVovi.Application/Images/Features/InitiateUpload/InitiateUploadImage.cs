@@ -49,7 +49,8 @@ public class InitiateUploadImageHandler(
                 request.Description
             );
 
-            await imageRepository.AddAsync(image, ct);
+            await imageRepository.AddOrUpdateAsync(image, ct);
+            
             await unitOfWork.CommitAsync(ct);
             
             // 3. Генерируем presigned URL для загрузки

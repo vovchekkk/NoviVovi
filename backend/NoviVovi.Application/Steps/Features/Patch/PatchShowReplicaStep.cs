@@ -33,7 +33,7 @@ public class PatchShowReplicaStepHandler(
         
         try
         {
-            var step = await GetStepContextOrThrow(request, ct);
+            var (label, step) = await GetStepContextOrThrow(request, ct);
             
             var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
 
@@ -50,6 +50,8 @@ public class PatchShowReplicaStepHandler(
             var replica = Replica.Create(character, request.Text);
 
             showReplicaStep.Update(replica);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 

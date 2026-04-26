@@ -31,7 +31,7 @@ public class PatchHideCharacterStepHandler(
         
         try
         {
-            var step = await GetStepContextOrThrow(request, ct);
+            var (label, step) = await GetStepContextOrThrow(request, ct);
             
             var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
 
@@ -46,6 +46,8 @@ public class PatchHideCharacterStepHandler(
             }
             
             hideCharacterStep.Update(character);
+            
+            await labelRepository.AddOrUpdateAsync(label, ct);
 
             await unitOfWork.CommitAsync(ct);
 
