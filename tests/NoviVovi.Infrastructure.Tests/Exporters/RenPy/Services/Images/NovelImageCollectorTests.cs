@@ -75,7 +75,7 @@ public class NovelImageCollectorTests
         Assert.Single(result);
         Assert.Equal(imageId, result[0].ImageId);
         Assert.Equal("/path/char.png", result[0].StoragePath);
-        Assert.Equal($"char_{charId:N}_state_{stateId:N}", result[0].RenPyImageName);
+        Assert.Equal($"char_{charId:N} state_{stateId:N}", result[0].RenPyImageName);
     }
 
     [Fact]
@@ -223,7 +223,7 @@ public class NovelImageCollectorTests
         // Assert
         Assert.Equal(2, result.Count);
         Assert.Contains(result, r => r.ImageId == bgImageId && r.RenPyImageName == $"bg_{bgImageId:N}");
-        Assert.Contains(result, r => r.ImageId == charImageId && r.RenPyImageName == $"char_{charId:N}_state_{stateId:N}");
+        Assert.Contains(result, r => r.ImageId == charImageId && r.RenPyImageName == $"char_{charId:N} state_{stateId:N}");
     }
 
     [Fact]
@@ -268,8 +268,9 @@ public class NovelImageCollectorTests
 
         // Assert
         Assert.Equal(2, result.Count);
-        Assert.Contains(result, r => r.ImageId == imageId1 && r.RenPyImageName == $"char_{charId:N}_state_{stateId1:N}");
-        Assert.Contains(result, r => r.ImageId == imageId2 && r.RenPyImageName == $"char_{charId:N}_state_{stateId2:N}");
+        Assert.Contains(result, r => r.ImageId == imageId1 && r.RenPyImageName == $"char_{charId:N} state_{stateId1:N}");
+        Assert.Contains(result, r => r.ImageId == imageId2 && r.RenPyImageName == $"char_{charId:N} state_{stateId2:N}");
     }
 }
+
 

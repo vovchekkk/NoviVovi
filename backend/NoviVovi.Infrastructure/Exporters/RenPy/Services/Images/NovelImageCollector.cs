@@ -33,7 +33,7 @@ public class NovelImageCollector : INovelImageCollector
                         images.Add(new ImageExportInfo(
                             charStep.CharacterObject.State.Image.Id,
                             charStep.CharacterObject.State.Image.StoragePath,
-                            $"char_{charId:N}_state_{stateId:N}"
+                            $"char_{charId:N} state_{stateId:N}"
                         ));
                         break;
                 }

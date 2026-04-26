@@ -52,10 +52,16 @@ public class ManualExportTest
             .ReturnsAsync(novel);
 
         var mockStorage = new Mock<IStorageService>();
-        // Мокаем загрузку изображений - возвращаем fake PNG
+        // Мокаем загрузку изображений - возвращаем реальные или fake PNG
         mockStorage
             .Setup(x => x.DownloadFileStreamAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(() => new MemoryStream(CreateFakePngBytes()));
+            .ReturnsAsync((string path, CancellationToken ct) =>
+            {
+                // Определяем тип изображения по пути
+                var fileName = path.Contains("bg-room") ? "background.png" : "character.png";
+                var imageBytes = LoadTestImage(fileName);
+                return new MemoryStream(imageBytes);
+            });
 
         var mockResourceLoader = new Mock<IEmbeddedResourceLoader>();
         mockResourceLoader
@@ -169,13 +175,13 @@ public class ManualExportTest
         );
         SetImageId(bgImage, Guid.Parse("11111111-2222-3333-4444-555555555555"));
 
-        // Создаем изображение для персонажа
+        // Создаем изображение для персонажа (РЕАЛЬНЫЙ размер твоего character.png)
         var aliceImage = Image.CreatePending(
             "alice_happy.png",
             "novels/images/alice-happy-001.png",
             "png",
             ImageType.Character,
-            new Size(500, 1000)
+            new Size(250, 500) // ← Измени на РЕАЛЬНЫЙ размер твоего изображения!
         );
         SetImageId(aliceImage, Guid.Parse("66666666-7777-8888-9999-000000000000"));
 
@@ -183,7 +189,7 @@ public class ManualExportTest
         var aliceHappy = CharacterState.Create(
             "happy",
             aliceImage,
-            Transform.Create(new Position(0, 0), new Size(500, 1000), 1.0, 0.0, 0), // LocalTransform = identity
+            Transform.Create(new Position(0, 0), new Size(0, 0), 1.0, 0.0, 0), // LocalTransform = НУЛЕВОЙ размер!
             "Счастливая Алиса"
         );
         alice.AddCharacterState(aliceHappy);
@@ -196,8 +202,8 @@ public class ManualExportTest
         var showBgStep = ShowBackgroundStep.Create(bgObject);
         novel.StartLabel.AddStep(showBgStep);
 
-        // 2. Показываем персонажа
-        var aliceTransform = Transform.Create(new Position(500, 200), new Size(500, 1000));
+        // 2. Показываем персонажа (относительные координаты, внизу экрана)
+        var aliceTransform = Transform.Create(new Position(0.5, 1.0), new Size(250, 500));
         var aliceObject = CharacterObject.Create(alice, aliceHappy, aliceTransform);
         var showAliceStep = ShowCharacterStep.Create(aliceObject);
         novel.StartLabel.AddStep(showAliceStep);
@@ -236,6 +242,35 @@ public class ManualExportTest
             0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE,
             0x42, 0x60, 0x82
         };
+    }
+
+    /// <summary>
+    /// Загружает реальное изображение из TestData/Images или возвращает fake PNG.
+    /// Поддерживает форматы: .png, .jpg, .jpeg
+    /// </summary>
+    private byte[] LoadTestImage(string fileName)
+    {
+        // Ищем папку TestData относительно сборки
+        var baseDir = AppContext.BaseDirectory; // bin/Debug/net10.0/
+        var imagesDir = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "TestData", "Images"));
+        
+        // Пробуем разные расширения
+        var baseName = Path.GetFileNameWithoutExtension(fileName);
+        var extensions = new[] { ".png", ".jpg", ".jpeg" };
+        
+        foreach (var ext in extensions)
+        {
+            var testDataPath = Path.Combine(imagesDir, baseName + ext);
+            if (File.Exists(testDataPath))
+            {
+                _output.WriteLine($"✅ Используется реальное изображение: {testDataPath}");
+                return File.ReadAllBytes(testDataPath);
+            }
+        }
+
+        _output.WriteLine($"⚠️ Файл {fileName} не найден (искали .png, .jpg, .jpeg), используется fake PNG");
+        _output.WriteLine($"   Положите реальное изображение в: {imagesDir}");
+        return CreateFakePngBytes();
     }
 
     private string GetScriptTemplate()

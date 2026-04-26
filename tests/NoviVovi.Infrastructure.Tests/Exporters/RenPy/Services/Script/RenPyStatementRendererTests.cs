@@ -27,7 +27,6 @@ public class RenPyStatementRendererTests
         zoom 1.00
         xzoom 1.00
         yzoom 1.00
-        zorder 0
 """;
         Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
@@ -50,7 +49,6 @@ public class RenPyStatementRendererTests
             zoom 1.00
             xzoom 1.00
             yzoom 1.00
-            zorder 0
 """;
         Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
@@ -73,7 +71,6 @@ public class RenPyStatementRendererTests
         zoom 1.00
         xzoom 1.00
         yzoom 1.00
-        zorder 0
 """;
         Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
@@ -90,14 +87,13 @@ public class RenPyStatementRendererTests
 
         // Assert
         var expected = """
-    show bob surprised:
+    show bob surprised zorder 1:
         xpos 0.60
         ypos 0.30
         zoom 1.50
         xzoom 1.00
         yzoom 1.00
         rotate 45.00
-        zorder 1
 """;
         Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
@@ -114,13 +110,12 @@ public class RenPyStatementRendererTests
 
         // Assert
         Assert.DoesNotContain("rotate", result);
-        Assert.Contains("show charlie happy:", result);
+        Assert.Contains("show charlie happy zorder 2:", result);
         Assert.Contains("xpos 0.25", result);
         Assert.Contains("ypos 0.75", result);
         Assert.Contains("zoom 0.80", result);
         Assert.Contains("xzoom 1.50", result);
         Assert.Contains("yzoom 0.50", result);
-        Assert.Contains("zorder 2", result);
     }
 
     [Fact]
@@ -134,14 +129,13 @@ public class RenPyStatementRendererTests
         var result = _renderer.Render(statement);
 
         // Assert
-        Assert.Contains("show dave angry:", result);
+        Assert.Contains("show dave angry zorder 10:", result);
         Assert.Contains("xpos 0.90", result);
         Assert.Contains("ypos 0.10", result);
         Assert.Contains("zoom 2.50", result);
         Assert.Contains("xzoom 2.00", result);
         Assert.Contains("yzoom 1.50", result);
         Assert.Contains("rotate 180.00", result);
-        Assert.Contains("zorder 10", result);
     }
 
     [Fact]
@@ -162,7 +156,6 @@ public class RenPyStatementRendererTests
             zoom 1.00
             xzoom 1.00
             yzoom 1.00
-            zorder 0
 """;
         Assert.Equal(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
@@ -359,6 +352,7 @@ public class RenPyStatementRendererTests
         Assert.StartsWith("scene bg_test:", result);
         Assert.Contains("xpos 0.00", result);
         Assert.Contains("xzoom 1.00", result);
+        Assert.DoesNotContain("zorder", result); // zorder не должен быть в ATL блоке
     }
 
     [Fact]
