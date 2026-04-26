@@ -17,7 +17,7 @@ public class Image : Entity
     public Image(
         Guid id,
         string name,
-        Guid novelId,
+        Guid? novelId,
         string storagePath,
         string format,
         ImageType type,

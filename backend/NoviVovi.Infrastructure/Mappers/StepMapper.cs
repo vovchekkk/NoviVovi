@@ -59,7 +59,7 @@ public partial class StepMapper(
         };
     }
 
-    public StepDbO ToDbO(ShowCharacterStep step, Guid labelId, Guid novelId, int stepOrder)
+    public StepDbO ToDbO(ShowCharacterStep step, Guid labelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -70,7 +70,7 @@ public partial class StepMapper(
             CharacterId = step.CharacterObject.Id
         };
 
-        res.Character = characterMapper.ToDbO(step.CharacterObject, novelId);
+        res.Character = characterMapper.ToDbO(step.CharacterObject);
         return res;
     }
 
@@ -89,7 +89,7 @@ public partial class StepMapper(
         return res;
     }
     
-    public StepDbO ToDbO(ShowReplicaStep step, Guid labelId, Guid novelId, int stepOrder)
+    public StepDbO ToDbO(ShowReplicaStep step, Guid labelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -100,7 +100,7 @@ public partial class StepMapper(
             ReplicaId = step.Replica.Id
         };
 
-        res.Replica = replicaMapper.ToDbO(step.Replica, novelId);
+        res.Replica = replicaMapper.ToDbO(step.Replica);
         return res;
     }
 
@@ -206,9 +206,9 @@ public partial class StepMapper(
         if (type == typeof(ShowMenuStep))
             return ToDbO((ShowMenuStep)step, labelId, stepOrder);
         if (type == typeof(ShowReplicaStep))
-            return ToDbO((ShowReplicaStep)step, labelId, novelId, stepOrder);
+            return ToDbO((ShowReplicaStep)step, labelId, stepOrder);
         if (type == typeof(ShowCharacterStep))
-            return ToDbO((ShowCharacterStep)step, labelId, novelId, stepOrder);
+            return ToDbO((ShowCharacterStep)step, labelId, stepOrder);
         throw new ArgumentException("Unsupported step type");
     }
 }

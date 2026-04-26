@@ -116,7 +116,6 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
     {
         const string sql = @"
             UPDATE ""Characters"" SET
-                novel_id = @NovelId,
                 name = @Name,
                 name_color = @NameColor,
                 description = @Description
@@ -130,21 +129,6 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
         const string sql = "DELETE FROM \"Characters\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
-
-    // public async Task<Guid> AddStepCharacterAsync(StepCharacterDbO stepCharacter)  //TODO: AddOrUpdateFull
-    // {
-    //     const string sql = @"
-    //         INSERT INTO ""StepCharacter"" (id, transform_id, character_state_id, step_id)
-    //         VALUES (@Id, @TransformId, @CharacterStateId, @StepId)";
-    //     
-    //     if (stepCharacter.Transform != null)
-    //         await imageDbORepository.AddOrUpdateTransformAsync(stepCharacter.Transform); //AddOrUpdate
-    //     if (stepCharacter.CharacterState != null)
-    //         await AddOrUpdateStateAsync(stepCharacter.CharacterState); //AddOrUpdate
-    //     
-    //     await ExecuteAsync(sql, stepCharacter);
-    //     return stepCharacter.Id;
-    // }
 
     public async Task<bool> CheckIfExists(CharacterDbO character)
     {
@@ -162,7 +146,7 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
         
         if (exists)
         {
-            await UpdateAsync(character);  //тут не будет петли?
+            await UpdateAsync(character);
         }
         else
         {
@@ -194,9 +178,11 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
 
         if (character.TransformId != null)
             character.Transform = await imageDbORepository.GetTransformByIdAsync(character.TransformId.Value);
-
+        
+        if(character.CharacterState != null) 
+            character.Character = await GetFullCharacterByIdAsync(character.CharacterState.CharacterId);
+        
         return character;
-        //TODO: доставать вместе с Character из бд
     }
 
     public async Task DeleteStepCharacterAsync(Guid id)
@@ -215,7 +201,6 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
     {
         const string sql = @"
         UPDATE ""CharacterStates"" SET
-            character_id = @CharacterId,
             image_id = @ImageId,
             state_name = @StateName,
             description = @Description,

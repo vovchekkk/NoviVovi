@@ -17,18 +17,12 @@ public class CharacterRepository(ICharacterDbORepository dboRepo, CharacterMappe
 
     public async Task AddOrUpdateAsync(Character character, CancellationToken ct)
     {
-        // var dbo = mapper.ToDbO(character);
-        // await dboRepo.AddOrUpdateFullAsync(dbo);
-        throw new NotImplementedException();
+        var dbo = mapper.ToDbO(character);
+        await dboRepo.AddOrUpdateFullAsync(dbo);
     }
 
     public async Task DeleteAsync(Character character, CancellationToken ct)
     {
         await dboRepo.DeleteAsync(character.Id);
-    }
-
-    public Task<IEnumerable<Character>> GetAllAsync(CancellationToken ct)
-    {
-        throw new NotImplementedException();
     }
 }
