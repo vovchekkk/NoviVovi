@@ -4,46 +4,42 @@ import api from "../../api";
 
 interface LayerProps {
     id: string;
-    transform: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        scale: number;
-        rotation: number;
-        zIndex: number;
+    transform?: {
+        x?: number;
+        y?: number;
+        width?: number;
+        height?: number;
+        scale?: number;
+        rotation?: number;
+        zIndex?: number;
     };
     className?: string;
 }
 
 export const Layer = ({ id, transform, className }: LayerProps) => {
     const [url, setUrl] = useState<string | null>(null);
-    const scaleValue = transform?.scale ?? 1; // Запасное значение — 1
+    const scaleValue = transform?.scale ?? 1;
     const rotateValue = transform?.rotation ?? 0;
 
     useEffect(() => {
         if (!id) return;
 
-        let isMounted = true;
-
         api.get<{ url: string }>(`/images/${id}`)
             .then((res) => {
-                if (isMounted) setUrl(res.data.url);
+                setUrl(res.data.url);
             })
-            .catch((err) => console.error("Layer Load Error:", err));
-
-        return () => { isMounted = false; };
     }, [id]);
 
-    if (!url) return null;
+    if (!url)
+        return null;
 
     const style: React.CSSProperties = {
         position: 'absolute',
-        left: `${transform.x ?? 0}%`,
-        top: `${transform.y ?? 0}%`,
-        width: `${transform.width ?? 100}%`,
-        height: `${transform.height ?? 100}%`,
-        zIndex: transform.zIndex,
+        left: `${transform?.x ?? 0}%`,
+        top: `${transform?.y ?? 0}%`,
+        width: `${transform?.width ?? 100}%`,
+        height: `${transform?.height ?? 100}%`,
+        zIndex: transform?.zIndex ?? 1,
         transform: `rotate(${rotateValue}deg) scale(${scaleValue})`,
         objectFit: 'cover',
         pointerEvents: 'none',
@@ -52,9 +48,8 @@ export const Layer = ({ id, transform, className }: LayerProps) => {
 
     return (
         <img
-            src={url}
+            src={url || ''}
             style={style}
-            className={className}
             alt="Layer"
         />
     );

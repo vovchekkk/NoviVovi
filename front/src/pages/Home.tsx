@@ -5,7 +5,7 @@ import CTAButton from '../shared/ui/CTAButton'
 import Modal from "../shared/ui/Modal.tsx";
 import {useState} from "react";
 import api from "../api.tsx";
-import {useNavigate} from "react-router-dom";
+import {data, useNavigate} from "react-router-dom";
 
 type Novel = {
     id: string;
@@ -16,11 +16,12 @@ export default function Home() {
     const [isOpen, setIsOpen] = useState(false);
     const [novelTitle, setNovelTitle] = useState('');
     const createNovel = async (e) => {
-        e.defaultPrevented();
+        e.preventDefault();
         try {
             const {data: newNovel} = await api.post<Novel>('/novels', {
                 title: novelTitle
             })
+            console.log(newNovel)
             setIsOpen(false);
             setNovelTitle('');
             navigate(`/editor/${newNovel.id}`);

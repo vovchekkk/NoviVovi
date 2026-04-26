@@ -16,12 +16,12 @@ export const router = createBrowserRouter([
         element: <Novels />,
     },
     {
-        path: '/editor/assets',
-        element: <Assets />,
-    },
-    {
         path: '/editor/scenes',
         element: <Scenes />,
+    },
+    {
+        path: '/editor/assets/:novelId',
+        element: <Assets />,
     },
     {
       path: '/editor/:novelId',

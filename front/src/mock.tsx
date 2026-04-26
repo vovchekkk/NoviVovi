@@ -1,5 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 import api from "./api.tsx";
+import cat from "./assets/cat.png";
 
 console.log('🚀 Axios Mock Adapter (Emotions Edition) загружен');
 
@@ -43,7 +44,7 @@ let mockLabels = [
 
 // Получение списка персонажей
 mock.onGet('novels/0/characters').reply(200, mockCharacters);
-mock.onGet(/\/images\/\d+$/).reply(200, {url:'src/assets/img.png'});
+mock.onGet(/\/images\/.+$/).reply(200, {url:cat});
 mock.onGet('/novels/0/labels').reply(200, mockLabels);
 mock.onGet('/novels/0/labels/1/steps').reply(200, mockSteps);
 mock.onGet('/novels/0/labels/2/steps').reply(200, mockSteps);
@@ -170,9 +171,8 @@ mock.onPost('images/upload-url').reply(200, {
 
 mock.onPut("https://fake-cloud-storage.com/upload").reply(200);
 
-// 3. Мок для получения URL в Preview
 mock.onGet("/images/mock_image_123").reply(200, {
-    url: "src/assets/upload.jpg" // реальное фото из интернета
+    url: "src/assets/upload.jpg"
 });
 
 export default mock;

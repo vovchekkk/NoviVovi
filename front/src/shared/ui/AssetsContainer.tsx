@@ -7,6 +7,7 @@ import api from "../../api.tsx";
 import {zodResolver} from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {useForm, useFieldArray} from 'react-hook-form';
+import {useParams} from "react-router-dom";
 
 const emotionSchema = z.object({
     id: z.string().optional(),
@@ -37,7 +38,11 @@ const initialCharacters: Character[] = [
     {id: '2', name: 'Мария'},
     {id: '3', name: 'Борис'},
 ];
-export default function AssetsContainer() {
+
+interface AssetsProps{
+    novelId: string;
+}
+export default function AssetsContainer({novelId}: AssetsProps) {
     const [characters, setCharacters] = useState<Character[]>([]);
     const [selectedId, setSelectedId] = useState<string | null>(characters[0]?.id ?? null);
     const [emotions, setEmotions] = useState<Emotion[]>([]);
@@ -74,7 +79,7 @@ export default function AssetsContainer() {
         const fetchCharacters = async () => {
             try {
                 setLoading(true);
-                const {data} = await api.get<Character[]>('novels/0/characters');
+                const {data} = await api.get<Character[]>(`novels/${novelId}/characters`);
                 setCharacters(data);
 
                 if (data.length > 0) {
@@ -89,7 +94,7 @@ export default function AssetsContainer() {
         };
 
         fetchCharacters();
-    }, []);
+    }, [novelId]);
     useEffect(() => {
         const loadCharacterData = async () => {
             if (!selectedId) return;
@@ -97,8 +102,8 @@ export default function AssetsContainer() {
             try {
                 setLoading(true);
                 const [charRes, emotionsRes] = await Promise.all([
-                    api.get<Character>(`/characters/${selectedId}`),
-                    api.get<Emotion[]>(`/characters/${selectedId}/emotions`)
+                    api.get<Character>(`novels/${novelId}/characters/${selectedId}`),
+                    api.get<Emotion[]>(`novels/${novelId}/characters/${selectedId}/states`)
                 ]);
                 reset({
                     name: charRes.data.name,
@@ -113,11 +118,11 @@ export default function AssetsContainer() {
         };
 
         loadCharacterData();
-    }, [selectedId, reset]);
+    }, [selectedId, reset, novelId]);
     const onSave = async (formData: CharacterSchema) => {
         if (!selectedId) return;
         try {
-            await api.patch(`characters/${selectedId}`, formData);
+            await api.patch(`novels/${novelId}/characters/${selectedId}`, formData);
             setCharacters(prev =>
                 prev.map(c => c.id === selectedId ? {...c, ...formData} : c)
             );
@@ -129,8 +134,9 @@ export default function AssetsContainer() {
     };
     const createCharacter = async () => {
         try {
-            const {data: newChar} = await api.post<Character>('/characters', {
-                name: 'Новый персонаж'
+            const {data: newChar} = await api.post<Character>(`novels/${novelId}/characters`, {
+                name: 'Новый персонаж',
+                nameColor: '#ffffff',
             })
             setCharacters(prev => [...prev, newChar]);
             setSelectedId(newChar.id);
@@ -143,7 +149,7 @@ export default function AssetsContainer() {
         if (!confirm('Удалить персонажа и все его эмоции?'))
             return;
         try {
-            await api.delete(`characters/${id}`);
+            await api.delete(`novels/${novelId}/characters/${id}`);
             setCharacters(prev => prev.filter(c => c.id !== id));
             if (selectedId === id) {
                 setSelectedId(characters[0]?.id ?? null);
@@ -157,10 +163,10 @@ export default function AssetsContainer() {
             return;
         const formData = new FormData();
         if (file)
-            formData.append('file', file); //имя параметра должно совпадать с бэком
+            formData.append('file', file);
         try {
             const {data: newEmotion} = await api.post<Emotion>(
-                `characters/${selectedId}/emotions`,
+                `novels/${novelId}/characters/${selectedId}/states`,
                 formData,
                 {
                     headers: {'Content-Type': 'multipart/form-data'}

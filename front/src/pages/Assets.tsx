@@ -1,7 +1,9 @@
 ﻿import Header from "../shared/ui/Header.tsx";
 import { css } from '../../styled-system/css'
 import AssetsContainer from "../shared/ui/AssetsContainer.tsx";
+import {useParams} from "react-router-dom";
 export default function Assets() {
+    const {novelId} = useParams();
     return (
         <div className={css({
             bg: '#775D68',
@@ -14,7 +16,7 @@ export default function Assets() {
                 pb: '0px',
                 px: '0px',
             })}>
-                <AssetsContainer></AssetsContainer>
+                <AssetsContainer novelId={novelId}></AssetsContainer>
             </main>
         </div>
     )
