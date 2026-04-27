@@ -52,7 +52,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     }
 
     [Fact]
-    public async Task InitiateUpload_EmptyName_ReturnsBadRequest()
+    public async Task InitiateUpload_EmptyName_ReturnsUnprocessableEntity()
     {
         // Arrange
         var request = new InitiateUploadImageRequest(
@@ -67,11 +67,11 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         var response = await PostRawAsync("/api/images/upload-url", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]
-    public async Task InitiateUpload_InvalidFormat_ReturnsBadRequest()
+    public async Task InitiateUpload_InvalidFormat_ReturnsUnprocessableEntity()
     {
         // Arrange
         var request = new InitiateUploadImageRequest(
@@ -86,7 +86,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         var response = await PostRawAsync("/api/images/upload-url", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]

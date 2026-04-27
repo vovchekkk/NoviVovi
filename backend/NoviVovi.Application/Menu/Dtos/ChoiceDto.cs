@@ -3,7 +3,6 @@
 namespace NoviVovi.Application.Menu.Dtos;
 
 public record ChoiceDto(
-    Guid Id,
     string Text,
     ChoiceTransitionDto Transition
 );

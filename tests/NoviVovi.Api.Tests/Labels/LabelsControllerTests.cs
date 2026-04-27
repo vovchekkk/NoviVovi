@@ -44,7 +44,7 @@ public class LabelsControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     }
 
     [Fact]
-    public async Task AddLabel_EmptyName_ReturnsBadRequest()
+    public async Task AddLabel_EmptyName_ReturnsUnprocessableEntity()
     {
         // Arrange
         var novelId = await CreateTestNovelAsync();
@@ -54,7 +54,7 @@ public class LabelsControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         var response = await PostRawAsync($"/api/novels/{novelId}/labels", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]

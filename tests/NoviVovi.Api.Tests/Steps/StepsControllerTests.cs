@@ -102,7 +102,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
     }
 
     [Fact]
-    public async Task AddShowReplicaStep_EmptyText_ReturnsBadRequest()
+    public async Task AddShowReplicaStep_EmptyText_ReturnsUnprocessableEntity()
     {
         // Arrange
         var novelId = await CreateTestNovelAsync();
@@ -115,7 +115,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var response = await PostRawAsync($"/api/novels/{novelId}/labels/{labelId}/steps", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]
@@ -341,7 +341,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
     }
 
     [Fact]
-    public async Task AddShowMenuStep_EmptyChoices_ReturnsBadRequest()
+    public async Task AddShowMenuStep_EmptyChoices_ReturnsUnprocessableEntity()
     {
         // Arrange
         var novelId = await CreateTestNovelAsync();
@@ -353,7 +353,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var response = await PostRawAsync($"/api/novels/{novelId}/labels/{labelId}/steps", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     #endregion

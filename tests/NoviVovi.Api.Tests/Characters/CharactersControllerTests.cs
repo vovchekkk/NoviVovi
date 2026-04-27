@@ -47,7 +47,7 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
     }
 
     [Fact]
-    public async Task AddCharacter_EmptyName_ReturnsBadRequest()
+    public async Task AddCharacter_EmptyName_ReturnsUnprocessableEntity()
     {
         // Arrange
         var novelId = await CreateTestNovelAsync();
@@ -57,11 +57,11 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
         var response = await PostRawAsync($"/api/novels/{novelId}/characters", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]
-    public async Task AddCharacter_InvalidColorFormat_ReturnsBadRequest()
+    public async Task AddCharacter_InvalidColorFormat_ReturnsUnprocessableEntity()
     {
         // Arrange
         var novelId = await CreateTestNovelAsync();
@@ -71,7 +71,7 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
         var response = await PostRawAsync($"/api/novels/{novelId}/characters", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]

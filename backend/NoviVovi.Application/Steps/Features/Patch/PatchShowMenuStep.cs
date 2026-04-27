@@ -46,7 +46,8 @@ public class PatchShowMenuStepHandler(
 
                 var labelLookup = targetLabels.ToDictionary(l => l.Id);
 
-                menu = Domain.Menu.Menu.Create();
+                menu = showMenuStep.Menu;
+                menu.RemoveAllChoices();
 
                 foreach (var choiceDto in request.Choices)
                 {

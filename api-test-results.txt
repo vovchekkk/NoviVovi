@@ -1,0 +1,897 @@
+﻿╨в╨╡╤Б╤В╨╛╨▓╤Л╨╣ ╨╖╨░╨┐╤Г╤Б╨║ ╨┤╨╗╤П D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll (.NETCoreApp,Version=v10.0)
+╨Т╨╡╤А╤Б╨╕╤П VSTest 18.0.1 (x64)
+
+╨Ч╨░╨┐╤Г╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П ╤В╨╡╤Б╤В╨╛╨▓; ╨┐╨╛╨┤╨╛╨╢╨┤╨╕╤В╨╡...
+╨Ю╨▒╤Й╨╡╨╡ ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╤В╨╡╤Б╤В╨╛╨▓╤Л╤Е ╤Д╨░╨╣╨╗╨╛╨▓ (1), ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е ╤Г╨║╨░╨╖╨░╨╜╨╜╨╛╨╝╤Г ╤И╨░╨▒╨╗╨╛╨╜╤Г.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.3)
+[xUnit.net 00:00:00.08]   Discovering: NoviVovi.Api.Tests
+[xUnit.net 00:00:00.12]   Discovered:  NoviVovi.Api.Tests
+[xUnit.net 00:00:00.14]   Starting:    NoviVovi.Api.Tests
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Testing
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Git\NoviVovi\backend\NoviVovi.Api
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+dotnet : [xUnit.net 00:00:03.02]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_Exi
+stingId_ReturnsState [FAIL]
+строка:1 знак:1
++ dotnet test tests/NoviVovi.Api.Tests/NoviVovi.Api.Tests.csproj --no-b ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([xUnit.net 00:0...rnsState [FAIL]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[xUnit.net 00:00:03.02]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:00:03.02]       Stack Trace:
+[xUnit.net 00:00:03.02]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:03.02]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:03.02]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(42,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId)
+[xUnit.net 00:00:03.02]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(164,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_ExistingId_ReturnsState()
+[xUnit.net 00:00:03.02]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_ExistingId_ReturnsState [781 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 42
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_ExistingId_ReturnsState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 164
+--- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: StateId f960872f-5f9f-46c1-b22a-9d101c0772d9 doesn't exists
+      NoviVovi.Domain.Common.DomainException: StateId f960872f-5f9f-46c1-b22a-9d101c0772d9 doesn't exists
+         at NoviVovi.Domain.Characters.Character.RemoveCharacterStateById(Guid stateId) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Characters\Character.cs:line 77
+         at NoviVovi.Application.Characters.Features.Delete.DeleteCharacterStateHandler.Handle(DeleteCharacterStateCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Delete\DeleteCharacterState.cs:line 32
+         at NoviVovi.Application.Characters.Features.Delete.DeleteCharacterStateHandler.Handle(DeleteCharacterStateCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Delete\DeleteCharacterState.cs:line 41
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at NoviVovi.Api.Characters.Controllers.CharacterStatesController.Delete(Guid novelId, Guid characterId, Guid stateId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharacterStatesController.cs:line 80
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:03.61]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:03.61]       Expected: NotFound
+[xUnit.net 00:00:03.61]       Actual:   UnprocessableEntity
+[xUnit.net 00:00:03.61]       Stack Trace:
+[xUnit.net 00:00:03.61]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(334,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_NonExistingId_ReturnsNotFound()
+[xUnit.net 00:00:03.61]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:03.61]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_NonExisti
+ngId_ReturnsNotFound [FAIL]
+[xUnit.net 00:00:04.11]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_ValidReque
+st_UpdatesState [FAIL]
+[xUnit.net 00:00:04.11]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:00:04.11]       Stack Trace:
+[xUnit.net 00:00:04.11]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:04.11]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:04.11]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(42,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId)
+[xUnit.net 00:00:04.11]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(238,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_ValidRequest_UpdatesState()
+[xUnit.net 00:00:04.11]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_NonExistingId_ReturnsNotFound [72 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_NonExistingId_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 334
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_ValidRequest_UpdatesState [28 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 42
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_ValidRequest_UpdatesState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 238
+--- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: NextAction cannot be null
+      NoviVovi.Domain.Common.DomainException: NextAction cannot be null
+         at NoviVovi.Domain.Characters.CharacterState.Create(String name, Image image, Transform localTransform, String description) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Characters\CharacterState.cs:line 29
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterStateHandler.Handle(AddCharacterStateCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacterState.cs:line 50
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterStateHandler.Handle(AddCharacterStateCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacterState.cs:line 63
+         at NoviVovi.Api.Characters.Controllers.CharacterStatesController.Add(Guid novelId, Guid characterId, AddCharacterStateRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharacterStatesController.cs:line 30
+         at lambda_method86(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:04.64]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingI
+mage_ReturnsBadRequest [FAIL]
+[xUnit.net 00:00:04.64]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:04.64]       Expected: BadRequest
+[xUnit.net 00:00:04.64]       Actual:   UnprocessableEntity
+[xUnit.net 00:00:04.64]       Stack Trace:
+[xUnit.net 00:00:04.64]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(155,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingImage_ReturnsBadRequest()
+[xUnit.net 00:00:04.64]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:05.16]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:00:05.16]       Stack Trace:
+[xUnit.net 00:00:05.16]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_ValidRequest
+_ReturnsCreatedState [FAIL]
+[xUnit.net 00:00:05.16]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:05.16]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:05.16]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(42,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId)
+[xUnit.net 00:00:05.16]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(57,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_ValidRequest_ReturnsCreatedState()
+[xUnit.net 00:00:05.16]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:05.66]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingC
+haracter_ReturnsNotFound [FAIL]
+[xUnit.net 00:00:05.66]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:00:05.66]       Stack Trace:
+[xUnit.net 00:00:05.66]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:05.66]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:05.66]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(42,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId)
+[xUnit.net 00:00:05.66]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(120,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingCharacter_ReturnsNotFound()
+[xUnit.net 00:00:05.66]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingImage_ReturnsBadRequest [49 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: BadRequest
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingImage_ReturnsBadRequest() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 155
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_ValidRequest_ReturnsCreatedState [24 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 42
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_ValidRequest_ReturnsCreatedState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 57
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingCharacter_ReturnsNotFound [11 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 42
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_NonExistingCharacter_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 120
+--- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜я┐╜яния┐╜ я┐╜я┐╜я┐╜соня┐╜я┐╜я┐╜ '2c19d6ea-0bf7-461d-9414-2a693ebfa7a8' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜я┐╜яния┐╜ я┐╜я┐╜я┐╜соня┐╜я┐╜я┐╜ '2c19d6ea-0bf7-461d-9414-2a693ebfa7a8' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Characters.Features.Patch.PatchCharacterStateHandler.Handle(PatchCharacterStateCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Patch\PatchCharacterState.cs:line 47
+         at NoviVovi.Application.Characters.Features.Patch.PatchCharacterStateHandler.Handle(PatchCharacterStateCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Patch\PatchCharacterState.cs:line 80
+         at NoviVovi.Api.Characters.Controllers.CharacterStatesController.Patch(Guid novelId, Guid characterId, Guid stateId, PatchCharacterStateRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharacterStatesController.cs:line 68
+         at lambda_method96(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:07.26]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:00:07.26]       Stack Trace:
+[xUnit.net 00:00:07.26]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:07.26]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:07.26]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(42,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId)
+[xUnit.net 00:00:07.26]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(207,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetAllCharacterStates_ReturnsAllStatesForCharacter()
+[xUnit.net 00:00:07.26]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:07.26]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetAllCharacterStates_ReturnsA
+llStatesForCharacter [FAIL]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_NonExistingId_ReturnsNotFound [42 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetAllCharacterStates_ReturnsAllStatesForCharacter [20 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 42
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetAllCharacterStates_ReturnsAllStatesForCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 207
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:07.81]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:00:07.81]       Stack Trace:
+[xUnit.net 00:00:07.81]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:07.81]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:07.81]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_EmptyName_Re
+turnsBadRequest [FAIL]
+[xUnit.net 00:00:07.81]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(42,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId)
+[xUnit.net 00:00:07.81]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(98,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_EmptyName_ReturnsBadRequest()
+[xUnit.net 00:00:07.81]         --- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜я┐╜яния┐╜ я┐╜я┐╜я┐╜соня┐╜я┐╜я┐╜ 'ad63f3b2-2d44-4d5b-9ed7-7482ce49b5e5' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜я┐╜яния┐╜ я┐╜я┐╜я┐╜соня┐╜я┐╜я┐╜ 'ad63f3b2-2d44-4d5b-9ed7-7482ce49b5e5' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Characters.Features.Get.GetCharacterStateHandler.Handle(GetCharacterStateQuery request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Get\GetCharacterState.cs:line 28
+         at NoviVovi.Api.Characters.Controllers.CharacterStatesController.Get(Guid novelId, Guid characterId, Guid stateId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharacterStatesController.cs:line 42
+         at lambda_method104(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:08.96]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:00:08.96]       Stack Trace:
+[xUnit.net 00:00:08.96]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_ExistingI
+d_DeletesState [FAIL]
+[xUnit.net 00:00:08.96]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:08.96]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:08.96]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(42,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId)
+[xUnit.net 00:00:08.96]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(295,0): at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_ExistingId_DeletesState()
+[xUnit.net 00:00:08.96]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_EmptyName_ReturnsBadRequest [16 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 42
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.AddCharacterState_EmptyName_ReturnsBadRequest() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 98
+--- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_NonExistingId_ReturnsNotFound [26 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_ExistingId_DeletesState [19 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.CreateTestImageAsync(Guid novelId) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 42
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_ExistingId_DeletesState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 295
+--- End of stack trace from previous location ---
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Testing
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Git\NoviVovi\backend\NoviVovi.Api
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ '73308398-451e-465e-a837-be5b82197180' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ '73308398-451e-465e-a837-be5b82197180' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterHandler.Handle(AddCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacter.cs:line 36
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterHandler.Handle(AddCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacter.cs:line 56
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Add(Guid novelId, AddCharacterRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 29
+         at lambda_method116(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: Character c3fee643-4b39-443c-ba67-692a22173dc4 doesn't exists
+      NoviVovi.Domain.Common.DomainException: Character c3fee643-4b39-443c-ba67-692a22173dc4 doesn't exists
+         at NoviVovi.Domain.Novels.Novel.RemoveCharacterById(Guid characterId) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Novels\Novel.cs:line 118
+         at NoviVovi.Application.Characters.Features.Delete.DeleteCharacterHandler.Handle(DeleteCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Delete\DeleteCharacter.cs:line 31
+         at NoviVovi.Application.Characters.Features.Delete.DeleteCharacterHandler.Handle(DeleteCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Delete\DeleteCharacter.cs:line 45
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Delete(Guid novelId, Guid characterId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 75
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:30.29]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_NonExistingId_Retur
+nsNotFound [FAIL]
+[xUnit.net 00:00:30.29]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:30.29]       Expected: NotFound
+[xUnit.net 00:00:30.29]       Actual:   UnprocessableEntity
+[xUnit.net 00:00:30.29]       Stack Trace:
+[xUnit.net 00:00:30.29]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(254,0): at NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_NonExistingId_ReturnsNotFound()
+[xUnit.net 00:00:30.29]         --- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_NonExistingNovel_ReturnsNotFound [78 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_NonExistingId_ReturnsNotFound [35 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_NonExistingId_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 254
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:30.85]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_ValidRequest_ReturnsCr
+eatedCharacter [FAIL]
+[xUnit.net 00:00:30.85]       Assert.Equal() Failure: Strings differ
+[xUnit.net 00:00:30.85]                  тЖУ (pos 0)
+[xUnit.net 00:00:30.85]       Expected: "FF5733"
+[xUnit.net 00:00:30.85]       Actual:   "#FF5733"
+[xUnit.net 00:00:30.85]                  тЖС (pos 0)
+[xUnit.net 00:00:30.85]       Stack Trace:
+[xUnit.net 00:00:30.85]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(35,0): at NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_ValidRequest_ReturnsCreatedCharacter()
+[xUnit.net 00:00:30.85]         --- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜соня┐╜я┐╜ 'ac71a3b8-cab2-4e09-83fd-d87e504f0b40' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜соня┐╜я┐╜ 'ac71a3b8-cab2-4e09-83fd-d87e504f0b40' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Characters.Features.Get.GetCharacterHandler.Handle(GetCharacterQuery request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Get\GetCharacter.cs:line 24
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Get(Guid novelId, Guid characterId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 40
+         at lambda_method142(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: Name cannot be empty
+      NoviVovi.Domain.Common.DomainException: Name cannot be empty
+         at NoviVovi.Domain.Characters.Character.Create(String name, Guid novelId, Color nameColorHex, String description) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Characters\Character.cs:line 27
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterHandler.Handle(AddCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacter.cs:line 41
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterHandler.Handle(AddCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacter.cs:line 56
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Add(Guid novelId, AddCharacterRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 29
+         at lambda_method116(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:31.96]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:31.96]       Expected: BadRequest
+[xUnit.net 00:00:31.96]       Actual:   UnprocessableEntity
+[xUnit.net 00:00:31.96]       Stack Trace:
+[xUnit.net 00:00:31.96]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(60,0): at NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_EmptyName_ReturnsBadRequest()
+[xUnit.net 00:00:31.96]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:31.95]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_EmptyName_ReturnsBadRe
+quest [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_ValidRequest_ReturnsCreatedCharacter [34 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Strings differ
+           тЖУ (pos 0)
+Expected: "FF5733"
+Actual:   "#FF5733"
+           тЖС (pos 0)
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_ValidRequest_ReturnsCreatedCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 35
+--- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_NonExistingId_ReturnsNotFound [34 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_EmptyName_ReturnsBadRequest [17 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: BadRequest
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_EmptyName_ReturnsBadRequest() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 60
+--- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: Invalid color format: 'GGGGGG'. Expected #RRGGBB or #RGB
+      NoviVovi.Domain.Common.DomainException: Invalid color format: 'GGGGGG'. Expected #RRGGBB or #RGB
+         at NoviVovi.Domain.Common.Color.FromHex(String hex) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Common\Color.cs:line 33
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterHandler.Handle(AddCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacter.cs:line 39
+         at NoviVovi.Application.Characters.Features.Add.AddCharacterHandler.Handle(AddCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Add\AddCharacter.cs:line 56
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Add(Guid novelId, AddCharacterRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 29
+         at lambda_method116(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:33.11]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_InvalidColorFormat_Ret
+urnsBadRequest [FAIL]
+[xUnit.net 00:00:33.11]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:33.11]       Expected: BadRequest
+[xUnit.net 00:00:33.11]       Actual:   UnprocessableEntity
+[xUnit.net 00:00:33.11]       Stack Trace:
+[xUnit.net 00:00:33.11]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(74,0): at NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_InvalidColorFormat_ReturnsBadRequest()
+[xUnit.net 00:00:33.11]         --- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetAllCharacters_ReturnsAllCharactersForNovel [56 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_InvalidColorFormat_ReturnsBadRequest [16 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: BadRequest
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_InvalidColorFormat_ReturnsBadRequest() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 74
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:34.19]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_ExistingId_ReturnsChar
+acter [FAIL]
+[xUnit.net 00:00:34.19]       Assert.Equal() Failure: Strings differ
+[xUnit.net 00:00:34.19]                  тЖУ (pos 0)
+[xUnit.net 00:00:34.19]       Expected: "FF5733"
+[xUnit.net 00:00:34.19]       Actual:   "#FF5733"
+[xUnit.net 00:00:34.19]                  тЖС (pos 0)
+[xUnit.net 00:00:34.19]       Stack Trace:
+[xUnit.net 00:00:34.19]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(107,0): at NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_ExistingId_ReturnsCharacter()
+[xUnit.net 00:00:34.19]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_ExistingId_ReturnsCharacter [22 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Strings differ
+           тЖУ (pos 0)
+Expected: "FF5733"
+Actual:   "#FF5733"
+           тЖС (pos 0)
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_ExistingId_ReturnsCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 107
+--- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜соня┐╜я┐╜ '16ac5146-35cc-49dd-8ed3-7406299b2ffb' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜соня┐╜я┐╜ '16ac5146-35cc-49dd-8ed3-7406299b2ffb' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Characters.Features.Patch.PatchCharacterHandler.Handle(PatchCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Patch\PatchCharacter.cs:line 36
+         at NoviVovi.Application.Characters.Features.Patch.PatchCharacterHandler.Handle(PatchCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Patch\PatchCharacter.cs:line 61
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Patch(Guid novelId, Guid characterId, PatchCharacterRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 64
+         at lambda_method158(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_NonExistingId_ReturnsNotFound [54 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetAllCharacters_DifferentNovels_ReturnsOnlyNovelCharacters [108 ms]
+[xUnit.net 00:00:40.03]       Assert.Equal() Failure: Strings differ
+[xUnit.net 00:00:40.03]                  тЖУ (pos 0)
+[xUnit.net 00:00:40.03]       Expected: "00FF00"
+[xUnit.net 00:00:40.03]       Actual:   "#00FF00"
+[xUnit.net 00:00:40.03]                  тЖС (pos 0)
+[xUnit.net 00:00:40.03]       Stack Trace:
+[xUnit.net 00:00:40.03]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(191,0): at NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_ValidRequest_UpdatesCharacter()
+[xUnit.net 00:00:40.03]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:40.03]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_ValidRequest_Updates
+Character [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_ValidRequest_UpdatesCharacter [92 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Strings differ
+           тЖУ (pos 0)
+Expected: "00FF00"
+Actual:   "#00FF00"
+           тЖС (pos 0)
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_ValidRequest_UpdatesCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 191
+--- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜соня┐╜я┐╜ '2305fffc-a68a-44bc-9c3c-901144e1eacb' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜соня┐╜я┐╜ '2305fffc-a68a-44bc-9c3c-901144e1eacb' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Characters.Features.Get.GetCharacterHandler.Handle(GetCharacterQuery request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Get\GetCharacter.cs:line 24
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Get(Guid novelId, Guid characterId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 40
+         at lambda_method142(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_ExistingId_DeletesCharacter [242 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: Invalid character state
+      System.ArgumentException: Invalid character state
+         at NoviVovi.Infrastructure.Mappers.CharacterMapper.ToDomain(CharacterStateDbO dbo) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\CharacterMapper.cs:line 65
+         at NoviVovi.Infrastructure.Mappers.CharacterMapper.ToDomain(CharacterDbO dbo) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\CharacterMapper.cs:line 19
+         at NoviVovi.Infrastructure.Mappers.NovelMapper.ToDomain(NovelDbO dbo) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\NovelMapper.cs:line 27
+         at NoviVovi.Infrastructure.Repositories.NovelRepository.GetByIdAsync(Guid id, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\NovelRepository.cs:line 16
+         at NoviVovi.Application.Characters.Features.Delete.DeleteCharacterHandler.Handle(DeleteCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Delete\DeleteCharacter.cs:line 28
+         at NoviVovi.Application.Characters.Features.Delete.DeleteCharacterHandler.Handle(DeleteCharacterCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Characters\Features\Delete\DeleteCharacter.cs:line 45
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at NoviVovi.Api.Characters.Controllers.CharactersController.Delete(Guid novelId, Guid characterId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Characters\Controllers\CharactersController.cs:line 75
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:43.10]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_CascadeDeletesChara
+cterStates [FAIL]
+[xUnit.net 00:00:43.10]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+[xUnit.net 00:00:43.10]       Stack Trace:
+[xUnit.net 00:00:43.10]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:43.10]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(74,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url)
+[xUnit.net 00:00:43.10]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(278,0): at NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_CascadeDeletesCharacterStates()
+[xUnit.net 00:00:43.10]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_CascadeDeletesCharacterStates [48 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 74
+   at NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_CascadeDeletesCharacterStates() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 278
+--- End of stack trace from previous location ---
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Testing
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Git\NoviVovi\backend\NoviVovi.Api
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+[xUnit.net 00:01:05.76]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:01:05.76]       Expected: BadRequest
+[xUnit.net 00:01:05.76]       Actual:   NotFound
+[xUnit.net 00:01:05.76]       Stack Trace:
+[xUnit.net 00:01:05.76]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(89,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_InvalidFormat_ReturnsBadRequest()
+[xUnit.net 00:01:05.76]         --- End of stack trace from previous location ---
+[xUnit.net 00:01:05.76]     NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_InvalidFormat_ReturnsBadRequ
+est [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_InvalidFormat_ReturnsBadRequest [839 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: BadRequest
+Actual:   NotFound
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_InvalidFormat_ReturnsBadRequest() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 89
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:07.03]     NoviVovi.Api.Tests.Images.ImagesControllerTests.ConfirmUpload_ValidImageId_ConfirmsUpload [
+FAIL]
+[xUnit.net 00:01:07.03]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:01:07.03]       Stack Trace:
+[xUnit.net 00:01:07.03]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:01:07.03]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:01:07.03]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(96,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.ConfirmUpload_ValidImageId_ConfirmsUpload()
+[xUnit.net 00:01:07.03]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.ConfirmUpload_ValidImageId_ConfirmsUpload [39 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Images.ImagesControllerTests.ConfirmUpload_ValidImageId_ConfirmsUpload() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 96
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:07.73]     NoviVovi.Api.Tests.Images.ImagesControllerTests.ImageWorkflow_CompleteFlow_WorksCorrectly [
+FAIL]
+[xUnit.net 00:01:07.73]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:01:07.73]       Stack Trace:
+[xUnit.net 00:01:07.73]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:01:07.73]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:01:07.73]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(276,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.ImageWorkflow_CompleteFlow_WorksCorrectly()
+[xUnit.net 00:01:07.73]         --- End of stack trace from previous location ---
+[xUnit.net 00:01:08.29]     NoviVovi.Api.Tests.Images.ImagesControllerTests.GetImage_ExistingId_ReturnsImage [FAIL]
+[xUnit.net 00:01:08.29]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:01:08.29]       Stack Trace:
+[xUnit.net 00:01:08.29]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:01:08.29]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:01:08.29]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(137,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.GetImage_ExistingId_ReturnsImage()
+[xUnit.net 00:01:08.29]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.ImageWorkflow_CompleteFlow_WorksCorrectly [4 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Images.ImagesControllerTests.ImageWorkflow_CompleteFlow_WorksCorrectly() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 276
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.GetImage_ExistingId_ReturnsImage [2 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Images.ImagesControllerTests.GetImage_ExistingId_ReturnsImage() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 137
+--- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.ConfirmUpload_NonExistingImageId_ReturnsNotFound [2 ms]
+[xUnit.net 00:01:09.29]     NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_ExistingId_DeletesImage [FAIL]
+[xUnit.net 00:01:09.29]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:01:09.29]       Stack Trace:
+[xUnit.net 00:01:09.29]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:01:09.29]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:01:09.29]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(230,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_ExistingId_DeletesImage()
+[xUnit.net 00:01:09.29]         --- End of stack trace from previous location ---
+[xUnit.net 00:01:09.80]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:01:09.80]       Stack Trace:
+[xUnit.net 00:01:09.80]     NoviVovi.Api.Tests.Images.ImagesControllerTests.PatchImage_ValidRequest_UpdatesImage [FAIL]
+[xUnit.net 00:01:09.80]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:01:09.80]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:01:09.80]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(180,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.PatchImage_ValidRequest_UpdatesImage()
+[xUnit.net 00:01:09.80]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_ExistingId_DeletesImage [2 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_ExistingId_DeletesImage() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 230
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.PatchImage_ValidRequest_UpdatesImage [3 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Images.ImagesControllerTests.PatchImage_ValidRequest_UpdatesImage() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 180
+--- End of stack trace from previous location ---
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[xUnit.net 00:01:11.27]     NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_ValidRequest_ReturnsUploadIn
+fo [FAIL]
+[xUnit.net 00:01:11.27]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+[xUnit.net 00:01:11.27]       Stack Trace:
+[xUnit.net 00:01:11.27]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:01:11.27]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(46,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:01:11.27]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(36,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_ValidRequest_ReturnsUploadInfo()
+[xUnit.net 00:01:11.27]         --- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.GetImage_NonExistingId_ReturnsNotFound [2 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_ValidRequest_ReturnsUploadInfo [32 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_ValidRequest_ReturnsUploadInfo() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 36
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:13.15]     NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_EmptyName_ReturnsBadRequest 
+[FAIL]
+[xUnit.net 00:01:13.15]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:01:13.15]       Expected: BadRequest
+[xUnit.net 00:01:13.15]       Actual:   NotFound
+[xUnit.net 00:01:13.15]       Stack Trace:
+[xUnit.net 00:01:13.15]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(70,0): at NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_EmptyName_ReturnsBadRequest()
+[xUnit.net 00:01:13.15]         --- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_NonExistingId_ReturnsNotFound [2 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.PatchImage_NonExistingId_ReturnsNotFound [8 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_EmptyName_ReturnsBadRequest [2 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: BadRequest
+Actual:   NotFound
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_EmptyName_ReturnsBadRequest() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 70
+--- End of stack trace from previous location ---
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Testing
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Git\NoviVovi\backend\NoviVovi.Api
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ '025d9df5-0c4c-49a7-ab60-4724d107f9bb' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ '025d9df5-0c4c-49a7-ab60-4724d107f9bb' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Labels.Features.Add.AddLabelHandler.Handle(AddLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Add\AddLabel.cs:line 33
+         at NoviVovi.Application.Labels.Features.Add.AddLabelHandler.Handle(AddLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Add\AddLabel.cs:line 51
+         at NoviVovi.Api.Labels.Controllers.LabelsController.Add(Guid novelId, AddLabelRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Labels\Controllers\LabelsController.cs:line 29
+         at lambda_method184(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.AddLabel_NonExistingNovel_ReturnsNotFound [101 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: Name cannot be empty
+      NoviVovi.Domain.Common.DomainException: Name cannot be empty
+         at NoviVovi.Domain.Labels.Label.Create(String name, Guid novelId) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Labels\Label.cs:line 23
+         at NoviVovi.Application.Labels.Features.Add.AddLabelHandler.Handle(AddLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Add\AddLabel.cs:line 36
+         at NoviVovi.Application.Labels.Features.Add.AddLabelHandler.Handle(AddLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Add\AddLabel.cs:line 51
+         at NoviVovi.Api.Labels.Controllers.LabelsController.Add(Guid novelId, AddLabelRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Labels\Controllers\LabelsController.cs:line 29
+         at lambda_method184(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:01:35.14]     NoviVovi.Api.Tests.Labels.LabelsControllerTests.AddLabel_EmptyName_ReturnsBadRequest [FAIL]
+[xUnit.net 00:01:35.14]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:01:35.14]       Expected: BadRequest
+[xUnit.net 00:01:35.14]       Actual:   UnprocessableEntity
+[xUnit.net 00:01:35.14]       Stack Trace:
+[xUnit.net 00:01:35.14]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs(57,0): at NoviVovi.Api.Tests.Labels.LabelsControllerTests.AddLabel_EmptyName_ReturnsBadRequest()
+[xUnit.net 00:01:35.14]         --- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜тка 'b0a794c1-afd3-44d1-a2bc-a41f45cf71c6' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜тка 'b0a794c1-afd3-44d1-a2bc-a41f45cf71c6' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Labels.Features.Delete.DeleteLabelHandler.Handle(DeleteLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Delete\DeleteLabel.cs:line 34
+         at NoviVovi.Application.Labels.Features.Delete.DeleteLabelHandler.Handle(DeleteLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Delete\DeleteLabel.cs:line 51
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at NoviVovi.Api.Labels.Controllers.LabelsController.Delete(Guid novelId, Guid labelId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Labels\Controllers\LabelsController.cs:line 75
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.AddLabel_EmptyName_ReturnsBadRequest [30 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: BadRequest
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Labels.LabelsControllerTests.AddLabel_EmptyName_ReturnsBadRequest() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs:line 57
+--- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_NonExistingId_ReturnsNotFound [60 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ тип я┐╜тепя┐╜: 'replica'
+      System.ArgumentException: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ тип я┐╜тепя┐╜: 'replica'
+         at NoviVovi.Infrastructure.DbExtensions.ToStepType(String stepType) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\DatabaseObjects\Enums\DatabaseExtensions.cs:line 17
+         at NoviVovi.Infrastructure.Mappers.StepMapper.ToDomain(StepDbO dbo, MappingContext ctx) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\StepMapper.cs:line 177
+         at NoviVovi.Infrastructure.Mappers.LabelMapper.ToDomain(LabelDbO dbo, MappingContext ctx) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\LabelMapper.cs:line 22
+         at NoviVovi.Infrastructure.Mappers.NovelMapper.ToDomain(NovelDbO dbo) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\NovelMapper.cs:line 23
+         at NoviVovi.Infrastructure.Repositories.NovelRepository.GetByIdAsync(Guid id, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\NovelRepository.cs:line 16
+         at NoviVovi.Application.Labels.Features.Delete.DeleteLabelHandler.Handle(DeleteLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Delete\DeleteLabel.cs:line 31
+         at NoviVovi.Application.Labels.Features.Delete.DeleteLabelHandler.Handle(DeleteLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Delete\DeleteLabel.cs:line 51
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at NoviVovi.Api.Labels.Controllers.LabelsController.Delete(Guid novelId, Guid labelId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Labels\Controllers\LabelsController.cs:line 75
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:01:37.02]     NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_CascadeDeletesSteps [FAIL]
+[xUnit.net 00:01:37.02]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+[xUnit.net 00:01:37.02]       Stack Trace:
+[xUnit.net 00:01:37.02]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:01:37.02]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(74,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url)
+[xUnit.net 00:01:37.02]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs(253,0): at NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_CascadeDeletesSteps()
+[xUnit.net 00:01:37.02]         --- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.GetAllLabels_DifferentNovels_ReturnsOnlyNovelLabels [71 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_CascadeDeletesSteps [36 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 74
+   at NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_CascadeDeletesSteps() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs:line 253
+--- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.GetLabel_ExistingId_ReturnsLabel [22 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.PatchLabel_ValidRequest_UpdatesLabel [154 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜тка '32cfacd7-57df-4367-a327-14b32d66750b' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜тка '32cfacd7-57df-4367-a327-14b32d66750b' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Labels.Features.Patch.PatchLabelHandler.Handle(PatchLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Patch\PatchLabel.cs:line 32
+         at NoviVovi.Application.Labels.Features.Patch.PatchLabelHandler.Handle(PatchLabelCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Patch\PatchLabel.cs:line 50
+         at NoviVovi.Api.Labels.Controllers.LabelsController.Patch(Guid novelId, Guid labelId, PatchLabelRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Labels\Controllers\LabelsController.cs:line 64
+         at lambda_method226(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.PatchLabel_NonExistingId_ReturnsNotFound [84 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.AddLabel_ValidRequest_ReturnsCreatedLabel [21 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜тка '978ea23d-d4bb-4b30-a385-b7d2bf83aad2' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜тка '978ea23d-d4bb-4b30-a385-b7d2bf83aad2' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Labels.Features.Get.GetLabelHandler.Handle(GetLabelQuery request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Get\GetLabel.cs:line 26
+         at NoviVovi.Api.Labels.Controllers.LabelsController.Get(Guid novelId, Guid labelId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Labels\Controllers\LabelsController.cs:line 40
+         at lambda_method218(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.GetLabel_NonExistingId_ReturnsNotFound [45 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.GetAllLabels_ReturnsAllLabelsForNovel [99 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜тка 'fb23790d-db7e-4e11-ab22-f551a1a15924' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜тка 'fb23790d-db7e-4e11-ab22-f551a1a15924' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Labels.Features.Get.GetLabelHandler.Handle(GetLabelQuery request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Labels\Features\Get\GetLabel.cs:line 26
+         at NoviVovi.Api.Labels.Controllers.LabelsController.Get(Guid novelId, Guid labelId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Labels\Controllers\LabelsController.cs:line 40
+         at lambda_method218(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_ExistingId_DeletesLabel [209 ms]

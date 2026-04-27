@@ -2,15 +2,33 @@
 
 namespace NoviVovi.Domain.Menu;
 
-public class Menu(Guid id) : Entity(id)
+public class Menu : Entity
 {
     private readonly List<Choice> _choices = new();
     
     public IReadOnlyList<Choice> Choices => _choices.AsReadOnly();
 
+    public Menu(Guid id) : base(id)
+    {
+    }
+    
+    
+
     public static Menu Create()
     {
         return new Menu(Guid.NewGuid());
+    }
+    
+    public static Menu Create(IEnumerable<Choice>? choices)
+    {
+        var menu = new Menu(Guid.NewGuid());
+        
+        if (choices is null)
+            throw new DomainException($"Choices cannot be null");
+        
+        menu.AddChoices(choices);
+        
+        return menu;
     }
 
     public void AddChoice(Choice? choice)
@@ -42,5 +60,10 @@ public class Menu(Guid id) : Entity(id)
             throw new DomainException($"Choices cannot be null");
         
         _choices.AddRange(choices);
+    }
+    
+    public void RemoveAllChoices()
+    {
+        _choices.Clear();
     }
 }

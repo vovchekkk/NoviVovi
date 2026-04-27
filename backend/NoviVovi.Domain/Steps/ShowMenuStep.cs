@@ -19,7 +19,7 @@ public class ShowMenuStep : Step
         
         return new ShowMenuStep(Guid.NewGuid(), menu, NextStepTransition.Create());
     }
-
+    
     public void Update(Menu.Menu? menu)
     {
         if (menu is not null)

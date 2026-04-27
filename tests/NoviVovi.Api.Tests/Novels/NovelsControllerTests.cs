@@ -34,7 +34,7 @@ public class NovelsControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     }
 
     [Fact]
-    public async Task CreateNovel_EmptyTitle_ReturnsBadRequest()
+    public async Task CreateNovel_EmptyTitle_ReturnsUnprocessableEntity()
     {
         // Arrange
         var request = new CreateNovelRequest("");
@@ -43,7 +43,8 @@ public class NovelsControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         var response = await PostRawAsync("/api/novels", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        // DomainException is mapped to UnprocessableEntity (422), not BadRequest (400)
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]

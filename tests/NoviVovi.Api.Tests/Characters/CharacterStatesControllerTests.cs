@@ -90,7 +90,7 @@ public class CharacterStatesControllerTests(NoviVoviWebApplicationFactory factor
     }
 
     [Fact]
-    public async Task AddCharacterState_EmptyName_ReturnsBadRequest()
+    public async Task AddCharacterState_EmptyName_ReturnsUnprocessableEntity()
     {
         // Arrange
         var novelId = await CreateTestNovelAsync();
@@ -108,7 +108,7 @@ public class CharacterStatesControllerTests(NoviVoviWebApplicationFactory factor
         var response = await PostRawAsync($"/api/novels/{novelId}/characters/{characterId}/states", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class CharacterStatesControllerTests(NoviVoviWebApplicationFactory factor
     }
 
     [Fact]
-    public async Task AddCharacterState_NonExistingImage_ReturnsBadRequest()
+    public async Task AddCharacterState_NonExistingImage_ReturnsUnprocessableEntity()
     {
         // Arrange
         var novelId = await CreateTestNovelAsync();
@@ -152,7 +152,7 @@ public class CharacterStatesControllerTests(NoviVoviWebApplicationFactory factor
         var response = await PostRawAsync($"/api/novels/{novelId}/characters/{characterId}/states", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]
