@@ -474,29 +474,66 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
 
                     if (choiceInfo) {
                         const sourceSteps = nextMap[sourceLabelId] ?? [];
-                        const step = sourceSteps.find((item) => item.id === choiceInfo.stepId);
-                        if (step) {
-                            const choices = extractStepChoices(step);
+                        let step = sourceSteps.find((item) => item.id === choiceInfo.stepId);
+                        let choices: StepChoice[];
+
+                        // Если шаг не найден, создаём новый menu‑шаг с одним пустым выбором
+                        if (!step) {
+                            const { data: newStep } = await api.post<Step>(
+                                `/novels/${novelId}/labels/${sourceLabelId}/steps`,
+                                {
+                                    type: 'menu',
+                                    menuRequest: {
+                                        choices: [{ text: 'Новый выбор' }],
+                                    },
+                                }
+                            ); //TODO: нормально обработать ошибку
+                            step = newStep;
+                            nextMap = upsertStep(nextMap, sourceLabelId, step);
+                            choices = extractStepChoices(step);
+                            // Индекс выбора — 0, так как он только что создан
+                            const choiceIndex = 0;
+                            // Обновим targetLabelId у созданного выбора
+                            const updatedChoices = choices.map((c, i) =>
+                                i === choiceIndex ? { ...c, targetLabelId: targetLabelId } : c
+                            );
+                            const { data: updatedStep } = await api.patch<Step>(`/steps/${step.id}`, {
+                                ...step,
+                                menuRequest: { id: step.menuRequest?.id ?? `menu-${step.id}`, choices: updatedChoices },
+                            });
+                            nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
+                        } else {
+                            // Шаг существует – проверяем, есть ли такой choice
+                            choices = extractStepChoices(step);
                             if (choices[choiceInfo.choiceIndex]) {
+                                // Обновляем существующий выбор
                                 const updatedChoices = choices.map((choice, index) =>
                                     index === choiceInfo.choiceIndex
-                                        ? { ...choice, targetLabelId }
+                                        ? { ...choice, targetLabelId: targetLabelId }
                                         : choice
                                 );
-
                                 const { data: updatedStep } = await api.patch<Step>(`/steps/${step.id}`, {
                                     ...step,
-                                    menuRequest: {
-                                        id: step.menuRequest?.id ?? `menu-${step.id}`,
-                                        choices: getStepChoices({
-                                            ...step,
-                                            menuRequest: { choices: updatedChoices },
-                                        }),
-                                    },
+                                    menuRequest: { id: step.menuRequest?.id ?? `menu-${step.id}`, choices: updatedChoices },
+                                });
+                                nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
+                            } else {
+                                // Индекс выходит за границы – добавляем новый выбор
+                                const newChoice: StepChoice = {
+                                    text: `Вариант ${choices.length + 1}`,
+                                    targetLabelId: targetLabelId,
+                                };
+                                const updatedChoices = [...choices, newChoice];
+                                const { data: updatedStep } = await api.patch<Step>(`/steps/${step.id}`, {
+                                    ...step,
+                                    menuRequest: { id: step.menuRequest?.id ?? `menu-${step.id}`, choices: updatedChoices }, //TODO: нормально обработать ошибку
                                 });
                                 nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
                             }
                         }
+
+                        applyStepsMap(nextMap);
+                        return;
                     } else {
                         const sourceSteps = nextMap[sourceLabelId] ?? [];
                         const jumpStep = sourceSteps.find((step) => step.type === 'jump');
