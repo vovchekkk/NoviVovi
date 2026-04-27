@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import ReactSelect from 'react-select';
 import {css} from '../../../styled-system/css'
 
@@ -8,6 +8,7 @@ interface SelectorProps {
     value?: string;
     onChange?: (val: string | null) => void;
     onBlur?: () => void;
+    disabled?: boolean;
 }
 
 type Option = {
@@ -15,7 +16,8 @@ type Option = {
     label: string;
 };
 
-export default function Selector({ title, options, value, onChange, onBlur }: SelectorProps) {
+export default function Selector({ title, options, value, onChange, onBlur, disabled }: SelectorProps) {
+
 
     const currentOption = options.find(o => o.value === value) || null;
     const customStyles = {
@@ -52,6 +54,7 @@ export default function Selector({ title, options, value, onChange, onBlur }: Se
                     value={currentOption} // Важно: передаем объект
                     onChange={(val: Option | null) => onChange?.(val ? val.value : null)} // Важно: отдаем только ID
                     onBlur={onBlur}
+                    isDisabled={disabled}
                     isClearable={true}
                     isSearchable={true}
                     styles={customStyles}

@@ -3,7 +3,7 @@ import { css } from "../../../styled-system/css";
 import api from "../../api";
 
 interface LayerProps {
-    id: string;
+    id: string | undefined | null;
     transform?: {
         x?: number;
         y?: number;
@@ -14,24 +14,29 @@ interface LayerProps {
         zIndex?: number;
     };
     className?: string;
+    novelId: string;
 }
 
-export const Layer = ({ id, transform, className }: LayerProps) => {
+export const Layer = ({ id, transform, className, novelId }: LayerProps) => {
     const [url, setUrl] = useState<string | null>(null);
-    const scaleValue = transform?.scale ?? 1;
-    const rotateValue = transform?.rotation ?? 0;
 
     useEffect(() => {
-        if (!id) return;
+        if (!id) {
+            setUrl(null);
+            return;
+        }
 
-        api.get<{ url: string }>(`/images/${id}`)
+        api.get<{ url: string }>(`novels/${novelId}/images/${id}`)
             .then((res) => {
                 setUrl(res.data.url);
             })
-    }, [id]);
+            .catch(() => {
+                setUrl(null);
+            });
 
-    if (!url)
-        return null;
+    }, [id, novelId]);
+
+    if (!id || !url) return null;
 
     const style: React.CSSProperties = {
         position: 'absolute',
@@ -40,38 +45,35 @@ export const Layer = ({ id, transform, className }: LayerProps) => {
         width: `${transform?.width ?? 100}%`,
         height: `${transform?.height ?? 100}%`,
         zIndex: transform?.zIndex ?? 1,
-        transform: `rotate(${rotateValue}deg) scale(${scaleValue})`,
+        transform: `rotate(${transform?.rotation ?? 0}deg) scale(${transform?.scale ?? 1})`,
         objectFit: 'cover',
         pointerEvents: 'none',
-        transition: 'all 0.1s linear',
     };
 
-    return (
-        <img
-            src={url || ''}
-            style={style}
-            alt="Layer"
-        />
-    );
+    return <img src={url} style={style} className={className} alt="" />;
 };
 
-export const BackgroundLayer = ({ imageId, transform }: { imageId: string, transform: any }) => {
+export const BackgroundLayer = ({ imageId, transform, novelId }: { imageId: any, transform: any, novelId:string }) => {
+    const actualId = typeof imageId === 'object' ? imageId?.imageId : imageId;
+
     return (
         <Layer
-            id={imageId}
+            id={actualId}
             transform={transform}
-            className={css({ filter: 'brightness(0.9)' })}
+            className={css({ filter: 'brightness(0.9)', transition: '0.3s' })}
+            novelId={novelId}
         />
     );
 };
 
-export const CharacterLayer = ({ characterId, stateId, transform }: any) => {
+export const CharacterLayer = ({ characterId, stateId, transform, novelId  }: any) => {
     const resourceId = stateId || characterId;
 
     return (
         <Layer
             id={resourceId}
             transform={transform}
+            novelId={novelId}
         />
     );
 };

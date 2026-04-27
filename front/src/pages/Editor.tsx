@@ -1,6 +1,6 @@
 import Header from "../shared/ui/Header.tsx";
 import {css} from '../../styled-system/css'
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import EditorHeader from "../shared/ui/EditorHeader.tsx";
 import Preview from "../shared/ui/Preview.tsx";
 import BlockPanel from "../shared/ui/BlockPanel.tsx";
@@ -11,17 +11,18 @@ import {z} from "zod";
 import Modal from "../shared/ui/Modal.tsx";
 import api from "../api.tsx";
 import {useParams} from "react-router-dom";
+import {vstack, hstack} from '../../styled-system/patterns';
 import {LabelItem} from "../shared/ui/LabelItem.tsx";
 import type {Character} from "../shared/ui/AssetsContainer.tsx";
 import { setLastNovelId } from "../shared/lib/novelSession.ts";
 
 export enum StepType {
-    BACKGROUND = 'background',
-    SHOW = 'show',
-    HIDE = 'hide',
+    BACKGROUND = 'show_background',
+    SHOW = 'show_character',
+    HIDE = 'hide_character',
     REPLICA = 'replica',
     JUMP = 'jump',
-    CHOICE = 'choice',
+    MENU = 'menu',
 }
 
 const transformSchema = z.object({
@@ -39,7 +40,7 @@ export const stepDisplayNames: Record<StepType, string> = {
     [StepType.HIDE]: 'Исчезновение',
     [StepType.REPLICA]: 'Реплика',
     [StepType.JUMP]: 'Переход',
-    [StepType.CHOICE]: 'Выбор',
+    [StepType.MENU]: 'Выбор',
 };
 const backgroundStateSchema = z.object({
     imageId: z.string(),
@@ -62,7 +63,7 @@ const baseStepSchema = z.object({
 });
 
 const hideStepSchema = baseStepSchema.extend({
-    type: z.literal('hide'),
+    type: z.literal('hide_character'),
     characterId: z.string().min(1, 'Выберите персонажа'),
 });
 
@@ -72,14 +73,14 @@ const jumpStepSchema = baseStepSchema.extend({
 });
 
 const showStepSchema = baseStepSchema.extend({
-    type: z.literal('show'),
+    type: z.literal('show_character'),
     characterId: z.string().min(1),
     characterStateId: z.string().min(1),
     transform: transformSchema,
 });
 
 const backgroundStepSchema = baseStepSchema.extend({
-    type: z.literal('background'),
+    type: z.literal('show_background'),
     imageId: z.string().min(1),
     transform: transformSchema,
 });
@@ -90,21 +91,8 @@ const replicaStepSchema = baseStepSchema.extend({
     text: z.string().min(1, 'Введите текст реплики'),
 });
 
-// const choiceStepSchema = baseStepSchema.extend({
-//     type: z.literal('choice'),
-//     menuRequest: z.object({
-//         id: z.string().min(1),
-//         choices: z.array(z.object({
-//             id: z.string().min(1),
-//             name: z.string().optional(),
-//             text: z.string().min(1, 'Введите текст варианта'),
-//             targetLabelId: z.string().min(1, 'Выберите сцену'),
-//         })),
-//     }),
-// });
-
 const choiceStepSchema = baseStepSchema.extend({
-    type: z.literal('choice'),
+    type: z.literal('menu'),
     menuRequest: z.object({
         id: z.string().min(1),
         choices: z.array(z.object({
@@ -134,7 +122,10 @@ export type Label = {
 type CharacterOption = {
     id:string,
     name:string,
-    states:string[],
+    states:{
+        id: string;
+        name: string;
+    }[],
 }
 type SelectorOption = {
     value: string;
@@ -147,6 +138,7 @@ type StepFormProps = {
     characterOptions: CharacterOption[];
     labelOptions: SelectorOption[];
     setValue:any;
+    novelId:string;
 };
 
 const normalizeIncomingStep = (step: any): Step => {
@@ -189,8 +181,9 @@ function JumpStepForm({control, errors, labelOptions}: StepFormProps) {
     );
 }
 
-function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
+function ShowStepForm({ control, errors, characterOptions, setValue }: StepFormProps) {
     const selectedCharacterId = useWatch({ control, name: 'characterId' });
+    const previousCharacterIdRef = useRef<string | undefined>();
     const selectedCharacter = characterOptions.find(ch => ch.id === selectedCharacterId);
     const options = characterOptions.map(ch => ({
         value: ch.id,
@@ -200,6 +193,14 @@ function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
         value: stateName,
         label: stateName
     }));
+
+    useEffect(() => {
+        if (previousCharacterIdRef.current !== undefined && previousCharacterIdRef.current !== selectedCharacterId) {
+            setValue('characterStateId', '');
+        }
+
+        previousCharacterIdRef.current = selectedCharacterId;
+    }, [selectedCharacterId, setValue]);
 
     return (
         <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
@@ -217,7 +218,10 @@ function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
                         <Selector
                             title="Состояние"
                             options={stateOptions}
-                            {...field}
+                            value={field.value}
+                            onBlur={field.onBlur}
+                            onChange={field.onChange}
+                            disabled={!selectedCharacterId}
                         />
                     )}
                 />
@@ -267,7 +271,6 @@ function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
     );
 }
 
-// Вспомогательный сверхкомпактный инпут
 function CompactInput({ label, name, control, step = "1" }: any) {
     return (
         <Controller
@@ -309,7 +312,7 @@ function CompactInput({ label, name, control, step = "1" }: any) {
     );
 }
 
-function BackgroundStepForm({ control, errors, setValue }: StepFormProps) {
+function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProps) {
     const [isUploading, setIsUploading] = useState(false);
     const currentImageId = useWatch({
         control,
@@ -341,12 +344,16 @@ function BackgroundStepForm({ control, errors, setValue }: StepFormProps) {
                 name: file.name,
                 type: 'Background',
                 format: file.type.split('/')[1],
-                width: dimensions.width.toString(),
-                height: dimensions.height.toString(),
+                size: {
+                    width: dimensions.width.toString(),
+                    height: dimensions.height.toString(),
+                },
             };
 
-            const response = await api.post('images/upload-url', request);
-            const { imageId, uploadUrl } = response.data;
+            const response = await api.post(`novels/${novelId}/images/upload-url`, request);
+            const { imageId, uploadUrl, viewUrl } = response.data;
+            console.log(uploadUrl)
+            console.log('imageId:', imageId);
 
             if (uploadUrl) {
                 await api.put(uploadUrl, file, {
@@ -506,13 +513,18 @@ function ChoiceStepForm({ control, labelOptions, register, errors }: StepFormPro
                             })
                         }
                         className={css({
-                            padding: '4px 12px',
-                            backgroundColor: '#28a745',
+                            padding: '8px 12px',
+                            backgroundColor: '#705661',
                             color: 'white',
                             border: 'none',
-                            borderRadius: '4px',
+                            borderRadius: '6px',
                             cursor: 'pointer',
-                            fontSize: '12px'
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            transition: 'background-color 0.2s',
+                            _hover: {
+                                backgroundColor: '#5e4a52'
+                            }
                         })}
                     >
                         + Добавить
@@ -521,13 +533,13 @@ function ChoiceStepForm({ control, labelOptions, register, errors }: StepFormPro
 
                 {fields.map((field, index) => (
                     <div key={field.id} className={css({
-                        padding: '12px',
-                        border: '1px solid #ddd',
+                        padding: '14px',
+                        border: '1px solid #e6d9df',
                         borderRadius: '8px',
-                        backgroundColor: '#fefefe',
+                        backgroundColor: '#fff',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '8px',
+                        gap: '12px',
                         position: 'relative'
                     })}>
                         <input
@@ -546,21 +558,22 @@ function ChoiceStepForm({ control, labelOptions, register, errors }: StepFormPro
                             onClick={() => remove(index)}
                             className={css({
                                 position: 'absolute',
-                                top: '8px',
-                                right: '8px',
+                                top: '10px',
+                                right: '10px',
                                 border: 'none',
                                 background: 'none',
                                 cursor: 'pointer',
-                                color: 'red',
-                                fontWeight: 'bold'
+                                color: '#a54f67',
+                                fontWeight: 'bold',
+                                fontSize: '16px',
+                                lineHeight: 1
                             })}
                         >
                             ✕
                         </button>
 
-                        {/* Текст выбора */}
-                        <div>
-                            <label className={css({ fontSize: '12px', color: '#666' })}>Текст кнопки</label>
+                        <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px' })}>
+                            <label className={css({ fontSize: '12px', fontWeight: 'bold', color: '#666' })}>Текст кнопки</label>
                             <input
                                 {...register(`menuRequest.choices.${index}.text` as const)}
                                 className={compactInputStyle}
@@ -568,14 +581,14 @@ function ChoiceStepForm({ control, labelOptions, register, errors }: StepFormPro
                             />
                         </div>
 
-                        <div>
+                        <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px' })}>
                             <label className={css({ fontSize: '12px', color: '#666' })}>Переход на сцену</label>
                             <Controller
                                 control={control}
                                 name={`menuRequest.choices.${index}.targetLabelId` as const}
                                 render={({ field: selectField }) => (
                                     <Selector
-                                        title="Выберите сцену"
+                                        title="Переход на сцену"
                                         options={labelOptions}
                                         {...selectField}
                                     />
@@ -592,15 +605,24 @@ function ChoiceStepForm({ control, labelOptions, register, errors }: StepFormPro
                 ))}
 
                 {fields.length === 0 && (
-                    <p className={css({ fontSize: '12px', color: '#999', textAlign: 'center' })}>
+                    <p className={css({ fontSize: '12px', color: '#888', textAlign: 'center', padding: '12px 0' })}>
                         Добавьте хотя бы один вариант выбора
                     </p>
                 )}
-
             </div>
         </div>
     );
 }
+
+// Стили для переиспользования
+const inputStyle = css({
+    width: '100%',
+    padding: '10px',
+    borderRadius: '8px',
+    backgroundColor: 'white',
+    border: '1px solid black',
+    fontSize: '14px'
+});
 
 const compactInputStyle = css({
     width: '100%',
@@ -615,11 +637,12 @@ export default function Editor() {
     const [isOpen, setIsOpen] = useState(false);
     const [steps, setSteps] = useState<Step[]>([]);
     const [labels, setLabels] = useState<Label[]>([]);
+    const [imageUrl, setImageUrl] = useState('');
     const [selectedLabelId, setSelectedLabelId] = useState<string | null>(labels[0]?.id ?? null);
     const [selectedStepIndex, setSelectedStepIndex] = useState(0);
     const [selectedId, setSelectedId] = useState<string | null>(steps[0]?.id ?? null);
     const currentStep = steps[selectedStepIndex];
-    const [, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [labelName, setLabelName] = useState(' ');
     const [isLabelOpen, setIsLabelOpen] = useState(false);
     const [characterOptions, setCharacterOptions] = useState<CharacterOption[]>([]);
@@ -669,7 +692,10 @@ export default function Editor() {
                 setCharacterOptions(data.map(ch => ({
                     id:ch.id,
                     name:ch.name,
-                    states:ch.characterStates.map(st => st.name),
+                    states:ch.characterStates.map(st => ({
+                        id: st.id,
+                        name: st.name,
+                    })),
                 })))
             } catch (error) {
                 console.log(error);
@@ -735,7 +761,7 @@ export default function Editor() {
                         });
                         break;
 
-                    case 'choice':
+                    case 'menu':
                         reset({
                             ...baseData,
                             menuRequest: data.menuRequest ?? {
@@ -804,8 +830,8 @@ export default function Editor() {
 
         fetchSteps();
     }, [selectedLabelId, novelId]);
-    const onSave = async (data: any) => {   // лучше типизировать Step
-        const finalState = { ... (data.state || {}) };
+    const onSave = async (data: any) => {
+        const finalState = { ...(data.state || {}) };
 
         if (data.type === 'background' && data.background) {
             finalState.background = data.background;
@@ -818,13 +844,17 @@ export default function Editor() {
                 transform: data.transform || { x: 40, y: 30, width: 25, height: 65, scale: 1, rotation: 0, zIndex: 20 }
             };
 
-            finalState.characters = [...(finalState.characters || []), newChar];
+            finalState.characters = [
+                ...(finalState.characters || []).filter((ch: any) => ch.characterId !== data.characterId),
+                newChar
+            ];
         }
 
         if (data.type === 'hide' && data.characterId) {
             finalState.characters = (finalState.characters || [])
                 .filter((ch: any) => ch.characterId !== data.characterId);
         }
+
         const finalData = {
             ...data,
             state: finalState
@@ -842,93 +872,93 @@ export default function Editor() {
         }
 
         try {
-            const { data: updatedStep } = await api.patch<Step>(`/steps/${data.id}`, finalData);
-            const newSteps = [...steps];
-            newSteps[selectedStepIndex] = updatedStep;
-            setSteps(newSteps);
+            let savedStep: Step;
+
+            if (data.id) {
+                const { data: updated } = await api.patch(`/steps/${data.id}`, finalData);
+                savedStep = updated;
+            }
+            else {
+                const { data: newStep } = await api.post<Step>(
+                    `/novels/${novelId}/labels/${selectedLabelId}/steps`,
+                    finalData
+                );
+                savedStep = newStep;
+            }
+
+            setSteps((prevSteps) =>
+                prevSteps.map((step, index) =>
+                    index === selectedStepIndex ? savedStep : step
+                )
+            );
+
+            console.log('Шаг успешно сохранён:', savedStep);
+
         } catch (error) {
             console.error('Ошибка сохранения шага:', error);
-            alert('Не удалось сохранить шаг. Проверьте данные.');
+            alert('Не удалось сохранить шаг');
         }
     };
-    const addStep = async (type: StepType) => {
-        let newStep;
+    const addStep = (type: StepType) => {
+        let tempStep: any = {
+            id: null,
+            type: '',
+            state: {},
+        };
 
         switch (type) {
-            case 'background':
-                newStep = {
-                    type: 'show_background',
-                    transform: { x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0 }
-                };
+            case 'show_background':
+                tempStep.type = 'show_background';
+                tempStep.transform = { x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0 };
                 break;
 
-            case 'show':
-                newStep = {
-                    type: 'show_character',
-                    characterId: '',
-                    characterStateId: '',
-                    transform : { x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10 }
-                };
+            case 'show_character':
+                tempStep.type = 'show_character';
+                tempStep.characterId = '';
+                tempStep.characterStateId = '';
+                tempStep.transform = { x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10 };
                 break;
 
-            case 'hide':
-                newStep = {
-                    type: 'hide_character',
-                    characterId: '',
-                };
+            case 'hide_character':
+                tempStep.type = 'hide_character';
+                tempStep.characterId = '';
                 break;
 
             case 'replica':
-                newStep = {
-                    type: 'replica',
-                    characterId: '',
-                    text: '',
-                };
+                tempStep.type = 'replica';
+                tempStep.characterId = '';
+                tempStep.text = '';
                 break;
 
             case 'jump':
-                newStep = {
-                    type: 'jump',
-                    targetId: ''
-                };
+                tempStep.type = 'jump';
+                tempStep.targetId = '';
                 break;
 
-            case 'choice':
-                newStep = {
-                    type: 'choice',
-                    menuRequest: {
-                        choices: [],
-                    },
+            case 'menu':
+                tempStep.type = 'menu';
+                tempStep.name = '';
+                tempStep.text = '';
+                tempStep.menuRequest = {
+                    choices: [],
                 };
                 break;
         }
 
-        try {
-            const { data: serverStep } = await api.post<Step>(
-                `/novels/${novelId}/labels/${selectedLabelId}/steps`,
-                newStep
-            );
+        setSteps((prevSteps) => {
+            const insertionIndex = (selectedStepIndex !== null && selectedStepIndex !== -1)
+                ? selectedStepIndex + 1
+                : prevSteps.length;
 
-            setSteps((prevSteps) => {
-                const insertionIndex = (selectedStepIndex !== null && selectedStepIndex !== -1)
-                    ? selectedStepIndex + 1
-                    : prevSteps.length;
+            const updatedSteps = [
+                ...prevSteps.slice(0, insertionIndex),
+                tempStep,
+                ...prevSteps.slice(insertionIndex)
+            ];
 
-                const updatedSteps = [
-                    ...prevSteps.slice(0, insertionIndex),
-                    serverStep,
-                    ...prevSteps.slice(insertionIndex)
-                ];
-
-                setSelectedStepIndex(insertionIndex);
-                setSelectedId(serverStep.id);
-                return updatedSteps;
-            });
-
-        } catch (error) {
-            console.error('Ошибка создания:', error);
-            alert('Не удалось создать шаг');
-        }
+            setSelectedStepIndex(insertionIndex);
+            return updatedSteps;
+        });
     };
     const deleteStep = async (index: number) => {
         const stepToDelete = steps[index];
@@ -968,21 +998,22 @@ export default function Editor() {
             register,
             setValue,
             characterOptions: characterOptions,
-            labelOptions,
+            labelOptions: labelOptions,
+            novelId:novelId,
         };
 
         switch (currentStep.type) {
-            case 'hide':
+            case 'hide_character':
                 return <HideStepForm {...formProps} />;
             case 'jump':
                 return <JumpStepForm {...formProps} />;
-            case 'show':
+            case 'show_character':
                 return <ShowStepForm {...formProps} />;
-            case 'background':
+            case 'show_background':
                 return <BackgroundStepForm {...formProps} />;
             case 'replica':
                 return <ReplicaStepForm {...formProps} />;
-            case 'choice':
+            case 'menu':
                 return <ChoiceStepForm {...formProps} />;
             default:
                 return null;
@@ -1016,10 +1047,14 @@ export default function Editor() {
 
     const deleteLabel = async (id: string) => {
         try {
-            await api.delete(`novels/${novelId}/labels/${id}`);
+            await api.delete<Label>(`novels/${novelId}/labels/${id}`, {
+                data: {
+                    labelId: id,
+                    novelId: novelId,
+                }
+            });
             const newLabels = labels.filter(lab => lab.id !== id);
             setLabels(newLabels);
-
             if (selectedLabelId === id) {
                 if (newLabels.length > 0) {
                     setSelectedLabelId(newLabels[0].id);
@@ -1160,7 +1195,7 @@ export default function Editor() {
                                     gap: '20px',
                                     flex: 4,
                                 })}>
-                                    <Preview control={control}></Preview>
+                                    <Preview steps={steps} selectedStepIndex={selectedStepIndex} control={control}></Preview>
                                     <BlockPanel
                                         steps={steps}
                                         selectedStepIndex={selectedStepIndex}
