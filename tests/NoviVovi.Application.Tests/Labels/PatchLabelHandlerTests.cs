@@ -5,6 +5,10 @@ using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Labels.Dtos;
 using NoviVovi.Application.Labels.Features.Patch;
 using NoviVovi.Application.Labels.Mappers;
+using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Images.Mappers;
+using NoviVovi.Application.Scene.Mappers;
+using NoviVovi.Application.Steps.Mappers;
 using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Domain.Labels;
@@ -16,19 +20,30 @@ public class PatchLabelHandlerTests
 {
     private readonly Mock<ILabelRepository> _mockLabelRepo;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<LabelDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly LabelDtoMapper _mockMapper;
     private readonly PatchLabelHandler _handler;
 
     public PatchLabelHandlerTests()
     {
         _mockLabelRepo = new Mock<ILabelRepository>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<LabelDtoMapper>();
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+                
+        // LabelDtoMapper requires StepDtoMapper, which requires other mappers
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        var characterStateMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
+        var characterMapper = new CharacterDtoMapper(characterStateMapper);
+        var stepMapper = new StepDtoMapper(characterMapper, imageMapper, transformMapper);
+        _mockMapper = new LabelDtoMapper(stepMapper);
         
         _handler = new PatchLabelHandler(
             _mockLabelRepo.Object,
             _mockUnitOfWork.Object,
-            _mockMapper.Object
+            _mockMapper
         );
     }
 
@@ -55,9 +70,6 @@ public class PatchLabelHandlerTests
             .Setup(r => r.AddOrUpdateAsync(label, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _mockMapper
-            .Setup(m => m.ToDto(label))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);

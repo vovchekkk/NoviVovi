@@ -35,11 +35,21 @@ public class DeleteCharacterStateHandlerTests
     {
         // Arrange
         var novelId = Guid.NewGuid();
-        var characterId = Guid.NewGuid();
-        var stateId = Guid.NewGuid();
-        
         var novel = Novel.Create("Test Novel");
+        
+        // Create character and add to novel
         var character = Character.Create("Alice", novelId, Domain.Common.Color.FromHex("FF5733"), null);
+        novel.AddCharacter(character);
+        var characterId = character.Id;
+        
+        // Create required dependencies for CharacterState
+        var image = Domain.Images.Image.CreatePending("test.png", novelId, "path/test.png", "png", Domain.Images.ImageType.Character, new Domain.Scene.Size(100, 100));
+        var transform = Domain.Scene.Transform.Create(new Domain.Scene.Position(0, 0), new Domain.Scene.Size(100, 100));
+        
+        // Add state to character
+        var state = CharacterState.Create("happy", image, transform);
+        character.AddCharacterState(state);
+        var stateId = state.Id;
 
         _mockNovelRepo
             .Setup(r => r.GetByIdAsync(novelId, It.IsAny<CancellationToken>()))
@@ -62,7 +72,6 @@ public class DeleteCharacterStateHandlerTests
         await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        _mockCharacterRepo.Verify(r => r.GetByIdAsync(characterId, It.IsAny<CancellationToken>()), Times.Once);
         _mockCharacterRepo.Verify(r => r.AddOrUpdateAsync(character, It.IsAny<CancellationToken>()), Times.Once);
         _mockUnitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }

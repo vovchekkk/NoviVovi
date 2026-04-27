@@ -25,10 +25,13 @@ public class DeleteStepHandlerTests
     {
         // Arrange
         var novelId = Guid.NewGuid();
-        var labelId = Guid.NewGuid();
-        var stepId = Guid.NewGuid();
-        
         var label = Label.Create("chapter1", novelId);
+        var labelId = label.Id;
+        
+        // Add a step to the label so it exists in the collection
+        var step = Domain.Steps.JumpStep.Create(label); // Jump to itself for simplicity
+        label.AddStep(step);
+        var stepId = step.Id;
 
         _mockLabelRepo
             .Setup(r => r.GetByIdAsync(labelId, It.IsAny<CancellationToken>()))

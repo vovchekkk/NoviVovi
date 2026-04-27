@@ -3,6 +3,9 @@ using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Features.Get;
 using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Images.Mappers;
+using NoviVovi.Application.Scene.Mappers;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels.Abstractions;
 using NoviVovi.Domain.Characters;
@@ -13,15 +16,24 @@ public class GetCharacterHandlerTests
 {
     private readonly Mock<INovelRepository> _mockNovelRepo;
     private readonly Mock<ICharacterRepository> _mockCharacterRepo;
-    private readonly Mock<CharacterDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly CharacterDtoMapper _mockMapper;
     private readonly GetCharacterHandler _handler;
 
     public GetCharacterHandlerTests()
     {
         _mockNovelRepo = new Mock<INovelRepository>();
         _mockCharacterRepo = new Mock<ICharacterRepository>();
-        _mockMapper = new Mock<CharacterDtoMapper>();
-        _handler = new GetCharacterHandler(_mockNovelRepo.Object, _mockCharacterRepo.Object, _mockMapper.Object);
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+                
+        // CharacterDtoMapper requires CharacterStateDtoMapper
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        var characterStateMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
+        _mockMapper = new CharacterDtoMapper(characterStateMapper);
+        _handler = new GetCharacterHandler(_mockNovelRepo.Object, _mockCharacterRepo.Object, _mockMapper);
     }
 
     [Fact]
@@ -37,9 +49,6 @@ public class GetCharacterHandlerTests
             .Setup(r => r.GetByIdAsync(characterId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(character);
 
-        _mockMapper
-            .Setup(m => m.ToDto(character))
-            .Returns(expectedDto);
 
         var query = new GetCharacterQuery(novelId, characterId);
 

@@ -3,6 +3,8 @@ using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Features.Add;
 using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Images.Mappers;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Images.Abstractions;
@@ -21,9 +23,10 @@ public class AddCharacterStateHandlerTests
     private readonly Mock<INovelRepository> _mockNovelRepo;
     private readonly Mock<ICharacterRepository> _mockCharacterRepo;
     private readonly Mock<IImageRepository> _mockImageRepo;
-    private readonly Mock<TransformDtoMapper> _mockTransformMapper;
+    private readonly TransformDtoMapper _mockTransformMapper;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<CharacterStateDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly CharacterStateDtoMapper _mockMapper;
     private readonly AddCharacterStateHandler _handler;
 
     public AddCharacterStateHandlerTests()
@@ -31,17 +34,24 @@ public class AddCharacterStateHandlerTests
         _mockNovelRepo = new Mock<INovelRepository>();
         _mockCharacterRepo = new Mock<ICharacterRepository>();
         _mockImageRepo = new Mock<IImageRepository>();
-        _mockTransformMapper = new Mock<TransformDtoMapper>();
+        _mockTransformMapper = new TransformDtoMapper();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<CharacterStateDtoMapper>();
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+                
+        // CharacterStateDtoMapper requires dependencies
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        _mockMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
         
         _handler = new AddCharacterStateHandler(
             _mockNovelRepo.Object,
             _mockCharacterRepo.Object,
             _mockImageRepo.Object,
-            _mockTransformMapper.Object,
+            _mockTransformMapper,
             _mockUnitOfWork.Object,
-            _mockMapper.Object
+            _mockMapper
         );
     }
 
@@ -90,17 +100,11 @@ public class AddCharacterStateHandlerTests
             .Setup(r => r.GetByIdAsync(imageId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(image);
 
-        _mockTransformMapper
-            .Setup(m => m.ToDomainModel(It.IsAny<TransformDto>()))
-            .Returns(Transform.Create(new Position(0.5, 0.5), new Size(512, 512), 1.0, 0.0, 1));
 
         _mockCharacterRepo
             .Setup(r => r.AddOrUpdateAsync(character, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<CharacterState>()))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);

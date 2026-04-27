@@ -15,7 +15,7 @@ public class CreateNovelHandlerTests
     private readonly Mock<INovelRepository> _mockNovelRepo;
     private readonly Mock<ILabelRepository> _mockLabelRepo;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<NovelDtoMapper> _mockMapper;
+    private readonly NovelDtoMapper _mapper;
     private readonly CreateNovelHandler _handler;
 
     public CreateNovelHandlerTests()
@@ -23,8 +23,8 @@ public class CreateNovelHandlerTests
         _mockNovelRepo = new Mock<INovelRepository>();
         _mockLabelRepo = new Mock<ILabelRepository>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<NovelDtoMapper>();
-        _handler = new CreateNovelHandler(_mockNovelRepo.Object, _mockLabelRepo.Object, _mockUnitOfWork.Object, _mockMapper.Object);
+        _mapper = new NovelDtoMapper();
+        _handler = new CreateNovelHandler(_mockNovelRepo.Object, _mockLabelRepo.Object, _mockUnitOfWork.Object, _mapper);
     }
 
     [Fact]
@@ -32,7 +32,6 @@ public class CreateNovelHandlerTests
     {
         // Arrange
         var command = new CreateNovelCommand { Title = "New Novel" };
-        var expectedDto = new NovelDto(Guid.NewGuid(), "New Novel", Guid.NewGuid(), new List<Guid>(), new List<Guid>());
 
         _mockNovelRepo
             .Setup(r => r.AddOrUpdateAsync(It.IsAny<Novel>(), It.IsAny<CancellationToken>()))
@@ -41,10 +40,6 @@ public class CreateNovelHandlerTests
         _mockLabelRepo
             .Setup(r => r.AddOrUpdateAsync(It.IsAny<Domain.Labels.Label>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<Novel>()))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
@@ -55,7 +50,8 @@ public class CreateNovelHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal("New Novel", result.Title);
-        _mockNovelRepo.Verify(r => r.AddOrUpdateAsync(It.IsAny<Novel>(), It.IsAny<CancellationToken>()), Times.Once);
+        // Novel is saved twice: once initially, once after StartLabel is set
+        _mockNovelRepo.Verify(r => r.AddOrUpdateAsync(It.IsAny<Novel>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
         _mockUnitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 

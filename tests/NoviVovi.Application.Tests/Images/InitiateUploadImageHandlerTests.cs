@@ -15,7 +15,7 @@ public class InitiateUploadImageHandlerTests
     private readonly Mock<IImageRepository> _mockImageRepo;
     private readonly Mock<IStorageService> _mockStorageService;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<UploadInfoImageDtoMapper> _mockMapper;
+    private readonly UploadInfoImageDtoMapper _mockMapper;
     private readonly InitiateUploadImageHandler _handler;
 
     public InitiateUploadImageHandlerTests()
@@ -23,13 +23,13 @@ public class InitiateUploadImageHandlerTests
         _mockImageRepo = new Mock<IImageRepository>();
         _mockStorageService = new Mock<IStorageService>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<UploadInfoImageDtoMapper>();
+        _mockMapper = new UploadInfoImageDtoMapper();
         
         _handler = new InitiateUploadImageHandler(
             _mockImageRepo.Object,
             _mockStorageService.Object,
             _mockUnitOfWork.Object,
-            _mockMapper.Object
+            _mockMapper
         );
     }
 
@@ -65,9 +65,6 @@ public class InitiateUploadImageHandlerTests
             .Setup(r => r.AddOrUpdateAsync(It.IsAny<Image>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<UploadInfoImage>()))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);

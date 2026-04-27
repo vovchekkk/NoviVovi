@@ -6,6 +6,7 @@ using NoviVovi.Application.Images.Dtos;
 using NoviVovi.Application.Images.Features.ConfirmUpload;
 using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Scene.Dtos;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Domain.Images;
 using NoviVovi.Domain.Scene;
 
@@ -15,15 +16,22 @@ public class ConfirmUploadImageHandlerTests
 {
     private readonly Mock<IImageRepository> _mockImageRepo;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<ImageDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly ImageDtoMapper _mockMapper;
     private readonly ConfirmUploadImageHandler _handler;
 
     public ConfirmUploadImageHandlerTests()
     {
         _mockImageRepo = new Mock<IImageRepository>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<ImageDtoMapper>();
-        _handler = new ConfirmUploadImageHandler(_mockImageRepo.Object, _mockUnitOfWork.Object, _mockMapper.Object);
+        _mockStorageService = new Mock<IStorageService>();
+        
+        // ImageDtoMapper requires IStorageService and SizeDtoMapper
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+        var sizeMapper = new SizeDtoMapper();
+        _mockMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        
+        _handler = new ConfirmUploadImageHandler(_mockImageRepo.Object, _mockUnitOfWork.Object, _mockMapper);
     }
 
     [Fact]
@@ -55,9 +63,6 @@ public class ConfirmUploadImageHandlerTests
             .Setup(r => r.AddOrUpdateAsync(image, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _mockMapper
-            .Setup(m => m.ToDto(image))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);

@@ -3,6 +3,8 @@ using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Features.Add;
 using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Images.Mappers;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Novels.Abstractions;
@@ -16,7 +18,8 @@ public class AddCharacterHandlerTests
     private readonly Mock<INovelRepository> _mockNovelRepo;
     private readonly Mock<ICharacterRepository> _mockCharacterRepo;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<CharacterDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly CharacterDtoMapper _mockMapper;
     private readonly AddCharacterHandler _handler;
 
     public AddCharacterHandlerTests()
@@ -24,13 +27,21 @@ public class AddCharacterHandlerTests
         _mockNovelRepo = new Mock<INovelRepository>();
         _mockCharacterRepo = new Mock<ICharacterRepository>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<CharacterDtoMapper>();
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+                
+        // CharacterDtoMapper requires CharacterStateDtoMapper
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        var characterStateMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
+        _mockMapper = new CharacterDtoMapper(characterStateMapper);
         
         _handler = new AddCharacterHandler(
             _mockNovelRepo.Object,
             _mockCharacterRepo.Object,
             _mockUnitOfWork.Object,
-            _mockMapper.Object
+            _mockMapper
         );
     }
 
@@ -61,9 +72,6 @@ public class AddCharacterHandlerTests
             .Setup(r => r.AddOrUpdateAsync(It.IsAny<Novel>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<Character>()))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
@@ -74,7 +82,7 @@ public class AddCharacterHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal("Alice", result.Name);
-        Assert.Equal("FF5733", result.NameColor);
+        Assert.Equal("#FF5733", result.NameColor); // Color.Value includes the # prefix
         
         _mockCharacterRepo.Verify(r => r.AddOrUpdateAsync(It.IsAny<Character>(), It.IsAny<CancellationToken>()), Times.Once);
         _mockUnitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);

@@ -3,6 +3,8 @@ using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Features.Patch;
 using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Images.Mappers;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
 using NoviVovi.Application.Images.Abstractions;
@@ -21,9 +23,10 @@ public class PatchCharacterStateHandlerTests
     private readonly Mock<INovelRepository> _mockNovelRepo;
     private readonly Mock<ICharacterRepository> _mockCharacterRepo;
     private readonly Mock<IImageRepository> _mockImageRepo;
-    private readonly Mock<TransformDtoMapper> _mockTransformMapper;
+    private readonly TransformDtoMapper _mockTransformMapper;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<CharacterStateDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly CharacterStateDtoMapper _mockMapper;
     private readonly PatchCharacterStateHandler _handler;
 
     public PatchCharacterStateHandlerTests()
@@ -31,17 +34,24 @@ public class PatchCharacterStateHandlerTests
         _mockNovelRepo = new Mock<INovelRepository>();
         _mockCharacterRepo = new Mock<ICharacterRepository>();
         _mockImageRepo = new Mock<IImageRepository>();
-        _mockTransformMapper = new Mock<TransformDtoMapper>();
+        _mockTransformMapper = new TransformDtoMapper();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<CharacterStateDtoMapper>();
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+                
+        // CharacterStateDtoMapper requires dependencies
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        _mockMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
         
         _handler = new PatchCharacterStateHandler(
             _mockNovelRepo.Object,
             _mockCharacterRepo.Object,
             _mockImageRepo.Object,
-            _mockTransformMapper.Object,
+            _mockTransformMapper,
             _mockUnitOfWork.Object,
-            _mockMapper.Object
+            _mockMapper
         );
     }
 
@@ -50,13 +60,25 @@ public class PatchCharacterStateHandlerTests
     {
         // Arrange
         var novelId = Guid.NewGuid();
-        var characterId = Guid.NewGuid();
-        var stateId = Guid.NewGuid();
-        var imageId = Guid.NewGuid();
-        
         var novel = Novel.Create("Test Novel");
+        
+        // Create character and add to novel
         var character = Character.Create("Alice", novelId, Domain.Common.Color.FromHex("FF5733"), null);
-        var image = Image.CreatePending("test.png", novelId, "path/test.png", "png", ImageType.Character, new Size(512, 512));
+        novel.AddCharacter(character);
+        var characterId = character.Id;
+        
+        // Create initial image and transform for the state
+        var initialImage = Image.CreatePending("initial.png", novelId, "path/initial.png", "png", ImageType.Character, new Size(512, 512));
+        var transform = Transform.Create(new Position(0, 0), new Size(100, 100));
+        
+        // Create state and add to character
+        var state = CharacterState.Create("happy", initialImage, transform);
+        character.AddCharacterState(state);
+        var stateId = state.Id;
+        
+        // Create new image for update
+        var newImage = Image.CreatePending("test.png", novelId, "path/test.png", "png", ImageType.Character, new Size(512, 512));
+        var imageId = newImage.Id;
         
         var command = new PatchCharacterStateCommand 
         { 
@@ -66,8 +88,6 @@ public class PatchCharacterStateHandlerTests
             Name = "updated_happy",
             ImageId = imageId
         };
-        
-        var expectedDto = new CharacterStateDto(stateId, "updated_happy", null, null, null);
 
         _mockNovelRepo
             .Setup(r => r.GetByIdAsync(novelId, It.IsAny<CancellationToken>()))
@@ -79,15 +99,11 @@ public class PatchCharacterStateHandlerTests
 
         _mockImageRepo
             .Setup(r => r.GetByIdAsync(imageId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(image);
+            .ReturnsAsync(newImage);
 
         _mockCharacterRepo
             .Setup(r => r.AddOrUpdateAsync(character, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<CharacterState>()))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);

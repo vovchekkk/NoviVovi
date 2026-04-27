@@ -1,6 +1,10 @@
 using Moq;
+using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Labels.Abstractions;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Application.Steps.Features.Get;
 using NoviVovi.Application.Steps.Mappers;
@@ -11,14 +15,25 @@ namespace NoviVovi.Application.Tests.Steps;
 public class GetStepHandlerTests
 {
     private readonly Mock<ILabelRepository> _mockLabelRepo;
-    private readonly Mock<StepDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly StepDtoMapper _mockMapper;
     private readonly GetStepHandler _handler;
 
     public GetStepHandlerTests()
     {
         _mockLabelRepo = new Mock<ILabelRepository>();
-        _mockMapper = new Mock<StepDtoMapper>();
-        _handler = new GetStepHandler(_mockLabelRepo.Object, _mockMapper.Object);
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+        
+        // StepDtoMapper requires dependencies with full chain
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        var characterStateMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
+        var characterMapper = new CharacterDtoMapper(characterStateMapper);
+        _mockMapper = new StepDtoMapper(characterMapper, imageMapper, transformMapper);
+        
+        _handler = new GetStepHandler(_mockLabelRepo.Object, _mockMapper);
     }
 
     [Fact]
@@ -26,22 +41,19 @@ public class GetStepHandlerTests
     {
         // Arrange
         var novelId = Guid.NewGuid();
-        var labelId = Guid.NewGuid();
-        var stepId = Guid.NewGuid();
         var label = Label.Create("chapter1", novelId);
+        var labelId = label.Id;
+        
+        // Create and add step to label
+        var step = Domain.Steps.JumpStep.Create(label);
+        label.AddStep(step);
+        var stepId = step.Id;
         
         var query = new GetStepQuery(novelId, labelId, stepId);
-        
-        // Create a mock StepDto (using Moq to create abstract class instance)
-        var expectedDto = Mock.Of<StepDto>(d => d.Id == stepId);
 
         _mockLabelRepo
             .Setup(r => r.GetByIdAsync(labelId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(label);
-
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<Domain.Steps.Step>()))
-            .Returns(expectedDto);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

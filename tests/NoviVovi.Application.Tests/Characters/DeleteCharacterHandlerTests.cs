@@ -35,9 +35,12 @@ public class DeleteCharacterHandlerTests
     {
         // Arrange
         var novelId = Guid.NewGuid();
-        var characterId = Guid.NewGuid();
         var novel = Novel.Create("Test Novel");
+        
+        // Create character and add to novel
         var character = Character.Create("Alice", novelId, Domain.Common.Color.FromHex("FF5733"), null);
+        novel.AddCharacter(character);
+        var characterId = character.Id;
 
         _mockNovelRepo
             .Setup(r => r.GetByIdAsync(novelId, It.IsAny<CancellationToken>()))
@@ -64,8 +67,8 @@ public class DeleteCharacterHandlerTests
         await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        _mockCharacterRepo.Verify(r => r.GetByIdAsync(characterId, It.IsAny<CancellationToken>()), Times.Once);
         _mockCharacterRepo.Verify(r => r.DeleteAsync(character, It.IsAny<CancellationToken>()), Times.Once);
+        _mockNovelRepo.Verify(r => r.AddOrUpdateAsync(novel, It.IsAny<CancellationToken>()), Times.Once);
         _mockUnitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -88,7 +91,8 @@ public class DeleteCharacterHandlerTests
         var command = new DeleteCharacterCommand(novelId, characterId);
 
         // Act & Assert
-        await Assert.ThrowsAsync<NotFoundException>(async () =>
+        // Handler calls novel.RemoveCharacterById() which throws DomainException if character doesn't exist in novel
+        await Assert.ThrowsAsync<Domain.Common.DomainException>(async () =>
             await _handler.Handle(command, CancellationToken.None));
 
         _mockCharacterRepo.Verify(r => r.DeleteAsync(It.IsAny<Character>(), It.IsAny<CancellationToken>()), Times.Never);

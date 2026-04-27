@@ -1,10 +1,15 @@
 using Moq;
+using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Dialogue.Mappers;
+using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Preview.Dtos;
 using NoviVovi.Application.Preview.Features.Get;
 using NoviVovi.Application.Preview.Mappers;
 using NoviVovi.Application.Scene.Dtos;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Domain.Labels;
 
 namespace NoviVovi.Application.Tests.Preview;
@@ -12,14 +17,28 @@ namespace NoviVovi.Application.Tests.Preview;
 public class GetScenePreviewHandlerTests
 {
     private readonly Mock<ILabelRepository> _mockLabelRepo;
-    private readonly Mock<SceneStateDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly SceneStateDtoMapper _mockMapper;
     private readonly GetScenePreviewHandler _handler;
 
     public GetScenePreviewHandlerTests()
     {
         _mockLabelRepo = new Mock<ILabelRepository>();
-        _mockMapper = new Mock<SceneStateDtoMapper>();
-        _handler = new GetScenePreviewHandler(_mockLabelRepo.Object, _mockMapper.Object);
+        _mockStorageService = new Mock<IStorageService>();
+        
+        // Setup storage service mock
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+        
+        // SceneStateDtoMapper requires complex dependency chain
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        var characterStateMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
+        var characterMapper = new CharacterDtoMapper(characterStateMapper);
+        var replicaMapper = new ReplicaDtoMapper(characterMapper);
+        _mockMapper = new SceneStateDtoMapper(replicaMapper, characterMapper, imageMapper, transformMapper);
+        
+        _handler = new GetScenePreviewHandler(_mockLabelRepo.Object, _mockMapper);
     }
 
     [Fact]
@@ -38,9 +57,6 @@ public class GetScenePreviewHandlerTests
             .Setup(r => r.GetByIdAsync(labelId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(label);
 
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<Domain.Preview.VisualSnapshot>()))
-            .Returns(expectedDto);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

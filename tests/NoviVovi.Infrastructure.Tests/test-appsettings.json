@@ -1,5 +1,8 @@
 {
+  "UseLocalStorage": true,
+  "UseLocalDatabase": true,
   "ConnectionStrings": {
-    "NovelDatabase": "Host=localhost;Port=5432;Database=Novels;Username=postgres;Password=<password>"
+    "LocalDatabase": "Host=localhost;Port=5432;Database=Novels;Username=postgres;Password=postgres;Include Error Detail=true",
+    "CloudDatabase": "Host=rc1a-ot1r915bnk6cftm9.mdb.yandexcloud.net;Port=6432;Database=Novels;Username=novivoviAdmin;Password=<password>;Ssl Mode=Require;Trust Server Certificate=true"
   }
 }

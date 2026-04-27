@@ -1,6 +1,10 @@
 using Moq;
+using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Labels.Abstractions;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Steps.Dtos;
 using NoviVovi.Application.Steps.Features.Get;
 using NoviVovi.Application.Steps.Mappers;
@@ -11,14 +15,25 @@ namespace NoviVovi.Application.Tests.Steps;
 public class GetStepsHandlerTests
 {
     private readonly Mock<ILabelRepository> _mockLabelRepo;
-    private readonly Mock<StepDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly StepDtoMapper _mockMapper;
     private readonly GetStepsHandler _handler;
 
     public GetStepsHandlerTests()
     {
         _mockLabelRepo = new Mock<ILabelRepository>();
-        _mockMapper = new Mock<StepDtoMapper>();
-        _handler = new GetStepsHandler(_mockLabelRepo.Object, _mockMapper.Object);
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+        
+        // StepDtoMapper requires dependencies with full chain
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        var characterStateMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
+        var characterMapper = new CharacterDtoMapper(characterStateMapper);
+        _mockMapper = new StepDtoMapper(characterMapper, imageMapper, transformMapper);
+        
+        _handler = new GetStepsHandler(_mockLabelRepo.Object, _mockMapper);
     }
 
     [Fact]
@@ -36,9 +51,6 @@ public class GetStepsHandlerTests
             .Setup(r => r.GetByIdAsync(labelId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(label);
 
-        _mockMapper
-            .Setup(m => m.ToDtos(It.IsAny<IEnumerable<Domain.Steps.Step>>()))
-            .Returns(expectedDtos);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

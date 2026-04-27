@@ -29,9 +29,12 @@ public class DeleteLabelHandlerTests
     {
         // Arrange
         var novelId = Guid.NewGuid();
-        var labelId = Guid.NewGuid();
         var novel = Novel.Create("Test Novel");
+        
+        // Create label and add to novel so it exists in the novel's collection
         var label = Label.Create("chapter1", novelId);
+        novel.AddLabel(label);
+        var labelId = label.Id;
 
         _mockNovelRepo
             .Setup(r => r.GetByIdAsync(novelId, It.IsAny<CancellationToken>()))
@@ -58,8 +61,8 @@ public class DeleteLabelHandlerTests
         await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        _mockLabelRepo.Verify(r => r.GetByIdAsync(labelId, It.IsAny<CancellationToken>()), Times.Once);
         _mockLabelRepo.Verify(r => r.DeleteAsync(label, It.IsAny<CancellationToken>()), Times.Once);
+        _mockNovelRepo.Verify(r => r.AddOrUpdateAsync(novel, It.IsAny<CancellationToken>()), Times.Once);
         _mockUnitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 

@@ -6,6 +6,7 @@ using NoviVovi.Application.Images.Dtos;
 using NoviVovi.Application.Images.Features.Get;
 using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Scene.Dtos;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Domain.Images;
 using NoviVovi.Domain.Scene;
 
@@ -15,15 +16,20 @@ public class GetImageHandlerTests
 {
     private readonly Mock<IImageRepository> _mockImageRepo;
     private readonly Mock<IStorageService> _mockStorageService;
-    private readonly Mock<ImageDtoMapper> _mockMapper;
+    private readonly ImageDtoMapper _mockMapper;
     private readonly GetImageHandler _handler;
 
     public GetImageHandlerTests()
     {
         _mockImageRepo = new Mock<IImageRepository>();
         _mockStorageService = new Mock<IStorageService>();
-        _mockMapper = new Mock<ImageDtoMapper>();
-        _handler = new GetImageHandler(_mockImageRepo.Object, _mockStorageService.Object, _mockMapper.Object);
+        
+        // ImageDtoMapper requires IStorageService and SizeDtoMapper
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+        var sizeMapper = new SizeDtoMapper();
+        _mockMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        
+        _handler = new GetImageHandler(_mockImageRepo.Object, _mockStorageService.Object, _mockMapper);
     }
 
     [Fact]
@@ -51,9 +57,6 @@ public class GetImageHandlerTests
             .Setup(r => r.GetByIdAsync(imageId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(image);
 
-        _mockMapper
-            .Setup(m => m.ToDto(image))
-            .Returns(expectedDto);
 
         var query = new GetImageQuery(imageId);
 

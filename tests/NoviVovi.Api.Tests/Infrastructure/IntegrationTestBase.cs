@@ -11,7 +11,7 @@ public abstract class IntegrationTestBase : IClassFixture<NoviVoviWebApplication
     protected readonly HttpClient Client;
     protected readonly NoviVoviWebApplicationFactory Factory;
     private IServiceScope? _scope;
-    protected IUnitOfWork UnitOfWork = null!;
+    protected IUnitOfWork? UnitOfWork;
 
     protected IntegrationTestBase(NoviVoviWebApplicationFactory factory)
     {
@@ -36,7 +36,8 @@ public abstract class IntegrationTestBase : IClassFixture<NoviVoviWebApplication
             await UnitOfWork.DisposeAsync();
         }
         
-        _scope?.Dispose();
+        // Don't call _scope.Dispose() because UnitOfWork only implements IAsyncDisposable
+        // The scope will be cleaned up by the test framework
     }
 
     protected async Task<TResponse?> PostAsync<TResponse>(string url, object request)

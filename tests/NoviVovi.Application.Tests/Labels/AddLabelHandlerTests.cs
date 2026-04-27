@@ -1,12 +1,16 @@
 using Moq;
+using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
+using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Labels.Abstractions;
 using NoviVovi.Application.Labels.Dtos;
 using NoviVovi.Application.Labels.Features.Add;
 using NoviVovi.Application.Labels.Mappers;
 using NoviVovi.Application.Novels.Abstractions;
+using NoviVovi.Application.Scene.Mappers;
 using NoviVovi.Application.Steps.Dtos;
+using NoviVovi.Application.Steps.Mappers;
 using NoviVovi.Domain.Labels;
 using NoviVovi.Domain.Novels;
 
@@ -17,7 +21,8 @@ public class AddLabelHandlerTests
     private readonly Mock<INovelRepository> _mockNovelRepo;
     private readonly Mock<ILabelRepository> _mockLabelRepo;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<LabelDtoMapper> _mockMapper;
+    private readonly Mock<IStorageService> _mockStorageService;
+    private readonly LabelDtoMapper _mockMapper;
     private readonly AddLabelHandler _handler;
 
     public AddLabelHandlerTests()
@@ -25,13 +30,23 @@ public class AddLabelHandlerTests
         _mockNovelRepo = new Mock<INovelRepository>();
         _mockLabelRepo = new Mock<ILabelRepository>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMapper = new Mock<LabelDtoMapper>();
+        _mockStorageService = new Mock<IStorageService>();
+        _mockStorageService.Setup(s => s.GetViewUrl(It.IsAny<string>())).Returns("https://test.com/view");
+        
+        // LabelDtoMapper requires StepDtoMapper, which requires other mappers
+        var sizeMapper = new SizeDtoMapper();
+        var imageMapper = new ImageDtoMapper(_mockStorageService.Object, sizeMapper);
+        var transformMapper = new TransformDtoMapper();
+        var characterStateMapper = new CharacterStateDtoMapper(imageMapper, transformMapper);
+        var characterMapper = new CharacterDtoMapper(characterStateMapper);
+        var stepMapper = new StepDtoMapper(characterMapper, imageMapper, transformMapper);
+        _mockMapper = new LabelDtoMapper(stepMapper);
         
         _handler = new AddLabelHandler(
             _mockNovelRepo.Object,
             _mockLabelRepo.Object,
             _mockUnitOfWork.Object,
-            _mockMapper.Object
+            _mockMapper
         );
     }
 
@@ -56,9 +71,6 @@ public class AddLabelHandlerTests
             .Setup(r => r.AddOrUpdateAsync(novel, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _mockMapper
-            .Setup(m => m.ToDto(It.IsAny<Label>()))
-            .Returns(expectedDto);
 
         _mockUnitOfWork.Setup(u => u.BeginTransaction());
         _mockUnitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
