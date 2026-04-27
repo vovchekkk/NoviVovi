@@ -27,8 +27,8 @@ public record AddCharacterStateCommand : IRequest<CharacterStateDto>
 
 public class AddCharacterStateHandler(
     INovelRepository novelRepository,
-    IImageRepository imageRepository,
     ICharacterRepository characterRepository,
+    IImageRepository imageRepository,
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
     CharacterStateDtoMapper mapper
@@ -40,8 +40,7 @@ public class AddCharacterStateHandler(
         
         try
         {
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+            var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
             var image = await imageRepository.GetByIdAsync(request.ImageId, ct);
@@ -51,7 +50,9 @@ public class AddCharacterStateHandler(
             var state = CharacterState.Create(request.Name, image, transform, request.Description);
 
             character.AddCharacterState(state);
-            characterRepository.AddOrUpdateAsync(character, ct);
+            
+            await characterRepository.AddOrUpdateAsync(character, ct);
+            
             await unitOfWork.CommitAsync(ct);
 
             return mapper.ToDto(state);

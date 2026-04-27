@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
@@ -21,6 +22,7 @@ public record AddCharacterCommand : IRequest<CharacterDto>
 
 public class AddCharacterHandler(
     INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     IUnitOfWork unitOfWork,
     CharacterDtoMapper mapper
 ) : IRequestHandler<AddCharacterCommand, CharacterDto>
@@ -37,8 +39,10 @@ public class AddCharacterHandler(
             var colorName = Color.FromHex(request.NameColor);
 
             var character = Character.Create(request.Name, request.NovelId, colorName, request.Description);
-
+            
             novel.AddCharacter(character);
+            
+            await characterRepository.AddOrUpdateAsync(character, ct);
             
             await novelRepository.AddOrUpdateAsync(novel, ct);
             

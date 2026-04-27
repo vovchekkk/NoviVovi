@@ -15,6 +15,12 @@ public class CharacterRepository(ICharacterDbORepository dboRepo, CharacterMappe
         return mapper.ToDomain(dbo);
     }
 
+    public async Task<IEnumerable<Character>> GetAllByNovelIdAsync(Guid novelId, CancellationToken ct)
+    {
+        var dbos = await dboRepo.GetFullByNovelIdAsync(novelId);
+        return dbos.Where(dbo => dbo != null).Select(dbo => mapper.ToDomain(dbo!));
+    }
+
     public async Task AddOrUpdateAsync(Character character, CancellationToken ct)
     {
         var dbo = mapper.ToDbO(character);

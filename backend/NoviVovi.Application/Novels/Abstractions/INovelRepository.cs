@@ -9,6 +9,4 @@ public interface INovelRepository
     public Task AddOrUpdateAsync(Novel novel, CancellationToken ct);
     public Task DeleteAsync(Novel novel, CancellationToken ct);
     public Task<IEnumerable<Novel>> GetAllAsync(CancellationToken ct);
-    
-    Task<IEnumerable<Character>> GetAllCharactersAsync(Guid novelId, CancellationToken ct);
 }

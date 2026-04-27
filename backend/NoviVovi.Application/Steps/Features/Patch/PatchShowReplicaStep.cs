@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
@@ -21,7 +22,7 @@ public record PatchShowReplicaStepCommand : PatchStepCommand
 }
 
 public class PatchShowReplicaStepHandler(
-    INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
@@ -35,16 +36,14 @@ public class PatchShowReplicaStepHandler(
         {
             var (label, step) = await GetStepContextOrThrow(request, ct);
             
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-
             if (step is not ShowReplicaStep showReplicaStep)
                 throw new BadRequestException($"Step {step.Id} is not {typeof(ShowReplicaStep)}");
 
             Character? character = null;
             if (request.CharacterId.HasValue)
             {
-                character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+                character = await characterRepository.GetByIdAsync(request.CharacterId.Value, ct)
+                                ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
             }
 
             var replica = Replica.Create(character, request.Text);

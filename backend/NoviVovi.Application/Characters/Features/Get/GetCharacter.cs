@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common.Exceptions;
@@ -14,13 +15,13 @@ public record GetCharacterQuery(
 
 public class GetCharacterHandler(
     INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     CharacterDtoMapper mapper
 ) : IRequestHandler<GetCharacterQuery, CharacterDto>
 {
     public async Task<CharacterDto> Handle(GetCharacterQuery request, CancellationToken ct)
     {
-        var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-        var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+        var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                         ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
         
         return mapper.ToDto(character);

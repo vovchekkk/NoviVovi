@@ -29,6 +29,8 @@ public class DeleteStepHandler(
             throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
 
         label.RemoveStepById(request.StepId);
+
+        await labelRepository.AddOrUpdateAsync(label, ct);
         
         await unitOfWork.SaveChangesAsync(ct);
     }

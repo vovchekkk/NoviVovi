@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Features.Get;
 using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Abstractions;
@@ -22,7 +23,7 @@ public record AddHideCharacterStepCommand : AddStepCommand
 }
 
 public class AddHideCharacterStepHandler(
-    INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
@@ -36,8 +37,7 @@ public class AddHideCharacterStepHandler(
         {
             var label = await GetStepContextOrThrow(request, ct);
 
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+            var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
             var step = HideCharacterStep.Create(character);

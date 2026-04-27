@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
@@ -19,7 +20,7 @@ public record PatchHideCharacterStepCommand : PatchStepCommand
 }
 
 public class PatchHideCharacterStepHandler(
-    INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     ILabelRepository labelRepository,
     IUnitOfWork unitOfWork,
     StepDtoMapper mapper
@@ -33,15 +34,13 @@ public class PatchHideCharacterStepHandler(
         {
             var (label, step) = await GetStepContextOrThrow(request, ct);
             
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-
             if (step is not HideCharacterStep hideCharacterStep)
                 throw new BadRequestException($"Step {step.Id} is not {typeof(HideCharacterStep)}");
             
             Character? character = null;
             if (request.CharacterId.HasValue)
             {
-                character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+                character = await characterRepository.GetByIdAsync(request.CharacterId.Value, ct)
                                 ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
             }
             

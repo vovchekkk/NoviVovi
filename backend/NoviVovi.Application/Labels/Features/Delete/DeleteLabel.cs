@@ -40,8 +40,8 @@ public class DeleteLabelHandler(
             novel.RemoveLabelById(request.LabelId);
             
             await labelRepository.DeleteAsync(label, ct);
-            
-            await labelRepository.AddOrUpdateAsync(label, ct);
+
+            await novelRepository.AddOrUpdateAsync(novel, ct);
             
             await unitOfWork.CommitAsync(ct);
         }
