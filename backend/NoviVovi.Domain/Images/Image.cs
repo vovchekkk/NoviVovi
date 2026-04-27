@@ -43,9 +43,12 @@ public class Image : Entity
         string? format,
         ImageType type,
         Size? size,
-        string? description = null
+        string? description = null,
+        Guid? imageGuid = null
     )
     {
+        imageGuid ??= Guid.NewGuid();
+        
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException($"Name cannot be empty");
         
@@ -65,7 +68,7 @@ public class Image : Entity
             throw new DomainException($"Invalid dimensions");
 
         return new Image(
-            Guid.NewGuid(),
+            imageGuid.Value,
             name,
             novelId,
             storagePath,

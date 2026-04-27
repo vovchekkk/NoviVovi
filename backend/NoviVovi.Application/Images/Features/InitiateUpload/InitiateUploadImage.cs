@@ -46,7 +46,8 @@ public class InitiateUploadImageHandler(
                 request.Format,
                 request.Type,
                 new Size(request.Size.Width, request.Size.Height),
-                request.Description
+                request.Description,
+                imageId
             );
 
             await imageRepository.AddOrUpdateAsync(image, ct);
