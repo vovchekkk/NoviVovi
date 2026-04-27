@@ -14,15 +14,14 @@ import {useParams} from "react-router-dom";
 import {vstack, hstack} from '../../styled-system/patterns';
 import {LabelItem} from "../shared/ui/LabelItem.tsx";
 import type {Character} from "../shared/ui/AssetsContainer.tsx";
-import axios from "axios";
 
 export enum StepType {
-    BACKGROUND = 'background',
-    SHOW = 'show',
-    HIDE = 'hide',
+    BACKGROUND = 'show_background',
+    SHOW = 'show_character',
+    HIDE = 'hide_character',
     REPLICA = 'replica',
     JUMP = 'jump',
-    CHOICE = 'choice',
+    MENU = 'menu',
 }
 
 const transformSchema = z.object({
@@ -40,7 +39,7 @@ export const stepDisplayNames: Record<StepType, string> = {
     [StepType.HIDE]: 'Исчезновение',
     [StepType.REPLICA]: 'Реплика',
     [StepType.JUMP]: 'Переход',
-    [StepType.CHOICE]: 'Выбор',
+    [StepType.MENU]: 'Выбор',
 };
 const backgroundStateSchema = z.object({
     imageId: z.string(),
@@ -63,7 +62,7 @@ const baseStepSchema = z.object({
 });
 
 const hideStepSchema = baseStepSchema.extend({
-    type: z.literal('hide'),
+    type: z.literal('hide_character'),
     characterId: z.string().min(1, 'Выберите персонажа'),
 });
 
@@ -73,14 +72,14 @@ const jumpStepSchema = baseStepSchema.extend({
 });
 
 const showStepSchema = baseStepSchema.extend({
-    type: z.literal('show'),
+    type: z.literal('show_character'),
     characterId: z.string().min(1),
     characterStateId: z.string().min(1),
     transform: transformSchema,
 });
 
 const backgroundStepSchema = baseStepSchema.extend({
-    type: z.literal('background'),
+    type: z.literal('show_background'),
     imageId: z.string().min(1),
     transform: transformSchema,
 });
@@ -92,7 +91,7 @@ const replicaStepSchema = baseStepSchema.extend({
 });
 
 const choiceStepSchema = baseStepSchema.extend({
-    type: z.literal('choice'),
+    type: z.literal('menu'),
     name: z.string(),
     text: z.string(),
     menuRequest: z.object({
@@ -140,6 +139,7 @@ type StepFormProps = {
     characterOptions: CharacterOption[];
     labelOptions: string[];
     setValue:any;
+    novelId:string;
 };
 
 function HideStepForm({control, errors, characterOptions}: StepFormProps) {
@@ -300,7 +300,7 @@ function CompactInput({ label, name, control, step = "1" }: any) {
     );
 }
 
-function BackgroundStepForm({ control, errors, setValue }: StepFormProps) {
+function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProps) {
     const [isUploading, setIsUploading] = useState(false);
     const currentImageId = useWatch({
         control,
@@ -332,12 +332,16 @@ function BackgroundStepForm({ control, errors, setValue }: StepFormProps) {
                 name: file.name,
                 type: 'Background',
                 format: file.type.split('/')[1],
-                width: dimensions.width.toString(),
-                height: dimensions.height.toString(),
+                size: {
+                    width: dimensions.width.toString(),
+                    height: dimensions.height.toString(),
+                },
             };
 
-            const response = await api.post('images/upload-url', request);
-            const { imageId, uploadUrl } = response.data;
+            const response = await api.post(`novels/${novelId}/images/upload-url`, request);
+            const { imageId, uploadUrl, viewUrl } = response.data;
+            console.log(uploadUrl)
+            console.log('imageId:', imageId);
 
             if (uploadUrl) {
                 await api.put(uploadUrl, file, {
@@ -479,15 +483,6 @@ function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
 
     return (
         <div className={css({ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '420px', margin: '0 auto' })}>
-            <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' })}>
-                <label className={css({ fontSize: '14px', fontWeight: 'bold', color: '#555' })}>Название шага</label>
-                <input
-                    {...control.register('name')}
-                    className={inputStyle}
-                    placeholder="Введите название..."
-                />
-                {errors.name && <p className={css({ color: 'red', fontSize: '12px' })}>{String(errors.name.message)}</p>}
-            </div>
 
             <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' })}>
                 <label className={css({ fontSize: '14px', fontWeight: 'bold', color: '#555' })}>Текст вопроса</label>
@@ -789,8 +784,8 @@ export default function Editor() {
 
         fetchSteps();
     }, [selectedLabelId, novelId]);
-    const onSave = (data: any) => {   // лучше типизировать Step
-        const finalState = { ... (data.state || {}) };
+    const onSave = async (data: any) => {
+        const finalState = { ...(data.state || {}) };
 
         if (data.type === 'background' && data.background) {
             finalState.background = data.background;
@@ -813,106 +808,103 @@ export default function Editor() {
             finalState.characters = (finalState.characters || [])
                 .filter((ch: any) => ch.characterId !== data.characterId);
         }
+
         const finalData = {
             ...data,
             state: finalState
         };
-        const newSteps = [...steps];
-        newSteps[selectedStepIndex] = finalData;
-        setSteps(newSteps);
-        api.patch(`/steps/${data.id}`, finalData);
+
+        try {
+            let savedStep: Step;
+
+            if (data.id) {
+                const { data: updated } = await api.patch(`/steps/${data.id}`, finalData);
+                savedStep = updated;
+            }
+            else {
+                const { data: newStep } = await api.post<Step>(
+                    `/novels/${novelId}/labels/${selectedLabelId}/steps`,
+                    finalData
+                );
+                savedStep = newStep;
+            }
+
+            setSteps((prevSteps) =>
+                prevSteps.map((step, index) =>
+                    index === selectedStepIndex ? savedStep : step
+                )
+            );
+
+            console.log('Шаг успешно сохранён:', savedStep);
+
+        } catch (error) {
+            console.error('Ошибка сохранения шага:', error);
+            alert('Не удалось сохранить шаг');
+        }
     };
-    const addStep = async (type: StepType) => {
-        const prevStep = selectedStepIndex !== null ? steps[selectedStepIndex] : steps[steps.length - 1];
-        const baseVisuals = {
-            background: prevStep?.state?.background || {
-                imageId: '',
-                transform: { x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0 }
-            },
-            characters: prevStep?.state?.characters || []
+    const addStep = (type: StepType) => {
+        let tempStep: any = {
+            id: null,
+            type: '',
+            state: {},
         };
 
-        let newStep;
-
         switch (type) {
-            case 'background':
-                newStep = {
-                    type: 'show_background',
-                    transform: { x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0 }
-                };
+            case 'show_background':
+                tempStep.type = 'show_background';
+                tempStep.transform = { x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0 };
                 break;
 
-            case 'show':
-                newStep = {
-                    type: 'show_character',
-                    characterId: '',
-                    characterStateId: '',
-                    transform : { x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10 }
-                };
+            case 'show_character':
+                tempStep.type = 'show_character';
+                tempStep.characterId = '';
+                tempStep.characterStateId = '';
+                tempStep.transform = { x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10 };
                 break;
 
-            case 'hide':
-                newStep = {
-                    type: 'hide_character',
-                    characterId: '',
-                };
+            case 'hide_character':
+                tempStep.type = 'hide_character';
+                tempStep.characterId = '';
                 break;
 
             case 'replica':
-                newStep = {
-                    type: 'replica',
-                    characterId: '',
-                    text: '',
-                };
+                tempStep.type = 'replica';
+                tempStep.characterId = '';
+                tempStep.text = '';
                 break;
 
             case 'jump':
-                newStep = {
-                    type: 'jump',
-                    targetId: ''
-                };
+                tempStep.type = 'jump';
+                tempStep.targetId = '';
                 break;
 
-            case 'choice':
-                newStep ={
-                    type: 'menu',
-                    name: '',
-                    text: '',
-                    menuRequest: {
-                        id: `temp-menu-${Date.now()}`,
-                        name: null,
-                        text: null,
-                        choices: [{ id: `temp-choice-${Date.now()}`, name: '', text: '', targetLabelId: '' }],
-                    },
+            case 'menu':
+                tempStep.type = 'menu';
+                tempStep.name = '';
+                tempStep.text = '';
+                tempStep.menuRequest = {
+                    id: `temp-menu-${Date.now()}`,
+                    name: null,
+                    text: null,
+                    choices: [{ id: `temp-choice-${Date.now()}`, name: '', text: '', targetLabelId: '' }],
                 };
                 break;
         }
 
-        try {
-            const { data: serverStep } = await api.post<Step>(
-                `/novels/${novelId}/labels/${selectedLabelId}/steps`,
-                newStep
-            );
+        setSteps((prevSteps) => {
+            const insertionIndex = (selectedStepIndex !== null && selectedStepIndex !== -1)
+                ? selectedStepIndex + 1
+                : prevSteps.length;
 
-            setSteps((prevSteps) => {
-                const insertionIndex = (selectedStepIndex !== null && selectedStepIndex !== -1)
-                    ? selectedStepIndex + 1
-                    : prevSteps.length;
+            const updatedSteps = [
+                ...prevSteps.slice(0, insertionIndex),
+                tempStep,
+                ...prevSteps.slice(insertionIndex)
+            ];
 
-                const updatedSteps = [
-                    ...prevSteps.slice(0, insertionIndex),
-                    serverStep,
-                    ...prevSteps.slice(insertionIndex)
-                ];
-
-                setSelectedStepIndex(insertionIndex);
-                return updatedSteps;
-            });
-
-        } catch (error) {
-            console.error('Ошибка создания:', error);
-            alert('Не удалось создать шаг');
-        }
+            setSelectedStepIndex(insertionIndex);
+            return updatedSteps;
+        });
     };
     const deleteStep = (index: number) => {
         const newSteps = steps.filter((_, i) => i !== index);
@@ -931,21 +923,22 @@ export default function Editor() {
             register,
             setValue,
             characterOptions: characterOptions,
-            labelOptions: labelNames
+            labelOptions: labelNames,
+            novelId:novelId,
         };
 
         switch (currentStep.type) {
-            case 'hide':
+            case 'hide_character':
                 return <HideStepForm {...formProps} />;
             case 'jump':
                 return <JumpStepForm {...formProps} />;
-            case 'show':
+            case 'show_character':
                 return <ShowStepForm {...formProps} />;
-            case 'background':
+            case 'show_background':
                 return <BackgroundStepForm {...formProps} />;
             case 'replica':
                 return <ReplicaStepForm {...formProps} />;
-            case 'choice':
+            case 'menu':
                 return <ChoiceStepForm {...formProps} />;
             default:
                 return null;
@@ -977,7 +970,7 @@ export default function Editor() {
             await api.delete<Label>(`novels/${novelId}/labels/${id}`, {
                 data: {
                     labelId: id,
-                    novelId: '0',
+                    novelId: novelId,
                 }
             });
             const newLabels = labels.filter(lab => lab.id !== id);
@@ -1006,14 +999,6 @@ export default function Editor() {
             console.error(error);
         }
     }
-
-    const changePreview = async() => {
-        try {
-            //тут будет больно
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     return (
         <div className={css({

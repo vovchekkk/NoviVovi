@@ -94,7 +94,7 @@ export default function BlockPanel({steps, selectedStepIndex, onSelectStep, onAd
                             fontStyle: 'italic',
                         })}
                     >
-                        Пока нет шагов. Добавьте первый блок!
+                        Пока нет блоков. Добавьте первый блок!
                     </div>
                 )}
             </div>

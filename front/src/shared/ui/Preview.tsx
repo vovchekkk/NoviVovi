@@ -20,7 +20,6 @@ export default function Preview({ steps, selectedStepIndex, control }: PreviewPr
 
     const [wType, wCharId, wStateId, wTransform, wImageId, wBackground] = watched;
 
-    // Логика текущего шага
     const isEditingShow = wType === 'show' && !!wCharId && !!wStateId;
     const isEditingHide = wType === 'hide' && !!wCharId;
     const isEditingBG = wType === 'background' && (!!wImageId || !!wBackground?.imageId);

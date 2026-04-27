@@ -33,7 +33,6 @@ export function LabelItem({
         const updatedLabel = { ...label, name: localName };
         onPatch(updatedLabel);
         setIsOpen(false);
-        console.log('Отправилось')
     }
     return (
         <div

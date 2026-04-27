@@ -3,7 +3,7 @@ import { css } from "../../../styled-system/css";
 import api from "../../api";
 
 interface LayerProps {
-    id: string | undefined | null; // Разрешаем undefined для проверок
+    id: string | undefined | null;
     transform?: {
         x?: number;
         y?: number;
@@ -14,19 +14,19 @@ interface LayerProps {
         zIndex?: number;
     };
     className?: string;
+    novelId: string;
 }
 
-export const Layer = ({ id, transform, className }: LayerProps) => {
+export const Layer = ({ id, transform, className, novelId }: LayerProps) => {
     const [url, setUrl] = useState<string | null>(null);
 
     useEffect(() => {
-        // Если ID пропал (селектор очищен) — СБРАСЫВАЕМ URL
         if (!id) {
             setUrl(null);
             return;
         }
 
-        api.get<{ url: string }>(`/images/${id}`)
+        api.get<{ url: string }>(`novels/${novelId}/images/${id}`)
             .then((res) => {
                 setUrl(res.data.url);
             })
@@ -34,9 +34,8 @@ export const Layer = ({ id, transform, className }: LayerProps) => {
                 setUrl(null);
             });
 
-    }, [id]);
+    }, [id, novelId]);
 
-    // Если нет URL или ID — НИЧЕГО не рисуем (компонент вернет null)
     if (!id || !url) return null;
 
     const style: React.CSSProperties = {
@@ -54,7 +53,7 @@ export const Layer = ({ id, transform, className }: LayerProps) => {
     return <img src={url} style={style} className={className} alt="" />;
 };
 
-export const BackgroundLayer = ({ imageId, transform }: { imageId: any, transform: any }) => {
+export const BackgroundLayer = ({ imageId, transform, novelId }: { imageId: any, transform: any, novelId:string }) => {
     const actualId = typeof imageId === 'object' ? imageId?.imageId : imageId;
 
     return (
@@ -62,17 +61,19 @@ export const BackgroundLayer = ({ imageId, transform }: { imageId: any, transfor
             id={actualId}
             transform={transform}
             className={css({ filter: 'brightness(0.9)', transition: '0.3s' })}
+            novelId={novelId}
         />
     );
 };
 
-export const CharacterLayer = ({ characterId, stateId, transform }: any) => {
+export const CharacterLayer = ({ characterId, stateId, transform, novelId  }: any) => {
     const resourceId = stateId || characterId;
 
     return (
         <Layer
             id={resourceId}
             transform={transform}
+            novelId={novelId}
         />
     );
 };
