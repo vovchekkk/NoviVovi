@@ -311,6 +311,17 @@ function CompactInput({ label, name, control, step = "1" }: any) {
         />
     );
 }
+export const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => resolve({ width: img.width, height: img.height });
+            img.src = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+    });
+};
 
 function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProps) {
     const [isUploading, setIsUploading] = useState(false);
@@ -318,18 +329,6 @@ function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProp
         control,
         name: 'background.imageId'
     });
-
-    const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => resolve({ width: img.width, height: img.height });
-                img.src = e.target?.result as string;
-            };
-            reader.readAsDataURL(file);
-        });
-    };
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];

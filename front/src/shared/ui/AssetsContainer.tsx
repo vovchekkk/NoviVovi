@@ -8,6 +8,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {useForm, useFieldArray} from 'react-hook-form';
 import {useParams} from "react-router-dom";
+import {getImageDimensions} from "../../pages/Editor.tsx";
 
 const emotionSchema = z.object({
     id: z.string().optional(),
@@ -17,7 +18,7 @@ const emotionSchema = z.object({
 const characterSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(1, 'Имя обязательно').max(50, 'Слишком длинное имя'),
-    color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Некорректный цвет').optional(),
+    nameColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Некорректный цвет').optional(),
     emotions: z.array(emotionSchema)
 });
 type CharacterSchema = z.infer<typeof characterSchema>;
@@ -25,7 +26,7 @@ type CharacterSchema = z.infer<typeof characterSchema>;
 export type Character = {
     id: string;
     name: string;
-    color?: string;
+    nameColor?: string;
     characterStates:Emotion[],
 };
 type Emotion = {
@@ -33,11 +34,6 @@ type Emotion = {
     name: string;
     fileUrl?: string;
 }
-const initialCharacters: Character[] = [
-    {id: '1', name: 'Анна'},
-    {id: '2', name: 'Мария'},
-    {id: '3', name: 'Борис'},
-];
 
 interface AssetsProps{
     novelId: string;
@@ -59,7 +55,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         formState: {errors, isSubmitting}
     } = useForm<CharacterSchema>({
         resolver: zodResolver(characterSchema),
-        defaultValues: {name: '', color: '#ffffff', emotions: []}
+        defaultValues: {name: '', nameColor: '#ffffff', emotions: []}
     });
     const {fields, append, remove} = useFieldArray({
         control,
@@ -70,7 +66,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         if (selectedCharacter) {
             reset({
                 name: selectedCharacter.name,
-                color: selectedCharacter.color || '#ffffff'
+                nameColor: selectedCharacter.nameColor || '#ffffff'
             });
         }
     }, [selectedId, reset, selectedCharacter]);
@@ -107,7 +103,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                 ]);
                 reset({
                     name: charRes.data.name,
-                    color: charRes.data.color || '#ffffff',
+                    nameColor: charRes.data.nameColor || '#ffffff',
                     emotions: emotionsRes.data || []
                 });
             } catch (e) {
@@ -121,15 +117,70 @@ export default function AssetsContainer({novelId}: AssetsProps) {
     }, [selectedId, reset, novelId]);
     const onSave = async (formData: CharacterSchema) => {
         if (!selectedId) return;
+
         try {
-            await api.patch(`novels/${novelId}/characters/${selectedId}`, formData);
-            setCharacters(prev =>
-                prev.map(c => c.id === selectedId ? {...c, ...formData} : c)
-            );
-            alert('Сохранено!');
+            setSaving(true);
+
+            await api.patch(`novels/${novelId}/characters/${selectedId}`, {
+                name: formData.name,
+                color: formData.nameColor,
+            });
+
+            const emotionPromises = formData.emotions.map(async (emotion, index) => {
+                let currentImageId = (emotion as any).imageId;
+                if (emotion.imageFile) {
+                    const file = emotion.imageFile;
+                    const dimensions = await getImageDimensions(file);
+
+                    const uploadRequest = {
+                        name: file.name,
+                        type: 'Character',
+                        format: file.type.split('/')[1],
+                        size: {
+                            width: dimensions.width.toString(),
+                            height: dimensions.height.toString(),
+                        },
+                    };
+
+                    const { data: uploadData } = await api.post(
+                        `novels/${novelId}/images/upload-url`,
+                        uploadRequest
+                    );
+
+                    await api.put(uploadData.uploadUrl, file, {
+                        headers: { 'Content-Type': file.type }
+                    });
+
+                    currentImageId = uploadData.imageId;
+                }
+
+                const statePayload = {
+                    name: emotion.name,
+                    description: null,
+                    imageId: currentImageId,
+                    localTransform: {
+                        x: 1, y: 1, width: 1, height: 1,
+                        scale: 1, rotation: 1, zIndex: 1
+                    }
+                };
+
+                if (emotion.id) {
+                    return api.put(`novels/${novelId}/characters/${selectedId}/states/${emotion.id}`, statePayload);
+                } else {
+                    return api.post(`novels/${novelId}/characters/${selectedId}/states`, statePayload);
+                }
+            });
+
+            await Promise.all(emotionPromises);
+
+            alert('Все данные и изображения сохранены!');
+            setCharacters(prev => prev.map(c => c.id === selectedId ? {...c, name: formData.name} : c));
+
         } catch (error) {
-            console.error(error);
-            alert('Ошибка при сохранении');
+            console.error("Ошибка при сохранении:", error);
+            alert('Произошла ошибка при сохранении данных.');
+        } finally {
+            setSaving(false);
         }
     };
     const createCharacter = async () => {
@@ -159,6 +210,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         }
     }
     const addEmotion = async (name: string, file: File | null) => {
+
         if (!selectedId)
             return;
         const formData = new FormData();
@@ -344,7 +396,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                                 Выберите цвет:{' '}
                                                 <input
                                                     type="color"
-                                                    {...register('color')}
+                                                    {...register('nameColor')}
                                                     className={css({ml: 2, cursor: 'pointer', verticalAlign: 'middle'})}
                                                 />
                                             </label>
@@ -388,7 +440,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                             </div>
                                             <button
                                                 type="button"
-                                                onClick={() => append({name: 'Новая эмоция'})}
+                                                onClick={() => append({ name: '', imageFile: null })}
                                                 className={css({
                                                     w: '30%',
                                                     py: '3',

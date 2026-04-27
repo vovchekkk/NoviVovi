@@ -8,6 +8,7 @@ interface EmotionBlockProps {
     watch: any;
     onRemove: () => void;
     errors?: any;
+    // onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function EmotionBlock({index, register, setValue, watch, onRemove, errors}: EmotionBlockProps) {
