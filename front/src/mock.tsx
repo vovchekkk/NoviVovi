@@ -1,25 +1,38 @@
 import MockAdapter from 'axios-mock-adapter';
 import api from "./api.tsx";
-import cat from "./assets/cat.png";
-
-console.log('🚀 Axios Mock Adapter (Emotions Edition) загружен');
+// import cat from "./assets/cat.png";
 
 const mock = new MockAdapter(api, {
     delayResponse: 600,
     onNoMatch: 'throwException'
 });
 
+const catImage = {
+    url: ' ',
+    transform:{
+        width:53,
+        x:27,
+        scale:0.4,
+    }
+}
 // 1. Расширенное хранилище данных
 let mockCharacters = [
-    { id: '1', name: 'Анна', color: '#3b82f6', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
-    { id: '2', name: 'Мария', color: '#ef4444', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
-    { id: '3', name: 'Борис', color: '#10b981', characterStates: [{name:'Грусть'}, {name:'Радость'}] },
+    { id: '1', name: 'Анна', color: '#3b82f6', characterStates: [{id:"6", name:'Грусть'}, {id:"98", name:'Радость'}] },
+    { id: '6', name: 'Мария', color: '#ef4444', characterStates: [{id:"96", name:'Грусть'}, {id:"97", name:'Радость'}] },
+    { id: '5', name: 'Борис', color: '#10b981', characterStates: [{id:"6", name:'Грусть'}, {id:"94", name:'Радость'}] },
 ];
 
 let mockSteps = [
-    { id: '1', type: 'hide', characterId: '2' },
     { id: '3', type: 'background', imageId: '2' },
-    { id: '2', type: 'background', imageId: '2' },
+    { id: '1', type: 'show', characterId: '5' },
+    { id: '6', type: 'show', characterId: '6' },
+    { id: '4', type: 'hide', characterId: '5' },
+    { id: '40', type: 'choice' }
+];
+
+let mockSteps2 = [
+    { id: '30', type: 'background', imageId: '2' },
+    { id: '10', type: 'show', characterId: '5' },
 ];
 
 // Храним эмоции отдельно, привязывая к ID персонажа
@@ -43,11 +56,12 @@ let mockLabels = [
 // === ОБРАБОТЧИКИ ===
 
 // Получение списка персонажей
+mock.onGet('steps/3').reply(200, { id: '3', type: 'background', imageId: '2' });
 mock.onGet('novels/0/characters').reply(200, mockCharacters);
-mock.onGet(/\/images\/.+$/).reply(200, {url:cat});
+// mock.onGet(/\/images\/.+$/).reply(200, {url:"https://img.freepik.com/premium-psd/png-adorable-gray-white-cat_53876-483460.jpg?semt=ais_hybrid&w=740&q=80"});
 mock.onGet('/novels/0/labels').reply(200, mockLabels);
 mock.onGet('/novels/0/labels/1/steps').reply(200, mockSteps);
-mock.onGet('/novels/0/labels/2/steps').reply(200, mockSteps);
+mock.onGet('/novels/0/labels/2/steps').reply(200, mockSteps2);
 mock.onGet('/novels/0/labels/3/steps').reply(200, mockSteps);
 
 // Получение персонажа по ID
@@ -173,6 +187,17 @@ mock.onPut("https://fake-cloud-storage.com/upload").reply(200);
 
 mock.onGet("/images/mock_image_123").reply(200, {
     url: "src/assets/upload.jpg"
+});
+mock.onGet("/images/2").reply(200, {
+    url: "https://png.pngtree.com/thumb_back/fh260/background/20240622/pngtree-the-sun-at-sundown-sunset-sky-background-image_15806374.jpg"
+});
+
+mock.onGet("/images/5").reply(200, {
+    url: "https://img.freepik.com/premium-psd/png-adorable-gray-white-cat_53876-483460.jpg?semt=ais_hybrid&w=740&q=80"
+});
+
+mock.onGet("/images/6").reply(200, {
+    url: "https://w7.pngwing.com/pngs/93/689/png-transparent-pet-sitting-feral-cat-dog-cat-mammal-cat-like-mammal-animals-thumbnail.png"
 });
 
 export default mock;

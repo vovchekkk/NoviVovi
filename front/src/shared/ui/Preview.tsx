@@ -1,31 +1,48 @@
-import {css} from '../../../styled-system/css'
-import {useWatch} from "react-hook-form";
-import {BackgroundLayer, CharacterLayer} from "./Layer.tsx";
+import { css } from '../../../styled-system/css';
+import { BackgroundLayer, CharacterLayer } from "./Layer";
+import { useSceneSnapshot } from "./SceneSnapshot.tsx";
+import { useWatch } from "react-hook-form";
 
 interface PreviewProps {
-    control:any;
+    steps: any[];
+    selectedStepIndex: number | null;
+    control?: any;
 }
 
-type Url = {
-    url:string;
-}
+export default function Preview({ steps, selectedStepIndex, control }: PreviewProps) {
+    const historyIndex = selectedStepIndex !== null ? selectedStepIndex - 1 : null;
+    const { background: hBackground, characters: hCharacters } = useSceneSnapshot(steps, historyIndex);
 
-export default function Preview({ control }: PreviewProps) {
-    const background = useWatch({ control, name: "background" });
-
-    const charactersFromRoot = useWatch({ control, name: "characters" });
-    const charactersFromState = useWatch({ control, name: "state.characters" });
-
-    const characters = charactersFromRoot?.length
-        ? charactersFromRoot
-        : charactersFromState || [];
-
-    const [watchedType, watchedCharacterId, watchedCharacterStateId, watchedTransform] = useWatch({
+    const watched = useWatch({
         control,
-        name: ["type", "characterId", "characterStateId", "transform"] as const,
+        name: ["type", "characterId", "characterStateId", "transform", "imageId", "background"] as const,
     });
 
-    const isShowStep = watchedType === 'show' && !!watchedCharacterId;
+    const [wType, wCharId, wStateId, wTransform, wImageId, wBackground] = watched;
+
+    // Логика текущего шага
+    const isEditingShow = wType === 'show' && !!wCharId && !!wStateId;
+    const isEditingHide = wType === 'hide' && !!wCharId;
+    const isEditingBG = wType === 'background' && (!!wImageId || !!wBackground?.imageId);
+
+    const activeBackground = isEditingBG
+        ? { imageId: wImageId || wBackground?.imageId, transform: wTransform || wBackground?.transform }
+        : hBackground;
+
+    let activeCharacters = [...hCharacters];
+
+    if (isEditingShow) {
+        activeCharacters = activeCharacters.filter(c => c.characterId !== wCharId);
+        activeCharacters.push({
+            characterId: wCharId,
+            characterStateId: wStateId,
+            transform: wTransform
+        });
+    }
+
+    if (isEditingHide) {
+        activeCharacters = activeCharacters.filter(c => c.characterId !== wCharId);
+    }
 
     return (
         <div className={css({
@@ -40,25 +57,15 @@ export default function Preview({ control }: PreviewProps) {
             border: '3px solid #705661',
             boxShadow: '0 8px 30px rgba(0,0,0,0.4)'
         })}>
-            <div className={css({
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
-                backgroundSize: '40px 40px',
-                pointerEvents: 'none'
-            })} />
-
-            {background?.imageId && (
+            <div className={css({ position: 'absolute', inset: 0, backgroundImage: '...', pointerEvents: 'none', zIndex: 1 })} />
+            {activeBackground?.imageId && (
                 <BackgroundLayer
-                    imageId={background.imageId}
-                    transform={background.transform || {
-                        x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0
-                    }}
+                    imageId={activeBackground.imageId}
+                    transform={activeBackground.transform}
                 />
             )}
-
-            {characters
-                .filter((char: any) => char?.characterId)
+            {activeCharacters
+                .filter((char: any) => !!char.characterId && !!char.characterStateId)
                 .sort((a: any, b: any) => (a.transform?.zIndex || 10) - (b.transform?.zIndex || 10))
                 .map((char: any, index: number) => (
                     <CharacterLayer
@@ -69,30 +76,13 @@ export default function Preview({ control }: PreviewProps) {
                     />
                 ))}
 
-            {isShowStep && watchedCharacterId && (
-                <CharacterLayer
-                    characterId={watchedCharacterId}
-                    stateId={watchedCharacterStateId}
-                    transform={watchedTransform || {
-                        x: 45, y: 30, width: 28, height: 68,
-                        scale: 1, rotation: 0, zIndex: 30
-                    }}
-                />
-            )}
-
-            {!background?.imageId && (
+            {!activeBackground?.imageId && (
                 <div className={css({
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#888',
-                    fontSize: '18px',
-                    textAlign: 'center',
-                    padding: '20px'
+                    position: 'absolute', inset: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#888', fontSize: '18px'
                 })}>
-                    Выберите фон в форме редактирования
+                    Нет фона
                 </div>
             )}
         </div>

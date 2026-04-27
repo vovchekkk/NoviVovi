@@ -1,11 +1,11 @@
 import Header from "../shared/ui/Header.tsx";
 import {css} from '../../styled-system/css'
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import EditorHeader from "../shared/ui/EditorHeader.tsx";
 import Preview from "../shared/ui/Preview.tsx";
 import BlockPanel from "../shared/ui/BlockPanel.tsx";
 import Selector from "../shared/ui/Selector.tsx";
-import {Controller, useFieldArray, useForm, useFormContext, useWatch} from "react-hook-form";
+import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import Modal from "../shared/ui/Modal.tsx";
@@ -126,7 +126,10 @@ export type Label = {
 type CharacterOption = {
     id:string,
     name:string,
-    states:string[],
+    states:{
+        id: string;
+        name: string;
+    }[],
 }
 const CHARACTERS = ['Анна', 'Мария', 'Борис'];
 const SCENES = ['Парк', 'Улица', 'Дом'];
@@ -166,21 +169,26 @@ function JumpStepForm({control, errors, labelOptions}: StepFormProps) {
     );
 }
 
-function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
+function ShowStepForm({ control, errors, characterOptions, setValue }: StepFormProps) {
     const selectedCharacterId = useWatch({ control, name: 'characterId' });
+    const previousCharacterIdRef = useRef<string | undefined>();
     const selectedCharacter = characterOptions.find(ch => ch.id === selectedCharacterId);
     const options = characterOptions.map(ch => ({
         value: ch.id,
         label: ch.name
     }));
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "characters"
-    });
-    const stateOptions = (selectedCharacter?.states || []).map(stateName => ({
-        value: stateName,
-        label: stateName
+    const stateOptions = (selectedCharacter?.states || []).map(state => ({
+        value: state.id,
+        label: state.name
     }));
+
+    useEffect(() => {
+        if (previousCharacterIdRef.current !== undefined && previousCharacterIdRef.current !== selectedCharacterId) {
+            setValue('characterStateId', '');
+        }
+
+        previousCharacterIdRef.current = selectedCharacterId;
+    }, [selectedCharacterId, setValue]);
 
     return (
         <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
@@ -198,7 +206,10 @@ function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
                         <Selector
                             title="Состояние"
                             options={stateOptions}
-                            {...field}
+                            value={field.value}
+                            onBlur={field.onBlur}
+                            onChange={field.onChange}
+                            disabled={!selectedCharacterId}
                         />
                     )}
                 />
@@ -248,7 +259,6 @@ function ShowStepForm({ control, errors, characterOptions }: StepFormProps) {
     );
 }
 
-// Вспомогательный сверхкомпактный инпут
 function CompactInput({ label, name, control, step = "1" }: any) {
     return (
         <Controller
@@ -468,44 +478,46 @@ function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
     });
 
     return (
-        <div className={css({ display: 'flex', flexDirection: 'column', gap: '20px', width: '350px', margin: '0 auto' })}>
-            <div className={css({ display: "flex", flexDirection: "column", gap: '8px' })}>
-                <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Название шага</label>
+        <div className={css({ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '420px', margin: '0 auto' })}>
+            <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' })}>
+                <label className={css({ fontSize: '14px', fontWeight: 'bold', color: '#555' })}>Название шага</label>
                 <input
                     {...control.register('name')}
                     className={inputStyle}
                     placeholder="Введите название..."
                 />
+                {errors.name && <p className={css({ color: 'red', fontSize: '12px' })}>{String(errors.name.message)}</p>}
             </div>
 
-            {/* Поле Текст вопроса */}
-            <div className={css({ display: "flex", flexDirection: "column", gap: '8px' })}>
-                <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Текст вопроса</label>
+            <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' })}>
+                <label className={css({ fontSize: '14px', fontWeight: 'bold', color: '#555' })}>Текст вопроса</label>
                 <textarea
                     {...control.register('text')}
-                    className={inputStyle}
                     placeholder="Что увидит игрок?"
-                    rows={2}
+                    rows={4}
                 />
+                {errors.text && <p className={css({ color: 'red', fontSize: '12px' })}>{String(errors.text.message)}</p>}
             </div>
 
-            <hr className={css({ width: '100%', border: '0.5px solid #ccc' })} />
-
-            {/* Секция Выборов */}
-            <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
-                <div className={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' })}>
-                    <label className={css({ fontSize: '16px', fontWeight: 'bold' })}>Варианты ответов</label>
+            <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' })}>
+                <div className={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' })}>
+                    <label className={css({ fontSize: '12px', fontWeight: 'bold', color: '#555', textTransform: 'uppercase', letterSpacing: '0.5px' })}>Варианты ответов</label>
                     <button
                         type="button"
                         onClick={() => append({ text: '', transition: { targetLabelId: '' } })}
                         className={css({
-                            padding: '4px 12px',
-                            backgroundColor: '#28a745',
+                            padding: '8px 12px',
+                            backgroundColor: '#705661',
                             color: 'white',
                             border: 'none',
-                            borderRadius: '4px',
+                            borderRadius: '6px',
                             cursor: 'pointer',
-                            fontSize: '12px'
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            transition: 'background-color 0.2s',
+                            _hover: {
+                                backgroundColor: '#5e4a52'
+                            }
                         })}
                     >
                         + Добавить
@@ -514,52 +526,50 @@ function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
 
                 {fields.map((field, index) => (
                     <div key={field.id} className={css({
-                        padding: '12px',
-                        border: '1px solid #ddd',
+                        padding: '14px',
+                        border: '1px solid #e6d9df',
                         borderRadius: '8px',
-                        backgroundColor: '#fefefe',
+                        backgroundColor: '#fff',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '8px',
+                        gap: '12px',
                         position: 'relative'
                     })}>
-                        {/* Кнопка удаления варианта */}
                         <button
                             type="button"
                             onClick={() => remove(index)}
                             className={css({
                                 position: 'absolute',
-                                top: '8px',
-                                right: '8px',
+                                top: '10px',
+                                right: '10px',
                                 border: 'none',
                                 background: 'none',
                                 cursor: 'pointer',
-                                color: 'red',
-                                fontWeight: 'bold'
+                                color: '#a54f67',
+                                fontWeight: 'bold',
+                                fontSize: '16px',
+                                lineHeight: 1
                             })}
                         >
                             ✕
                         </button>
 
-                        {/* Текст выбора */}
-                        <div>
-                            <label className={css({ fontSize: '12px', color: '#666' })}>Текст кнопки</label>
+                        <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px' })}>
+                            <label className={css({ fontSize: '12px', fontWeight: 'bold', color: '#666' })}>Текст кнопки</label>
                             <input
                                 {...control.register(`choices.${index}.text` as const)}
-                                className={compactInputStyle}
+                                className={inputStyle}
                                 placeholder="Текст ответа"
                             />
                         </div>
 
-                        {/* Переход (targetLabelId) */}
-                        <div>
-                            <label className={css({ fontSize: '12px', color: '#666' })}>Переход на сцену</label>
+                        <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px' })}>
                             <Controller
                                 control={control}
                                 name={`choices.${index}.transition.targetLabelId` as const}
                                 render={({ field: selectField }) => (
                                     <Selector
-                                        title="Выберите сцену"
+                                        title="Переход на сцену"
                                         options={labelOptions}
                                         {...selectField}
                                     />
@@ -570,7 +580,7 @@ function ChoiceStepForm({ control, errors, labelOptions }: StepFormProps) {
                 ))}
 
                 {fields.length === 0 && (
-                    <p className={css({ fontSize: '12px', color: '#999', textAlign: 'center' })}>
+                    <p className={css({ fontSize: '12px', color: '#888', textAlign: 'center', padding: '12px 0' })}>
                         Добавьте хотя бы один вариант выбора
                     </p>
                 )}
@@ -647,7 +657,10 @@ export default function Editor() {
                 setCharacterOptions(data.map(ch => ({
                     id:ch.id,
                     name:ch.name,
-                    states:ch.characterStates.map(st => st.name),
+                    states:ch.characterStates.map(st => ({
+                        id: st.id,
+                        name: st.name,
+                    })),
                 })))
             } catch (error) {
                 console.log(error);
@@ -790,7 +803,10 @@ export default function Editor() {
                 transform: data.transform || { x: 40, y: 30, width: 25, height: 65, scale: 1, rotation: 0, zIndex: 20 }
             };
 
-            finalState.characters = [...(finalState.characters || []), newChar];
+            finalState.characters = [
+                ...(finalState.characters || []).filter((ch: any) => ch.characterId !== data.characterId),
+                newChar
+            ];
         }
 
         if (data.type === 'hide' && data.characterId) {
@@ -1107,7 +1123,7 @@ export default function Editor() {
                                     gap: '20px',
                                     flex: 4,
                                 })}>
-                                    <Preview control={control}></Preview>
+                                    <Preview steps={steps} selectedStepIndex={selectedStepIndex} control={control}></Preview>
                                     <BlockPanel
                                         steps={steps}
                                         selectedStepIndex={selectedStepIndex}
@@ -1251,3 +1267,4 @@ export default function Editor() {
         </div>
     )
 }
+
