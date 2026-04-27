@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using NoviVovi.Api;
+using NoviVovi.Api.Infrastructure;
 using NoviVovi.Application;
 using NoviVovi.Infrastructure;
 using Scalar.AspNetCore;
@@ -17,6 +18,11 @@ builder.Services.AddCors(options =>
                 .AllowCredentials();
         });
 });
+
+// Add exception handler
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddApi();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -50,6 +56,10 @@ builder.Services.AddOpenApi(options =>
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigins");
+
+// Add exception handler middleware
+app.UseExceptionHandler();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

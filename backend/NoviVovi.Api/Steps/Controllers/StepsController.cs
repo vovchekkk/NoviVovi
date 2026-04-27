@@ -21,7 +21,7 @@ public class StepsController(
 ) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<NovelResponse>> Create(
+    public async Task<ActionResult<StepResponse>> Create(
         [FromRoute] Guid novelId,
         [FromRoute] Guid labelId,
         AddStepRequest request
@@ -35,7 +35,7 @@ public class StepsController(
     }
 
     [HttpGet("{stepid:guid}")]
-    public async Task<ActionResult<NovelResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId,
+    public async Task<ActionResult<StepResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId,
         [FromRoute] Guid stepId)
     {
         var step = await mediator.Send(new GetStepQuery(novelId, labelId, stepId));
@@ -44,7 +44,7 @@ public class StepsController(
     }
 
     [HttpGet]
-    public async Task<ActionResult<NovelResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId)
+    public async Task<ActionResult<StepResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId)
     {
         var step = await mediator.Send(new GetStepsQuery(novelId, labelId));
 

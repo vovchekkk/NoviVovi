@@ -1,4 +1,5 @@
-﻿using NoviVovi.Application.Images.Dtos;
+﻿using NoviVovi.Application.Characters.Mappers;
+using NoviVovi.Application.Images.Dtos;
 using NoviVovi.Application.Images.Mappers;
 using NoviVovi.Application.Scene.Dtos;
 using NoviVovi.Domain.Images;
@@ -9,14 +10,20 @@ namespace NoviVovi.Application.Scene.Mappers;
 
 [Mapper]
 public partial class CharacterObjectDtoMapper(
-    ImageDtoMapper imageMapper,
+    CharacterDtoMapper characterMapper,
+    CharacterStateDtoMapper characterStateMapper,
     TransformDtoMapper transformMapper
 )
 {
-    public partial CharacterObjectDto ToDto(CharacterObject source);
-
-    private ImageDto MapImage(Image source) => imageMapper.ToDto(source);
-    private TransformDto MapTransform(Transform source) => transformMapper.ToDto(source);
+    public CharacterObjectDto ToDto(CharacterObject source)
+    {
+        return new CharacterObjectDto(
+            source.Id,
+            characterMapper.ToDto(source.Character),
+            characterStateMapper.ToDto(source.State),
+            transformMapper.ToDto(source.FinalTransform)
+        );
+    }
 
     public partial IEnumerable<CharacterObjectDto> ToDtos(IEnumerable<CharacterObject> sources);
 }
