@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Images.Abstractions;
 using NoviVovi.Application.Labels.Abstractions;
@@ -69,6 +70,7 @@ public static class DependencyInjection
         services.AddScoped<INovelRepository, NovelRepository>();
         services.AddScoped<ILabelRepository, LabelRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped<ICharacterRepository, CharacterRepository>();
 
         // Use LocalStorageService for development, S3StorageService for production
         var useLocalStorage = configuration["UseLocalStorage"];
