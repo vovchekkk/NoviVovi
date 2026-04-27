@@ -8,10 +8,28 @@ interface EmotionBlockProps {
     watch: any;
     onRemove: () => void;
     errors?: any;
+    isActive: boolean;
+    onSelect: () => void;
     // onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
-
-export default function EmotionBlock({index, register, setValue, watch, onRemove, errors}: EmotionBlockProps) {
+const CompactInput = ({ label, name, register, step = "1" }: any) => (
+    <div className={css({ display: 'flex', flexDirection: 'column', gap: '2px' })}>
+        <span className={css({ fontSize: '10px', fontWeight: 'bold', color: '#666' })}>{label}</span>
+        <input
+            type="number"
+            step={step}
+            {...register(name, { valueAsNumber: true })}
+            className={css({
+                width: '100%',
+                p: '4px',
+                fontSize: '12px',
+                borderRadius: '4px',
+                border: '1px solid #ccc'
+            })}
+        />
+    </div>
+);
+export default function EmotionBlock({index, register, setValue, watch, onRemove, errors, isActive, onSelect}: EmotionBlockProps) {
     const imageFile = watch(`emotions.${index}.imageFile`);
     const fileUrl = watch(`emotions.${index}.fileUrl`);
 
@@ -33,114 +51,56 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
         setPreview(null);
     }, [imageFile, fileUrl]);
     return (
-        <div className={css({
-            display: 'flex',
-            flexDirection: 'column',
-            backgroundColor: '#DFC6D1',
-            padding: '15px',
-            borderRadius: '12px',
-            gap: '10px',
-            position: 'relative',
-            border: '1px solid rgba(0,0,0,0.1)'
-        })}>
-            <button
-                type="button"
-                onClick={onRemove}
-                className={css({
-                    position: 'absolute',
-                    top: '5px',
-                    right: '10px',
-                    cursor: 'pointer',
-                    color: '#775D68',
-                    _hover: {color: 'red'}
-                })}
-            >
-                ✕
-            </button>
+        <div
+            onClick={onSelect}
+            className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: isActive ? '#fdf0f5' : '#DFC6D1', // Подсветка активной
+                padding: '15px',
+                borderRadius: '12px',
+                gap: '10px',
+                position: 'relative',
+                border: isActive ? '2px solid #775D68' : '1px solid rgba(0,0,0,0.1)',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+            })}
+        >
 
-            <div className={css({display: 'flex', gap: '20px'})}>
-                <div className={css({
-                    width: '100px',
-                    height: '100px',
-                    backgroundColor: 'white',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    border: '1px solid #ccc',
-                    flexShrink: 0
-                })}>
-                    {preview ? (
-                        <img
-                            src={preview}
-                            alt="Preview"
-                            className={css({width: '100%', height: '100%', objectFit: 'cover'})}
-                        />
-                    ) : (
-                        <span className={css({fontSize: '10px', color: '#999', textAlign: 'center'})}>
-                            Нет фото
-                        </span>
-                    )}
-                </div>
-                <div className={css({display: 'flex', flexDirection: 'column'})}>
-                    <div className={css({display: 'flex', flexDirection: 'column', gap: '4px'})}>
-                        <label className={css({fontSize: '14px', fontWeight: 'bold'})}>Название</label>
-                        <div className={css({display: 'flex', width: '100%'})}>
-                            <input
-                                {...register(`emotions.${index}.name`)}
-                                placeholder="Напр: Радость"
-                                className={css({
-                                    backgroundColor: 'white',
-                                    width: '50%',
-                                    p: '8px',
-                                    borderRadius: '8px',
-                                    border: errors?.name ? '1px solid red' : '1px solid #ccc'
-                                })}
-                            />
+            <div className={css({ display: 'flex', gap: '20px' })}>
+
+                <div className={css({ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' })}>
+                    <input
+                        {...register(`emotions.${index}.name`)}
+                        placeholder="Название (напр. Радость)"
+                        className={css({ p: '8px', borderRadius: '8px', border: '1px solid #ccc' })}
+                    />
+
+                    <div className={css({
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gap: '8px',
+                        backgroundColor: 'rgba(255,255,255,0.5)',
+                        p: '8px',
+                        borderRadius: '8px'
+                    })}>
+                        <CompactInput label="X (%)" name={`emotions.${index}.transform.x`} register={register} />
+                        <CompactInput label="Y (%)" name={`emotions.${index}.transform.y`} register={register} />
+                        <CompactInput label="W (%)" name={`emotions.${index}.transform.width`} register={register} />
+                        <CompactInput label="H (%)" name={`emotions.${index}.transform.height`} register={register} />
+                        <CompactInput label="Scale" name={`emotions.${index}.transform.scale`} register={register} step="0.1" />
+                        <CompactInput label="Rotate" name={`emotions.${index}.transform.rotation`} register={register} />
+                    </div>
+
+                    <label className={css({ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' })}>
+                        <input type="file" className={css({ display: 'none' })} onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) setValue(`emotions.${index}.imageFile`, file);
+                        }} />
+                        <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
+                            Загрузить файл
                         </div>
-                        {errors?.name &&
-                            <span className={css({color: 'red', fontSize: '12px'})}>{errors.name.message}</span>}
-                    </div>
-
-                    <div className={css({display: 'flex', flexDirection: 'column', gap: '4px'})}>
-                        <label className={css({fontSize: '14px', fontWeight: 'bold'})}>Картинка эмоции</label>
-                        <label className={css({display: 'flex', width: '100%', alignItems: 'center', gap: '10px'})}>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                className={css({display: 'none'})}
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        setValue(`emotions.${index}.imageFile`, file);
-                                    }
-                                }}
-                            />
-                            <div className={css({
-                                px: '15px',
-                                py: '8px',
-                                bg: '#775D68',
-                                color: 'white',
-                                borderRadius: '8px',
-                                fontSize: '14px',
-                                _hover: {bg: '#604a54'},
-                                transition: 'background 0.2s'
-                            })}>
-                                Загрузить фото
-                            </div>
-                            <span className={css({
-                                fontSize: '13px',
-                                color: imageFile ? 'black' : '#888',
-                                maxWidth: '200px',
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis'
-                            })}>
-                    {imageFile ? imageFile.name : 'Файл еще не выбран'}
-                </span>
-                        </label>
-                    </div>
+                    </label>
                 </div>
             </div>
         </div>

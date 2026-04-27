@@ -6,14 +6,24 @@ import EmotionBlock from "./EmotionBlock.tsx";
 import api from "../../api.tsx";
 import {zodResolver} from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {useForm, useFieldArray} from 'react-hook-form';
-import {useParams} from "react-router-dom";
+import {useForm, useFieldArray, useWatch} from 'react-hook-form';
 import {getImageDimensions} from "../../pages/Editor.tsx";
+
 
 const emotionSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(1, 'Название обязательно'),
-    imageFile: z.instanceof(File).optional().nullable(),
+    imageFile: z.any().optional().nullable(),
+    fileUrl: z.string().optional(),
+    transform: z.object({
+        x: z.number().default(50),
+        y: z.number().default(50),
+        width: z.number().default(40),
+        height: z.number().optional(),
+        scale: z.number().default(1),
+        rotation: z.number().default(0),
+        zIndex: z.number().default(1),
+    }).default({x: 50, y: 50, width: 40, scale: 1, rotation: 0, zIndex: 1})
 });
 const characterSchema = z.object({
     id: z.string().optional(),
@@ -27,7 +37,7 @@ export type Character = {
     id: string;
     name: string;
     nameColor?: string;
-    characterStates:Emotion[],
+    characterStates: Emotion[],
 };
 type Emotion = {
     id: string;
@@ -35,15 +45,17 @@ type Emotion = {
     fileUrl?: string;
 }
 
-interface AssetsProps{
+interface AssetsProps {
     novelId: string;
 }
+
 export default function AssetsContainer({novelId}: AssetsProps) {
     const [characters, setCharacters] = useState<Character[]>([]);
     const [selectedId, setSelectedId] = useState<string | null>(characters[0]?.id ?? null);
     const [emotions, setEmotions] = useState<Emotion[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
     const selectedCharacter = characters.find(character => character.id === selectedId) ?? null;
     const {
         register,
@@ -57,6 +69,17 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         resolver: zodResolver(characterSchema),
         defaultValues: {name: '', nameColor: '#ffffff', emotions: []}
     });
+    const watchedEmotions = useWatch({
+        control,
+        name: "emotions"
+    });
+
+    const currentEmotion = watchedEmotions?.[activeIndex];
+    const getEmotionPreviewUrl = (emotion: any) => {
+        if (!emotion) return null;
+        if (emotion.imageFile instanceof File) return URL.createObjectURL(emotion.imageFile);
+        return emotion.fileUrl || null;
+    };
     const {fields, append, remove} = useFieldArray({
         control,
         name: "emotions"
@@ -142,13 +165,13 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                         },
                     };
 
-                    const { data: uploadData } = await api.post(
+                    const {data: uploadData} = await api.post(
                         `novels/${novelId}/images/upload-url`,
                         uploadRequest
                     );
 
                     await api.put(uploadData.uploadUrl, file, {
-                        headers: { 'Content-Type': file.type }
+                        headers: {'Content-Type': file.type}
                     });
 
                     currentImageId = uploadData.imageId;
@@ -425,7 +448,11 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                             })}>
                                                 Эмоции
                                             </div>
-                                            <div className={css({ display: 'flex', flexDirection: 'column', gap: '15px' })}>
+                                            <div className={css({
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: '15px'
+                                            })}>
                                                 {fields.map((field, index) => (
                                                     <EmotionBlock
                                                         key={field.id}
@@ -433,6 +460,8 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                                         register={register}
                                                         setValue={setValue}
                                                         watch={watch}
+                                                        isActive={index === activeIndex}
+                                                        onSelect={() => setActiveIndex(index)}
                                                         onRemove={() => remove(index)}
                                                         errors={errors.emotions?.[index]}
                                                     />
@@ -440,7 +469,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                             </div>
                                             <button
                                                 type="button"
-                                                onClick={() => append({ name: '', imageFile: null })}
+                                                onClick={() => append({name: '', imageFile: null})}
                                                 className={css({
                                                     w: '30%',
                                                     py: '3',
@@ -473,13 +502,60 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                 </div>
                                 <div className={css({
                                     height: '100%',
-                                    backgroundColor: 'white',
+                                    backgroundColor: '#333',
                                     borderRadius: '12px',
                                     padding: '10px',
                                     margin: '10px',
-                                    flex: 1,
+                                    flex: 1.5,
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    border: '2px solid #ccc'
                                 })}>
-                                    Фото
+                                    {currentEmotion ? (
+                                        <>
+                                            <div className={css({
+                                                position: 'absolute',
+                                                top: '10px',
+                                                left: '10px',
+                                                color: 'white',
+                                                zIndex: 10,
+                                                fontSize: '12px',
+                                                backgroundColor: 'rgba(0,0,0,0.5)',
+                                                padding: '2px 8px',
+                                                borderRadius: '4px'
+                                            })}>
+                                                Превью: {currentEmotion.name || 'Без имени'}
+                                            </div>
+
+                                            <img
+                                                src={
+                                                    currentEmotion.imageFile instanceof File
+                                                        ? URL.createObjectURL(currentEmotion.imageFile)
+                                                        : (currentEmotion.fileUrl || '')
+                                                }
+                                                alt="Preview"
+                                                style={{
+                                                    position: 'absolute',
+                                                    left: `${currentEmotion.transform?.x ?? 50}%`,
+                                                    top: `${currentEmotion.transform?.y ?? 50}%`,
+                                                    width: `${currentEmotion.transform?.width ?? 40}%`,
+                                                    height: `${currentEmotion.transform?.height ?? 40}%`,
+                                                    transform: `translate(-50%, -50%) 
+                                scale(${currentEmotion.transform?.scale ?? 1}) 
+                                rotate(${currentEmotion.transform?.rotation ?? 0}deg)`,
+                                                    zIndex: currentEmotion.transform?.zIndex ?? 1,
+                                                    objectFit: 'fill'
+                                                }}
+                                            />
+                                        </>
+                                    ) : (
+                                        <div className={css({color: '#888', fontSize: '14px'})}>
+                                            Выберите или добавьте эмоцию для превью
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </form>

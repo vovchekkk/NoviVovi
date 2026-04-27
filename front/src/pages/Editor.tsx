@@ -304,6 +304,7 @@ function CompactInput({ label, name, control, step = "1" }: any) {
                             ':focus': { borderColor: '#007bff' }
                         })}
                         {...field}
+                        value={field.value ?? 0}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                 </div>
@@ -705,7 +706,19 @@ export default function Editor() {
 
     useEffect(() => {
         if (currentStep) {
-            reset(currentStep);
+            const dataForForm = {
+                ...currentStep,
+                background: {
+                    imageId: currentStep.background?.imageId || currentStep.imageId || '',
+                    transform: currentStep.background?.transform || currentStep.transform || {
+                        x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 1
+                    }
+                },
+                transform: currentStep.transform || {
+                    x: 40, y: 30, width: 25, height: 70, scale: 1, rotation: 0, zIndex: 20
+                }
+            };
+            reset(dataForForm);
         }
     }, [selectedStepIndex, currentStep, reset]);
     useEffect(() => {
@@ -721,7 +734,7 @@ export default function Editor() {
                     type: data.type,
                 });
                 switch (data.type) {
-                    case 'show':
+                    case 'show_character':
                         reset({
                             ...baseData,
                             characterId: data.characterId,
@@ -730,14 +743,14 @@ export default function Editor() {
                         });
                         break;
 
-                    case 'hide':
+                    case 'hide_character':
                         reset({
                             ...baseData,
                             characterId: data.characterId,
                         });
                         break;
 
-                    case 'background':
+                    case 'show_background':
                         reset({
                             ...baseData,
                             imageId: data.imageId,
@@ -1194,7 +1207,7 @@ export default function Editor() {
                                     gap: '20px',
                                     flex: 4,
                                 })}>
-                                    <Preview steps={steps} selectedStepIndex={selectedStepIndex} control={control}></Preview>
+                                    <Preview steps={steps} selectedStepIndex={selectedStepIndex} control={control} novelId={novelId}></Preview>
                                     <BlockPanel
                                         steps={steps}
                                         selectedStepIndex={selectedStepIndex}

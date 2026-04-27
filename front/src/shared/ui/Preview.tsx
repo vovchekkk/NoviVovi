@@ -7,9 +7,10 @@ interface PreviewProps {
     steps: any[];
     selectedStepIndex: number | null;
     control?: any;
+    novelId: string;
 }
 
-export default function Preview({ steps, selectedStepIndex, control }: PreviewProps) {
+export default function Preview({ steps, selectedStepIndex, control, novelId }: PreviewProps) {
     const historyIndex = selectedStepIndex !== null ? selectedStepIndex - 1 : null;
     const { background: hBackground, characters: hCharacters } = useSceneSnapshot(steps, historyIndex);
 
@@ -20,12 +21,16 @@ export default function Preview({ steps, selectedStepIndex, control }: PreviewPr
 
     const [wType, wCharId, wStateId, wTransform, wImageId, wBackground] = watched;
 
-    const isEditingShow = wType === 'show' && !!wCharId && !!wStateId;
-    const isEditingHide = wType === 'hide' && !!wCharId;
-    const isEditingBG = wType === 'background' && (!!wImageId || !!wBackground?.imageId);
+    const isEditingShow = wType === 'show_character' && !!wCharId && !!wStateId;
+    const isEditingHide = wType === 'hide_character' && !!wCharId;
+    console.log("Current Watcher State:", { wType, wImageId, wBackgroundId: wBackground?.imageId });
+    const isEditingBG = wType === 'show_background' && (!!wImageId || !!wBackground?.imageId);
 
     const activeBackground = isEditingBG
-        ? { imageId: wImageId || wBackground?.imageId, transform: wTransform || wBackground?.transform }
+        ? {
+            imageId: wBackground?.imageId || wImageId,
+            transform: wBackground?.transform || wTransform
+        }
         : hBackground;
 
     let activeCharacters = [...hCharacters];
@@ -61,6 +66,7 @@ export default function Preview({ steps, selectedStepIndex, control }: PreviewPr
                 <BackgroundLayer
                     imageId={activeBackground.imageId}
                     transform={activeBackground.transform}
+                    novelId={novelId}
                 />
             )}
             {activeCharacters
@@ -72,6 +78,7 @@ export default function Preview({ steps, selectedStepIndex, control }: PreviewPr
                         characterId={char.characterId}
                         stateId={char.characterStateId}
                         transform={char.transform}
+                        novelId={novelId}
                     />
                 ))}
 

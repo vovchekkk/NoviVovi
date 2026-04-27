@@ -7,9 +7,6 @@ export const useSceneSnapshot = (steps: any[], currentIndex: number | null) => {
         }
 
         const index = currentIndex !== null ? currentIndex : steps.length - 1;
-        // Берем шаги ДО текущего (не включая текущий, если мы хотим "предпросмотр поверх")
-        // Либо ВКЛЮЧАЯ текущий, если это просто плеер.
-        // Для редактора лучше остановиться на index, а текущий шаг рендерить отдельно.
         const snapshotSteps = steps.slice(0, index + 1);
 
         let background: any = null;
@@ -19,7 +16,7 @@ export const useSceneSnapshot = (steps: any[], currentIndex: number | null) => {
         for (const step of snapshotSteps) {
             const state = step.state || step;
 
-            if (step.type === 'background') {
+            if (step.type === 'show_background') {
                 const data = step.state || step;
                 const id = data.background?.imageId || data.imageId;
 
@@ -31,7 +28,7 @@ export const useSceneSnapshot = (steps: any[], currentIndex: number | null) => {
                 }
             }
 
-            if (step.type === 'show' && state.characterId && state.characterStateId) {
+            if (step.type === 'show_character' && state.characterId && state.characterStateId) {
                 charactersMap[state.characterId] = {
                     characterId: state.characterId,
                     characterStateId: state.characterStateId,
@@ -39,7 +36,7 @@ export const useSceneSnapshot = (steps: any[], currentIndex: number | null) => {
                 };
             }
 
-            if (step.type === 'hide' && state.characterId) {
+            if (step.type === 'hide_character' && state.characterId) {
                 delete charactersMap[state.characterId];
             }
         }

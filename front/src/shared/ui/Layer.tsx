@@ -46,7 +46,7 @@ export const Layer = ({ id, transform, className, novelId }: LayerProps) => {
         height: `${transform?.height ?? 100}%`,
         zIndex: transform?.zIndex ?? 1,
         transform: `rotate(${transform?.rotation ?? 0}deg) scale(${transform?.scale ?? 1})`,
-        objectFit: 'cover',
+        objectFit: 'fill',
         pointerEvents: 'none',
     };
 
