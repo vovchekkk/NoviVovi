@@ -58,7 +58,7 @@ const sceneStateSchema = z.object({
 });
 const baseStepSchema = z.object({
     id: z.string().min(1),
-    state: sceneStateSchema,
+    state: sceneStateSchema.optional(),
 });
 
 const hideStepSchema = baseStepSchema.extend({
@@ -90,15 +90,28 @@ const replicaStepSchema = baseStepSchema.extend({
     text: z.string().min(1, 'Введите текст реплики'),
 });
 
+// const choiceStepSchema = baseStepSchema.extend({
+//     type: z.literal('choice'),
+//     menuRequest: z.object({
+//         id: z.string().min(1),
+//         choices: z.array(z.object({
+//             id: z.string().min(1),
+//             name: z.string().optional(),
+//             text: z.string().min(1, 'Введите текст варианта'),
+//             targetLabelId: z.string().min(1, 'Выберите сцену'),
+//         })),
+//     }),
+// });
+
 const choiceStepSchema = baseStepSchema.extend({
     type: z.literal('choice'),
     menuRequest: z.object({
         id: z.string().min(1),
         choices: z.array(z.object({
-            id: z.string().min(1),
+            id: z.string(),
             name: z.string().optional(),
-            text: z.string().min(1, 'Введите текст варианта'),
-            targetLabelId: z.string().min(1, 'Выберите сцену'),
+            text: z.string(),
+            targetLabelId: z.string(),
         })),
     }),
 });
@@ -471,7 +484,7 @@ function ReplicaStepForm({control, errors, register, characterOptions}: StepForm
     );
 }
 
-function ChoiceStepForm({ control, labelOptions, register }: StepFormProps) {
+function ChoiceStepForm({ control, labelOptions, register, errors }: StepFormProps) {
     const { fields, append, remove } = useFieldArray({
         control,
         name: "menuRequest.choices"
@@ -486,7 +499,7 @@ function ChoiceStepForm({ control, labelOptions, register }: StepFormProps) {
                         type="button"
                         onClick={() =>
                             append({
-                                id: `temp-choice-${Date.now()}`,
+                                id: '',
                                 name: '',
                                 text: '',
                                 targetLabelId: '',
@@ -521,6 +534,12 @@ function ChoiceStepForm({ control, labelOptions, register }: StepFormProps) {
                             type="hidden"
                             {...register(`menuRequest.choices.${index}.id` as const)}
                         />
+                        {/* Ошибка валидации для текста */}
+                        {errors?.menuRequest?.choices?.[index]?.text && (
+                            <p className={css({ color: 'red' })}>
+                                {errors.menuRequest.choices[index].text.message}
+                            </p>
+                        )}
                         {/* Кнопка удаления варианта */}
                         <button
                             type="button"
@@ -562,6 +581,12 @@ function ChoiceStepForm({ control, labelOptions, register }: StepFormProps) {
                                     />
                                 )}
                             />
+                            {/* Ошибка валидации для targetLabelId */}
+                            {errors?.menuRequest?.choices?.[index]?.targetLabelId && (
+                                <p className={css({ color: 'red' })}>
+                                    {errors.menuRequest.choices[index].targetLabelId.message}
+                                </p>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -571,6 +596,7 @@ function ChoiceStepForm({ control, labelOptions, register }: StepFormProps) {
                         Добавьте хотя бы один вариант выбора
                     </p>
                 )}
+
             </div>
         </div>
     );
@@ -809,15 +835,21 @@ export default function Editor() {
                 ...finalData.menuRequest,
                 choices: finalData.menuRequest.choices.map((choice: any) => ({
                     ...choice,
+                    id: choice.id || '',
                     name: choice.name?.trim() || choice.text,
                 })),
             };
         }
 
-        const newSteps = [...steps];
-        newSteps[selectedStepIndex] = finalData;
-        setSteps(newSteps);
-        await api.patch(`/steps/${data.id}`, finalData);
+        try {
+            await api.patch(`/steps/${data.id}`, finalData);
+            const newSteps = [...steps];
+            newSteps[selectedStepIndex] = finalData;
+            setSteps(newSteps);
+        } catch (error) {
+            console.error('Ошибка сохранения шага:', error);
+            alert('Не удалось сохранить шаг. Проверьте данные.');
+        }
     };
     const addStep = async (type: StepType) => {
         let newStep;
@@ -1229,7 +1261,7 @@ export default function Editor() {
                             borderRadius: '12px',
                         })}>
                             {currentStep ? (
-                                <form onSubmit={handleSubmit(onSave)} className={css({
+                                <form onSubmit={handleSubmit(onSave, (errors) => console.log('Форма невалидна', errors))} className={css({
                                     padding: '20px',
                                     display: 'flex',
                                     flexDirection: 'column',
