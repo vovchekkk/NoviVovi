@@ -68,3 +68,6 @@ app.MapControllers();
 
 // Запускаем приложение
 await app.RunAsync();
+
+// Make Program accessible for integration tests
+public partial class Program { }

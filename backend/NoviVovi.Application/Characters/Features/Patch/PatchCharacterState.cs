@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
@@ -27,6 +28,7 @@ public record PatchCharacterStateCommand : IRequest<CharacterStateDto>
 
 public class PatchCharacterStateHandler(
     INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     IImageRepository imageRepository,
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
@@ -39,9 +41,8 @@ public class PatchCharacterStateHandler(
         
         try
         {
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
-                        ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
+                            ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
 
             var state = character.CharacterStates.FirstOrDefault(c => c.Id == request.StateId)
                         ?? throw new NotFoundException($"Состояние персонажа '{request.StateId}' не найдено");
@@ -66,6 +67,8 @@ public class PatchCharacterStateHandler(
                 
                 state.PatchTransform(transformPatch);
             }
+            
+            await characterRepository.AddOrUpdateAsync(character, ct);
 
             await unitOfWork.CommitAsync(ct);
 

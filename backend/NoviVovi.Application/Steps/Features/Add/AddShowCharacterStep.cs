@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
@@ -23,7 +24,7 @@ public record AddShowCharacterStepCommand : AddStepCommand
 }
 
 public class AddShowCharacterStepHandler(
-    INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     ILabelRepository labelRepository,
     TransformDtoMapper transformMapper,
     IUnitOfWork unitOfWork,
@@ -38,10 +39,9 @@ public class AddShowCharacterStepHandler(
         {
             var label = await GetStepContextOrThrow(request, ct);
 
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+            var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
-            
+
             var state = character.CharacterStates.FirstOrDefault(c => c.Id == request.CharacterStateId)
                         ?? throw new NotFoundException($"Состояние персонажа '{request.CharacterId}' не найдено");
 

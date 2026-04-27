@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Common;
 using NoviVovi.Application.Common.Abstractions;
 using NoviVovi.Application.Common.Exceptions;
@@ -15,6 +16,7 @@ public record DeleteCharacterStateCommand(
 
 public class DeleteCharacterStateHandler(
     INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     IUnitOfWork unitOfWork
 ) : IRequestHandler<DeleteCharacterStateCommand>
 {
@@ -24,11 +26,12 @@ public class DeleteCharacterStateHandler(
         
         try
         {
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+            var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
             
             character.RemoveCharacterStateById(request.StateId);
+
+            await characterRepository.AddOrUpdateAsync(character, ct);
 
             await unitOfWork.CommitAsync(ct);
         }

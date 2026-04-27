@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NoviVovi.Application.Characters.Abstactions;
 using NoviVovi.Application.Characters.Dtos;
 using NoviVovi.Application.Characters.Mappers;
 using NoviVovi.Application.Common;
@@ -21,6 +22,7 @@ public record PatchCharacterCommand : IRequest<CharacterDto>
 
 public class PatchCharacterHandler(
     INovelRepository novelRepository,
+    ICharacterRepository characterRepository,
     IUnitOfWork unitOfWork,
     CharacterDtoMapper mapper
 ) : IRequestHandler<PatchCharacterCommand, CharacterDto>
@@ -31,10 +33,9 @@ public class PatchCharacterHandler(
         
         try
         {
-            var allCharacters = await novelRepository.GetAllCharactersAsync(request.NovelId, ct);
-            var character = allCharacters.FirstOrDefault(c => c.Id == request.CharacterId)
+            var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
-            
+
             if (request.Name is not null)
                 character.UpdateName(request.Name);
 
@@ -47,6 +48,8 @@ public class PatchCharacterHandler(
 
             if (request.Description is not null)
                 character.UpdateDescription(request.Description);
+            
+            await characterRepository.AddOrUpdateAsync(character, ct);
 
             await unitOfWork.CommitAsync(ct);
 
