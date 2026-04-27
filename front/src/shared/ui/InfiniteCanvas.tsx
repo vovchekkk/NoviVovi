@@ -43,6 +43,7 @@ type Step = {
         } | null;
     };
     menuRequest?: {
+        id?: string;
         choices?: StepChoice[];
     };
     choices?: StepChoice[];
@@ -55,9 +56,12 @@ type InfiniteCanvasProps = {
 type SceneNodeData = {
     label: string;
     previewUrl: string;
+    isStart?: boolean;
     choices: Array<{
         handleId: string;
         text: string;
+        stepId: string;
+        choiceIndex: number;
     }>;
 };
 
@@ -92,12 +96,32 @@ const SceneGraphNode = ({ data }: { data: SceneNodeData }) => {
     return (
         <div className={css({
             width: '220px',
-            border: '2px solid #775D68',
+            border: `2px solid ${data.isStart ? '#f59e0b' : '#775D68'}`,
             borderRadius: '12px',
             backgroundColor: 'white',
             overflow: 'hidden',
             boxShadow: 'md',
+            position: 'relative',
         })}>
+            {data.isStart && (
+                <div className={css({
+                    position: 'absolute',
+                    top: '-10px',
+                    left: '-10px',
+                    backgroundColor: '#f59e0b',
+                    borderRadius: '50%',
+                    width: '24px',
+                    height: '24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '14px',
+                    zIndex: 10,
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                })}>
+                    🚀
+                </div>
+            )}
             <Handle
                 type="target"
                 position={Position.Left}
@@ -188,12 +212,6 @@ const extractStepChoices = (step: Step): StepChoice[] => {
     return [];
 };
 
-const getStepChoices = (step: Step): StepChoice[] =>
-    extractStepChoices(step).map((choice) => ({
-        ...choice,
-        name: choice.name?.trim() || choice.text || 'Вариант',
-    }));
-
 const collectChoiceHandles = (steps: Step[]): SceneNodeData['choices'] => {
     const result: SceneNodeData['choices'] = [];
 
@@ -204,9 +222,18 @@ const collectChoiceHandles = (steps: Step[]): SceneNodeData['choices'] => {
 
         const choices = extractStepChoices(step);
         choices.forEach((choice, choiceIndex) => {
+            const hasText = choice.text && choice.text.trim().length > 0;
+            const hasTarget = choice.targetLabelId && choice.targetLabelId.trim().length > 0;
+
+            if (!hasText && !hasTarget) {
+                return;
+            }
+
             result.push({
                 handleId: buildChoiceHandleId(step.id, choiceIndex),
                 text: choice.text || choice.name || `Вариант ${choiceIndex + 1}`,
+                stepId: step.id,
+                choiceIndex: choiceIndex,
             });
         });
     }
@@ -248,7 +275,8 @@ const saveLayout = (novelId: string, nodes: SceneNode[]): void => {
 const buildNodes = (
     labels: Label[],
     stepsByLabelId: Record<string, Step[]>,
-    previewByLabelId: Record<string, string>
+    previewByLabelId: Record<string, string>,
+    startLabelId?: string
 ): SceneNode[] => {
     const columns = Math.max(1, Math.ceil(Math.sqrt(labels.length)));
 
@@ -263,6 +291,7 @@ const buildNodes = (
             label: label.name,
             previewUrl: previewByLabelId[label.id] ?? previewImage,
             choices: collectChoiceHandles(stepsByLabelId[label.id] ?? []),
+            isStart: label.id === startLabelId,
         },
     }));
 };
@@ -359,6 +388,7 @@ const buildEdges = (
 
 export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
     const [labels, setLabels] = useState<Label[]>([]);
+    const [startLabelId, setStartLabelId] = useState<string | undefined>();
     const [nodes, setNodes, onNodesChange] = useNodesState<SceneNode>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<SceneEdge>([]);
     const [loading, setLoading] = useState(true);
@@ -412,6 +442,12 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
 
         try {
             const { data: labels } = await api.get<Label[]>(`/novels/${novelId}/labels`);
+
+            // TODO: Заменить на реальный endpoint когда появится
+            // const { data: novelData } = await api.get(`/novels/${novelId}`);
+            // const startLabelId = novelData.startLabelId;
+            const startLabelId = labels[0]?.id;
+
             const stepResponses = await Promise.all(
                 labels.map((label) =>
                     api.get<Step[]>(`/novels/${novelId}/labels/${label.id}/steps`)
@@ -428,12 +464,13 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
             }, {});
 
             const layout = readStoredLayout(novelId);
-            const nextNodes = buildNodes(labels, nextStepsByLabelId, previewByLabelId).map((node) => ({
+            const nextNodes = buildNodes(labels, nextStepsByLabelId, previewByLabelId, startLabelId).map((node) => ({
                 ...node,
                 position: layout[node.id] ?? node.position,
             }));
 
             setLabels(labels);
+            setStartLabelId(startLabelId);
             setStepsByLabelId(nextStepsByLabelId);
             setNodes(nextNodes);
             setEdges(buildEdges(labels, nextStepsByLabelId));
@@ -477,7 +514,6 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                         let step = sourceSteps.find((item) => item.id === choiceInfo.stepId);
                         let choices: StepChoice[];
 
-                        // Если шаг не найден, создаём новый menu‑шаг с одним пустым выбором
                         if (!step) {
                             const { data: newStep } = await api.post<Step>(
                                 `/novels/${novelId}/labels/${sourceLabelId}/steps`,
@@ -487,13 +523,11 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                                         choices: [{ text: 'Новый выбор' }],
                                     },
                                 }
-                            ); //TODO: нормально обработать ошибку
+                            );
                             step = newStep;
                             nextMap = upsertStep(nextMap, sourceLabelId, step);
                             choices = extractStepChoices(step);
-                            // Индекс выбора — 0, так как он только что создан
                             const choiceIndex = 0;
-                            // Обновим targetLabelId у созданного выбора
                             const updatedChoices = choices.map((c, i) =>
                                 i === choiceIndex ? { ...c, targetLabelId: targetLabelId } : c
                             );
@@ -503,10 +537,8 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                             });
                             nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
                         } else {
-                            // Шаг существует – проверяем, есть ли такой choice
                             choices = extractStepChoices(step);
                             if (choices[choiceInfo.choiceIndex]) {
-                                // Обновляем существующий выбор
                                 const updatedChoices = choices.map((choice, index) =>
                                     index === choiceInfo.choiceIndex
                                         ? { ...choice, targetLabelId: targetLabelId }
@@ -518,7 +550,6 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                                 });
                                 nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
                             } else {
-                                // Индекс выходит за границы – добавляем новый выбор
                                 const newChoice: StepChoice = {
                                     text: `Вариант ${choices.length + 1}`,
                                     targetLabelId: targetLabelId,
@@ -526,7 +557,7 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                                 const updatedChoices = [...choices, newChoice];
                                 const { data: updatedStep } = await api.patch<Step>(`/steps/${step.id}`, {
                                     ...step,
-                                    menuRequest: { id: step.menuRequest?.id ?? `menu-${step.id}`, choices: updatedChoices }, //TODO: нормально обработать ошибку
+                                    menuRequest: { id: step.menuRequest?.id ?? `menu-${step.id}`, choices: updatedChoices },
                                 });
                                 nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
                             }
@@ -587,6 +618,7 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
             try {
                 const typedDeletedEdges = deletedEdges as SceneEdge[];
                 let nextMap = cloneStepsMap(stepsByLabelId);
+
                 for (const edge of typedDeletedEdges) {
                     const edgeData = edge.data;
                     if (!edgeData) {
@@ -599,34 +631,35 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                         continue;
                     }
 
-                    const sourceSteps = nextMap[edgeData.sourceLabelId] ?? [];
-                    const step = sourceSteps.find((item) => item.id === edgeData.stepId);
-                    if (!step) {
-                        continue;
-                    }
+                    if (edgeData.kind === 'choice') {
+                        const sourceSteps = nextMap[edgeData.sourceLabelId] ?? [];
+                        const step = sourceSteps.find((item) => item.id === edgeData.stepId);
+                        if (!step) {
+                            continue;
+                        }
 
-                    const choices = extractStepChoices(step);
-                    if (!choices[edgeData.choiceIndex]) {
-                        continue;
-                    }
+                        const choices = extractStepChoices(step);
 
-                    const updatedChoices = choices.map((choice, index) =>
-                        index === edgeData.choiceIndex
-                            ? { ...choice, targetLabelId: '' }
-                            : choice
-                    );
+                        if (!choices[edgeData.choiceIndex]) {
+                            continue;
+                        }
 
-                    const { data: updatedStep } = await api.patch<Step>(`/steps/${step.id}`, {
-                        ...step,
-                        menuRequest: {
-                            id: step.menuRequest?.id ?? `menu-${step.id}`,
-                            choices: getStepChoices({
+                        const updatedChoices = choices.filter((_, index) => index !== edgeData.choiceIndex);
+
+                        if (updatedChoices.length === 0) {
+                            await api.delete(`/steps/${step.id}`);
+                            nextMap = removeStep(nextMap, edgeData.sourceLabelId, step.id);
+                        } else {
+                            const { data: updatedStep } = await api.patch<Step>(`/steps/${step.id}`, {
                                 ...step,
-                                menuRequest: { choices: updatedChoices },
-                            }),
-                        },
-                    });
-                    nextMap = upsertStep(nextMap, edgeData.sourceLabelId, updatedStep);
+                                menuRequest: {
+                                    id: step.menuRequest?.id ?? `menu-${step.id}`,
+                                    choices: updatedChoices,
+                                },
+                            });
+                            nextMap = upsertStep(nextMap, edgeData.sourceLabelId, updatedStep);
+                        }
+                    }
                 }
 
                 applyStepsMap(nextMap);

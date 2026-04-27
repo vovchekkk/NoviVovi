@@ -842,9 +842,9 @@ export default function Editor() {
         }
 
         try {
-            await api.patch(`/steps/${data.id}`, finalData);
+            const { data: updatedStep } = await api.patch<Step>(`/steps/${data.id}`, finalData);
             const newSteps = [...steps];
-            newSteps[selectedStepIndex] = finalData;
+            newSteps[selectedStepIndex] = updatedStep;
             setSteps(newSteps);
         } catch (error) {
             console.error('Ошибка сохранения шага:', error);
@@ -894,11 +894,10 @@ export default function Editor() {
                 break;
 
             case 'choice':
-                newStep ={
+                newStep = {
                     type: 'choice',
                     menuRequest: {
-                        id: `temp-menu-${Date.now()}`,
-                        choices: [{ id: `temp-choice-${Date.now()}`, name: '', text: '', targetLabelId: '' }],
+                        choices: [],
                     },
                 };
                 break;
@@ -1017,19 +1016,21 @@ export default function Editor() {
 
     const deleteLabel = async (id: string) => {
         try {
-            await api.delete<Label>(`novels/${novelId}/labels/${id}`, {
-                data: {
-                    labelId: id,
-                    novelId: '0',
-                }
-            });
+            await api.delete(`novels/${novelId}/labels/${id}`);
             const newLabels = labels.filter(lab => lab.id !== id);
             setLabels(newLabels);
+
             if (selectedLabelId === id) {
-                setSelectedLabelId(newLabels[0].id);
+                if (newLabels.length > 0) {
+                    setSelectedLabelId(newLabels[0].id);
+                } else {
+                    setSelectedLabelId(null);
+                    setSteps([]);
+                }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            alert('Не удалось удалить сцену');
         }
     }
 
