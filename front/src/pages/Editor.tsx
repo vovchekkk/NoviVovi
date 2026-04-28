@@ -172,6 +172,14 @@ const normalizeIncomingStep = (step: any): Step => {
             type: 'choice',
         };
     }
+    if (step?.type === 'show_replica') {
+        return {
+            ...step,
+            type: 'replica',
+            characterId: step.replica?.speakerId ?? '',
+            text: step.replica?.text ?? '',
+        };
+    }
     return step as Step;
 };
 
@@ -397,7 +405,7 @@ function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProp
 
             const response = await api.post(`novels/${novelId}/images/upload-url`, request);
             const { imageId, uploadUrl, viewUrl } = response.data;
-            console.log(uploadUrl)
+
             console.log('imageId:', imageId);
 
             if (uploadUrl) {
@@ -407,6 +415,7 @@ function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProp
             }
 
             if (imageId) {
+                setValue('imageId', imageId);
                 setValue('background.imageId', imageId);
                 alert('Изображение загружено и сохранено в облако!');
             }
@@ -802,7 +811,7 @@ export default function Editor() {
                         reset({
                             ...baseData,
                             state: data.state ?? defaultSceneState,
-                            imageId: data.imageId,
+                            imageId: data.backgroundObject.image.id,
                             background: {
                                 imageId: data.imageId ?? '',
                                 transform: data.transform ?? defaultBackgroundTransform,
@@ -949,12 +958,14 @@ export default function Editor() {
             };
         }
 
+        console.log(finalData);
         try {
             let savedStep: Step;
 
+            console.log(data);
             if (data.id) {
                 const { data: updated } = await api.patch(`/novels/${novelId}/labels/${selectedLabelId}/steps/${data.id}`, finalData);
-                savedStep = updated;
+                savedStep = normalizeIncomingStep(updated);
             }
             else {
                 const { data: newStep } = await api.post<Step>(
@@ -1046,7 +1057,7 @@ export default function Editor() {
         }
 
         try {
-            await api.delete(`novels/${novelId}/${selectedLabelId}/steps/${stepToDelete.id}`);
+            await api.delete(`novels/${novelId}/labels/${selectedLabelId}/steps/${stepToDelete.id}`);
             const newSteps = steps.filter((_, i) => i !== index);
             setSteps(newSteps);
 
