@@ -50,14 +50,17 @@ public class StepsController(
     }
 
     [HttpGet]
-    public async Task<ActionResult<StepResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId)
+    [Produces("application/json")]
+    public async Task<ActionResult<IEnumerable<StepResponse>>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId)
     {
         var step = await mediator.Send(new GetStepsQuery(novelId, labelId));
 
-        return Ok(mapper.ToResponses(step));
+        var responses = mapper.ToResponses(step);
+        return Ok(responses);
     }
 
     [HttpPatch("{stepid:guid}")]
+    [Produces("application/json")]
     public async Task<ActionResult<StepResponse>> Patch(
         [FromRoute] Guid novelId,
         [FromRoute] Guid labelId,
@@ -69,7 +72,8 @@ public class StepsController(
 
         var step = await mediator.Send(command);
 
-        return Ok(mapper.ToResponse(step));
+        StepResponse response = mapper.ToResponse(step);
+        return response;
     }
 
     [HttpDelete("{stepid:guid}")]
