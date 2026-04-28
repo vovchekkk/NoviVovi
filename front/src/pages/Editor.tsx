@@ -9,7 +9,8 @@ import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import Modal from "../shared/ui/Modal.tsx";
-import api from "../api.tsx";
+import { labelsApi, stepsApi, charactersApi, imagesApi } from "../shared/api/client";
+import type { LabelResponse, StepResponse, CharacterResponse } from "../shared/api/types";
 import {useParams} from "react-router-dom";
 import {vstack, hstack} from '../../styled-system/patterns';
 import {LabelItem} from "../shared/ui/LabelItem.tsx";
@@ -57,8 +58,9 @@ const sceneStateSchema = z.object({
     background: backgroundStateSchema.nullable(),
     characters: z.array(characterStateSchema),
 });
+
 const baseStepSchema = z.object({
-    id: z.string().min(1),
+    id: z.string().nullable().optional(),
     state: sceneStateSchema.optional(),
 });
 
@@ -67,7 +69,8 @@ const hideStepSchema = baseStepSchema.extend({
     characterId: z.string().min(1, 'Выберите персонажа'),
 });
 
-const jumpStepSchema = baseStepSchema.extend({
+const jumpStepSchema = z.object({
+    id: z.string().nullable().optional(),
     type: z.literal('jump'),
     targetId: z.string().min(1, 'Выберите следующую сцену'),
 });
@@ -91,16 +94,17 @@ const replicaStepSchema = baseStepSchema.extend({
     text: z.string().min(1, 'Введите текст реплики'),
 });
 
-const choiceStepSchema = baseStepSchema.extend({
+const choiceStepSchema = z.object({
+    id: z.string().nullable().optional(),
     type: z.literal('menu'),
     menuRequest: z.object({
-        id: z.string().min(1),
+        id: z.string().optional(),
         choices: z.array(z.object({
-            id: z.string(),
+            id: z.string().optional(),
             name: z.string().optional(),
-            text: z.string(),
-            targetLabelId: z.string(),
-        })),
+            text: z.string().min(1, 'Введите текст выбора'),
+            targetLabelId: z.string().min(1, 'Выберите сцену'),
+        })).min(1, 'Добавьте хотя бы один вариант'),
     }),
 });
 
@@ -142,10 +146,33 @@ type StepFormProps = {
 };
 
 const normalizeIncomingStep = (step: any): Step => {
-    if (step?.type === 'menu') {
+    // Преобразуем новые типы API в старую структуру для формы
+    if (step.type === 'show_menu') {
         return {
             ...step,
-            type: 'choice',
+            type: 'menu',
+            menuRequest: {
+                id: step.id || `temp-menu-${step.id}`,
+                choices: step.menu?.choices?.map((c: any) => ({
+                    text: c.text || '',
+                    targetLabelId: c.transition?.targetLabelId || '',
+                })) || [],
+            },
+        };
+    }
+    if (step.type === 'show_replica') {
+        return {
+            ...step,
+            type: 'replica',
+            characterId: step.replica?.speakerId || '',
+            text: step.replica?.text || '',
+        };
+    }
+    if (step.type === 'jump') {
+        return {
+            ...step,
+            type: 'jump',
+            targetId: step.targetLabelId || '',
         };
     }
     return step as Step;
@@ -350,15 +377,13 @@ function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProp
                 },
             };
 
-            const response = await api.post(`novels/${novelId}/images/upload-url`, request);
-            const { imageId, uploadUrl, viewUrl } = response.data;
+            const response = await imagesApi.getUploadUrl();
+            const { imageId, uploadUrl } = response.data;
             console.log(uploadUrl)
             console.log('imageId:', imageId);
 
             if (uploadUrl) {
-                await api.put(uploadUrl, file, {
-                    headers: { 'Content-Type': file.type }
-                });
+                await imagesApi.upload(uploadUrl, file);
             }
 
             if (imageId) {
@@ -641,7 +666,8 @@ export default function Editor() {
     const [selectedLabelId, setSelectedLabelId] = useState<string | null>(labels[0]?.id ?? null);
     const [selectedStepIndex, setSelectedStepIndex] = useState(0);
     const [selectedId, setSelectedId] = useState<string | null>(steps[0]?.id ?? null);
-    const currentStep = steps[selectedStepIndex];
+    const [newStepData, setNewStepData] = useState<any>(null); // Для нового step до сохранения
+    const currentStep = newStepData || steps[selectedStepIndex]; // Используем newStepData если есть
     const [loading, setLoading] = useState(true);
     const [labelName, setLabelName] = useState(' ');
     const [isLabelOpen, setIsLabelOpen] = useState(false);
@@ -688,7 +714,7 @@ export default function Editor() {
     useEffect(() => {
         const fetchCharacterNames = async () => {
             try {
-                const {data} = await api.get<Character[]>(`novels/${novelId}/characters`);
+                const {data} = await charactersApi.getAll(novelId);
                 setCharacterOptions(data.map(ch => ({
                     id:ch.id,
                     name:ch.name,
@@ -727,8 +753,15 @@ export default function Editor() {
 
             try {
                 setLoading(true);
-                const {data: rawStep} = await api.get<any>(`/steps/${selectedId}`);
-                const data = normalizeIncomingStep(rawStep);
+                // Этот endpoint не используется - данные уже есть в steps
+                // const {data: rawStep} = await stepsApi.getById(novelId, selectedLabelId, selectedId);
+                // const data = normalizeIncomingStep(rawStep);
+                
+                // Используем данные из локального состояния
+                const currentStep = steps.find(s => s.id === selectedId);
+                if (!currentStep) return;
+                
+                const data = normalizeIncomingStep(currentStep);
                 const baseData = ({
                     id: data.id,
                     type: data.type,
@@ -799,7 +832,7 @@ export default function Editor() {
         const fetchLabels = async () => {
             try {
                 setLoading(true);
-                const {data} = await api.get<Label[]>(`/novels/${novelId}/labels`);
+                const {data} = await labelsApi.getAll(novelId);
                 setLabels(data);
 
                 if (data.length > 0) {
@@ -807,7 +840,7 @@ export default function Editor() {
                 }
             } catch (error) {
                 console.error(error);
-                alert('Не удалось загрузить персонажей');
+                alert('Не удалось загрузить сцены');
             } finally {
                 setLoading(false);
             }
@@ -823,7 +856,7 @@ export default function Editor() {
             }
             try {
                 setLoading(true);
-                const {data} = await api.get<any[]>(`novels/${novelId}/labels/${selectedLabelId}/steps`);
+                const {data} = await stepsApi.getAll(novelId, selectedLabelId);
                 const normalizedSteps = data.map((step) => normalizeIncomingStep(step));
                 setSteps(normalizedSteps);
 
@@ -867,47 +900,69 @@ export default function Editor() {
                 .filter((ch: any) => ch.characterId !== data.characterId);
         }
 
-        const finalData = {
-            ...data,
-            state: finalState
+        // Преобразуем данные под новое API
+        const finalData: any = {
+            type: data.type,
         };
 
-        if (finalData.type === 'choice' && finalData.menuRequest?.choices) {
-            finalData.menuRequest = {
-                ...finalData.menuRequest,
-                choices: finalData.menuRequest.choices.map((choice: any) => ({
-                    ...choice,
-                    id: choice.id || '',
-                    name: choice.name?.trim() || choice.text,
-                })),
-            };
+        // Jump step: targetId -> targetLabelId
+        if (data.type === 'jump' && data.targetId) {
+            finalData.type = 'jump';
+            finalData.targetLabelId = data.targetId;
+        }
+
+        // Menu step: menuRequest.choices -> choices
+        if (data.type === 'menu' && data.menuRequest?.choices) {
+            finalData.type = 'show_menu';
+            finalData.choices = data.menuRequest.choices.map((choice: any) => ({
+                text: choice.text || choice.name || '',
+                targetLabelId: choice.targetLabelId || '',
+            }));
+        }
+
+        // Replica step
+        if (data.type === 'replica') {
+            finalData.type = 'show_replica';
+            finalData.speakerId = data.characterId || '';
+            finalData.text = data.text || '';
+        }
+
+        // Show character step
+        if (data.type === 'show_character') {
+            finalData.characterId = data.characterId;
+            finalData.characterStateId = data.characterStateId;
+            finalData.transform = data.transform;
+        }
+
+        // Hide character step
+        if (data.type === 'hide_character') {
+            finalData.characterId = data.characterId;
+        }
+
+        // Background step
+        if (data.type === 'show_background') {
+            finalData.imageId = data.imageId;
+            finalData.transform = data.transform;
         }
 
         try {
             let savedStep: Step;
 
             if (data.id) {
-                const { data: updated } = await api.patch(`/steps/${data.id}`, finalData);
-                savedStep = updated;
+                const { data: updated } = await stepsApi.patch(novelId, selectedLabelId, data.id, finalData);
+                savedStep = normalizeIncomingStep(updated);
+                setSteps(prev => prev.map(s => s.id === savedStep.id ? savedStep : s));
+            } else {
+                const { data: newStep } = await stepsApi.create(novelId, selectedLabelId, finalData);
+                savedStep = normalizeIncomingStep(newStep);
+                setSteps(prev => [...prev, savedStep]);
+                setNewStepData(null); // Очищаем временный step
             }
-            else {
-                const { data: newStep } = await api.post<Step>(
-                    `/novels/${novelId}/labels/${selectedLabelId}/steps`,
-                    finalData
-                );
-                savedStep = newStep;
-            }
 
-            setSteps((prevSteps) =>
-                prevSteps.map((step, index) =>
-                    index === selectedStepIndex ? savedStep : step
-                )
-            );
-
-            console.log('Шаг успешно сохранён:', savedStep);
-
+            setSelectedId(savedStep.id);
+            alert('Шаг сохранён');
         } catch (error) {
-            console.error('Ошибка сохранения шага:', error);
+            console.error(error);
             alert('Не удалось сохранить шаг');
         }
     };
@@ -957,20 +1012,11 @@ export default function Editor() {
                 break;
         }
 
-        setSteps((prevSteps) => {
-            const insertionIndex = (selectedStepIndex !== null && selectedStepIndex !== -1)
-                ? selectedStepIndex + 1
-                : prevSteps.length;
-
-            const updatedSteps = [
-                ...prevSteps.slice(0, insertionIndex),
-                tempStep,
-                ...prevSteps.slice(insertionIndex)
-            ];
-
-            setSelectedStepIndex(insertionIndex);
-            return updatedSteps;
-        });
+        // Сохраняем временный step для отображения формы
+        setNewStepData(tempStep);
+        setSelectedId(null);
+        setSelectedStepIndex(-1);
+        reset(tempStep);
     };
     const deleteStep = async (index: number) => {
         const stepToDelete = steps[index];
@@ -979,7 +1025,7 @@ export default function Editor() {
         }
 
         try {
-            await api.delete(`/steps/${stepToDelete.id}`);
+            await stepsApi.delete(novelId, selectedLabelId, stepToDelete.id);
             const newSteps = steps.filter((_, i) => i !== index);
             setSteps(newSteps);
 
@@ -1044,7 +1090,7 @@ export default function Editor() {
     const createLabel = async (e) => {
         e.preventDefault();
         try {
-            const {data: newLabel} = await api.post<Label>(`/novels/${novelId}/labels`, {
+            const {data: newLabel} = await labelsApi.create(novelId, {
                 name: labelName || 'Новая сцена'
             })
             setLabels([...labels, newLabel]);
@@ -1059,12 +1105,7 @@ export default function Editor() {
 
     const deleteLabel = async (id: string) => {
         try {
-            await api.delete<Label>(`novels/${novelId}/labels/${id}`, {
-                data: {
-                    labelId: id,
-                    novelId: novelId,
-                }
-            });
+            await labelsApi.delete(novelId, id);
             const newLabels = labels.filter(lab => lab.id !== id);
             setLabels(newLabels);
             if (selectedLabelId === id) {
@@ -1083,10 +1124,8 @@ export default function Editor() {
 
     const patchLabel = async (label:Label) => {
         try {
-            await api.patch<Label>(`/novels/${novelId}/labels/${label.id}`, {
-                novelId: '0',
-                labelId: label.id,
-                name:label.name,
+            await labelsApi.patch(novelId, label.id, {
+                name: label.name,
             })
             setLabels((prevLabels) =>
                 prevLabels.map((lab) =>
@@ -1095,6 +1134,7 @@ export default function Editor() {
             );
         } catch (error) {
             console.error(error);
+            alert('Не удалось обновить сцену');
         }
     }
 

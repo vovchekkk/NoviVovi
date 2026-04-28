@@ -14,7 +14,8 @@ import {
 import '@xyflow/react/dist/style.css';
 import { css } from '../../../styled-system/css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import api from "../../api.tsx";
+import api, { labelsApi, stepsApi } from '../api/client';
+import type { LabelResponse, StepResponse } from '../api/types';
 import previewImage from '../../assets/img.png';
 
 type Label = {
@@ -203,9 +204,18 @@ const extractChoiceTarget = (choice: StepChoice): string | null => {
 };
 
 const extractStepChoices = (step: Step): StepChoice[] => {
+    // Для show_menu из нового API
+    if (step.type === 'show_menu' && Array.isArray(step.menu?.choices)) {
+        return step.menu.choices.map((c: any) => ({
+            text: c.text || '',
+            targetLabelId: c.transition?.targetLabelId || '',
+        }));
+    }
+    // Для старой структуры с menuRequest
     if (Array.isArray(step.menuRequest?.choices) && step.menuRequest.choices.length > 0) {
         return step.menuRequest.choices;
     }
+    // Для прямого choices
     if (Array.isArray(step.choices) && step.choices.length > 0) {
         return step.choices;
     }
@@ -216,7 +226,8 @@ const collectChoiceHandles = (steps: Step[]): SceneNodeData['choices'] => {
     const result: SceneNodeData['choices'] = [];
 
     for (const step of steps) {
-        if (step.type !== 'choice' && step.type !== 'menu') {
+        // Проверяем все варианты типов menu
+        if (step.type !== 'choice' && step.type !== 'menu' && step.type !== 'show_menu') {
             continue;
         }
 
@@ -307,8 +318,9 @@ const buildEdges = (
         const steps = stepsByLabelId[label.id] ?? [];
 
         for (const step of steps) {
+            // Jump step - проверяем оба варианта (старый targetId и новый targetLabelId)
             if (step.type === 'jump') {
-                const targetId = step.targetId?.trim();
+                const targetId = (step.targetId || step.targetLabelId)?.trim();
                 if (!targetId || !labelIds.has(targetId)) {
                     continue;
                 }
@@ -337,7 +349,8 @@ const buildEdges = (
                 continue;
             }
 
-            if (step.type !== 'choice' && step.type !== 'menu') {
+            // Menu/Choice step
+            if (step.type !== 'choice' && step.type !== 'menu' && step.type !== 'show_menu') {
                 continue;
             }
 
@@ -395,6 +408,17 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
     const [error, setError] = useState<string | null>(null);
     const [stepsByLabelId, setStepsByLabelId] = useState<Record<string, Step[]>>({});
 
+    // Маппинг stepId -> labelId для API вызовов
+    const stepToLabelMap = useMemo(() => {
+        const map: Record<string, string> = {};
+        Object.entries(stepsByLabelId).forEach(([labelId, steps]) => {
+            steps.forEach(step => {
+                map[step.id] = labelId;
+            });
+        });
+        return map;
+    }, [stepsByLabelId]);
+
     const cloneStepsMap = useCallback((map: Record<string, Step[]>): Record<string, Step[]> => {
         return Object.entries(map).reduce<Record<string, Step[]>>((acc, [labelId, steps]) => {
             acc[labelId] = [...steps];
@@ -441,16 +465,13 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
         setError(null);
 
         try {
-            const { data: labels } = await api.get<Label[]>(`/novels/${novelId}/labels`);
+            const { data: labels } = await labelsApi.getAll(novelId);
 
-            // TODO: Заменить на реальный endpoint когда появится
-            // const { data: novelData } = await api.get(`/novels/${novelId}`);
-            // const startLabelId = novelData.startLabelId;
             const startLabelId = labels[0]?.id;
 
             const stepResponses = await Promise.all(
                 labels.map((label) =>
-                    api.get<Step[]>(`/novels/${novelId}/labels/${label.id}/steps`)
+                    stepsApi.getAll(novelId, label.id)
                 )
             );
 
@@ -515,15 +536,10 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                         let choices: StepChoice[];
 
                         if (!step) {
-                            const { data: newStep } = await api.post<Step>(
-                                `/novels/${novelId}/labels/${sourceLabelId}/steps`,
-                                {
-                                    type: 'menu',
-                                    menuRequest: {
-                                        choices: [{ text: 'Новый выбор' }],
-                                    },
-                                }
-                            );
+                            const { data: newStep } = await stepsApi.create(novelId, sourceLabelId, {
+                                type: 'show_menu',
+                                choices: [{ text: 'Новый выбор', targetLabelId: targetLabelId }],
+                            });
                             step = newStep;
                             nextMap = upsertStep(nextMap, sourceLabelId, step);
                             choices = extractStepChoices(step);
@@ -531,9 +547,9 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                             const updatedChoices = choices.map((c, i) =>
                                 i === choiceIndex ? { ...c, targetLabelId: targetLabelId } : c
                             );
-                            const { data: updatedStep } = await api.patch<Step>(`/steps/${step.id}`, {
-                                ...step,
-                                menuRequest: { id: step.menuRequest?.id ?? `menu-${step.id}`, choices: updatedChoices },
+                            const { data: updatedStep } = await stepsApi.patch(novelId, sourceLabelId, step.id, {
+                                type: 'show_menu',
+                                choices: updatedChoices,
                             });
                             nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
                         } else {
@@ -712,8 +728,9 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                     nodeTypes={nodeTypes}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    onEdgesDelete={onEdgesDelete}
+                    // Временно отключено: требует переделки под новое API
+                    // onConnect={onConnect}
+                    // onEdgesDelete={onEdgesDelete}
                     fitView
                     nodesDraggable
                     nodesConnectable
