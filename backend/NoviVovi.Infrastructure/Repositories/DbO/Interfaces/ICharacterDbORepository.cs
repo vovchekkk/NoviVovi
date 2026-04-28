@@ -14,7 +14,7 @@ public interface ICharacterDbORepository
     Task DeleteAsync(Guid id);
     Task<Guid> AddOrUpdateStepCharacterAsync(StepCharacterDbO stepCharacter);
     Task<Guid> AddOrUpdateFullAsync(CharacterDbO character);
-    Task<StepCharacterDbO> GetFullStepCharacterByIdAsync(Guid stepCharacterId);
+    Task<StepCharacterDbO?> GetCharacterObjectByCharacterIdAsync(Guid stepCharacterId);
     Task<Guid> AddOrUpdateStateAsync(CharacterStateDbO state);
     Task DeleteStateAsync(Guid stateId);
     Task DeleteStepCharacterAsync(Guid stepCharId);

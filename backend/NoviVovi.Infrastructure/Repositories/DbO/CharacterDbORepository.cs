@@ -161,16 +161,16 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
         return character.Id;
     }
 
-    public async Task<StepCharacterDbO?> GetFullStepCharacterByIdAsync(Guid id)
+    public async Task<StepCharacterDbO?> GetCharacterObjectByCharacterIdAsync(Guid stepCharacterId)
     {
         const string sql = @"
         SELECT id AS Id,
                transform_id AS TransformId,
                character_state_id AS CharacterStateId
         FROM ""StepCharacter""
-        WHERE id = @Id";
+        WHERE id = @StepCharacterId";
 
-        var character = await QueryFirstOrDefaultAsync<StepCharacterDbO>(sql, new { Id = id });
+        var character = await QueryFirstOrDefaultAsync<StepCharacterDbO>(sql, new { StepCharacterId = stepCharacterId });
         if (character == null) return null;
 
         character.CharacterState =

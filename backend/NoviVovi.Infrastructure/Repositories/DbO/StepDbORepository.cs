@@ -1,4 +1,6 @@
 using NoviVovi.Application.Common.Abstractions;
+using NoviVovi.Infrastructure.DatabaseObjects.Characters;
+using NoviVovi.Infrastructure.DatabaseObjects.Enums;
 using NoviVovi.Infrastructure.DatabaseObjects.Labels;
 using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
@@ -67,7 +69,16 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
             // CHARACTER
             if (step.CharacterId.HasValue)
             {
-                step.Character = await characterRepository.GetFullStepCharacterByIdAsync(step.CharacterId.Value);
+                // For ShowCharacterStep - load full StepCharacterDbO with state and transform
+                if (step.StepType == StepType.ShowCharacter.ToStepTypeString())
+                {
+                    step.Character = await characterRepository.GetCharacterObjectByCharacterIdAsync(step.CharacterId.Value);
+                }
+                // For HideCharacterStep - load just the Character
+                else if (step.StepType == StepType.HideCharacter.ToStepTypeString())
+                {
+                    step.HideCharacter = await characterRepository.GetFullCharacterByIdAsync(step.CharacterId.Value);
+                }
             }
 
             // BACKGROUND
@@ -151,7 +162,7 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
             step.NextLabel = await labelRepo.GetFullByIdAsync(step.NextLabelId.Value, ctx);
 
         if (step.CharacterId.HasValue)
-            step.Character = await characterRepository.GetFullStepCharacterByIdAsync(step.CharacterId.Value);
+            step.Character = await characterRepository.GetCharacterObjectByCharacterIdAsync(step.CharacterId.Value);
 
         if (step.BackgroundId.HasValue)
             step.Background = await imageRepository.GetFullBackgroundByIdAsync(step.BackgroundId.Value);

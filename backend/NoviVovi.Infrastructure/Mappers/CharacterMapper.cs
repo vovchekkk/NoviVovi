@@ -65,13 +65,14 @@ public partial class CharacterMapper(
 
     public StepCharacterDbO ToDbO(CharacterObject stepCharacterObject)
     {
+        var transform = transformMapper.ToDbO(stepCharacterObject.Transform);
         var res = new StepCharacterDbO
         {
             Id = stepCharacterObject.Id,
             CharacterStateId = stepCharacterObject.State.Id,
             CharacterState = ToDbO(stepCharacterObject.State, stepCharacterObject.Character.Id),
-            TransformId = Guid.Empty,
-            Transform = transformMapper.ToDbO(stepCharacterObject.Transform),
+            TransformId = transform.Id,
+            Transform = transform,
             Character = ToDbO(stepCharacterObject.Character)
         };
         return res;

@@ -10,9 +10,10 @@ namespace NoviVovi.Api.Tests.Infrastructure;
 public class NoviVoviWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private static readonly SemaphoreSlim _dbSemaphore = new(1, 1);
-    private TestDatabaseManager? _dbManager;
+    private static TestDatabaseManager? _sharedDbManager;
+    private static int _instanceCount = 0;
 
-    public string TestConnectionString => _dbManager?.ConnectionString 
+    public string TestConnectionString => _sharedDbManager?.ConnectionString 
         ?? throw new InvalidOperationException("Database not initialized");
 
     public async Task InitializeAsync()
@@ -20,8 +21,15 @@ public class NoviVoviWebApplicationFactory : WebApplicationFactory<Program>, IAs
         await _dbSemaphore.WaitAsync();
         try
         {
-            _dbManager = new TestDatabaseManager();
-            await _dbManager.InitializeAsync();
+            _instanceCount++;
+            
+            // Create database only once for all tests
+            if (_sharedDbManager == null)
+            {
+                _sharedDbManager = new TestDatabaseManager();
+                await _sharedDbManager.InitializeAsync();
+                Console.WriteLine($"[TestDB] Created shared test database: {_sharedDbManager.ConnectionString}");
+            }
         }
         finally
         {
@@ -34,10 +42,15 @@ public class NoviVoviWebApplicationFactory : WebApplicationFactory<Program>, IAs
         await _dbSemaphore.WaitAsync();
         try
         {
-            if (_dbManager != null)
+            _instanceCount--;
+            
+            // Cleanup database only when last instance is disposed
+            if (_instanceCount == 0 && _sharedDbManager != null)
             {
-                await _dbManager.CleanupAsync();
-                _dbManager.Dispose();
+                Console.WriteLine($"[TestDB] Cleaning up shared test database");
+                await _sharedDbManager.CleanupAsync();
+                _sharedDbManager.Dispose();
+                _sharedDbManager = null;
             }
         }
         finally

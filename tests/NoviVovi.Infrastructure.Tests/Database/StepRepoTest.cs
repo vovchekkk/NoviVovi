@@ -355,12 +355,13 @@ public class StepRepoTest : IAsyncLifetime
         var replica = CreateReplica("step replica text");
         var step = CreateStep(label.Id, 1, "show_replica", replica: replica);
         
-        await _stepRepo.AddAsync(step);
+        await stepRepo.AddOrUpdateFullAsync(step, new LoadContext());
         
-        var dbStep = await _connection.QuerySingleAsync<dynamic>(
+        await using var conn = new NpgsqlConnection(connectionString);
+        var dbStep = await conn.QuerySingleAsync<dynamic>(
             "SELECT step_type, replica_id FROM \"Steps\" WHERE id = @Id", new { Id = step.Id });
-        Assert.Equal("show_replica", dbStep.stepType);
-        Assert.Equal(replica.Id, dbStep.replicaId);
+        Assert.Equal("show_replica", dbStep.step_type);
+        Assert.Equal(replica.Id, dbStep.replica_id);
         
         // Обновляем реплику
         replica.Text = "updated text";
@@ -556,7 +557,7 @@ public class StepRepoTest : IAsyncLifetime
         var stepChar = CreateStepCharacter(state);
         await characterRepo.AddOrUpdateStepCharacterAsync(stepChar);
         
-        var result = await characterRepo.GetFullStepCharacterByIdAsync(stepChar.Id);
+        var result = await characterRepo.GetCharacterObjectByCharacterIdAsync(stepChar.Id);
         
         Assert.NotNull(result);
         Assert.Equal(stepChar.Id, result.Id);
@@ -586,7 +587,7 @@ public class StepRepoTest : IAsyncLifetime
         stepChar.CharacterState = state2;
         await characterRepo.AddOrUpdateStepCharacterAsync(stepChar);
         
-        var updated = await characterRepo.GetFullStepCharacterByIdAsync(stepChar.Id);
+        var updated = await characterRepo.GetCharacterObjectByCharacterIdAsync(stepChar.Id);
         Assert.Equal(state2.Id, updated.CharacterState.Id);
     }
     

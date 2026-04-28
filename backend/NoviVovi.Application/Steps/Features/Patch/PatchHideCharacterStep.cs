@@ -50,7 +50,7 @@ public class PatchHideCharacterStepHandler(
 
             await unitOfWork.CommitAsync(ct);
 
-            return mapper.ToDto(step);
+            return mapper.ToDto(hideCharacterStep);
         }
         catch
         {

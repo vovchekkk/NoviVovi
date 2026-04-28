@@ -24,6 +24,11 @@ public class StepDbO
     public MenuDbO? Menu { get; set; }
     public LabelDbO? NextLabel { get; set; }
     
+    // For ShowCharacterStep - full character with state and transform
     public StepCharacterDbO? Character { get; set; }
+    
+    // For HideCharacterStep - just the character
+    public CharacterDbO? HideCharacter { get; set; }
+    
     public BackgroundDbO? Background { get; set; }
 }

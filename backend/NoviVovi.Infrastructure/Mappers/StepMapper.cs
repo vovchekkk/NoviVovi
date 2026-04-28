@@ -67,7 +67,7 @@ public partial class StepMapper(
             StepType = StepType.ShowCharacter.ToStepTypeString(),
             LabelId = labelId,
             StepOrder = stepOrder,
-            CharacterId = step.CharacterObject.Id
+            CharacterId = step.CharacterObject.Character.Id
         };
 
         res.Character = characterMapper.ToDbO(step.CharacterObject);
@@ -106,9 +106,9 @@ public partial class StepMapper(
 
     public HideCharacterStep ToHideCharacterStep(StepDbO step)
     {
-        if (step.CharacterId == null || step.Character == null)
+        if (step.CharacterId == null || step.HideCharacter == null)
             throw new ArgumentException("Invalid step character");
-        var res = new HideCharacterStep(step.Id, characterMapper.ToDomain(step.Character.Character),
+        var res = new HideCharacterStep(step.Id, characterMapper.ToDomain(step.HideCharacter),
             new NextStepTransition());
         return res;
     }

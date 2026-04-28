@@ -1,140 +1,84 @@
-# NoviVovi API Tests
+# NoviVovi Tests
 
-Интеграционные и unit тесты для NoviVovi API.
+## Архитектура тестовой БД
 
-## Структура тестов
+### Как это работает
 
-```
-tests/
-├── NoviVovi.Api.Tests/              # Интеграционные тесты API
-│   ├── Infrastructure/              # Тестовая инфраструктура
-│   │   ├── TestDatabaseManager.cs   # Управление тестовой БД
-│   │   ├── NoviVoviWebApplicationFactory.cs  # WebApplicationFactory
-│   │   ├── IntegrationTestBase.cs   # Базовый класс для тестов
-│   │   ├── MockStorageService.cs    # Мок для S3
-│   │   └── DatabaseCollection.cs    # xUnit collection fixture
-│   ├── Novels/                      # Тесты для Novels API
-│   ├── Labels/                      # Тесты для Labels API
-│   ├── Characters/                  # Тесты для Characters API
-│   ├── Images/                      # Тесты для Images API
-│   └── Steps/                       # Тесты для Steps API (TODO)
-└── NoviVovi.Application.Tests/      # Unit тесты для Application слоя (TODO)
-```
+Все интеграционные тесты используют **одну общую базу данных** `test_novels_shared`:
 
-## Требования
+1. **При первом запуске тестов:**
+   - Создается БД `test_novels_shared`
+   - Применяется схема (таблицы, внешние ключи)
+   - БД остается активной для всех последующих тестов
 
-- .NET 10.0
-- PostgreSQL 14+ (локально на localhost:5432)
-- Пользователь postgres с паролем postgres
+2. **Перед каждым тестом:**
+   - Все таблицы очищаются через `TRUNCATE ... CASCADE`
+   - Это обеспечивает изоляцию между тестами
 
-## Запуск тестов
+3. **После завершения всех тестов:**
+   - БД автоматически удаляется
 
-### Все тесты
+### Преимущества
+
+- ✅ **Экономия места:** Одна БД вместо сотен
+- ✅ **Быстрее:** Не нужно создавать/удалять БД для каждого теста
+- ✅ **Изоляция:** Каждый тест работает с чистой БД благодаря `TRUNCATE`
+
+### Очистка старых БД
+
+Если у вас остались старые тестовые БД (созданные до этого изменения), запустите:
+
 ```bash
-dotnet test tests/NoviVovi.Api.Tests/
+psql -U postgres -f cleanup-test-databases.sql
 ```
 
-### Конкретный тестовый класс
+Или вручную в PostgreSQL:
+
+```sql
+-- Посмотреть все тестовые БД
+SELECT datname FROM pg_database WHERE datname LIKE 'test_novels_%';
+
+-- Удалить все тестовые БД
+DROP DATABASE IF EXISTS test_novels_shared;
+-- И все старые с GUID в имени
+```
+
+### Конфигурация
+
+- **Имя БД:** `test_novels_shared` (фиксированное)
+- **Connection String:** `Host=localhost;Port=5432;Database=test_novels_shared;Username=postgres;Password=postgres`
+- **Очистка:** Автоматическая через `TRUNCATE` перед каждым тестом
+
+### Запуск тестов
+
 ```bash
-dotnet test tests/NoviVovi.Api.Tests/ --filter "FullyQualifiedName~NovelsControllerTests"
+# Все тесты
+dotnet test
+
+# Конкретный класс
+dotnet test --filter "FullyQualifiedName~StepsControllerTests"
+
+# Конкретный тест
+dotnet test --filter "FullyQualifiedName~PatchShowCharacterStep_ValidRequest_ReturnsUpdatedStep"
 ```
 
-### Конкретный тест
-```bash
-dotnet test tests/NoviVovi.Api.Tests/ --filter "FullyQualifiedName~CreateNovel_ValidRequest"
+### Troubleshooting
+
+**Проблема:** Тесты падают с ошибкой подключения к БД
+
+**Решение:**
+1. Убедитесь, что PostgreSQL запущен
+2. Проверьте, что пользователь `postgres` с паролем `postgres` существует
+3. Удалите БД вручную и перезапустите тесты:
+   ```sql
+   DROP DATABASE IF EXISTS test_novels_shared;
+   ```
+
+**Проблема:** БД занимает много места
+
+**Решение:** Это не должно происходить с новой архитектурой. Если БД большая, проверьте:
+```sql
+SELECT pg_size_pretty(pg_database_size('test_novels_shared'));
 ```
 
-## Как работают интеграционные тесты
-
-1. **Изоляция БД**: Каждый запуск тестов создает новую временную БД PostgreSQL
-2. **Очистка между тестами**: База очищается перед каждым тестом (TRUNCATE CASCADE)
-3. **Реальные HTTP запросы**: Тесты используют `WebApplicationFactory` для создания in-memory сервера
-4. **Проверка БД**: Тесты проверяют не только HTTP ответы, но и данные в БД
-
-## Написание новых тестов
-
-### Интеграционный тест
-
-```csharp
-[Collection("Database collection")]
-public class MyControllerTests(NoviVoviWebApplicationFactory factory) : IntegrationTestBase(factory)
-{
-    [Fact]
-    public async Task MyTest_Scenario_ExpectedResult()
-    {
-        // Arrange
-        var request = new MyRequest("data");
-
-        // Act
-        var response = await PostAsync<MyResponse>("/api/my-endpoint", request);
-
-        // Assert
-        Assert.NotNull(response);
-        Assert.Equal("expected", response.Value);
-
-        // Verify in database
-        var dbRecord = await QuerySingleAsync<dynamic>(
-            @"SELECT * FROM ""MyTable"" WHERE ""id"" = @Id",
-            new { Id = response.Id });
-        
-        Assert.NotNull(dbRecord);
-    }
-}
-```
-
-### Helper методы в IntegrationTestBase
-
-- `PostAsync<T>(url, request)` - POST запрос с десериализацией
-- `GetAsync<T>(url)` - GET запрос с десериализацией
-- `GetListAsync<T>(url)` - GET запрос для списка
-- `PatchAsync<T>(url, request)` - PATCH запрос
-- `DeleteAsync(url)` - DELETE запрос
-- `PostRawAsync(url, request)` - POST без проверки статуса
-- `GetRawAsync(url)` - GET без проверки статуса
-- `QuerySingleAsync<T>(sql, param)` - SQL запрос (один результат)
-- `QueryAsync<T>(sql, param)` - SQL запрос (список)
-- `ClearDatabaseAsync()` - Очистка БД
-
-## Покрытие тестами
-
-### ✅ Реализовано (55 тестов)
-
-- **Novels API** (11 тестов): Create, Get, GetAll, Patch, Delete, GetGraph, Export
-- **Labels API** (12 тестов): Add, Get, GetAll, Patch, Delete, Cascade
-- **Characters API** (11 тестов): Add, Get, GetAll, Patch, Delete, Cascade
-- **CharacterStates API** (10 тестов): Add, Get, GetAll, Patch, Delete
-- **Images API** (11 тестов): InitiateUpload, Confirm, Get, Patch, Delete, Workflow
-
-### 🚧 В разработке
-
-- **Steps API**: Add/Get/Patch/Delete для всех типов шагов
-- **Preview API**: GetScenePreview, session management
-- **Application Unit Tests**: Тесты для handlers с моками
-
-## Troubleshooting
-
-### Ошибка подключения к PostgreSQL
-Убедитесь, что PostgreSQL запущен и доступен на localhost:5432 с пользователем postgres/postgres.
-
-### Тесты падают с "too many connections"
-Это может произойти при параллельном запуске. Используйте:
-```bash
-dotnet test --parallel none
-```
-
-### База данных не очищается
-Проверьте, что `ClearDatabaseAsync()` вызывается в `InitializeAsync()` базового класса.
-
-## CI/CD
-
-Для CI/CD рекомендуется использовать Docker контейнер с PostgreSQL:
-
-```yaml
-services:
-  postgres:
-    image: postgres:16
-    environment:
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - 5432:5432
-```
+Если размер > 100MB, что-то не так с очисткой данных.

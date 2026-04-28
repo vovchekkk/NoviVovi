@@ -9,7 +9,9 @@ public partial class TransformMapper
 {
     public Transform ToDomain(TransformDbO? dbo)
     {
-        dbo ??= new TransformDbO { Id = Guid.NewGuid() };
+        if (dbo == null)
+            dbo = new TransformDbO { Id = Guid.NewGuid() };
+            
         var res = new Transform
         (
             dbo.Id,

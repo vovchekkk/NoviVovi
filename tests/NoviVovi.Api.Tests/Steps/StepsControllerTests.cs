@@ -14,6 +14,7 @@ using NoviVovi.Api.Steps.Requests;
 using NoviVovi.Api.Steps.Responses;
 using NoviVovi.Api.Tests.Infrastructure;
 using NoviVovi.Api.Transitions.Requests;
+using NoviVovi.Api.Transitions.Responses;
 
 namespace NoviVovi.Api.Tests.Steps;
 
@@ -563,6 +564,227 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         Assert.Equal(step1!.Id, (Guid)dbSteps[0].id);
         Assert.Equal(step2!.Id, (Guid)dbSteps[1].id);
         Assert.Equal(step3!.Id, (Guid)dbSteps[2].id);
+    }
+
+    #endregion
+
+    #region Patch Tests
+
+    [Fact]
+    public async Task PatchShowBackgroundStep_ValidRequest_ReturnsUpdatedStep()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var imageId = await CreateTestImageAsync(novelId);
+
+        // Create initial step
+        var createRequest = new AddShowBackgroundStepRequest(
+            imageId,
+            new TransformRequest(0, 0, 100, 100, 1.0, 0, 0)
+        );
+        var createdStep = await PostAsync<ShowBackgroundStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps",
+            createRequest
+        );
+
+        // Act - Update the step with new transform
+        var patchRequest = new PatchShowBackgroundStepRequest(
+            imageId,
+            new TransformRequest(10, 10, 200, 200, 1.5, 45, 1)
+        );
+        var response = await PatchAsync<ShowBackgroundStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps/{createdStep!.Id}",
+            patchRequest
+        );
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(createdStep.Id, response.Id);
+        Assert.Equal(10, response.BackgroundObject.Transform.X);
+        Assert.Equal(10, response.BackgroundObject.Transform.Y);
+        Assert.Equal(200, response.BackgroundObject.Transform.Width);
+        Assert.Equal(200, response.BackgroundObject.Transform.Height);
+        Assert.Equal(1.5, response.BackgroundObject.Transform.Scale);
+        Assert.Equal(45, response.BackgroundObject.Transform.Rotation);
+        Assert.Equal(1, response.BackgroundObject.Transform.ZIndex);
+    }
+
+    [Fact]
+    public async Task PatchShowReplicaStep_ValidRequest_ReturnsUpdatedStep()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var characterId = await CreateTestCharacterAsync(novelId);
+
+        // Create initial step
+        var createdStep = await PostAsync<ShowReplicaStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps",
+            new AddShowReplicaStepRequest(characterId, "Original text")
+        );
+
+        // Act - Update the step
+        var patchRequest = new PatchShowReplicaStepRequest(characterId, "Updated text");
+        var response = await PatchAsync<ShowReplicaStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps/{createdStep!.Id}",
+            patchRequest
+        );
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(createdStep.Id, response.Id);
+        Assert.Equal("Updated text", response.Replica.Text);
+    }
+
+    [Fact]
+    public async Task PatchShowMenuStep_ValidRequest_ReturnsUpdatedStep()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var targetLabelId = await CreateTestLabelAsync(novelId, "target");
+
+        // Create initial step
+        var createdStep = await PostAsync<ShowMenuStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps",
+            new AddShowMenuStepRequest(
+            [
+                new ChoiceRequest("Choice 1", new ChoiceTransitionRequest { TargetLabelId = targetLabelId })
+            ])
+        );
+
+        // Act - Update with new choices
+        var patchRequest = new PatchShowMenuStepRequest(
+        [
+            new ChoiceRequest("Updated Choice 1", new ChoiceTransitionRequest { TargetLabelId = targetLabelId }),
+            new ChoiceRequest("New Choice 2", new ChoiceTransitionRequest { TargetLabelId = targetLabelId })
+        ]);
+        var response = await PatchAsync<ShowMenuStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps/{createdStep!.Id}",
+            patchRequest
+        );
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(createdStep.Id, response.Id);
+        Assert.Equal(2, response.Menu.Choices.Count);
+        Assert.Equal("Updated Choice 1", response.Menu.Choices[0].Text);
+        Assert.Equal("New Choice 2", response.Menu.Choices[1].Text);
+    }
+
+    [Fact]
+    public async Task PatchShowCharacterStep_ValidRequest_ReturnsUpdatedStep()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var characterId = await CreateTestCharacterAsync(novelId);
+        var imageId = await CreateTestImageAsync(novelId, ImageTypeRequest.Character);
+        var stateId = await CreateTestCharacterStateAsync(novelId, characterId, imageId);
+
+        // Create initial step
+        var createdStep = await PostAsync<ShowCharacterStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps",
+            new AddShowCharacterStepRequest(
+                characterId,
+                stateId,
+                new TransformRequest(0, 0, 100, 100, 1.0, 0, 0)
+            )
+        );
+
+        // Act - Update with new transform
+        var patchRequest = new PatchShowCharacterStepRequest(
+            characterId,
+            stateId,
+            new TransformRequest(50, 50, 150, 150, 1.2, 30, 2)
+        );
+        var response = await PatchAsync<ShowCharacterStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps/{createdStep!.Id}",
+            patchRequest
+        );
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(createdStep.Id, response.Id);
+        Assert.Equal(50, response.CharacterObject.Transform.X);
+        Assert.Equal(50, response.CharacterObject.Transform.Y);
+    }
+
+    [Fact]
+    public async Task PatchHideCharacterStep_ValidRequest_ReturnsUpdatedStep()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var characterId1 = await CreateTestCharacterAsync(novelId, "Char1");
+        var characterId2 = await CreateTestCharacterAsync(novelId, "Char2");
+
+        // Create initial step
+        var createdStep = await PostAsync<HideCharacterStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps",
+            new AddHideCharacterStepRequest(characterId1)
+        );
+
+        // Act - Update to hide different character
+        var patchRequest = new PatchHideCharacterStepRequest(characterId2);
+        var response = await PatchAsync<HideCharacterStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps/{createdStep!.Id}",
+            patchRequest
+        );
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(createdStep.Id, response.Id);
+        Assert.Equal(characterId2, response.Character.Id);
+    }
+
+    [Fact]
+    public async Task PatchJumpStep_ValidRequest_ReturnsUpdatedStep()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var targetLabel1 = await CreateTestLabelAsync(novelId, "target1");
+        var targetLabel2 = await CreateTestLabelAsync(novelId, "target2");
+
+        // Create initial step
+        var createdStep = await PostAsync<JumpStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps",
+            new AddJumpStepRequest(targetLabel1)
+        );
+
+        // Act - Update to jump to different label
+        var patchRequest = new PatchJumpStepRequest(targetLabel2);
+        var response = await PatchAsync<JumpStepResponse>(
+            $"/api/novels/{novelId}/labels/{labelId}/steps/{createdStep!.Id}",
+            patchRequest
+        );
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(createdStep.Id, response.Id);
+        var jumpTransition = Assert.IsType<JumpTransitionResponse>(response.Transition);
+        Assert.Equal(targetLabel2, jumpTransition.TargetLabelId);
+    }
+
+    [Fact]
+    public async Task PatchStep_NonExistingId_ReturnsNotFound()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var characterId = await CreateTestCharacterAsync(novelId);
+        var nonExistingId = Guid.NewGuid();
+
+        // Act
+        var response = await PatchRawAsync(
+            $"/api/novels/{novelId}/labels/{labelId}/steps/{nonExistingId}",
+            new PatchShowReplicaStepRequest(characterId, "Text")
+        );
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     #endregion

@@ -17,7 +17,8 @@ public class TestDatabaseManager : IDisposable
 
     public TestDatabaseManager()
     {
-        _testDatabaseName = $"test_novels_{Guid.NewGuid():N}";
+        // Use fixed database name for all tests (v2 to avoid corrupted old DB)
+        _testDatabaseName = "test_novels_shared_v2";
         _testConnectionString = $"Host=localhost;Port=5432;Database={_testDatabaseName};Username=postgres;Password=postgres;Include Error Detail=true";
     }
 
@@ -37,7 +38,19 @@ public class TestDatabaseManager : IDisposable
         await using var connection = new NpgsqlConnection(MasterConnectionString);
         await connection.OpenAsync();
         
-        await connection.ExecuteAsync($@"CREATE DATABASE ""{_testDatabaseName}""");
+        // Check if database exists
+        var exists = await connection.ExecuteScalarAsync<bool>(
+            $"SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = '{_testDatabaseName}')");
+        
+        if (!exists)
+        {
+            await connection.ExecuteAsync($@"CREATE DATABASE ""{_testDatabaseName}""");
+            Console.WriteLine($"[TestDB] Created database: {_testDatabaseName}");
+        }
+        else
+        {
+            Console.WriteLine($"[TestDB] Database already exists: {_testDatabaseName} (reusing)");
+        }
     }
 
     private async Task ApplySchemaAsync()
@@ -45,38 +58,35 @@ public class TestDatabaseManager : IDisposable
         await using var connection = new NpgsqlConnection(_testConnectionString);
         await connection.OpenAsync();
 
-        var schema = GetDatabaseSchema();
-        await connection.ExecuteAsync(schema);
+        // Check if schema already exists (check for Novels table)
+        var schemaExists = await connection.ExecuteScalarAsync<bool>(
+            "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'Novels')");
+        
+        if (!schemaExists)
+        {
+            var schema = GetDatabaseSchema();
+            await connection.ExecuteAsync(schema);
+            Console.WriteLine($"[TestDB] Applied schema to database: {_testDatabaseName}");
+        }
+        else
+        {
+            Console.WriteLine($"[TestDB] Schema already exists in database: {_testDatabaseName}");
+        }
     }
 
     /// <summary>
     /// Cleans up test database.
+    /// NOTE: Database is NOT automatically deleted to avoid connection issues.
+    /// Use cleanup-test-databases.sql script to manually clean up when needed.
     /// </summary>
     public async Task CleanupAsync()
     {
         if (_disposed)
             return;
 
-        try
-        {
-            await using var connection = new NpgsqlConnection(MasterConnectionString);
-            await connection.OpenAsync();
-
-            // Terminate all connections to test database
-            await connection.ExecuteAsync($@"
-                SELECT pg_terminate_backend(pg_stat_activity.pid)
-                FROM pg_stat_activity
-                WHERE pg_stat_activity.datname = '{_testDatabaseName}'
-                  AND pid <> pg_backend_pid();
-            ");
-
-            // Drop database
-            await connection.ExecuteAsync($@"DROP DATABASE IF EXISTS ""{_testDatabaseName}""");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to cleanup test database {_testDatabaseName}: {ex.Message}");
-        }
+        // Don't delete the database automatically - it will be reused
+        // This avoids connection issues and improves test performance
+        Console.WriteLine($"[TestDB] Keeping database for reuse: {_testDatabaseName}");
     }
 
     public void Dispose()
