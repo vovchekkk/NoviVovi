@@ -56,7 +56,7 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
             className={css({
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: isActive ? '#fdf0f5' : '#DFC6D1', // Подсветка активной
+                backgroundColor: isActive ? '#fdf0f5' : '#DFC6D1',
                 padding: '15px',
                 borderRadius: '12px',
                 gap: '10px',

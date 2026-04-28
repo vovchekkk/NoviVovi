@@ -19,11 +19,11 @@ const emotionSchema = z.object({
         x: z.number().default(50),
         y: z.number().default(50),
         width: z.number().default(40),
-        height: z.number().optional(),
+        height: z.number().default(40),
         scale: z.number().default(1),
         rotation: z.number().default(0),
         zIndex: z.number().default(1),
-    }).default({x: 50, y: 50, width: 40, scale: 1, rotation: 0, zIndex: 1})
+    }).default({x: 50, y: 50, width: 40, height:40, scale: 1, rotation: 0, zIndex: 1})
 });
 const characterSchema = z.object({
     id: z.string().optional(),

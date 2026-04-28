@@ -1,6 +1,6 @@
 import Header from "../shared/ui/Header.tsx";
 import {css} from '../../styled-system/css'
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import EditorHeader from "../shared/ui/EditorHeader.tsx";
 import Preview from "../shared/ui/Preview.tsx";
 import BlockPanel from "../shared/ui/BlockPanel.tsx";
@@ -57,8 +57,32 @@ const sceneStateSchema = z.object({
     background: backgroundStateSchema.nullable(),
     characters: z.array(characterStateSchema),
 });
+const defaultTransform = {
+    x: 40,
+    y: 30,
+    width: 25,
+    height: 70,
+    scale: 1,
+    rotation: 0,
+    zIndex: 20,
+};
+
+const defaultBackgroundTransform = {
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    scale: 1,
+    rotation: 0,
+    zIndex: 1,
+};
+
+const defaultSceneState = {
+    background: null,
+    characters: [],
+};
 const baseStepSchema = z.object({
-    id: z.string().min(1),
+    id: z.string().optional().nullable(),
     state: sceneStateSchema.optional(),
 });
 
@@ -189,10 +213,23 @@ function ShowStepForm({ control, errors, characterOptions, setValue }: StepFormP
         value: ch.id,
         label: ch.name
     }));
-    const stateOptions = (selectedCharacter?.states || []).map(stateName => ({
-        value: stateName,
-        label: stateName
-    }));
+    const stateOptions = useMemo(() => {
+        if (!selectedCharacter || !Array.isArray(selectedCharacter.states)) {
+            return [];
+        }
+
+        return selectedCharacter.states.map(state => {
+            // Если state — это объект {id, name}, берем name. Если строка — берем её саму.
+            const label = typeof state === 'object' && state !== null ? (state.name || state.id) : state;
+            const value = typeof state === 'object' && state !== null ? (state.id || state.name) : state;
+
+            return {
+                value: String(value),
+                label: String(label)
+            };
+        });
+    }, [selectedCharacter]);
+    console.log(characterOptions)
 
     useEffect(() => {
         if (previousCharacterIdRef.current !== undefined && previousCharacterIdRef.current !== selectedCharacterId) {
@@ -202,6 +239,8 @@ function ShowStepForm({ control, errors, characterOptions, setValue }: StepFormP
         previousCharacterIdRef.current = selectedCharacterId;
     }, [selectedCharacterId, setValue]);
 
+    console.log('Character Options:', options);
+    console.log('State Options:', stateOptions);
     return (
         <div className={css({ display: 'flex', flexDirection: 'column', gap: '12px' })}>
             <div className={css({ display: 'flex', flexDirection: 'column', gap: '8px' })}>
@@ -209,7 +248,12 @@ function ShowStepForm({ control, errors, characterOptions, setValue }: StepFormP
                     control={control}
                     name="characterId"
                     render={({ field }) =>
-                        <Selector title="Персонаж" options={options} {...field} />}
+                        <Selector
+                            title="Персонаж"
+                            options={options}
+                            {...field}
+                            value={field.value ?? ''}
+                        />}
                 />
                 <Controller
                     control={control}
@@ -222,6 +266,7 @@ function ShowStepForm({ control, errors, characterOptions, setValue }: StepFormP
                             onBlur={field.onBlur}
                             onChange={field.onChange}
                             disabled={!selectedCharacterId}
+
                         />
                     )}
                 />
@@ -474,16 +519,23 @@ function ReplicaStepForm({control, errors, register, characterOptions}: StepForm
                 margin: '0 auto',
             })}>
                 <label className={css({fontSize: '18px', textAlign: 'left'})}>Текст реплики</label>
-                <textarea
-                    {...register('text')}
-                    className={css({
-                        width: '300px',
-                        minHeight: '120px',
-                        padding: '12px',
-                        borderRadius: '8px',
-                        backgroundColor: 'white',
-                        border: '1px solid black',
-                    })}
+                <Controller
+                    control={control}
+                    name="text"
+                    render={({field}) => (
+                        <textarea
+                            {...field}
+                            value={field.value || ''}
+                            className={css({
+                                width: '300px',
+                                minHeight: '120px',
+                                padding: '12px',
+                                borderRadius: '8px',
+                                backgroundColor: 'white',
+                                border: '1px solid black',
+                            })}
+                        />
+                    )}
                 />
             </div>
             {errors.text && <p className={css({color: 'red', fontSize: '13px'})}>{errors.text.message}</p>}
@@ -657,7 +709,9 @@ export default function Editor() {
         resolver: zodResolver(stepSchema),
         mode: 'onChange',
         defaultValues: {
+            state: defaultSceneState,
             characterId: '',
+            text: currentStep?.text ?? '',
             characterStateId: '',
             menuRequest: {
                 id: 'temp-menu-default',
@@ -665,15 +719,7 @@ export default function Editor() {
             },
             background: {
                 imageId: '',
-                transform: {
-                    x: 0,
-                    y: 0,
-                    width: 100,
-                    height: 100,
-                    scale: 1,
-                    rotation: 0,
-                    zIndex: 1
-                }
+                transform: defaultBackgroundTransform
             },
             characters: []
         }
@@ -689,7 +735,7 @@ export default function Editor() {
         const fetchCharacterNames = async () => {
             try {
                 const {data} = await api.get<Character[]>(`novels/${novelId}/characters`);
-                setCharacterOptions(data.map(ch => ({
+                setCharacterOptions(data?.map(ch => ({
                     id:ch.id,
                     name:ch.name,
                     states:ch.characterStates.map(st => ({
@@ -708,15 +754,15 @@ export default function Editor() {
         if (currentStep) {
             const dataForForm = {
                 ...currentStep,
+                state: currentStep.state ?? defaultSceneState,
+                characterId: currentStep.characterId ?? '',
+                text: currentStep.text ?? '',
+                characterStateId: currentStep.characterStateId ?? '',
                 background: {
                     imageId: currentStep.background?.imageId || currentStep.imageId || '',
-                    transform: currentStep.background?.transform || currentStep.transform || {
-                        x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 1
-                    }
+                    transform: currentStep.background?.transform || currentStep.transform || defaultBackgroundTransform
                 },
-                transform: currentStep.transform || {
-                    x: 40, y: 30, width: 25, height: 70, scale: 1, rotation: 0, zIndex: 20
-                }
+                transform: currentStep.transform || defaultTransform
             };
             reset(dataForForm);
         }
@@ -727,7 +773,7 @@ export default function Editor() {
 
             try {
                 setLoading(true);
-                const {data: rawStep} = await api.get<any>(`/steps/${selectedId}`);
+                const {data: rawStep} = await api.get<any>(`novels/${novelId}/labels/${selectedLabelId}/steps/${selectedId}`);
                 const data = normalizeIncomingStep(rawStep);
                 const baseData = ({
                     id: data.id,
@@ -737,30 +783,38 @@ export default function Editor() {
                     case 'show_character':
                         reset({
                             ...baseData,
-                            characterId: data.characterId,
-                            characterStateId: data.characterStateId,
-                            transform: data.transform,
+                            state: data.state ?? defaultSceneState,
+                            characterId: data.characterId ?? '',
+                            characterStateId: data.characterStateId ?? '',
+                            transform: data.transform ?? defaultTransform,
                         });
                         break;
 
                     case 'hide_character':
                         reset({
                             ...baseData,
-                            characterId: data.characterId,
+                            state: data.state ?? defaultSceneState,
+                            characterId: data.characterId ?? '',
                         });
                         break;
 
                     case 'show_background':
                         reset({
                             ...baseData,
+                            state: data.state ?? defaultSceneState,
                             imageId: data.imageId,
-                            transform: data.transform,
+                            background: {
+                                imageId: data.imageId ?? '',
+                                transform: data.transform ?? defaultBackgroundTransform,
+                            },
+                            transform: data.transform ?? defaultBackgroundTransform,
                         });
                         break;
 
                     case 'jump':
                         reset({
                             ...baseData,
+                            state: data.state ?? defaultSceneState,
                             targetId: data.targetId,
                         });
                         break;
@@ -768,14 +822,16 @@ export default function Editor() {
                     case 'replica':
                         reset({
                             ...baseData,
-                            characterId: data.characterId,
-                            text: data.text,
+                            state: data.state ?? defaultSceneState,
+                            characterId: data.characterId ?? '',
+                            text: data.text ?? '',
                         });
                         break;
 
                     case 'menu':
                         reset({
                             ...baseData,
+                            state: data.state ?? defaultSceneState,
                             menuRequest: data.menuRequest ?? {
                                 id: `temp-menu-${data.id}`,
                                 choices: [],
@@ -784,7 +840,10 @@ export default function Editor() {
                         break;
 
                     default:
-                        reset(baseData);
+                        reset({
+                            ...baseData,
+                            state: data.state ?? defaultSceneState,
+                        });
                 }
             } catch (e) {
                 console.error('Ошибка загрузки:', e);
@@ -839,17 +898,22 @@ export default function Editor() {
                 setLoading(false);
             }
         };
+        console.log(steps)
 
         fetchSteps();
     }, [selectedLabelId, novelId]);
     const onSave = async (data: any) => {
-        const finalState = { ...(data.state || {}) };
+        const finalState = {
+            ...defaultSceneState,
+            ...(data.state || {}),
+            characters: data.state?.characters || defaultSceneState.characters,
+        };
 
-        if (data.type === 'background' && data.background) {
+        if (data.type === 'show_background' && data.background) {
             finalState.background = data.background;
         }
 
-        if (data.type === 'show' && data.characterId) {
+        if (data.type === 'show_character' && data.characterId) {
             const newChar = {
                 characterId: data.characterId,
                 characterStateId: data.characterStateId || null,
@@ -862,17 +926,19 @@ export default function Editor() {
             ];
         }
 
-        if (data.type === 'hide' && data.characterId) {
+        if (data.type === 'hide_character' && data.characterId) {
             finalState.characters = (finalState.characters || [])
                 .filter((ch: any) => ch.characterId !== data.characterId);
         }
 
+        const { type, ...restData } = data;
         const finalData = {
-            ...data,
+            type,
+            ...restData,
             state: finalState
         };
 
-        if (finalData.type === 'choice' && finalData.menuRequest?.choices) {
+        if (finalData.type === 'menu' && finalData.menuRequest?.choices) {
             finalData.menuRequest = {
                 ...finalData.menuRequest,
                 choices: finalData.menuRequest.choices.map((choice: any) => ({
@@ -887,7 +953,7 @@ export default function Editor() {
             let savedStep: Step;
 
             if (data.id) {
-                const { data: updated } = await api.patch(`/steps/${data.id}`, finalData);
+                const { data: updated } = await api.patch(`/novels/${novelId}/labels/${selectedLabelId}/steps/${data.id}`, finalData);
                 savedStep = updated;
             }
             else {
@@ -913,9 +979,9 @@ export default function Editor() {
     };
     const addStep = (type: StepType) => {
         let tempStep: any = {
-            id: null,
+            id: '',
             type: '',
-            state: {},
+            state: defaultSceneState,
         };
 
         switch (type) {
@@ -952,6 +1018,7 @@ export default function Editor() {
                 tempStep.name = '';
                 tempStep.text = '';
                 tempStep.menuRequest = {
+                    id: 'temp-menu-default',
                     choices: [],
                 };
                 break;
@@ -979,7 +1046,7 @@ export default function Editor() {
         }
 
         try {
-            await api.delete(`/steps/${stepToDelete.id}`);
+            await api.delete(`novels/${novelId}/${selectedLabelId}/steps/${stepToDelete.id}`);
             const newSteps = steps.filter((_, i) => i !== index);
             setSteps(newSteps);
 

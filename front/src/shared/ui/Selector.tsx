@@ -6,7 +6,7 @@ interface SelectorProps {
     title: string;
     options: Option[];
     value?: string;
-    onChange?: (val: string | null) => void;
+    onChange?: (val: string) => void;
     onBlur?: () => void;
     disabled?: boolean;
 }
@@ -52,7 +52,7 @@ export default function Selector({ title, options, value, onChange, onBlur, disa
                 <ReactSelect
                     options={options}
                     value={currentOption} // Важно: передаем объект
-                    onChange={(val: Option | null) => onChange?.(val ? val.value : null)} // Важно: отдаем только ID
+                    onChange={(val: Option | null) => onChange?.(val ? val.value : '')} // Важно: отдаем только ID
                     onBlur={onBlur}
                     isDisabled={disabled}
                     isClearable={true}
@@ -64,3 +64,4 @@ export default function Selector({ title, options, value, onChange, onBlur, disa
         </div>
     );
 }
+

@@ -23,7 +23,6 @@ export default function Preview({ steps, selectedStepIndex, control, novelId }: 
 
     const isEditingShow = wType === 'show_character' && !!wCharId && !!wStateId;
     const isEditingHide = wType === 'hide_character' && !!wCharId;
-    console.log("Current Watcher State:", { wType, wImageId, wBackgroundId: wBackground?.imageId });
     const isEditingBG = wType === 'show_background' && (!!wImageId || !!wBackground?.imageId);
 
     const activeBackground = isEditingBG
