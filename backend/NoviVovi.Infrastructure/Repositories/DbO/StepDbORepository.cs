@@ -54,9 +54,27 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
 
             ctx.Steps[step.Id] = step;
 
+            // REPLICA
+            if (step.ReplicaId.HasValue)
+            {
+                step.Replica = await GetReplicaByIdAsync(step.ReplicaId.Value);
+            }
+
             // MENU
             if (step.MenuId.HasValue)
                 step.Menu = await menuRepo.GetFullByIdAsync(step.MenuId.Value, ctx);
+
+            // CHARACTER
+            if (step.CharacterId.HasValue)
+            {
+                step.Character = await characterRepository.GetFullStepCharacterByIdAsync(step.CharacterId.Value);
+            }
+
+            // BACKGROUND
+            if (step.BackgroundId.HasValue)
+            {
+                step.Background = await imageRepository.GetFullBackgroundByIdAsync(step.BackgroundId.Value);
+            }
 
             // NEXT LABEL (ВОТ ТУТ БЫЛ ЦИКЛ)
             if (step.NextLabelId.HasValue)
