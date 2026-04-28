@@ -22,16 +22,31 @@ public class DeleteStepHandler(
 {
     public async Task Handle(DeleteStepCommand request, CancellationToken ct)
     {
-        var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
-                    ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
+        unitOfWork.BeginTransaction();
         
-        if (label.NovelId != request.NovelId)
-            throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
+        try
+        {
+            var label = await labelRepository.GetByIdAsync(request.LabelId, ct)
+                        ?? throw new NotFoundException($"Метка '{request.LabelId}' не найдена");
+            
+            if (label.NovelId != request.NovelId)
+                throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
 
-        label.RemoveStepById(request.StepId);
+            // Check if step exists before trying to remove it
+            var stepExists = label.Steps.Any(s => s.Id == request.StepId);
+            if (!stepExists)
+                throw new NotFoundException($"Шаг '{request.StepId}' не найден");
 
-        await labelRepository.AddOrUpdateAsync(label, ct);
-        
-        await unitOfWork.SaveChangesAsync(ct);
+            label.RemoveStepById(request.StepId);
+
+            await labelRepository.AddOrUpdateAsync(label, ct);
+            
+            await unitOfWork.SaveChangesAsync(ct);
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 }

@@ -40,8 +40,8 @@ public class AddShowMenuStepHandler(
             
             var labelLookup = targetLabels.ToDictionary(l => l.Id);
             
-            var menu = Domain.Menu.Menu.Create();
-            
+            // Create choices first
+            var choices = new List<Choice>();
             foreach (var choiceDto in request.Choices)
             {
                 if (!labelLookup.TryGetValue(choiceDto.Transition.TargetLabelId, out var targetLabel))
@@ -49,8 +49,11 @@ public class AddShowMenuStepHandler(
 
                 var transition = ChoiceTransition.Create(targetLabel);
                 var choice = Choice.Create(choiceDto.Text, transition);
-                menu.AddChoice(choice);
+                choices.Add(choice);
             }
+            
+            // Create menu with choices - this will validate that choices is not empty
+            var menu = Domain.Menu.Menu.Create(choices);
 
             var step = ShowMenuStep.Create(menu);
 

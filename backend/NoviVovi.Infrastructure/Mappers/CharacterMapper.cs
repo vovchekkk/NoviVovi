@@ -55,14 +55,12 @@ public partial class CharacterMapper(
 
     public CharacterState ToDomain(CharacterStateDbO dbo)
     {
-        if (dbo is { Transform: not null, Image: not null })
-            return new CharacterState(
+        return new CharacterState(
                 dbo.Id,
                 dbo.StateName,
                 imageMapper.ToDomain(dbo.Image),
                 transformMapper.ToDomain(dbo.Transform),
                 dbo.Description);
-        throw new ArgumentException("Invalid character state");
     }
 
     public StepCharacterDbO ToDbO(CharacterObject stepCharacterObject)

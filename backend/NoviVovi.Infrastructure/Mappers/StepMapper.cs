@@ -26,7 +26,7 @@ public partial class StepMapper(
             StepOrder = stepOrder,
             CharacterId = step.Character.Id
         };
-        return new StepDbO();
+        return res;
     }
     
     

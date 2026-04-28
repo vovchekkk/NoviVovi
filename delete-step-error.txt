@@ -1,0 +1,87 @@
+﻿  ╨Ю╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╨╡ ╨┐╤А╨╛╨╡╨║╤В╨╛╨▓ ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П...
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  ╨Т╤Б╨╡ ╨┐╤А╨╛╨╡╨║╤В╤Л ╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╤Л ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  NoviVovi.Domain -> D:\Git\NoviVovi\backend\NoviVovi.Domain\bin\Debug\net10.0\NoviVovi.Domain.dll
+  NoviVovi.Application -> D:\Git\NoviVovi\backend\NoviVovi.Application\bin\Debug\net10.0\NoviVovi.Application.dll
+  NoviVovi.Infrastructure -> D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\bin\Debug\net10.0\NoviVovi.Infrastructure.dll
+  NoviVovi.Api -> D:\Git\NoviVovi\backend\NoviVovi.Api\bin\Debug\net10.0\NoviVovi.Api.dll
+  NoviVovi.Api.Tests -> D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+╨в╨╡╤Б╤В╨╛╨▓╤Л╨╣ ╨╖╨░╨┐╤Г╤Б╨║ ╨┤╨╗╤П D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll (.NETCoreApp,Version=v10.0)
+╨Т╨╡╤А╤Б╨╕╤П VSTest 18.0.1 (x64)
+
+╨Ч╨░╨┐╤Г╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П ╤В╨╡╤Б╤В╨╛╨▓; ╨┐╨╛╨┤╨╛╨╢╨┤╨╕╤В╨╡...
+╨Ю╨▒╤Й╨╡╨╡ ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╤В╨╡╤Б╤В╨╛╨▓╤Л╤Е ╤Д╨░╨╣╨╗╨╛╨▓ (1), ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е ╤Г╨║╨░╨╖╨░╨╜╨╜╨╛╨╝╤Г ╤И╨░╨▒╨╗╨╛╨╜╤Г.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+[xUnit.net 00:00:00.01] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.3)
+[xUnit.net 00:00:00.20]   Discovering: NoviVovi.Api.Tests
+[xUnit.net 00:00:00.28]   Discovered:  NoviVovi.Api.Tests
+[xUnit.net 00:00:00.31]   Starting:    NoviVovi.Api.Tests
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Testing
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Git\NoviVovi\backend\NoviVovi.Api
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: StepId ab0207e7-123c-4f72-8578-f3a90ba0bfe9 doesn't exists
+      NoviVovi.Domain.Common.DomainException: StepId ab0207e7-123c-4f72-8578-f3a90ba0bfe9 doesn't exists
+         at NoviVovi.Domain.Labels.Label.RemoveStepById(Guid stepId) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Labels\Label.cs:line 66
+         at NoviVovi.Application.Steps.Features.Delete.DeleteStepHandler.Handle(DeleteStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Delete\DeleteStep.cs:line 31
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at NoviVovi.Api.Steps.Controllers.StepsController.Delete(Guid novelId, Guid labelId, Guid stepId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 86
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+[xUnit.net 00:00:07.48]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:07.48]       Expected: NotFound
+[xUnit.net 00:00:07.48]       Actual:   UnprocessableEntity
+[xUnit.net 00:00:07.48]       Stack Trace:
+dotnet : [xUnit.net 00:00:07.47]     NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotF
+ound [FAIL]
+строка:1 знак:1
++ dotnet test tests/NoviVovi.Api.Tests/NoviVovi.Api.Tests.csproj --filt ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([xUnit.net 00:0...NotFound [FAIL]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[xUnit.net 00:00:07.48]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(533,0): at NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotFound()
+[xUnit.net 00:00:07.49]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotFound [1 s]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 533
+--- End of stack trace from previous location ---
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+[xUnit.net 00:00:13.06]   Finished:    NoviVovi.Api.Tests
+
+╨Т╤Б╨╡╨│╨╛ ╤В╨╡╤Б╤В╨╛╨▓: 1
+     ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜╨╛: 1
+╨б╨▒╨╛╨╣ ╤В╨╡╤Б╤В╨╛╨▓╨╛╨│╨╛ ╨╖╨░╨┐╤Г╤Б╨║╨░.
+ ╨Ю╨▒╤Й╨╡╨╡ ╨▓╤А╨╡╨╝╤П: 14,5805 ╨б╨╡╨║╤Г╨╜╨┤╤Л
