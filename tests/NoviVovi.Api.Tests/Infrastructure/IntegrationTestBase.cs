@@ -1,6 +1,9 @@
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
+using NoviVovi.Api.Infrastructure;
 using NoviVovi.Application.Common.Abstractions;
 
 namespace NoviVovi.Api.Tests.Infrastructure;
@@ -12,6 +15,19 @@ public abstract class IntegrationTestBase : IClassFixture<NoviVoviWebApplication
     protected readonly NoviVoviWebApplicationFactory Factory;
     private IServiceScope? _scope;
     protected IUnitOfWork? UnitOfWork;
+    
+    protected static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters =
+        {
+            new JsonStringEnumConverter(),
+            new TransitionResponseConverter(),
+            new StepResponseConverter()
+        },
+        DefaultIgnoreCondition = JsonIgnoreCondition.Never
+    };
 
     protected IntegrationTestBase(NoviVoviWebApplicationFactory factory)
     {
@@ -42,30 +58,30 @@ public abstract class IntegrationTestBase : IClassFixture<NoviVoviWebApplication
 
     protected async Task<TResponse?> PostAsync<TResponse>(string url, object request)
     {
-        var response = await Client.PostAsJsonAsync(url, request);
+        var response = await Client.PostAsJsonAsync(url, request, JsonOptions);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TResponse>();
+        return await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions);
     }
 
     protected async Task<TResponse?> GetAsync<TResponse>(string url)
     {
         var response = await Client.GetAsync(url);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TResponse>();
+        return await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions);
     }
 
     protected async Task<List<TResponse>?> GetListAsync<TResponse>(string url)
     {
         var response = await Client.GetAsync(url);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<List<TResponse>>();
+        return await response.Content.ReadFromJsonAsync<List<TResponse>>(JsonOptions);
     }
 
     protected async Task<TResponse?> PatchAsync<TResponse>(string url, object request)
     {
-        var response = await Client.PatchAsJsonAsync(url, request);
+        var response = await Client.PatchAsJsonAsync(url, request, JsonOptions);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TResponse>();
+        return await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions);
     }
 
     protected async Task DeleteAsync(string url)
@@ -76,7 +92,7 @@ public abstract class IntegrationTestBase : IClassFixture<NoviVoviWebApplication
 
     protected async Task<HttpResponseMessage> PostRawAsync(string url, object request)
     {
-        return await Client.PostAsJsonAsync(url, request);
+        return await Client.PostAsJsonAsync(url, request, JsonOptions);
     }
 
     protected async Task<HttpResponseMessage> GetRawAsync(string url)

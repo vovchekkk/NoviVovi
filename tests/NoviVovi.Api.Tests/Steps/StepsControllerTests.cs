@@ -52,9 +52,9 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
             new SizeRequest(512, 512)
         );
 
-        var uploadInfo = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url", imageRequest);
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url", imageRequest);
         Assert.NotNull(uploadInfo);
-        await Client.PostAsync($"/api/images/{uploadInfo.ImageId}/confirm", null);
+        await Client.PostAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}/confirm", null);
         return uploadInfo.ImageId;
     }
 
@@ -85,7 +85,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var request = new AddShowReplicaStepRequest(characterId, "Hello, world!");
 
         // Act
-        var response = await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps", request);
+        var response = await PostAsync<JumpStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps", request);
 
         // Assert
         Assert.NotNull(response);
@@ -98,7 +98,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         
         Assert.NotNull(dbStep);
         Assert.Equal(labelId, (Guid)dbStep.label_id);
-        Assert.Equal("replica", (string)dbStep.step_type);
+        Assert.Equal("show_replica", (string)dbStep.step_type);
     }
 
     [Fact]
@@ -309,8 +309,8 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var request = new AddShowMenuStepRequest(
             new List<ChoiceRequest>
             {
-                new ChoiceRequest(Guid.NewGuid(), "Choice 1", new ChoiceTransitionRequest { TargetLabelId = targetLabel1 }),
-                new ChoiceRequest(Guid.NewGuid(), "Choice 2", new ChoiceTransitionRequest { TargetLabelId = targetLabel2 })
+                new ChoiceRequest("Choice 1", new ChoiceTransitionRequest { TargetLabelId = targetLabel1 }),
+                new ChoiceRequest("Choice 2", new ChoiceTransitionRequest { TargetLabelId = targetLabel2 })
             }
         );
 
@@ -327,7 +327,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
             new { Id = response.Id });
         
         Assert.NotNull(dbStep);
-        Assert.Equal("menu", (string)dbStep.step_type);
+        Assert.Equal("show_menu", (string)dbStep.step_type);
 
         // Verify choices created
         var choicesCount = await QuerySingleAsync<int>(
@@ -416,12 +416,12 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var labelId = await CreateTestLabelAsync(novelId);
         var characterId = await CreateTestCharacterAsync(novelId);
 
-        var created = await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        var created = await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "Test"));
         Assert.NotNull(created);
 
         // Act
-        var response = await GetAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps/{created.Id}");
+        var response = await GetAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps/{created.Id}");
 
         // Assert
         Assert.NotNull(response);
@@ -451,15 +451,15 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var labelId = await CreateTestLabelAsync(novelId);
         var characterId = await CreateTestCharacterAsync(novelId);
 
-        await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "Step 1"));
-        await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "Step 2"));
-        await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "Step 3"));
 
         // Act
-        var response = await GetListAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps");
+        var response = await GetListAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps");
 
         // Assert
         Assert.NotNull(response);
@@ -475,14 +475,14 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var label2Id = await CreateTestLabelAsync(novelId, "label2");
         var characterId = await CreateTestCharacterAsync(novelId);
 
-        await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{label1Id}/steps",
+        await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{label1Id}/steps",
             new AddShowReplicaStepRequest(characterId, "Label1 Step"));
-        await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{label2Id}/steps",
+        await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{label2Id}/steps",
             new AddShowReplicaStepRequest(characterId, "Label2 Step"));
 
         // Act
-        var label1Steps = await GetListAsync<StepResponse>($"/api/novels/{novelId}/labels/{label1Id}/steps");
-        var label2Steps = await GetListAsync<StepResponse>($"/api/novels/{novelId}/labels/{label2Id}/steps");
+        var label1Steps = await GetListAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{label1Id}/steps");
+        var label2Steps = await GetListAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{label2Id}/steps");
 
         // Assert
         Assert.NotNull(label1Steps);
@@ -499,7 +499,7 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var labelId = await CreateTestLabelAsync(novelId);
         var characterId = await CreateTestCharacterAsync(novelId);
 
-        var created = await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        var created = await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "To Delete"));
         Assert.NotNull(created);
 
@@ -542,15 +542,15 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         var characterId = await CreateTestCharacterAsync(novelId);
 
         // Add steps in order
-        var step1 = await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        var step1 = await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "First"));
-        var step2 = await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        var step2 = await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "Second"));
-        var step3 = await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
+        var step3 = await PostAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps",
             new AddShowReplicaStepRequest(characterId, "Third"));
 
         // Act - get all steps
-        var steps = await GetListAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps");
+        var steps = await GetListAsync<ShowReplicaStepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps");
 
         // Assert - verify order in database
         var dbSteps = await QueryAsync<dynamic>(

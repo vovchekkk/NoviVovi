@@ -28,15 +28,25 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+{
+    // Add custom formatter for StepResponse at the beginning
+    options.OutputFormatters.Insert(0, new StepResponseOutputFormatter());
+})
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new TransitionResponseConverter());
+        options.JsonSerializerOptions.Converters.Add(new StepResponseConverter());
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
     });
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.SerializerOptions.Converters.Add(new TransitionResponseConverter());
+    options.SerializerOptions.Converters.Add(new StepResponseConverter());
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
 });
 
 builder.Services.AddOpenApi(options =>

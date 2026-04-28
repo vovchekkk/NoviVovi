@@ -26,7 +26,7 @@ public class CharacterState : Entity
         string? description = null)
     {
         if (image is null)
-            throw new DomainException($"NextAction cannot be null");
+            throw new DomainException($"Image cannot be null");
 
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException($"Name cannot be empty");

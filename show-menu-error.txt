@@ -1,0 +1,77 @@
+﻿  ╨Ю╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╨╡ ╨┐╤А╨╛╨╡╨║╤В╨╛╨▓ ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П...
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  ╨Т╤Б╨╡ ╨┐╤А╨╛╨╡╨║╤В╤Л ╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╤Л ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  NoviVovi.Domain -> D:\Git\NoviVovi\backend\NoviVovi.Domain\bin\Debug\net10.0\NoviVovi.Domain.dll
+  NoviVovi.Application -> D:\Git\NoviVovi\backend\NoviVovi.Application\bin\Debug\net10.0\NoviVovi.Application.dll
+  NoviVovi.Infrastructure -> D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\bin\Debug\net10.0\NoviVovi.Infrastructure.dll
+  NoviVovi.Api -> D:\Git\NoviVovi\backend\NoviVovi.Api\bin\Debug\net10.0\NoviVovi.Api.dll
+  NoviVovi.Api.Tests -> D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+╨в╨╡╤Б╤В╨╛╨▓╤Л╨╣ ╨╖╨░╨┐╤Г╤Б╨║ ╨┤╨╗╤П D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll (.NETCoreApp,Version=v10.0)
+╨Т╨╡╤А╤Б╨╕╤П VSTest 18.0.1 (x64)
+
+╨Ч╨░╨┐╤Г╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П ╤В╨╡╤Б╤В╨╛╨▓; ╨┐╨╛╨┤╨╛╨╢╨┤╨╕╤В╨╡...
+╨Ю╨▒╤Й╨╡╨╡ ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╤В╨╡╤Б╤В╨╛╨▓╤Л╤Е ╤Д╨░╨╣╨╗╨╛╨▓ (1), ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е ╤Г╨║╨░╨╖╨░╨╜╨╜╨╛╨╝╤Г ╤И╨░╨▒╨╗╨╛╨╜╤Г.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+[xUnit.net 00:00:00.01] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.3)
+[xUnit.net 00:00:00.39]   Discovering: NoviVovi.Api.Tests
+[xUnit.net 00:00:00.54]   Discovered:  NoviVovi.Api.Tests
+[xUnit.net 00:00:00.59]   Starting:    NoviVovi.Api.Tests
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Testing
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Git\NoviVovi\backend\NoviVovi.Api
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+dotnet : [xUnit.net 00:00:06.99]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_Returns
+CreatedStep [FAIL]
+строка:1 знак:1
++ dotnet test tests/NoviVovi.Api.Tests/NoviVovi.Api.Tests.csproj --filt ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([xUnit.net 00:0...atedStep [FAIL]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[xUnit.net 00:00:06.99]       System.Text.Json.JsonException : Missing 'type' discriminator in StepResponse JSON
+[xUnit.net 00:00:06.99]       Stack Trace:
+[xUnit.net 00:00:06.99]         D:\Git\NoviVovi\backend\NoviVovi.Api\Infrastructure\StepResponseConverter.cs(17,0): at NoviVovi.Api.Infrastructure.StepResponseConverter.Read(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options)
+[xUnit.net 00:00:06.99]            at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+[xUnit.net 00:00:06.99]            at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+[xUnit.net 00:00:06.99]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
+[xUnit.net 00:00:06.99]            at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+[xUnit.net 00:00:06.99]            at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)
+[xUnit.net 00:00:06.99]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(62,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:06.99]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(318,0): at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_ReturnsCreatedStep()
+[xUnit.net 00:00:06.99]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_ReturnsCreatedStep [1 s]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Text.Json.JsonException : Missing 'type' discriminator in StepResponse JSON
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Infrastructure.StepResponseConverter.Read(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options) in D:\Git\NoviVovi\backend\NoviVovi.Api\Infrastructure\StepResponseConverter.cs:line 17
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 62
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 318
+--- End of stack trace from previous location ---
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+[xUnit.net 00:00:12.73]   Finished:    NoviVovi.Api.Tests
+
+╨б╨▒╨╛╨╣ ╤В╨╡╤Б╤В╨╛╨▓╨╛╨│╨╛ ╨╖╨░╨┐╤Г╤Б╨║╨░.
+╨Т╤Б╨╡╨│╨╛ ╤В╨╡╤Б╤В╨╛╨▓: 1
+     ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜╨╛: 1
+ ╨Ю╨▒╤Й╨╡╨╡ ╨▓╤А╨╡╨╝╤П: 14,2145 ╨б╨╡╨║╤Г╨╜╨┤╤Л

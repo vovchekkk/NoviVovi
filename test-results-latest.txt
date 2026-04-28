@@ -1,0 +1,454 @@
+﻿  ╨Ю╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╨╡ ╨┐╤А╨╛╨╡╨║╤В╨╛╨▓ ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П...
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  ╨Т╤Б╨╡ ╨┐╤А╨╛╨╡╨║╤В╤Л ╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╤Л ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  NoviVovi.Domain -> D:\Git\NoviVovi\backend\NoviVovi.Domain\bin\Debug\net10.0\NoviVovi.Domain.dll
+  NoviVovi.Application -> D:\Git\NoviVovi\backend\NoviVovi.Application\bin\Debug\net10.0\NoviVovi.Application.dll
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\CharacterDbORepository.cs(164,42): warning CS8613: ╨Ф╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╣ NULL ╨┤╨╗╤П ╤Б╤Б╤Л╨╗╨╛╤З╨╜╤Л╤Е ╤В╨╕╨┐╨╛╨▓ ╨▓ ╤В╨╕╨┐╨╡ ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╨╝╨╛╨│╨╛ ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П ╨╛╨▒╤К╨╡╨║╤В╨░ "Task<StepCharacterDbO?> CharacterDbORepository.GetFullStepCharacterByIdAsync(Guid id)" ╨╜╨╡ ╤Б╨╛╨▓╨┐╨░╨┤╨░╨╡╤В ╤Б ╤П╨▓╨╜╨╛ ╤А╨╡╨░╨╗╨╕╨╖╨╛╨▓╨░╨╜╨╜╤Л╨╝ ╤З╨╗╨╡╨╜╨╛╨╝ "Task<StepCharacterDbO> ICharacterDbORepository.GetFullStepCharacterByIdAsync(Guid stepCharacterId)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\DatabaseObjects\Characters\StepCharacterDbO.cs(11,25): warning CS8618: ╤Б╨▓╨╛╨╣╤Б╤В╨▓╨╛ "Character", ╨╜╨╡ ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П NULL, ╨┤╨╛╨╗╨╢╨╡╨╜ ╤Б╨╛╨┤╨╡╤А╨╢╨░╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡, ╨╛╤В╨╗╨╕╤З╨╜╨╛╨╡ ╨╛╤В NULL, ╨┐╤А╨╕ ╨▓╤Л╤Е╨╛╨┤╨╡ ╨╕╨╖ ╨║╨╛╨╜╤Б╤В╤А╤Г╨║╤В╨╛╤А╨░. ╨а╨░╤Б╤Б╨╝╨╛╤В╤А╨╕╤В╨╡ ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╤П ╨╝╨╛╨┤╨╕╤Д╨╕╨║╨░╤В╨╛╤А╨░ "required" ╨╕╨╗╨╕ ╨╛╨▒╤К╤П╨▓╨╗╨╡╨╜╨╕╤П ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П ╤Б╨▓╨╛╨╣╤Б╤В╨▓╨╛, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╡╨│╨╛ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL. [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\DatabaseObjects\Enums\DatabaseExtensions.cs(24,25): warning CS8524: ╨Т╤Л╤А╨░╨╢╨╡╨╜╨╕╨╡ switch ╨╜╨╡ ╨╛╨▒╤А╨░╨▒╨░╤В╤Л╨▓╨░╨╡╤В ╨╜╨╡╨║╨╛╤В╨╛╤А╤Л╨╡ ╤В╨╕╨┐╤Л ╨▓╤Е╨╛╨┤╨╜╤Л╤Е ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╣, ╨▓ ╤В╨╛╨╝ ╤З╨╕╤Б╨╗╨╡ ╨╜╨╡╨╕╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╜╨╛╨╡ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨┐╨╡╤А╨╡╤З╨╕╤Б╨╗╨╡╨╜╨╕╤П (╨╜╨╡ ╤П╨▓╨╗╤П╨╡╤В╤Б╤П ╨╕╤Б╤З╨╡╤А╨┐╤Л╨▓╨░╤О╤Й╨╕╨╝). ╨Э╨░╨┐╤А╨╕╨╝╨╡╤А, ╨╜╨╡ ╨╛╤Е╨▓╨░╤З╨╡╨╜ ╤И╨░╨▒╨╗╨╛╨╜ "(NoviVovi.Infrastructure.DatabaseObjects.Enums.StepType)6". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\NovelMapper.cs(41,22): warning CS8619: ╨Ф╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П NULL ╨▓ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╕ ╤В╨╕╨┐╨░ "List<LabelDbO?>" ╨╜╨╡ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨╝╤Г ╤В╨╕╨┐╤Г "List<LabelDbO>". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\NovelRepository.cs(39,54): warning CS8622: ╨Ф╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╣ NULL ╨┤╨╗╤П ╤Б╤Б╤Л╨╗╨╛╤З╨╜╤Л╤Е ╤В╨╕╨┐╨╛╨▓ ╨▓ ╤В╨╕╨┐╨╡ ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "dbo" ╨╛╨▒╤К╨╡╨║╤В╨░ "Character CharacterMapper.ToDomain(CharacterDbO dbo)" ╨╜╨╡ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨╝╤Г ╨╛╨▒╤К╨╡╨║╤В╤Г ╨┤╨╡╨╗╨╡╨│╨╕╤А╨╛╨▓╨░╨╜╨╕╤П "Func<CharacterDbO?, Character>" (╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨╕╨╖-╨╖╨░ ╨░╤В╤А╨╕╨▒╤Г╤В╨╛╨▓ ╨┤╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╣ NULL). [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Exporters\RenPy\Core\Novels\Mappers\NovelToRenPyMapper.cs(26,57): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\CharacterDbORepository.cs(28,69): warning CS8604: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨░╤А╨│╤Г╨╝╨╡╨╜╤В-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL, ╨┤╨╗╤П ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "source" ╨▓ "Guid[] Enumerable.ToArray<Guid>(IEnumerable<Guid> source)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Mappers\StepMapper.cs(177,20): warning CS8604: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨░╤А╨│╤Г╨╝╨╡╨╜╤В-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL, ╨┤╨╗╤П ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "stepType" ╨▓ "StepType DbExtensions.ToStepType(string stepType)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\DependencyInjection.cs(30,16): warning CS8714: ╨в╨╕╨┐ "T" ╨╜╨╡ ╨╝╨╛╨╢╨╡╤В ╨▒╤Л╤В╤М ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜ ╨║╨░╨║ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╤В╨╕╨┐╨░ "T" ╨▓ ╤Г╨╜╨╕╨▓╨╡╤А╤Б╨░╨╗╤М╨╜╨╛╨╝ ╤В╨╕╨┐╨╡ ╨╕╨╗╨╕ ╨╝╨╡╤В╨╛╨┤╨╡ "ServiceProviderServiceExtensions.GetRequiredService<T>(IServiceProvider)". ╨Ф╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П NULL ╨┤╨╗╤П ╨░╤А╨│╤Г╨╝╨╡╨╜╤В╨░ ╤В╨╕╨┐╨░ "T" ╨╜╨╡ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨╛╨│╤А╨░╨╜╨╕╤З╨╡╨╜╨╕╤О "notnull". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\LabelRepository.cs(27,44): warning CS8604: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨░╤А╨│╤Г╨╝╨╡╨╜╤В-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL, ╨┤╨╗╤П ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "label" ╨▓ "Task<Guid> ILabelDbORepository.AddOrUpdateFullAsync(LabelDbO label, LoadContext? ctx = null)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\CharacterDbORepository.cs(35,52): warning CS8604: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨░╤А╨│╤Г╨╝╨╡╨╜╤В-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL, ╨┤╨╗╤П ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "novelIds" ╨▓ "Task<IEnumerable<CharacterDbO>> CharacterDbORepository.GetByNovelIdsAsync(IEnumerable<Guid> novelIds)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\NovelDbORepository.cs(45,24): warning CS8619: ╨Ф╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П NULL ╨▓ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╕ ╤В╨╕╨┐╨░ "List<LabelDbO?>" ╨╜╨╡ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨╝╤Г ╤В╨╕╨┐╤Г "List<LabelDbO>". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\NovelDbORepository.cs(46,28): warning CS8619: ╨Ф╨╛╨┐╤Г╤Б╤В╨╕╨╝╨╛╤Б╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╤П NULL ╨▓ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╕ ╤В╨╕╨┐╨░ "List<CharacterDbO?>" ╨╜╨╡ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨╝╤Г ╤В╨╕╨┐╤Г "List<CharacterDbO>". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\StepDbORepository.cs(85,64): warning CS8604: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨░╤А╨│╤Г╨╝╨╡╨╜╤В-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL, ╨┤╨╗╤П ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "source" ╨▓ "Guid[] Enumerable.ToArray<Guid>(IEnumerable<Guid> source)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\StepDbORepository.cs(92,47): warning CS8604: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨░╤А╨│╤Г╨╝╨╡╨╜╤В-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL, ╨┤╨╗╤П ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "labelIds" ╨▓ "Task<IEnumerable<StepDbO>> StepDbORepository.GetByLabelIdsAsync(IEnumerable<Guid> labelIds)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\CharacterDbORepository.cs(183,35): warning CS8601: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨╜╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╡╨╡ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL. [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\LabelDbORepository.cs(95,66): warning CS8604: ╨Т╨╛╨╖╨╝╨╛╨╢╨╜╨╛, ╨░╤А╨│╤Г╨╝╨╡╨╜╤В-╤Б╤Б╤Л╨╗╨║╨░, ╨┤╨╛╨┐╤Г╤Б╨║╨░╤О╤Й╨╕╨╣ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ NULL, ╨┤╨╗╤П ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ "source" ╨▓ "Guid[] Enumerable.ToArray<Guid>(IEnumerable<Guid> source)". [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\NovelDbORepository.cs(163,59): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\NovelDbORepository.cs(178,62): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj]
+  NoviVovi.Infrastructure -> D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\bin\Debug\net10.0\NoviVovi.Infrastructure.dll
+D:\Git\NoviVovi\backend\NoviVovi.Api\Menu\Mappers\MenuResponseMapper.cs(9,5): warning RMG020: The member Id on the mapping source type NoviVovi.Domain.Menu.Menu is not mapped to any member on the mapping target type NoviVovi.Application.Menu.Dtos.MenuDto [D:\Git\NoviVovi\backend\NoviVovi.Api\NoviVovi.Api.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Api\Menu\Mappers\MenuResponseMapper.cs(9,5): warning RMG020: The member Id on the mapping source type NoviVovi.Domain.Menu.Choice is not mapped to any member on the mapping target type NoviVovi.Application.Menu.Dtos.ChoiceDto [D:\Git\NoviVovi\backend\NoviVovi.Api\NoviVovi.Api.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Api\Scene\Mappers\CharacterObjectResponseMapper.cs(23,5): warning RMG020: The member FinalTransform on the mapping source type NoviVovi.Domain.Scene.CharacterObject is not mapped to any member on the mapping target type NoviVovi.Application.Scene.Dtos.CharacterObjectDto [D:\Git\NoviVovi\backend\NoviVovi.Api\NoviVovi.Api.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Mappers\StepResponseMapper.cs(20,6): warning RMG066: No members are mapped in the object mapping from NoviVovi.Application.Transitions.Dtos.NextStepTransitionDto to NoviVovi.Api.Transitions.Responses.NextStepTransitionResponse (https://next.mapperly.riok.app/docs/configuration/analyzer-diagnostics/RMG066) [D:\Git\NoviVovi\backend\NoviVovi.Api\NoviVovi.Api.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Api\Transitions\Mappers\TransitionResponseMapper.cs(12,6): warning RMG066: No members are mapped in the object mapping from NoviVovi.Application.Transitions.Dtos.NextStepTransitionDto to NoviVovi.Api.Transitions.Responses.NextStepTransitionResponse (https://next.mapperly.riok.app/docs/configuration/analyzer-diagnostics/RMG066) [D:\Git\NoviVovi\backend\NoviVovi.Api\NoviVovi.Api.csproj]
+  NoviVovi.Api -> D:\Git\NoviVovi\backend\NoviVovi.Api\bin\Debug\net10.0\NoviVovi.Api.dll
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Novels\NovelsControllerTests.cs(33,44): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs(42,42): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(44,39): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(100,37): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(50,48): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(87,39): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Novels\NovelsControllerTests.cs(123,47): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(102,22): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(110,28): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(171,48): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(119,15): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(223,48): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs(216,45): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(273,49): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs(176,46): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs(268,44): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(330,38): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(200,47): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs(244,15): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(386,38): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs(269,15): warning CS8602: ╨а╨░╨╖╤Л╨╝╨╡╨╜╨╛╨▓╨░╨╜╨╕╨╡ ╨▓╨╡╤А╨╛╤П╤В╨╜╨╛╨╣ ╨┐╤Г╤Б╤В╨╛╨╣ ╤Б╤Б╤Л╨╗╨║╨╕. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+  NoviVovi.Api.Tests -> D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+╨в╨╡╤Б╤В╨╛╨▓╤Л╨╣ ╨╖╨░╨┐╤Г╤Б╨║ ╨┤╨╗╤П D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll (.NETCoreApp,Version=v10.0)
+╨Т╨╡╤А╤Б╨╕╤П VSTest 18.0.1 (x64)
+
+╨Ч╨░╨┐╤Г╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П ╤В╨╡╤Б╤В╨╛╨▓; ╨┐╨╛╨┤╨╛╨╢╨┤╨╕╤В╨╡...
+╨Ю╨▒╤Й╨╡╨╡ ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╤В╨╡╤Б╤В╨╛╨▓╤Л╤Е ╤Д╨░╨╣╨╗╨╛╨▓ (1), ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е ╤Г╨║╨░╨╖╨░╨╜╨╜╨╛╨╝╤Г ╤И╨░╨▒╨╗╨╛╨╜╤Г.
+dotnet : [xUnit.net 00:00:03.11]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_Exi
+stingId_ReturnsState [FAIL]
+строка:1 знак:1
++ dotnet test tests/NoviVovi.Api.Tests/ --verbosity minimal 2>&1 | Out- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([xUnit.net 00:0...rnsState [FAIL]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_ExistingId_ReturnsState [879 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.GetAsync[TResponse](String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 53
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetCharacterState_ExistingId_ReturnsState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 177
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:03.59]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_NonExisti
+ngId_ReturnsNotFound [FAIL]
+[xUnit.net 00:00:04.06]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_ValidReque
+st_UpdatesState [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_NonExistingId_ReturnsNotFound [46 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_NonExistingId_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 334
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_ValidRequest_UpdatesState [60 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PatchAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 67
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.PatchCharacterState_ValidRequest_UpdatesState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 253
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:10.74]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetAllCharacterStates_ReturnsA
+llStatesForCharacter [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetAllCharacterStates_ReturnsAllStatesForCharacter [27 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.GetAllCharacterStates_ReturnsAllStatesForCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 215
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:12.29]     NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_ExistingI
+d_DeletesState [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_ExistingId_DeletesState [22 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 74
+   at NoviVovi.Api.Tests.Characters.CharacterStatesControllerTests.DeleteCharacterState_ExistingId_DeletesState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharacterStatesControllerTests.cs:line 308
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:35.85]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_NonExistingId_Retur
+nsNotFound [FAIL]
+[xUnit.net 00:00:36.26]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_ValidRequest_ReturnsCr
+eatedCharacter [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_NonExistingId_ReturnsNotFound [23 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_NonExistingId_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 254
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_ValidRequest_ReturnsCreatedCharacter [26 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Strings differ
+           тЖУ (pos 0)
+Expected: "FF5733"
+Actual:   "#FF5733"
+           тЖС (pos 0)
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.AddCharacter_ValidRequest_ReturnsCreatedCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 35
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:38.15]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_ExistingId_ReturnsChar
+acter [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_ExistingId_ReturnsCharacter [19 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Strings differ
+           тЖУ (pos 0)
+Expected: "FF5733"
+Actual:   "#FF5733"
+           тЖС (pos 0)
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.GetCharacter_ExistingId_ReturnsCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 107
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:40.59]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_ValidRequest_Updates
+Character [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_ValidRequest_UpdatesCharacter [24 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Strings differ
+           тЖУ (pos 0)
+Expected: "00FF00"
+Actual:   "#00FF00"
+           тЖС (pos 0)
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Characters.CharactersControllerTests.PatchCharacter_ValidRequest_UpdatesCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 191
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:42.17]     NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_CascadeDeletesChara
+cterStates [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_CascadeDeletesCharacterStates [32 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 74
+   at NoviVovi.Api.Tests.Characters.CharactersControllerTests.DeleteCharacter_CascadeDeletesCharacterStates() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Characters\CharactersControllerTests.cs:line 278
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:00.82]     NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_InvalidFormat_ReturnsUnproce
+ssableEntity [FAIL]
+[xUnit.net 00:01:01.76]     NoviVovi.Api.Tests.Images.ImagesControllerTests.ImageWorkflow_CompleteFlow_WorksCorrectly [
+FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_InvalidFormat_ReturnsUnprocessableEntity [59 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: UnprocessableEntity
+Actual:   OK
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Images.ImagesControllerTests.InitiateUpload_InvalidFormat_ReturnsUnprocessableEntity() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 91
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.ImageWorkflow_CompleteFlow_WorksCorrectly [34 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Strings differ
+Expected: "Testing complete workflow"
+Actual:   null
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Images.ImagesControllerTests.ImageWorkflow_CompleteFlow_WorksCorrectly() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 309
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:03.07]     NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_ExistingId_DeletesImage [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_ExistingId_DeletesImage [37 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   OK
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Images.ImagesControllerTests.DeleteImage_ExistingId_DeletesImage() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Images\ImagesControllerTests.cs:line 256
+--- End of stack trace from previous location ---
+[xUnit.net 00:01:25.16]     NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_CascadeDeletesSteps [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_CascadeDeletesSteps [24 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 74
+   at NoviVovi.Api.Tests.Labels.LabelsControllerTests.DeleteLabel_CascadeDeletesSteps() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Labels\LabelsControllerTests.cs:line 253
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:09.81]     NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_WithBackground_ReturnsSceneSta
+teWithBackground [FAIL]
+[xUnit.net 00:02:10.27]     NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_ComplexScene_ReturnsFullState 
+[FAIL]
+[xUnit.net 00:02:10.70]     NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_NonExistingStep_ReturnsNotFoun
+d [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_WithBackground_ReturnsSceneStateWithBackground [52 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.CreateTestImageAsync(Guid novelId, ImageTypeRequest type) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 53
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_WithBackground_ReturnsSceneStateWithBackground() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 101
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_ComplexScene_ReturnsFullState [38 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.CreateTestImageAsync(Guid novelId, ImageTypeRequest type) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 53
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_ComplexScene_ReturnsFullState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 249
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_NonExistingStep_ReturnsNotFound [29 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   OK
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_NonExistingStep_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 220
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:11.10]     NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_MultipleSteps_AccumulatesState
+ [FAIL]
+[xUnit.net 00:02:11.63]     NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_SimpleReplicaStep_ReturnsScene
+State [FAIL]
+[xUnit.net 00:02:12.08]     NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_WithCharacter_ReturnsSceneStat
+eWithCharacter [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_MultipleSteps_AccumulatesState [20 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.CreateTestImageAsync(Guid novelId, ImageTypeRequest type) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 53
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_MultipleSteps_AccumulatesState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 147
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_SimpleReplicaStep_ReturnsSceneState [48 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator. Path: $ | LineNumber: 0 | BytePositionInLine: 11.
+---- System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator.
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Text.Json.ThrowHelper.ThrowNotSupportedException(ReadStack& state, Utf8JsonReader& reader, Exception innerException)
+   at System.Text.Json.Serialization.Converters.ObjectDefaultConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 47
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_SimpleReplicaStep_ReturnsSceneState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 81
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_WithCharacter_ReturnsSceneStateWithCharacter [18 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.CreateTestImageAsync(Guid novelId, ImageTypeRequest type) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 53
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_WithCharacter_ReturnsSceneStateWithCharacter() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 123
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:12.91]     NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_HideCharacterStep_RemovesChara
+cterFromState [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_HideCharacterStep_RemovesCharacterFromState [17 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 404 (Not Found).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.CreateTestImageAsync(Guid novelId, ImageTypeRequest type) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 53
+   at NoviVovi.Api.Tests.Preview.PreviewControllerTests.GetPreview_HideCharacterStep_RemovesCharacterFromState() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Preview\PreviewControllerTests.cs:line 185
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:22.67]     NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_ExistingId_DeletesStep [FAIL]
+[xUnit.net 00:02:23.38]     NoviVovi.Api.Tests.Steps.StepsControllerTests.StepOrder_MultipleSteps_MaintainsCorrectOrder
+ [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_ExistingId_DeletesStep [91 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.DeleteAsync(String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 74
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_ExistingId_DeletesStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 507
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.StepOrder_MultipleSteps_MaintainsCorrectOrder [65 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.StepOrder_MultipleSteps_MaintainsCorrectOrder() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 547
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:24.06]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_ValidRequest_ReturnsCrea
+tedStep [FAIL]
+[xUnit.net 00:02:24.77]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowCharacterStep_ValidRequest_ReturnsCrea
+tedStep [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_ValidRequest_ReturnsCreatedStep [49 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 211
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowCharacterStep_ValidRequest_ReturnsCreatedStep [54 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowCharacterStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 159
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:29.48]     NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotFound [FAI
+L]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotFound [15 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: NotFound
+Actual:   UnprocessableEntity
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotFound() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 533
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:32.28]     NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_DifferentLabels_ReturnsOnlyLabelS
+teps [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_DifferentLabels_ReturnsOnlyLabelSteps [32 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.GetListAsync[TResponse](String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 60
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_DifferentLabels_ReturnsOnlyLabelSteps() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 484
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:33.76]     NoviVovi.Api.Tests.Steps.StepsControllerTests.GetStep_ExistingId_ReturnsStep [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.GetStep_ExistingId_ReturnsStep [21 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.GetAsync[TResponse](String url) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 53
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.GetStep_ExistingId_ReturnsStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 424
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:34.54]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddJumpStep_ValidRequest_ReturnsCreatedStep [
+FAIL]
+[xUnit.net 00:02:35.07]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowBackgroundStep_ValidRequest_ReturnsCre
+atedStep [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddJumpStep_ValidRequest_ReturnsCreatedStep [20 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator. Path: $ | LineNumber: 0 | BytePositionInLine: 14.
+---- System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator.
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Text.Json.ThrowHelper.ThrowNotSupportedException(ReadStack& state, Utf8JsonReader& reader, Exception innerException)
+   at System.Text.Json.Serialization.Converters.ObjectDefaultConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 47
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddJumpStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 374
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowBackgroundStep_ValidRequest_ReturnsCreatedStep [38 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator. Path: $ | LineNumber: 0 | BytePositionInLine: 20.
+---- System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator.
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Text.Json.ThrowHelper.ThrowNotSupportedException(ReadStack& state, Utf8JsonReader& reader, Exception innerException)
+   at System.Text.Json.Serialization.Converters.ObjectDefaultConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 47
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowBackgroundStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 261
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+
+[xUnit.net 00:02:35.59]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_EmptyChoices_ReturnsUnprocess
+ableEntity [FAIL]
+[xUnit.net 00:02:36.30]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowReplicaStep_ValidRequest_ReturnsCreate
+dStep [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_EmptyChoices_ReturnsUnprocessableEntity [32 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   Assert.Equal() Failure: Values differ
+Expected: UnprocessableEntity
+Actual:   OK
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_EmptyChoices_ReturnsUnprocessableEntity() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 356
+--- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowReplicaStep_ValidRequest_ReturnsCreatedStep [20 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Text.Json.JsonException : JSON deserialization for type 'NoviVovi.Api.Transitions.Responses.JumpTransitionResponse' was missing required properties including: 'targetLabelId'.
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Text.Json.ThrowHelper.ThrowJsonException_JsonRequiredPropertyMissing(JsonTypeInfo parent, BitArray assignedOrNotRequiredPropertiesSet)
+   at System.Text.Json.Serialization.Converters.ObjectDefaultConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+   at System.Text.Json.Serialization.Metadata.JsonPropertyInfo`1.ReadJsonAndSetMember(Object obj, ReadStack& state, Utf8JsonReader& reader)
+   at System.Text.Json.Serialization.Converters.ObjectDefaultConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 47
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowReplicaStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 88
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:37.06]     NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_ReturnsAllStepsForLabel [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_ReturnsAllStepsForLabel [24 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 46
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_ReturnsAllStepsForLabel() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 456
+--- End of stack trace from previous location ---
+[xUnit.net 00:02:40.95]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_ReturnsCreatedSt
+ep [FAIL]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_ReturnsCreatedStep [85 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator. Path: $ | LineNumber: 0 | BytePositionInLine: 8.
+---- System.NotSupportedException : The JSON payload for polymorphic interface or abstract type 'NoviVovi.Api.Steps.Responses.StepResponse' must specify a type discriminator.
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Text.Json.ThrowHelper.ThrowNotSupportedException(ReadStack& state, Utf8JsonReader& reader, Exception innerException)
+   at System.Text.Json.Serialization.Converters.ObjectDefaultConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsyncCore[T](HttpContent content, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 47
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 318
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+

@@ -26,7 +26,11 @@ public class Menu : Entity
         if (choices is null)
             throw new DomainException($"Choices cannot be null");
         
-        menu.AddChoices(choices);
+        var choicesList = choices.ToList();
+        if (choicesList.Count == 0)
+            throw new DomainException($"Choices cannot be empty");
+        
+        menu.AddChoices(choicesList);
         
         return menu;
     }

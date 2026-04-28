@@ -11,4 +11,6 @@ public partial class TransitionDtoMapper
     [MapDerivedType(typeof(JumpTransition), typeof(JumpTransitionDto))]
     [MapDerivedType(typeof(NextStepTransition), typeof(NextStepTransitionDto))]
     public partial TransitionDto ToDto(Transition source);
+    
+    public NextStepTransitionDto ToDto(NextStepTransition source) => new();
 }

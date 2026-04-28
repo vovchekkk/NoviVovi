@@ -1,0 +1,38 @@
+﻿  ╨Ю╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╨╡ ╨┐╤А╨╛╨╡╨║╤В╨╛╨▓ ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П...
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf [D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj]
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  ╨Т╤Б╨╡ ╨┐╤А╨╛╨╡╨║╤В╤Л ╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╤Л ╨┤╨╗╤П ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Tests.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1510: PackageReference System.Security.Claims will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\NoviVovi.Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+  NoviVovi.Domain -> D:\Git\NoviVovi\backend\NoviVovi.Domain\bin\Debug\net10.0\NoviVovi.Domain.dll
+  NoviVovi.Application -> D:\Git\NoviVovi\backend\NoviVovi.Application\bin\Debug\net10.0\NoviVovi.Application.dll
+  NoviVovi.Infrastructure -> D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\bin\Debug\net10.0\NoviVovi.Infrastructure.dll
+  NoviVovi.Api -> D:\Git\NoviVovi\backend\NoviVovi.Api\bin\Debug\net10.0\NoviVovi.Api.dll
+  NoviVovi.Api.Tests -> D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+╨в╨╡╤Б╤В╨╛╨▓╤Л╨╣ ╨╖╨░╨┐╤Г╤Б╨║ ╨┤╨╗╤П D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll (.NETCoreApp,Version=v10.0)
+╨Т╨╡╤А╤Б╨╕╤П VSTest 18.0.1 (x64)
+
+╨Ч╨░╨┐╤Г╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П ╤В╨╡╤Б╤В╨╛╨▓; ╨┐╨╛╨┤╨╛╨╢╨┤╨╕╤В╨╡...
+╨Ю╨▒╤Й╨╡╨╡ ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╤В╨╡╤Б╤В╨╛╨▓╤Л╤Е ╤Д╨░╨╣╨╗╨╛╨▓ (1), ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е ╤Г╨║╨░╨╖╨░╨╜╨╜╨╛╨╝╤Г ╤И╨░╨▒╨╗╨╛╨╜╤Г.
+D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.3)
+[xUnit.net 00:00:00.08]   Discovering: NoviVovi.Api.Tests
+[xUnit.net 00:00:00.12]   Discovered:  NoviVovi.Api.Tests
+[xUnit.net 00:00:00.14]   Starting:    NoviVovi.Api.Tests
+Serialized JSON (concrete type):
+{"Replica":{"Id":"de7dd379-3b7b-4f7a-8ef7-52e243e79547","SpeakerId":"a25f4243-c2fd-46fa-96d2-06b15bd33184","Text":"Hello"},"Transition":{},"Id":"71b8913a-7021-458c-9118-08dfe1760ad9"}
+Serialized JSON (base type):
+{"type":"show_replica","Replica":{"Id":"de7dd379-3b7b-4f7a-8ef7-52e243e79547","SpeakerId":"a25f4243-c2fd-46fa-96d2-06b15bd33184","Text":"Hello"},"Transition":{},"Id":"71b8913a-7021-458c-9118-08dfe1760ad9"}
+[xUnit.net 00:00:00.34]   Finished:    NoviVovi.Api.Tests
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Serialization.SerializationTest.TestShowReplicaStepResponseSerialization [157 ms]
+
+╨в╨╡╤Б╤В╨╛╨▓╤Л╨╣ ╨╖╨░╨┐╤Г╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜.
+╨Т╤Б╨╡╨│╨╛ ╤В╨╡╤Б╤В╨╛╨▓: 1
+     ╨Я╤А╨╛╨╣╨┤╨╡╨╜╨╛: 1
+ ╨Ю╨▒╤Й╨╡╨╡ ╨▓╤А╨╡╨╝╤П: 0,9236 ╨б╨╡╨║╤Г╨╜╨┤╤Л

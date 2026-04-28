@@ -353,15 +353,13 @@ public class StepRepoTest : IAsyncLifetime
         await labelRepo.AddOrUpdateFullAsync(label);
         
         var replica = CreateReplica("step replica text");
-        var step = CreateStep(label.Id, 1, "replica", replica: replica);
+        var step = CreateStep(label.Id, 1, "show_replica", replica: replica);
         
-        // Создаём
-        await stepRepo.AddOrUpdateFullAsync(step, new LoadContext());
+        await _stepRepo.AddAsync(step);
         
-        await using var conn = new NpgsqlConnection(connectionString);
-        var dbStep = await conn.QueryFirstOrDefaultAsync<(string stepType, Guid? replicaId)>(
+        var dbStep = await _connection.QuerySingleAsync<dynamic>(
             "SELECT step_type, replica_id FROM \"Steps\" WHERE id = @Id", new { Id = step.Id });
-        Assert.Equal("replica", dbStep.stepType);
+        Assert.Equal("show_replica", dbStep.stepType);
         Assert.Equal(replica.Id, dbStep.replicaId);
         
         // Обновляем реплику

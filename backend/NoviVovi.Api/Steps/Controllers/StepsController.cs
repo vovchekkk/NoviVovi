@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NoviVovi.Api.Infrastructure;
 using NoviVovi.Api.Steps.CommandMappers;
 using NoviVovi.Api.Novels.Responses;
 using NoviVovi.Api.Steps.Mappers;
@@ -21,6 +22,7 @@ public class StepsController(
 ) : ControllerBase
 {
     [HttpPost]
+    [Produces("application/json")]
     public async Task<ActionResult<StepResponse>> Create(
         [FromRoute] Guid novelId,
         [FromRoute] Guid labelId,
@@ -31,16 +33,20 @@ public class StepsController(
         
         var step = await mediator.Send(command);
 
-        return Ok(mapper.ToResponse(step));
+        StepResponse response = mapper.ToResponse(step);
+        
+        return response;
     }
 
     [HttpGet("{stepid:guid}")]
+    [Produces("application/json")]
     public async Task<ActionResult<StepResponse>> Get([FromRoute] Guid novelId, [FromRoute] Guid labelId,
         [FromRoute] Guid stepId)
     {
         var step = await mediator.Send(new GetStepQuery(novelId, labelId, stepId));
 
-        return Ok(mapper.ToResponse(step));
+        StepResponse response = mapper.ToResponse(step);
+        return response;
     }
 
     [HttpGet]

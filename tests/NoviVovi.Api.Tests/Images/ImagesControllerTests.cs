@@ -33,7 +33,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         );
 
         // Act
-        var response = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url", request);
+        var response = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url", request);
 
         // Assert
         Assert.NotNull(response);
@@ -55,6 +55,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task InitiateUpload_EmptyName_ReturnsUnprocessableEntity()
     {
         // Arrange
+        var novelId = await CreateTestNovelAsync();
         var request = new InitiateUploadImageRequest(
             "",
             null,
@@ -64,7 +65,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         );
 
         // Act
-        var response = await PostRawAsync("/api/images/upload-url", request);
+        var response = await PostRawAsync($"/api/novels/{novelId}/images/upload-url", request);
 
         // Assert
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
@@ -74,6 +75,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task InitiateUpload_InvalidFormat_ReturnsUnprocessableEntity()
     {
         // Arrange
+        var novelId = await CreateTestNovelAsync();
         var request = new InitiateUploadImageRequest(
             "image.xyz",
             null,
@@ -83,7 +85,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         );
 
         // Act
-        var response = await PostRawAsync("/api/images/upload-url", request);
+        var response = await PostRawAsync($"/api/novels/{novelId}/images/upload-url", request);
 
         // Assert
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
@@ -93,7 +95,8 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task ConfirmUpload_ValidImageId_ConfirmsUpload()
     {
         // Arrange
-        var uploadInfo = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url",
+        var novelId = await CreateTestNovelAsync();
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url",
             new InitiateUploadImageRequest(
                 "test.png",
                 null,
@@ -104,7 +107,7 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         Assert.NotNull(uploadInfo);
 
         // Act
-        var response = await Client.PostAsync($"/api/images/{uploadInfo.ImageId}/confirm", null);
+        var response = await Client.PostAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}/confirm", null);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -121,10 +124,11 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task ConfirmUpload_NonExistingImageId_ReturnsNotFound()
     {
         // Arrange
+        var novelId = await CreateTestNovelAsync();
         var nonExistingId = Guid.NewGuid();
 
         // Act
-        var response = await Client.PostAsync($"/api/images/{nonExistingId}/confirm", null);
+        var response = await Client.PostAsync($"/api/novels/{novelId}/images/{nonExistingId}/confirm", null);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -134,7 +138,8 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task GetImage_ExistingId_ReturnsImage()
     {
         // Arrange
-        var uploadInfo = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url",
+        var novelId = await CreateTestNovelAsync();
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url",
             new InitiateUploadImageRequest(
                 "test.png",
                 null,
@@ -144,10 +149,10 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
             ));
         Assert.NotNull(uploadInfo);
 
-        await Client.PostAsync($"/api/images/{uploadInfo.ImageId}/confirm", null);
+        await Client.PostAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}/confirm", null);
 
         // Act
-        var response = await GetAsync<ImageResponse>($"/api/images/{uploadInfo.ImageId}");
+        var response = await GetAsync<ImageResponse>($"/api/novels/{novelId}/images/{uploadInfo.ImageId}");
 
         // Assert
         Assert.NotNull(response);
@@ -164,10 +169,11 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task GetImage_NonExistingId_ReturnsNotFound()
     {
         // Arrange
+        var novelId = await CreateTestNovelAsync();
         var nonExistingId = Guid.NewGuid();
 
         // Act
-        var response = await GetRawAsync($"/api/images/{nonExistingId}");
+        var response = await GetRawAsync($"/api/novels/{novelId}/images/{nonExistingId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -177,7 +183,8 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task PatchImage_ValidRequest_UpdatesImage()
     {
         // Arrange
-        var uploadInfo = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url",
+        var novelId = await CreateTestNovelAsync();
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url",
             new InitiateUploadImageRequest(
                 "original.png",
                 "Original description",
@@ -187,12 +194,12 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
             ));
         Assert.NotNull(uploadInfo);
 
-        await Client.PostAsync($"/api/images/{uploadInfo.ImageId}/confirm", null);
+        await Client.PostAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}/confirm", null);
 
         var patchRequest = new PatchImageRequest("updated.png", "Updated description", null);
 
         // Act
-        var response = await PatchAsync<ImageResponse>($"/api/images/{uploadInfo.ImageId}", patchRequest);
+        var response = await PatchAsync<ImageResponse>($"/api/novels/{novelId}/images/{uploadInfo.ImageId}", patchRequest);
 
         // Assert
         Assert.NotNull(response);
@@ -213,11 +220,12 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task PatchImage_NonExistingId_ReturnsNotFound()
     {
         // Arrange
+        var novelId = await CreateTestNovelAsync();
         var nonExistingId = Guid.NewGuid();
         var patchRequest = new PatchImageRequest("updated.png", null, null);
 
         // Act
-        var response = await PatchRawAsync($"/api/images/{nonExistingId}", patchRequest);
+        var response = await PatchRawAsync($"/api/novels/{novelId}/images/{nonExistingId}", patchRequest);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -227,7 +235,8 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task DeleteImage_ExistingId_DeletesImage()
     {
         // Arrange
-        var uploadInfo = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url",
+        var novelId = await CreateTestNovelAsync();
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url",
             new InitiateUploadImageRequest(
                 "to_delete.png",
                 null,
@@ -237,13 +246,13 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
             ));
         Assert.NotNull(uploadInfo);
 
-        await Client.PostAsync($"/api/images/{uploadInfo.ImageId}/confirm", null);
+        await Client.PostAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}/confirm", null);
 
         // Act
-        await DeleteAsync($"/api/images/{uploadInfo.ImageId}");
+        await DeleteAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}");
 
         // Assert - verify deleted
-        var getResponse = await GetRawAsync($"/api/images/{uploadInfo.ImageId}");
+        var getResponse = await GetRawAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}");
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
 
         // Verify in database
@@ -258,10 +267,11 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
     public async Task DeleteImage_NonExistingId_ReturnsNotFound()
     {
         // Arrange
+        var novelId = await CreateTestNovelAsync();
         var nonExistingId = Guid.NewGuid();
 
         // Act
-        var response = await DeleteRawAsync($"/api/images/{nonExistingId}");
+        var response = await DeleteRawAsync($"/api/novels/{novelId}/images/{nonExistingId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -273,7 +283,8 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         // This test verifies the complete image upload workflow
 
         // Step 1: Initiate upload
-        var uploadInfo = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url",
+        var novelId = await CreateTestNovelAsync();
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url",
             new InitiateUploadImageRequest(
                 "workflow_test.png",
                 "Testing complete workflow",
@@ -288,24 +299,24 @@ public class ImagesControllerTests(NoviVoviWebApplicationFactory factory) : Inte
         // Our mock storage service always returns success
 
         // Step 3: Confirm upload
-        var confirmResponse = await Client.PostAsync($"/api/images/{uploadInfo.ImageId}/confirm", null);
+        var confirmResponse = await Client.PostAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}/confirm", null);
         Assert.Equal(HttpStatusCode.OK, confirmResponse.StatusCode);
 
         // Step 4: Get image details
-        var image = await GetAsync<ImageResponse>($"/api/images/{uploadInfo.ImageId}");
+        var image = await GetAsync<ImageResponse>($"/api/novels/{novelId}/images/{uploadInfo.ImageId}");
         Assert.NotNull(image);
         Assert.Equal("workflow_test.png", image.Name);
         Assert.Equal("Testing complete workflow", image.Description);
 
         // Step 5: Update metadata
-        var updated = await PatchAsync<ImageResponse>($"/api/images/{uploadInfo.ImageId}",
+        var updated = await PatchAsync<ImageResponse>($"/api/novels/{novelId}/images/{uploadInfo.ImageId}",
             new PatchImageRequest("workflow_test_updated.png", null, null));
         Assert.NotNull(updated);
         Assert.Equal("workflow_test_updated.png", updated.Name);
 
         // Step 6: Delete image
-        await DeleteAsync($"/api/images/{uploadInfo.ImageId}");
-        var deletedCheck = await GetRawAsync($"/api/images/{uploadInfo.ImageId}");
+        await DeleteAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}");
+        var deletedCheck = await GetRawAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}");
         Assert.Equal(HttpStatusCode.NotFound, deletedCheck.StatusCode);
     }
 }

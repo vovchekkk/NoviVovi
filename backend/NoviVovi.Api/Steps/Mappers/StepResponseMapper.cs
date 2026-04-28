@@ -1,11 +1,12 @@
 ﻿using NoviVovi.Api.Characters.Mappers;
 using NoviVovi.Api.Characters.Responses;
+using NoviVovi.Api.Dialogue.Mappers;
+using NoviVovi.Api.Images.Mappers;
+using NoviVovi.Api.Menu.Mappers;
 using NoviVovi.Api.Scene.Mappers;
 using NoviVovi.Api.Scene.Responses;
 using NoviVovi.Api.Steps.Responses;
 using NoviVovi.Api.Transitions.Responses;
-using NoviVovi.Application.Characters.Dtos;
-using NoviVovi.Application.Scene.Dtos;
 using NoviVovi.Application.Steps.Dtos;
 using Riok.Mapperly.Abstractions;
 
@@ -14,7 +15,11 @@ namespace NoviVovi.Api.Steps.Mappers;
 [Mapper]
 public partial class StepResponseMapper(
     CharacterResponseMapper characterMapper,
-    TransformResponseMapper transformMapper
+    CharacterStateResponseMapper characterStateMapper,
+    TransformResponseMapper transformMapper,
+    ReplicaResponseMapper replicaMapper,
+    ChoiceResponseMapper choiceMapper,
+    ImageResponseMapper imageMapper
 )
 {
     [MapDerivedType(typeof(HideCharacterStepDto), typeof(HideCharacterStepResponse))]
@@ -27,6 +32,7 @@ public partial class StepResponseMapper(
     
     public partial IEnumerable<StepResponse> ToResponses(IEnumerable<StepDto> source);
     
+    // Explicit implementations for each step type
     public JumpStepResponse ToResponse(JumpStepDto source) => new()
     {
         Id = source.Id,
@@ -36,15 +42,49 @@ public partial class StepResponseMapper(
         }
     };
     
-    public partial ShowBackgroundStepResponse ToResponse(ShowBackgroundStepDto source);
+    public ShowBackgroundStepResponse ToResponse(ShowBackgroundStepDto source) => new()
+    {
+        Id = source.Id,
+        BackgroundObject = new BackgroundObjectResponse(
+            Id: source.BackgroundObject.Id,
+            Image: imageMapper.ToResponse(source.BackgroundObject.Image),
+            Transform: transformMapper.ToResponse(source.BackgroundObject.Transform)
+        ),
+        Transition = new NextStepTransitionResponse()
+    };
     
-    public partial ShowCharacterStepResponse ToResponse(ShowCharacterStepDto source);
+    public ShowCharacterStepResponse ToResponse(ShowCharacterStepDto source) => new()
+    {
+        Id = source.Id,
+        CharacterObject = new CharacterObjectResponse(
+            Id: source.CharacterObject.Id,
+            Character: characterMapper.ToResponse(source.CharacterObject.Character),
+            State: characterStateMapper.ToResponse(source.CharacterObject.State),
+            Transform: transformMapper.ToResponse(source.CharacterObject.Transform)
+        ),
+        Transition = new NextStepTransitionResponse()
+    };
     
-    public partial ShowMenuStepResponse ToResponse(ShowMenuStepDto source);
+    public ShowMenuStepResponse ToResponse(ShowMenuStepDto source) => new()
+    {
+        Id = source.Id,
+        Menu = new Menu.Responses.MenuResponse(
+            Choices: choiceMapper.ToResponses(source.Menu.Choices).ToList()
+        ),
+        Transition = new NextStepTransitionResponse()
+    };
 
-    public partial ShowReplicaStepResponse ToResponse(ShowReplicaStepDto source);
+    public ShowReplicaStepResponse ToResponse(ShowReplicaStepDto source) => new()
+    {
+        Id = source.Id,
+        Replica = replicaMapper.ToResponse(source.Replica),
+        Transition = new NextStepTransitionResponse()
+    };
     
-    private TransformResponse MapTransform(TransformDto source) => transformMapper.ToResponse(source);
-    
-    private CharacterResponse MapCharacter(CharacterDto source) => characterMapper.ToResponse(source);
+    public HideCharacterStepResponse ToResponse(HideCharacterStepDto source) => new()
+    {
+        Id = source.Id,
+        Character = characterMapper.ToResponse(source.Character),
+        Transition = new NextStepTransitionResponse()
+    };
 }

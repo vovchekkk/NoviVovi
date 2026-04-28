@@ -1,12 +1,18 @@
-﻿using NoviVovi.Application.Menu.Dtos;
+﻿using NoviVovi.Api.Menu.Responses;
+using NoviVovi.Application.Menu.Dtos;
 using Riok.Mapperly.Abstractions;
 
 namespace NoviVovi.Api.Menu.Mappers;
 
 [Mapper]
-public partial class MenuResponseMapper
+public partial class MenuResponseMapper(
+    ChoiceResponseMapper choiceMapper
+)
 {
-    public partial MenuDto ToResponse(Domain.Menu.Menu source);
+    public MenuResponse ToResponse(MenuDto source) => new(
+        Choices: choiceMapper.ToResponses(source.Choices).ToList()
+    );
 
-    public partial IEnumerable<MenuDto> ToResponses(IEnumerable<Domain.Menu.Menu> sources);
+    public IEnumerable<MenuResponse> ToResponses(IEnumerable<MenuDto> sources) =>
+        sources.Select(ToResponse);
 }
