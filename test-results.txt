@@ -1,0 +1,395 @@
+﻿╨в╨╡╤Б╤В╨╛╨▓╤Л╨╣ ╨╖╨░╨┐╤Г╤Б╨║ ╨┤╨╗╤П D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\bin\Debug\net10.0\NoviVovi.Api.Tests.dll (.NETCoreApp,Version=v10.0)
+╨Т╨╡╤А╤Б╨╕╤П VSTest 18.0.1 (x64)
+
+╨Ч╨░╨┐╤Г╤Б╨║ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П ╤В╨╡╤Б╤В╨╛╨▓; ╨┐╨╛╨┤╨╛╨╢╨┤╨╕╤В╨╡...
+╨Ю╨▒╤Й╨╡╨╡ ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╤В╨╡╤Б╤В╨╛╨▓╤Л╤Е ╤Д╨░╨╣╨╗╨╛╨▓ (1), ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╤О╤Й╨╕╤Е ╤Г╨║╨░╨╖╨░╨╜╨╜╨╛╨╝╤Г ╤И╨░╨▒╨╗╨╛╨╜╤Г.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.3)
+[xUnit.net 00:00:00.07]   Discovering: NoviVovi.Api.Tests
+[xUnit.net 00:00:00.11]   Discovered:  NoviVovi.Api.Tests
+[xUnit.net 00:00:00.13]   Starting:    NoviVovi.Api.Tests
+[TestDB] Database already exists: test_novels_shared_v2 (reusing)
+[TestDB] Schema already exists in database: test_novels_shared_v2
+[TestDB] Created shared test database: Host=localhost;Port=5432;Database=test_novels_shared_v2;Username=postgres;Password=postgres;Include Error Detail=true
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Testing
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Git\NoviVovi\backend\NoviVovi.Api
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜ fbf50238-4d14-432d-a4ff-253e081fa789 я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜ fbf50238-4d14-432d-a4ff-253e081fa789 я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Get.GetStepHandler.Handle(GetStepQuery request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Get\GetStep.cs:line 31
+         at NoviVovi.Api.Steps.Controllers.StepsController.Get(Guid novelId, Guid labelId, Guid stepId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 46
+         at lambda_method73(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_ExistingId_DeletesStep [668 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.StepOrder_MultipleSteps_MaintainsCorrectOrder [69 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: 23503: INSERT я┐╜я┐╜я┐╜ UPDATE я┐╜ табя┐╜я┐╜я┐╜ "Steps" я┐╜я┐╜я┐╜я┐╜шаея┐╜ я┐╜я┐╜раня┐╜ченя┐╜я┐╜ я┐╜я┐╜я┐╜шнея┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ "Steps_character_id_fkey"
+      DETAIL: я┐╜я┐╜я┐╜я┐╜ (character_id)=(213e94a8-afc7-4dad-b6d7-3e3b7e645dd4) я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ табя┐╜я┐╜я┐╜ "StepCharacter".
+      Npgsql.PostgresException (0x80004005): 23503: INSERT я┐╜я┐╜я┐╜ UPDATE я┐╜ табя┐╜я┐╜я┐╜ "Steps" я┐╜я┐╜я┐╜я┐╜шаея┐╜ я┐╜я┐╜раня┐╜ченя┐╜я┐╜ я┐╜я┐╜я┐╜шнея┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ "Steps_character_id_fkey"
+      DETAIL: я┐╜я┐╜я┐╜я┐╜ (character_id)=(213e94a8-afc7-4dad-b6d7-3e3b7e645dd4) я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ табя┐╜я┐╜я┐╜ "StepCharacter".
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+         at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 663
+         at NoviVovi.Infrastructure.Repositories.BaseRepository.ExecuteAsync(String sql, Object param, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\Interfaces\BaseRepository.cs:line 49
+         at NoviVovi.Infrastructure.Repositories.DbO.StepDbORepository.AddAsync(StepDbO step) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\StepDbORepository.cs:line 187
+         at NoviVovi.Infrastructure.Repositories.DbO.StepDbORepository.AddOrUpdateFullAsync(StepDbO step, LoadContext ctx) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\StepDbORepository.cs:line 270
+         at NoviVovi.Infrastructure.Repositories.New.LabelDbORepository.AddOrUpdateFullAsync(LabelDbO label, LoadContext ctx) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\LabelDbORepository.cs:line 201
+         at NoviVovi.Infrastructure.Repositories.LabelRepository.AddOrUpdateAsync(Label label, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\LabelRepository.cs:line 27
+         at NoviVovi.Application.Steps.Features.Add.AddHideCharacterStepHandler.Handle(AddHideCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddHideCharacterStep.cs:line 47
+         at NoviVovi.Application.Steps.Features.Add.AddHideCharacterStepHandler.Handle(AddHideCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddHideCharacterStep.cs:line 56
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+        Exception data:
+          Severity: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+          SqlState: 23503
+          MessageText: INSERT я┐╜я┐╜я┐╜ UPDATE я┐╜ табя┐╜я┐╜я┐╜ "Steps" я┐╜я┐╜я┐╜я┐╜шаея┐╜ я┐╜я┐╜раня┐╜ченя┐╜я┐╜ я┐╜я┐╜я┐╜шнея┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ "Steps_character_id_fkey"
+          Detail: я┐╜я┐╜я┐╜я┐╜ (character_id)=(213e94a8-afc7-4dad-b6d7-3e3b7e645dd4) я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ табя┐╜я┐╜я┐╜ "StepCharacter".
+          SchemaName: public
+          TableName: Steps
+          ConstraintName: Steps_character_id_fkey
+          File: ri_triggers.c
+          Line: 2783
+          Routine: ri_ReportViolation
+dotnet : [xUnit.net 00:00:01.58]     NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_ValidRequest_Re
+turnsCreatedStep [FAIL]
+строка:1 знак:1
++ dotnet test "D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\NoviVovi.Api.Te ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([xUnit.net 00:0...atedStep [FAIL]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[xUnit.net 00:00:01.58]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+[xUnit.net 00:00:01.58]       Stack Trace:
+[xUnit.net 00:00:01.58]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:01.58]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(62,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:01.58]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(212,0): at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_ValidRequest_ReturnsCreatedStep()
+[xUnit.net 00:00:01.58]         --- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜соня┐╜я┐╜ 'd985c9aa-cdd4-422a-b5fa-e10cd50cad34' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜соня┐╜я┐╜ 'd985c9aa-cdd4-422a-b5fa-e10cd50cad34' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Add.AddShowReplicaStepHandler.Handle(AddShowReplicaStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowReplicaStep.cs:line 39
+         at NoviVovi.Application.Steps.Features.Add.AddShowReplicaStepHandler.Handle(AddShowReplicaStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowReplicaStep.cs:line 57
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜соня┐╜я┐╜ '3e2c2cdd-4984-4c9a-8fca-1b29b5e66116' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜соня┐╜я┐╜ '3e2c2cdd-4984-4c9a-8fca-1b29b5e66116' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Add.AddHideCharacterStepHandler.Handle(AddHideCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddHideCharacterStep.cs:line 40
+         at NoviVovi.Application.Steps.Features.Add.AddHideCharacterStepHandler.Handle(AddHideCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddHideCharacterStep.cs:line 56
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: Text cannot be empty
+      NoviVovi.Domain.Common.DomainException: Text cannot be empty
+         at NoviVovi.Domain.Dialogue.Replica.Create(Character speaker, String text) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Dialogue\Replica.cs:line 24
+         at NoviVovi.Application.Steps.Features.Add.AddShowReplicaStepHandler.Handle(AddShowReplicaStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowReplicaStep.cs:line 42
+         at NoviVovi.Application.Steps.Features.Add.AddShowReplicaStepHandler.Handle(AddShowReplicaStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowReplicaStep.cs:line 57
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜соня┐╜я┐╜ '3630ca22-34fa-4e9b-aeff-efb69ffce375' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜соня┐╜я┐╜ '3630ca22-34fa-4e9b-aeff-efb69ffce375' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Add.AddShowCharacterStepHandler.Handle(AddShowCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowCharacterStep.cs:line 42
+         at NoviVovi.Application.Steps.Features.Add.AddShowCharacterStepHandler.Handle(AddShowCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowCharacterStep.cs:line 65
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: 23503: INSERT я┐╜я┐╜я┐╜ UPDATE я┐╜ табя┐╜я┐╜я┐╜ "Steps" я┐╜я┐╜я┐╜я┐╜шаея┐╜ я┐╜я┐╜раня┐╜ченя┐╜я┐╜ я┐╜я┐╜я┐╜шнея┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ "Steps_character_id_fkey"
+      DETAIL: я┐╜я┐╜я┐╜я┐╜ (character_id)=(9f4c95e3-346c-4f85-9e97-8f91cf6f5267) я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ табя┐╜я┐╜я┐╜ "StepCharacter".
+      Npgsql.PostgresException (0x80004005): 23503: INSERT я┐╜я┐╜я┐╜ UPDATE я┐╜ табя┐╜я┐╜я┐╜ "Steps" я┐╜я┐╜я┐╜я┐╜шаея┐╜ я┐╜я┐╜раня┐╜ченя┐╜я┐╜ я┐╜я┐╜я┐╜шнея┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ "Steps_character_id_fkey"
+      DETAIL: я┐╜я┐╜я┐╜я┐╜ (character_id)=(9f4c95e3-346c-4f85-9e97-8f91cf6f5267) я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ табя┐╜я┐╜я┐╜ "StepCharacter".
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+         at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 663
+         at NoviVovi.Infrastructure.Repositories.BaseRepository.ExecuteAsync(String sql, Object param, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\Interfaces\BaseRepository.cs:line 49
+         at NoviVovi.Infrastructure.Repositories.DbO.StepDbORepository.AddAsync(StepDbO step) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\StepDbORepository.cs:line 187
+         at NoviVovi.Infrastructure.Repositories.DbO.StepDbORepository.AddOrUpdateFullAsync(StepDbO step, LoadContext ctx) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\StepDbORepository.cs:line 270
+         at NoviVovi.Infrastructure.Repositories.New.LabelDbORepository.AddOrUpdateFullAsync(LabelDbO label, LoadContext ctx) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\DbO\LabelDbORepository.cs:line 201
+         at NoviVovi.Infrastructure.Repositories.LabelRepository.AddOrUpdateAsync(Label label, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Infrastructure\Repositories\LabelRepository.cs:line 27
+         at NoviVovi.Application.Steps.Features.Add.AddHideCharacterStepHandler.Handle(AddHideCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddHideCharacterStep.cs:line 47
+         at NoviVovi.Application.Steps.Features.Add.AddHideCharacterStepHandler.Handle(AddHideCharacterStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddHideCharacterStep.cs:line 56
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+        Exception data:
+          Severity: я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+          SqlState: 23503
+          MessageText: INSERT я┐╜я┐╜я┐╜ UPDATE я┐╜ табя┐╜я┐╜я┐╜ "Steps" я┐╜я┐╜я┐╜я┐╜шаея┐╜ я┐╜я┐╜раня┐╜ченя┐╜я┐╜ я┐╜я┐╜я┐╜шнея┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ "Steps_character_id_fkey"
+          Detail: я┐╜я┐╜я┐╜я┐╜ (character_id)=(9f4c95e3-346c-4f85-9e97-8f91cf6f5267) я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ табя┐╜я┐╜я┐╜ "StepCharacter".
+          SchemaName: public
+          TableName: Steps
+          ConstraintName: Steps_character_id_fkey
+          File: ri_triggers.c
+          Line: 2783
+          Routine: ri_ReportViolation
+[xUnit.net 00:00:02.88]     NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchHideCharacterStep_ValidRequest_ReturnsUp
+datedStep [FAIL]
+[xUnit.net 00:00:02.88]       System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+[xUnit.net 00:00:02.88]       Stack Trace:
+[xUnit.net 00:00:02.88]            at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+[xUnit.net 00:00:02.88]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs(62,0): at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request)
+[xUnit.net 00:00:02.88]         D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs(724,0): at NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchHideCharacterStep_ValidRequest_ReturnsUpdatedStep()
+[xUnit.net 00:00:02.88]         --- End of stack trace from previous location ---
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_ValidRequest_ReturnsCreatedStep [46 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 62
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_ValidRequest_ReturnsCreatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 212
+--- End of stack trace from previous location ---
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchShowCharacterStep_ValidRequest_ReturnsUpdatedStep [149 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowCharacterStep_ValidRequest_ReturnsCreatedStep [48 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowReplicaStep_NonExistingCharacter_ReturnsNotFound [18 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddHideCharacterStep_NonExistingCharacter_ReturnsNotFound [19 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchShowReplicaStep_ValidRequest_ReturnsUpdatedStep [57 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowReplicaStep_EmptyText_ReturnsUnprocessableEntity [32 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowCharacterStep_NonExistingCharacter_ReturnsNotFound [23 ms]
+  ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchHideCharacterStep_ValidRequest_ReturnsUpdatedStep [42 ms]
+  ╨б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╨╡ ╨╛╨▒ ╨╛╤И╨╕╨▒╨║╨╡:
+   System.Net.Http.HttpRequestException : Response status code does not indicate success: 500 (Internal Server Error).
+  ╨в╤А╨░╤Б╤Б╨╕╤А╨╛╨▓╨║╨░ ╤Б╤В╨╡╨║╨░:
+     at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at NoviVovi.Api.Tests.Infrastructure.IntegrationTestBase.PostAsync[TResponse](String url, Object request) in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Infrastructure\IntegrationTestBase.cs:line 62
+   at NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchHideCharacterStep_ValidRequest_ReturnsUpdatedStep() in D:\Git\NoviVovi\tests\NoviVovi.Api.Tests\Steps\StepsControllerTests.cs:line 724
+--- End of stack trace from previous location ---
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜ 'c2306f52-cd1b-4e0f-b916-45fe7634110e' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜ 'c2306f52-cd1b-4e0f-b916-45fe7634110e' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Delete.DeleteStepHandler.Handle(DeleteStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Delete\DeleteStep.cs:line 38
+         at NoviVovi.Application.Steps.Features.Delete.DeleteStepHandler.Handle(DeleteStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Delete\DeleteStep.cs:line 49
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at NoviVovi.Api.Steps.Controllers.StepsController.Delete(Guid novelId, Guid labelId, Guid stepId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 86
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜тка '162ac64c-1fe4-4fd4-ab4b-fd67f2878910' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜тка '162ac64c-1fe4-4fd4-ab4b-fd67f2878910' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Add.AddJumpStepHandler.Handle(AddJumpStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddJumpStep.cs:line 35
+         at NoviVovi.Application.Steps.Features.Add.AddJumpStepHandler.Handle(AddJumpStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddJumpStep.cs:line 51
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜ 17000c6e-313d-4bbe-b823-630501458e6c я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜ 17000c6e-313d-4bbe-b823-630501458e6c я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Get.GetStepHandler.Handle(GetStepQuery request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Get\GetStep.cs:line 31
+         at NoviVovi.Api.Steps.Controllers.StepsController.Get(Guid novelId, Guid labelId, Guid stepId) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 46
+         at lambda_method73(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: Choices cannot be empty
+      NoviVovi.Domain.Common.DomainException: Choices cannot be empty
+         at NoviVovi.Domain.Menu.Menu.Create(IEnumerable`1 choices) in D:\Git\NoviVovi\backend\NoviVovi.Domain\Menu\Menu.cs:line 31
+         at NoviVovi.Application.Steps.Features.Add.AddShowMenuStepHandler.Handle(AddShowMenuStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowMenuStep.cs:line 56
+         at NoviVovi.Application.Steps.Features.Add.AddShowMenuStepHandler.Handle(AddShowMenuStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowMenuStep.cs:line 71
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchShowBackgroundStep_ValidRequest_ReturnsUpdatedStep [46 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.DeleteStep_NonExistingId_ReturnsNotFound [22 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddJumpStep_NonExistingTargetLabel_ReturnsNotFound [20 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_DifferentLabels_ReturnsOnlyLabelSteps [42 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.GetStep_NonExistingId_ReturnsNotFound [17 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.GetStep_ExistingId_ReturnsStep [29 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddJumpStep_ValidRequest_ReturnsCreatedStep [27 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowBackgroundStep_ValidRequest_ReturnsCreatedStep [30 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_EmptyChoices_ReturnsUnprocessableEntity [23 ms]
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜я┐╜ражя┐╜я┐╜я┐╜я┐╜ '390f3731-df44-429d-9bc9-9b4b904e9b6b' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜я┐╜ражя┐╜я┐╜я┐╜я┐╜ '390f3731-df44-429d-9bc9-9b4b904e9b6b' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
+         at NoviVovi.Application.Steps.Features.Add.AddShowBackgroundStepHandler.Handle(AddShowBackgroundStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowBackgroundStep.cs:line 42
+         at NoviVovi.Application.Steps.Features.Add.AddShowBackgroundStepHandler.Handle(AddShowBackgroundStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Add\AddShowBackgroundStep.cs:line 62
+         at NoviVovi.Api.Steps.Controllers.StepsController.Create(Guid novelId, Guid labelId, AddStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 34
+         at lambda_method56(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+fail: NoviVovi.Api.Infrastructure.GlobalExceptionHandler[0]
+      я┐╜роия┐╜я┐╜шла я┐╜я┐╜я┐╜я┐╜рабя┐╜таня┐╜я┐╜я┐╜ я┐╜шибя┐╜я┐╜: я┐╜я┐╜я┐╜ '4567563f-920b-4b9f-bbf4-3997af61ad7f' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ я┐╜я┐╜тке
+      NoviVovi.Application.Common.Exceptions.NotFoundException: я┐╜я┐╜я┐╜ '4567563f-920b-4b9f-bbf4-3997af61ad7f' я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜ я┐╜я┐╜тке
+         at NoviVovi.Application.Steps.Features.Patch.BasePatchStepHandler.GetStepContextOrThrow(PatchStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Patch\PatchStep.cs:line 31
+         at NoviVovi.Application.Steps.Features.Patch.PatchShowReplicaStepHandler.Handle(PatchShowReplicaStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Patch\PatchShowReplicaStep.cs:line 37
+         at NoviVovi.Application.Steps.Features.Patch.PatchShowReplicaStepHandler.Handle(PatchShowReplicaStepCommand request, CancellationToken ct) in D:\Git\NoviVovi\backend\NoviVovi.Application\Steps\Features\Patch\PatchShowReplicaStep.cs:line 62
+         at NoviVovi.Api.Steps.Controllers.StepsController.Patch(Guid novelId, Guid labelId, Guid stepId, PatchStepRequest request) in D:\Git\NoviVovi\backend\NoviVovi.Api\Steps\Controllers\StepsController.cs:line 73
+         at lambda_method153(Closure, Object)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+[xUnit.net 00:00:05.10]   Finished:    NoviVovi.Api.Tests
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowReplicaStep_ValidRequest_ReturnsCreatedStep [29 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.GetAllSteps_ReturnsAllStepsForLabel [39 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowBackgroundStep_NonExistingImage_ReturnsNotFound [17 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.AddShowMenuStep_ValidRequest_ReturnsCreatedStep [81 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchJumpStep_ValidRequest_ReturnsUpdatedStep [42 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchStep_NonExistingId_ReturnsNotFound [37 ms]
+  ╨Я╤А╨╛╨╣╨┤╨╡╨╜ NoviVovi.Api.Tests.Steps.StepsControllerTests.PatchShowMenuStep_ValidRequest_ReturnsUpdatedStep [45 ms]
+
+╨б╨▒╨╛╨╣ ╤В╨╡╤Б╤В╨╛╨▓╨╛╨│╨╛ ╨╖╨░╨┐╤Г╤Б╨║╨░.
+╨Т╤Б╨╡╨│╨╛ ╤В╨╡╤Б╤В╨╛╨▓: 27
+     ╨Я╤А╨╛╨╣╨┤╨╡╨╜╨╛: 25
+     ╨Э╨╡ ╨┐╤А╨╛╨╣╨┤╨╡╨╜╨╛: 2
+ ╨Ю╨▒╤Й╨╡╨╡ ╨▓╤А╨╡╨╝╤П: 5,6363 ╨б╨╡╨║╤Г╨╜╨┤╤Л

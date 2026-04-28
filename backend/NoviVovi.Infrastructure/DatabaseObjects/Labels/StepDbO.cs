@@ -13,6 +13,7 @@ public class StepDbO
     public Guid? MenuId { get; set; }
     public Guid? BackgroundId { get; set; }
     public Guid? CharacterId { get; set; }
+    public Guid? HideCharacterId { get; set; }
     public Guid? NextLabelId { get; set; }
     public int StepOrder { get; set; }
     public string? StepType { get; set; }
