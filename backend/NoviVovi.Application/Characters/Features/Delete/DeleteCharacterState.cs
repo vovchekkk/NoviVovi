@@ -23,12 +23,15 @@ public class DeleteCharacterStateHandler(
     public async Task Handle(DeleteCharacterStateCommand request, CancellationToken ct)
     {
         unitOfWork.BeginTransaction();
-        
+
         try
         {
             var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
-            
+
+            if (character.CharacterStates.All(s => !s.Id.Equals(request.StateId)))
+                throw new NotFoundException($"Состояние персонажа '{request.StateId}' не найдено");
+
             character.RemoveCharacterStateById(request.StateId);
 
             await characterRepository.AddOrUpdateAsync(character, ct);

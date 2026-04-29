@@ -28,10 +28,13 @@ public class DeleteCharacterHandler(
             var novel = await novelRepository.GetByIdAsync(request.NovelId, ct)
                         ?? throw new NotFoundException($"Новелла '{request.NovelId}' не найдена");
             
-            novel.RemoveCharacterById(request.CharacterId);
-            
             var character = await characterRepository.GetByIdAsync(request.CharacterId, ct)
                             ?? throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден");
+            
+            if (novel.Characters.All(c => !c.Id.Equals(request.CharacterId)))
+                throw new NotFoundException($"Персонаж '{request.CharacterId}' не найден в новелле '{request.NovelId}'");
+            
+            novel.RemoveCharacterById(request.CharacterId);
             
             await characterRepository.DeleteAsync(character, ct);
             

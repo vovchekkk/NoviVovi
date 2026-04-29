@@ -32,7 +32,7 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
         Assert.NotNull(response);
         Assert.NotEqual(Guid.Empty, response.Id);
         Assert.Equal("Alice", response.Name);
-        Assert.Equal("FF5733", response.NameColor);
+        Assert.Equal("#FF5733", response.NameColor); // API returns color with #
         Assert.Equal("Main character", response.Description);
 
         // Verify in database
@@ -104,7 +104,7 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
         Assert.NotNull(response);
         Assert.Equal(created.Id, response.Id);
         Assert.Equal("Alice", response.Name);
-        Assert.Equal("FF5733", response.NameColor);
+        Assert.Equal("#FF5733", response.NameColor);
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
         Assert.NotNull(response);
         Assert.Equal(created.Id, response.Id);
         Assert.Equal("Alice Updated", response.Name);
-        Assert.Equal("00FF00", response.NameColor);
+        Assert.Equal("#00FF00", response.NameColor);
         Assert.Equal("Updated description", response.Description);
 
         // Verify in database
@@ -226,9 +226,12 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
         Assert.NotNull(created);
 
         // Act
-        await DeleteAsync($"/api/novels/{novelId}/characters/{created.Id}");
+        var deleteResponse = await DeleteRawAsync($"/api/novels/{novelId}/characters/{created.Id}");
 
-        // Assert - verify deleted
+        // Assert - DELETE should return NoContent (204)
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+        
+        // Verify character is deleted - GET should return NotFound
         var getResponse = await GetRawAsync($"/api/novels/{novelId}/characters/{created.Id}");
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
 
@@ -268,7 +271,7 @@ public class CharactersControllerTests(NoviVoviWebApplicationFactory factory) : 
         var stateId = Guid.NewGuid();
         await UnitOfWork.Connection.ExecuteAsync(@"
             INSERT INTO ""Images"" (""id"", ""novel_id"", ""name"", ""url"", ""format"", ""img_type"", ""height"", ""width"", ""size"")
-            VALUES (@ImageId, @NovelId, 'test.png', 'http://test.com/test.png', 'png', 'Character', 512, 512, 1024);
+            VALUES (@ImageId, @NovelId, 'test.png', 'http://test.com/test.png', 'png', 'character', 512, 512, 1024);
             
             INSERT INTO ""CharacterStates"" (""id"", ""character_id"", ""image_id"", ""state_name"")
             VALUES (@StateId, @CharacterId, @ImageId, 'happy');

@@ -375,7 +375,6 @@ public class LabelMapperTests
             "png",
             ImageType.Background,
             new Size(1920, 1080),
-            null,
             ImageStatus.Active
         );
         

@@ -45,15 +45,13 @@ public class PatchImageHandlerTests
         var command = new PatchImageCommand 
         { 
             ImageId = imageId,
-            Name = "updated.png",
-            Description = "Updated description"
+            Name = "updated.png"
         };
         
         var expectedDto = new ImageDto
         {
             Id = imageId,
             Name = "updated.png",
-            Description = "Updated description",
             Format = "png",
             Type = ImageTypeDto.Background,
             Size = new SizeDto(1920, 1080),

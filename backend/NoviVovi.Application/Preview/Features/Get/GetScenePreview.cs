@@ -28,6 +28,10 @@ public class GetScenePreviewHandler(
         if (label.NovelId != request.NovelId)
             throw new ConflictException($"Метка '{request.LabelId}' не принадлежит новелле '{request.NovelId}'");
 
+        // Check if step exists in the label
+        if (label.Steps.All(s => !s.Id.Equals(request.StepId)))
+            throw new NotFoundException($"Шаг '{request.StepId}' не найден");
+
         var snapshot = new VisualSnapshot();
         foreach (var step in label.GetStepsUntil(request.StepId))
         {

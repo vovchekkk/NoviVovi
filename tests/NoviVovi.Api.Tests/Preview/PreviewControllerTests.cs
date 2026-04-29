@@ -44,15 +44,14 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
     {
         var imageRequest = new InitiateUploadImageRequest(
             "test.png",
-            null,
             "png",
             type,
             new SizeRequest(512, 512)
         );
 
-        var uploadInfo = await PostAsync<UploadInfoImageResponse>("/api/images/upload-url", imageRequest);
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novelId}/images/upload-url", imageRequest);
         Assert.NotNull(uploadInfo);
-        await Client.PostAsync($"/api/images/{uploadInfo.ImageId}/confirm", null);
+        await Client.PostAsync($"/api/novels/{novelId}/images/{uploadInfo.ImageId}/confirm", null);
         return uploadInfo.ImageId;
     }
 

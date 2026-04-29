@@ -17,7 +17,6 @@ public partial class ImageDtoMapper(
     {
         Id = source.Id,
         Name = source.Name,
-        Description = source.Description,
         Url = storageService.GetViewUrl(source.StoragePath), 
         StoragePath = source.StoragePath,
         Format = source.Format,

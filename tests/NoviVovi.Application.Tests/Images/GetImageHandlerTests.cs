@@ -44,7 +44,6 @@ public class GetImageHandlerTests
         {
             Id = imageId,
             Name = "test.png",
-            Description = null,
             Format = "png",
             Type = ImageTypeDto.Background,
             Size = new SizeDto(1920, 1080),

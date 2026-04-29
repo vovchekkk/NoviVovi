@@ -158,7 +158,6 @@ public class CharacterMapperTests
             "png",
             ImageType.Character,
             new Size(512, 512),
-            null,
             ImageStatus.Active
         );
 
@@ -292,7 +291,6 @@ public class CharacterMapperTests
             "png",
             ImageType.Character,
             new Size(512, 512),
-            null,
             ImageStatus.Active
         );
 

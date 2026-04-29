@@ -47,7 +47,6 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
     {
         var imageRequest = new InitiateUploadImageRequest(
             "test.png",
-            null,
             "png",
             type,
             new SizeRequest(512, 512)

@@ -33,7 +33,6 @@ public class CharacterStatesControllerTests(NoviVoviWebApplicationFactory factor
     {
         var imageRequest = new InitiateUploadImageRequest(
             "character.png",
-            "Character image",
             "png",
             ImageTypeRequest.Character,
             new SizeRequest(512, 512)

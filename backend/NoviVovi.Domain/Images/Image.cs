@@ -7,7 +7,6 @@ public class Image : Entity
 {
     public string Name { get; private set; }
     public Guid? NovelId { get; private set; }
-    public string? Description { get; private set; }
     public string StoragePath { get; private set; } 
     public string Format { get; private set; }
     public ImageType Type { get; private set; }
@@ -22,7 +21,6 @@ public class Image : Entity
         string format,
         ImageType type,
         Size size,
-        string? description,
         ImageStatus status
     ) : base(id)
     {
@@ -32,7 +30,6 @@ public class Image : Entity
         Format = format;
         Type = type;
         Size = size;
-        Description = description;
         Status = status;
     }
     
@@ -43,7 +40,6 @@ public class Image : Entity
         string? format,
         ImageType type,
         Size? size,
-        string? description = null,
         Guid? imageGuid = null
     )
     {
@@ -61,6 +57,11 @@ public class Image : Entity
         if (string.IsNullOrWhiteSpace(format))
             throw new DomainException($"Format cannot be empty");
         
+        // Validate format - only allow common image formats
+        var allowedFormats = new[] { "png", "jpg", "jpeg", "webp", "gif" };
+        if (!allowedFormats.Contains(format.ToLowerInvariant()))
+            throw new DomainException($"Invalid image format '{format}'. Allowed formats: {string.Join(", ", allowedFormats)}");
+        
         if (size is null)
             throw new DomainException($"Size cannot be null");
         
@@ -75,7 +76,6 @@ public class Image : Entity
             format,
             type,
             size,
-            description,
             ImageStatus.Pending
         );
     }
@@ -93,11 +93,6 @@ public class Image : Entity
             throw new DomainException("Name cannot be empty");
         
         Name = name;
-    }
-
-    public void UpdateDescription(string? description)
-    {
-        Description = description;
     }
 
     public void UpdateType(ImageType? type)

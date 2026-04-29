@@ -20,7 +20,6 @@ public partial class ImageMapper(
             imgDbo.Format,
             imgDbo.ImgType.ToImageType(),
             new Size(imgDbo.Width, imgDbo.Height),
-            null,
             ImageStatus.Active);
         return img;
     }

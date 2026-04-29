@@ -16,7 +16,6 @@ public class InitiateUploadImageCommand : IRequest<UploadInfoImageDto>
 {
     public required Guid NovelId { get; init; }
     public required string Name { get; init; }
-    public string? Description { get; init; }
     public required string Format { get; init; }
     public required ImageType Type { get; init; }
     public required SizeDto Size { get; init; }
@@ -46,7 +45,6 @@ public class InitiateUploadImageHandler(
                 request.Format,
                 request.Type,
                 new Size(request.Size.Width, request.Size.Height),
-                request.Description,
                 imageId
             );
 

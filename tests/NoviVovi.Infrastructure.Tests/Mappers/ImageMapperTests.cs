@@ -60,7 +60,6 @@ public class ImageMapperTests
             "png",
             ImageType.Character,
             new Size(512, 512),
-            null,
             ImageStatus.Active
         );
 
@@ -92,7 +91,6 @@ public class ImageMapperTests
             "jpg",
             ImageType.Background,
             new Size(1920, 1080),
-            null,
             ImageStatus.Active
         );
 
@@ -201,7 +199,6 @@ public class ImageMapperTests
             "png",
             ImageType.Background,
             new Size(1920, 1080),
-            null,
             ImageStatus.Active
         );
 
@@ -245,7 +242,6 @@ public class ImageMapperTests
             "png",
             ImageType.Background,
             new Size(1920, 1080),
-            null,
             ImageStatus.Active
         );
 

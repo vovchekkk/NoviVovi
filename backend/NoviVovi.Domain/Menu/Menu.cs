@@ -11,8 +11,6 @@ public class Menu : Entity
     public Menu(Guid id) : base(id)
     {
     }
-    
-    
 
     public static Menu Create()
     {

@@ -14,7 +14,6 @@ public class PatchImageCommand : IRequest<ImageDto>
 {
     public required Guid ImageId { get; init; }
     public string? Name { get; init; }
-    public string? Description { get; init; }
     public ImageType? Type { get; init; }
 }
 
@@ -35,9 +34,6 @@ public class PatchImageHandler(
             
             if (request.Name is not null)
                 image.UpdateName(request.Name);
-            
-            if (request.Description is not null)
-                image.UpdateDescription(request.Description);
             
             if (request.Type.HasValue)
                 image.UpdateType(request.Type.Value);
