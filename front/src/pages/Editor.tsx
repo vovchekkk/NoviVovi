@@ -175,6 +175,7 @@ const normalizeIncomingStep = (step: any): Step => {
     if (step.type === 'show_menu') {
         return {
             ...step,
+            id: step.id || '',
             type: 'menu',
             menuRequest: {
                 id: step.id || `temp-menu-${step.id}`,
@@ -196,8 +197,10 @@ const normalizeIncomingStep = (step: any): Step => {
     if (step.type === 'jump') {
         return {
             ...step,
+            id: step.id || '',
             type: 'jump',
-            targetId: step.targetLabelId || '',
+            targetId: step.transition?.targetLabelId || step.targetLabelId || '',
+            targetLabelId: step.transition?.targetLabelId || step.targetLabelId || '',
         };
     }
     if (step?.type === 'show_background') {

@@ -131,7 +131,8 @@ CREATE TABLE "Steps" (
     "replica_id" UUID,
     "menu_id" UUID,
     "background_id" UUID,
-    "character_id" UUID,
+    "character_id" UUID,           -- для ShowCharacterStep                               
+    "hide_character_id" UUID,      -- ← НОВОЕ ПОЛЕ для HideCharacterStep                  
     "next_label_id" UUID,
     "step_order" INT NOT NULL,
     "step_type" VARCHAR(50)
@@ -185,6 +186,9 @@ ADD FOREIGN KEY ("background_id") REFERENCES "Backgrounds"("id") ON DELETE SET N
 
 ALTER TABLE "Steps"
 ADD FOREIGN KEY ("character_id") REFERENCES "StepCharacter"("id") ON DELETE SET NULL;
+
+ALTER TABLE "Steps"
+    ADD FOREIGN KEY ("hide_character_id") REFERENCES "Characters"("id") ON DELETE SET NULL;
 
 ALTER TABLE "Steps"
 ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE SET NULL;
