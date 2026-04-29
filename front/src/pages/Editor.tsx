@@ -1084,447 +1084,446 @@ export default function Editor() {
                 alert('Не удалось сохранить шаг');
             }
         }
-        ;
-        const addStep = (type: StepType) => {
-            let tempStep: any = {
-                id: '',
-                type: '',
-                state: defaultSceneState,
-            };
-
-            switch (type) {
-                case 'show_background':
-                    tempStep.background = {
-                        imageId: '',
-                        transform: {...defaultBackgroundTransform}
-                    };
-                    tempStep.type = 'show_background';
-                    tempStep.transform = {x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0};
-                    break;
-
-                case 'show_character':
-                    tempStep.type = 'show_character';
-                    tempStep.characterId = '';
-                    tempStep.characterStateId = '';
-                    tempStep.transform = {x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10};
-                    break;
-
-                case 'hide_character':
-                    tempStep.type = 'hide_character';
-                    tempStep.characterId = '';
-                    break;
-
-                case 'replica':
-                    tempStep.type = 'replica';
-                    tempStep.characterId = '';
-                    tempStep.text = '';
-                    break;
-
-                case 'jump':
-                    tempStep.type = 'jump';
-                    tempStep.targetId = '';
-                    break;
-
-                case 'menu':
-                    tempStep.type = 'menu';
-                    tempStep.name = '';
-                    tempStep.text = '';
-                    tempStep.menuRequest = {
-                        id: 'temp-menu-default',
-                        choices: [],
-                    };
-                    break;
-            }
-
-            // Сохраняем временный step для отображения формы
-            setNewStepData(tempStep);
-            setSelectedId(null);
-            setSelectedStepIndex(-1);
-            reset(tempStep);
+    };
+    const addStep = (type: StepType) => {
+        let tempStep: any = {
+            id: '',
+            type: '',
+            state: defaultSceneState,
         };
-        const deleteStep = async (index: number) => {
-            const stepToDelete = steps[index];
-            if (!stepToDelete) {
+
+        switch (type) {
+            case 'show_background':
+                tempStep.background = {
+                    imageId: '',
+                    transform: {...defaultBackgroundTransform}
+                };
+                tempStep.type = 'show_background';
+                tempStep.transform = {x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0};
+                break;
+
+            case 'show_character':
+                tempStep.type = 'show_character';
+                tempStep.characterId = '';
+                tempStep.characterStateId = '';
+                tempStep.transform = {x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10};
+                break;
+
+            case 'hide_character':
+                tempStep.type = 'hide_character';
+                tempStep.characterId = '';
+                break;
+
+            case 'replica':
+                tempStep.type = 'replica';
+                tempStep.characterId = '';
+                tempStep.text = '';
+                break;
+
+            case 'jump':
+                tempStep.type = 'jump';
+                tempStep.targetId = '';
+                break;
+
+            case 'menu':
+                tempStep.type = 'menu';
+                tempStep.name = '';
+                tempStep.text = '';
+                tempStep.menuRequest = {
+                    id: 'temp-menu-default',
+                    choices: [],
+                };
+                break;
+        }
+
+        // Сохраняем временный step для отображения формы
+        setNewStepData(tempStep);
+        setSelectedId(null);
+        setSelectedStepIndex(-1);
+        reset(tempStep);
+    };
+    const deleteStep = async (index: number) => {
+        const stepToDelete = steps[index];
+        if (!stepToDelete) {
+            return;
+        }
+
+        try {
+            await stepsApi.delete(novelId, selectedLabelId, stepToDelete.id);
+            await api.delete(`novels/${novelId}/labels/${selectedLabelId}/steps/${stepToDelete.id}`);
+            const newSteps = steps.filter((_, i) => i !== index);
+            setSteps(newSteps);
+
+            if (newSteps.length === 0) {
+                setSelectedStepIndex(0);
+                setSelectedId(null);
                 return;
             }
 
-            try {
-                await stepsApi.delete(novelId, selectedLabelId, stepToDelete.id);
-                await api.delete(`novels/${novelId}/labels/${selectedLabelId}/steps/${stepToDelete.id}`);
-                const newSteps = steps.filter((_, i) => i !== index);
-                setSteps(newSteps);
-
-                if (newSteps.length === 0) {
-                    setSelectedStepIndex(0);
-                    setSelectedId(null);
-                    return;
-                }
-
-                const nextIndex = Math.min(selectedStepIndex, newSteps.length - 1);
-                setSelectedStepIndex(nextIndex);
-                setSelectedId(newSteps[nextIndex].id);
-            } catch (error) {
-                console.error(error);
-                alert('Не удалось удалить шаг');
-            }
+            const nextIndex = Math.min(selectedStepIndex, newSteps.length - 1);
+            setSelectedStepIndex(nextIndex);
+            setSelectedId(newSteps[nextIndex].id);
+        } catch (error) {
+            console.error(error);
+            alert('Не удалось удалить шаг');
         }
-        const renderStepForm = () => {
-            if (!currentStep) return <div>Выберите шаг</div>;
+    }
+    const renderStepForm = () => {
+        if (!currentStep) return <div>Выберите шаг</div>;
 
-            const labelOptions = labels.map((label) => ({
-                value: label.id,
-                label: label.name,
-            }));
-            const formProps = {
-                control,
-                errors,
-                register,
-                setValue,
-                characterOptions: characterOptions,
-                labelOptions: labelOptions,
-                novelId: novelId,
-            };
-
-            switch (currentStep.type) {
-                case 'hide_character':
-                    return <HideStepForm {...formProps} />;
-                case 'jump':
-                    return <JumpStepForm {...formProps} />;
-                case 'show_character':
-                    return <ShowStepForm {...formProps} />;
-                case 'show_background':
-                    return <BackgroundStepForm {...formProps} />;
-                case 'replica':
-                    return <ReplicaStepForm {...formProps} />;
-                case 'menu':
-                    return <ChoiceStepForm {...formProps} />;
-                default:
-                    return null;
-            }
+        const labelOptions = labels.map((label) => ({
+            value: label.id,
+            label: label.name,
+        }));
+        const formProps = {
+            control,
+            errors,
+            register,
+            setValue,
+            characterOptions: characterOptions,
+            labelOptions: labelOptions,
+            novelId: novelId,
         };
 
-        const handleSelectStep = (index: number) => {
-            setSelectedStepIndex(index);
-            setSelectedId(steps[index]?.id ?? null);
-        };
-
-        const changeLabel = (labelId) => {
-            setSelectedLabelId(labelId);
+        switch (currentStep.type) {
+            case 'hide_character':
+                return <HideStepForm {...formProps} />;
+            case 'jump':
+                return <JumpStepForm {...formProps} />;
+            case 'show_character':
+                return <ShowStepForm {...formProps} />;
+            case 'show_background':
+                return <BackgroundStepForm {...formProps} />;
+            case 'replica':
+                return <ReplicaStepForm {...formProps} />;
+            case 'menu':
+                return <ChoiceStepForm {...formProps} />;
+            default:
+                return null;
         }
+    };
 
-        const createLabel = async (e) => {
-            e.preventDefault();
-            try {
-                const {data: newLabel} = await labelsApi.create(novelId, {
-                    name: labelName || 'Новая сцена'
-                })
-                setLabels([...labels, newLabel]);
-                setSelectedLabelId(newLabel.id);
-            } catch (error) {
-                console.error(error);
-                alert('Не удалось создать сцену. Попробуйте еще раз.');
-            } finally {
-                setIsLabelOpen(false);
-            }
+    const handleSelectStep = (index: number) => {
+        setSelectedStepIndex(index);
+        setSelectedId(steps[index]?.id ?? null);
+    };
+
+    const changeLabel = (labelId) => {
+        setSelectedLabelId(labelId);
+    }
+
+    const createLabel = async (e) => {
+        e.preventDefault();
+        try {
+            const {data: newLabel} = await labelsApi.create(novelId, {
+                name: labelName || 'Новая сцена'
+            })
+            setLabels([...labels, newLabel]);
+            setSelectedLabelId(newLabel.id);
+        } catch (error) {
+            console.error(error);
+            alert('Не удалось создать сцену. Попробуйте еще раз.');
+        } finally {
+            setIsLabelOpen(false);
         }
+    }
 
-        const deleteLabel = async (id: string) => {
-            try {
-                await labelsApi.delete(novelId, id);
-                const newLabels = labels.filter(lab => lab.id !== id);
-                setLabels(newLabels);
-                if (selectedLabelId === id) {
-                    if (newLabels.length > 0) {
-                        setSelectedLabelId(newLabels[0].id);
-                    } else {
-                        setSelectedLabelId(null);
-                        setSteps([]);
-                    }
+    const deleteLabel = async (id: string) => {
+        try {
+            await labelsApi.delete(novelId, id);
+            const newLabels = labels.filter(lab => lab.id !== id);
+            setLabels(newLabels);
+            if (selectedLabelId === id) {
+                if (newLabels.length > 0) {
+                    setSelectedLabelId(newLabels[0].id);
+                } else {
+                    setSelectedLabelId(null);
+                    setSteps([]);
                 }
-            } catch (error) {
-                console.error(error);
-                alert('Не удалось удалить сцену');
             }
+        } catch (error) {
+            console.error(error);
+            alert('Не удалось удалить сцену');
         }
+    }
 
-        const patchLabel = async (label: Label) => {
-            try {
-                await labelsApi.patch(novelId, label.id, {
-                    name: label.name,
-                })
-                setLabels((prevLabels) =>
-                    prevLabels.map((lab) =>
-                        lab.id === label.id ? {...label, name: label.name} : lab
-                    )
-                );
-            } catch (error) {
-                console.error(error);
-                alert('Не удалось обновить сцену');
-            }
+    const patchLabel = async (label: Label) => {
+        try {
+            await labelsApi.patch(novelId, label.id, {
+                name: label.name,
+            })
+            setLabels((prevLabels) =>
+                prevLabels.map((lab) =>
+                    lab.id === label.id ? {...label, name: label.name} : lab
+                )
+            );
+        } catch (error) {
+            console.error(error);
+            alert('Не удалось обновить сцену');
         }
+    }
 
-        return (
-            <div className={css({
-                bg: '#775D68',
-                minHeight: '100vh',
-                color: 'text',
+    return (
+        <div className={css({
+            bg: '#775D68',
+            minHeight: '100vh',
+            color: 'text',
+        })}>
+            <Header active="editor"/>
+            <main className={css({
+                pt: '90px',
+                pb: '0px',
+                px: '0px',
             })}>
-                <Header active="editor"/>
-                <main className={css({
-                    pt: '90px',
-                    pb: '0px',
-                    px: '0px',
+                <div className={css({
+                    minHeight: '100vh',
+                    background: '#775D68',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    gap: '0px',
                 })}>
                     <div className={css({
-                        minHeight: '100vh',
-                        background: '#775D68',
                         display: 'flex',
-                        flexDirection: 'column',
+                        minHeight: '0',
+                        flex: 1,
+                        gap: '20px',
                         width: '100%',
-                        gap: '0px',
                     })}>
                         <div className={css({
                             display: 'flex',
-                            minHeight: '0',
-                            flex: 1,
-                            gap: '20px',
+                            flexDirection: 'column',
                             width: '100%',
+                            gap: '0px',
                         })}>
+                            <EditorHeader active="editor"/>
                             <div className={css({
-                                display: 'flex',
-                                flexDirection: 'column',
+                                backgroundColor: 'white',
+                                color: 'black',
                                 width: '100%',
-                                gap: '0px',
+                                height: '100%',
+                                paddingTop: '20px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: '20px',
+                                flex: 4,
                             })}>
-                                <EditorHeader active="editor"/>
+                                <div className={css({
+                                    backgroundColor: '#DFC6D1',
+                                    borderRadius: '5px',
+                                    flex: 1,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                })}>
+                                    <div className={css({
+                                        fontWeight: 'bold',
+                                        fontSize: '20px',
+                                        marginTop: '15px',
+                                    })}>
+                                        Сцены
+                                    </div>
+                                    <div className={css({
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '10px',
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        marginTop: '20px',
+                                    })}>
+                                        {labels.map(label => (
+                                            <LabelItem
+                                                key={label.id}
+                                                changeLabel={changeLabel}
+                                                label={label}
+                                                selectedId={selectedLabelId}
+                                                onDelete={deleteLabel}
+                                                onPatch={patchLabel}
+                                                labelName={labelName}
+                                                setLabelName={setLabelName}
+                                            >
+                                            </LabelItem>
+                                        ))}
+                                    </div>
+                                    <button
+                                        onClick={() => setIsLabelOpen(true)}
+                                        className={css({
+                                            bg: 'white',
+                                            width: '80%',
+                                            minHeight: '44px',
+                                            padding: '10px 14px',
+                                            margin: '20px auto',
+                                            _hover: {
+                                                bg: '#705661', color: 'white',
+                                                boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)'
+                                            },
+                                            borderRadius: '12px',
+                                            fontWeight: 'medium',
+                                            flexShrink: 0,
+                                        })}>
+                                        + Добавить сцену
+                                    </button>
+                                </div>
                                 <div className={css({
                                     backgroundColor: 'white',
                                     color: 'black',
-                                    width: '100%',
-                                    height: '100%',
-                                    paddingTop: '20px',
                                     display: 'flex',
-                                    flexDirection: 'row',
+                                    flexDirection: 'column',
                                     gap: '20px',
                                     flex: 4,
                                 })}>
-                                    <div className={css({
-                                        backgroundColor: '#DFC6D1',
-                                        borderRadius: '5px',
-                                        flex: 1,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                    })}>
-                                        <div className={css({
-                                            fontWeight: 'bold',
-                                            fontSize: '20px',
-                                            marginTop: '15px',
-                                        })}>
-                                            Сцены
-                                        </div>
-                                        <div className={css({
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: '10px',
-                                            width: '100%',
-                                            alignItems: 'center',
-                                            marginTop: '20px',
-                                        })}>
-                                            {labels.map(label => (
-                                                <LabelItem
-                                                    key={label.id}
-                                                    changeLabel={changeLabel}
-                                                    label={label}
-                                                    selectedId={selectedLabelId}
-                                                    onDelete={deleteLabel}
-                                                    onPatch={patchLabel}
-                                                    labelName={labelName}
-                                                    setLabelName={setLabelName}
-                                                >
-                                                </LabelItem>
-                                            ))}
-                                        </div>
-                                        <button
-                                            onClick={() => setIsLabelOpen(true)}
-                                            className={css({
-                                                bg: 'white',
-                                                width: '80%',
-                                                minHeight: '44px',
-                                                padding: '10px 14px',
-                                                margin: '20px auto',
-                                                _hover: {
-                                                    bg: '#705661', color: 'white',
-                                                    boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)'
-                                                },
-                                                borderRadius: '12px',
-                                                fontWeight: 'medium',
-                                                flexShrink: 0,
-                                            })}>
-                                            + Добавить сцену
-                                        </button>
-                                    </div>
-                                    <div className={css({
-                                        backgroundColor: 'white',
-                                        color: 'black',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '20px',
-                                        flex: 4,
-                                    })}>
-                                        <Preview
-                                            steps={steps}
-                                            selectedStepIndex={selectedStepIndex}
-                                            control={control}
-                                            novelId={novelId}
-                                            characterOptions={characterOptions}
-                                        ></Preview>
-                                        <BlockPanel
-                                            steps={steps}
-                                            selectedStepIndex={selectedStepIndex}
-                                            onSelectStep={handleSelectStep}
-                                            onAddClick={() => setIsOpen(true)}
-                                            onDeleteStep={deleteStep}
-                                        />
-                                    </div>
+                                    <Preview
+                                        steps={steps}
+                                        selectedStepIndex={selectedStepIndex}
+                                        control={control}
+                                        novelId={novelId}
+                                        characterOptions={characterOptions}
+                                    ></Preview>
+                                    <BlockPanel
+                                        steps={steps}
+                                        selectedStepIndex={selectedStepIndex}
+                                        onSelectStep={handleSelectStep}
+                                        onAddClick={() => setIsOpen(true)}
+                                        onDeleteStep={deleteStep}
+                                    />
                                 </div>
-                                <Modal active={isLabelOpen} setActive={setIsLabelOpen}>
-                                    <div className={css({
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '20px',
-                                    })}>
+                            </div>
+                            <Modal active={isLabelOpen} setActive={setIsLabelOpen}>
+                                <div className={css({
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px',
+                                })}>
 
-                                        <form onSubmit={createLabel} className={css({
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: '20px',
-                                        })}>
-                                            <div className={css({
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                gap: '10px',
-                                                width: '300px',
-                                                margin: '0 auto',
-                                            })}>
-                                                <label
-                                                    className={css({
-                                                        fontSize: '18px',
-                                                        textAlign: 'left'
-                                                    })}>Название</label>
-                                                <input value={labelName}
-                                                       onChange={(e) => setLabelName(e.target.value)}
-                                                       required
-                                                       className={css({
-                                                           width: '100%',
-                                                           padding: '10px',
-                                                           borderRadius: '8px',
-                                                           backgroundColor: 'white',
-                                                           border: '1px solid black'
-                                                       })}
-                                                />
-                                            </div>
-                                            <button type="submit" className={css({
-                                                alignSelf: 'flex-start',
-                                                padding: '10px 20px',
-                                                borderRadius: '8px',
-                                                border: 'none',
-                                                backgroundColor: '#705661',
-                                                color: 'white',
-                                                fontWeight: 'bold',
-                                                margin: '0 auto',
-                                                width: '300px',
-                                                _hover: {bg: '#A87383'},
-                                            })}>
-                                                Создать
-                                            </button>
-                                        </form>
-                                    </div>
-                                </Modal>
-                                <Modal active={isOpen} setActive={setIsOpen}>
-                                    <div className={css({
+                                    <form onSubmit={createLabel} className={css({
                                         display: 'flex',
                                         flexDirection: 'column',
                                         gap: '20px',
                                     })}>
                                         <div className={css({
-                                            fontSize: '18px',
-                                            fontWeight: 'bold',
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: '10px',
+                                            width: '300px',
+                                            margin: '0 auto',
                                         })}>
-                                            Выберите тип блока
+                                            <label
+                                                className={css({
+                                                    fontSize: '18px',
+                                                    textAlign: 'left'
+                                                })}>Название</label>
+                                            <input value={labelName}
+                                                   onChange={(e) => setLabelName(e.target.value)}
+                                                   required
+                                                   className={css({
+                                                       width: '100%',
+                                                       padding: '10px',
+                                                       borderRadius: '8px',
+                                                       backgroundColor: 'white',
+                                                       border: '1px solid black'
+                                                   })}
+                                            />
                                         </div>
-                                        {Object.values(StepType).map((type) => {
-                                            return (
-                                                <button
-                                                    key={type}
-                                                    onClick={() => {
-                                                        addStep(type);
-                                                        setIsOpen(false);
-                                                    }}
-                                                    className={css({
-                                                        padding: '10px',
-                                                        borderRadius: '8px',
-                                                        border: '1px solid #ccc',
-                                                        backgroundColor: '#F8EDEB',
-                                                        _hover: {bg: '#DFC6D1'},
-                                                    })}
-                                                >
-                                                    {stepDisplayNames[type]}
-                                                </button>
-                                            );
-                                        })}</div>
-                                </Modal>
-                            </div>
-                            <div className={css({
-                                backgroundColor: '#DFC6D1',
-                                color: 'black',
-                                flex: 1,
-                                minWidth: '400px',
-                                borderRadius: '12px',
-                            })}>
-                                {currentStep ? (
-                                    <form
-                                        onSubmit={handleSubmit(onSave, (errors) => console.log('Форма невалидна', errors))}
-                                        className={css({
-                                            padding: '20px',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: '20px'
-                                        })}>
-                                        <h2 className={css({
-                                            fontSize: '20px',
+                                        <button type="submit" className={css({
+                                            alignSelf: 'flex-start',
+                                            padding: '10px 20px',
+                                            borderRadius: '8px',
+                                            border: 'none',
+                                            backgroundColor: '#705661',
+                                            color: 'white',
                                             fontWeight: 'bold',
-                                            borderBottom: '2px solid #705661'
+                                            margin: '0 auto',
+                                            width: '300px',
+                                            _hover: {bg: '#A87383'},
                                         })}>
-                                            {stepDisplayNames[currentStep.type as StepType]}
-                                        </h2>
-                                        {renderStepForm()}
-                                        <button
-                                            type="submit"
-                                            className={css({
-                                                alignSelf: 'flex-start',
-                                                padding: '10px 20px',
-                                                borderRadius: '8px',
-                                                border: 'none',
-                                                backgroundColor: '#705661',
-                                                color: 'white',
-                                                fontWeight: 'bold',
-                                                margin: '0 auto',
-                                                width: '300px',
-                                                _hover: {bg: '#A87383'},
-                                            })}
-                                        >
-                                            Сохранить
+                                            Создать
                                         </button>
                                     </form>
-                                ) : (
-                                    <div className={css({padding: '20px'})}>Выберите шаг для редактирования</div>
-                                )}
-                            </div>
+                                </div>
+                            </Modal>
+                            <Modal active={isOpen} setActive={setIsOpen}>
+                                <div className={css({
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px',
+                                })}>
+                                    <div className={css({
+                                        fontSize: '18px',
+                                        fontWeight: 'bold',
+                                    })}>
+                                        Выберите тип блока
+                                    </div>
+                                    {Object.values(StepType).map((type) => {
+                                        return (
+                                            <button
+                                                key={type}
+                                                onClick={() => {
+                                                    addStep(type);
+                                                    setIsOpen(false);
+                                                }}
+                                                className={css({
+                                                    padding: '10px',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid #ccc',
+                                                    backgroundColor: '#F8EDEB',
+                                                    _hover: {bg: '#DFC6D1'},
+                                                })}
+                                            >
+                                                {stepDisplayNames[type]}
+                                            </button>
+                                        );
+                                    })}</div>
+                            </Modal>
+                        </div>
+                        <div className={css({
+                            backgroundColor: '#DFC6D1',
+                            color: 'black',
+                            flex: 1,
+                            minWidth: '400px',
+                            borderRadius: '12px',
+                        })}>
+                            {currentStep ? (
+                                <form
+                                    onSubmit={handleSubmit(onSave, (errors) => console.log('Форма невалидна', errors))}
+                                    className={css({
+                                        padding: '20px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '20px'
+                                    })}>
+                                    <h2 className={css({
+                                        fontSize: '20px',
+                                        fontWeight: 'bold',
+                                        borderBottom: '2px solid #705661'
+                                    })}>
+                                        {stepDisplayNames[currentStep.type as StepType]}
+                                    </h2>
+                                    {renderStepForm()}
+                                    <button
+                                        type="submit"
+                                        className={css({
+                                            alignSelf: 'flex-start',
+                                            padding: '10px 20px',
+                                            borderRadius: '8px',
+                                            border: 'none',
+                                            backgroundColor: '#705661',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            margin: '0 auto',
+                                            width: '300px',
+                                            _hover: {bg: '#A87383'},
+                                        })}
+                                    >
+                                        Сохранить
+                                    </button>
+                                </form>
+                            ) : (
+                                <div className={css({padding: '20px'})}>Выберите шаг для редактирования</div>
+                            )}
                         </div>
                     </div>
-                </main>
-            </div>
-        )
-    }
+                </div>
+            </main>
+        </div>
+    )
 }
