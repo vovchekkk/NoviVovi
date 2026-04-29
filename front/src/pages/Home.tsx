@@ -4,14 +4,11 @@ import VideoContainer from '../shared/ui/VideoContainer'
 import CTAButton from '../shared/ui/CTAButton'
 import Modal from "../shared/ui/Modal.tsx";
 import {useState} from "react";
-import api from "../api.tsx";
+import { novelsApi } from "../shared/api/client";
+import type { NovelResponse } from "../shared/api/types";
 import { useNavigate } from "react-router-dom";
 import { setLastNovelId } from "../shared/lib/novelSession.ts";
 
-type Novel = {
-    id: string;
-    title: string;
-};
 export default function Home() {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +17,7 @@ export default function Home() {
     const createNovel = async (e) => {
         e.preventDefault();
         try {
-            const {data: newNovel} = await api.post<Novel>('/novels', {
+            const {data: newNovel} = await novelsApi.create({
                 title: novelTitle
             })
             setLastNovelId(newNovel.id);
