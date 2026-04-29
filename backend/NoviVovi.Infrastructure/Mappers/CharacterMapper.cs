@@ -36,6 +36,8 @@ public partial class CharacterMapper(
 
     public CharacterStateDbO ToDbO(CharacterState character, Guid characterId)
     {
+        var transformDbO = transformMapper.ToDbO(character.LocalTransform);
+        
         var res = new CharacterStateDbO
         {
             Id = character.Id,
@@ -44,6 +46,8 @@ public partial class CharacterMapper(
             ImageId = character.Image.Id,
             StateName = character.Name,
             Image = imageMapper.ToDbO(character.Image),
+            Transform = transformDbO,
+            TransformId = transformDbO.Id
         };
         return res;
     }

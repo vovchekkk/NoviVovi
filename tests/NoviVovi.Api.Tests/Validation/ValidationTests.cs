@@ -345,7 +345,7 @@ public class ValidationTests(NoviVoviWebApplicationFactory factory) : Integratio
 
         // Act
         var response = await PostRawAsync($"/api/novels/{novel.Id}/labels/{label.Id}/steps",
-            new AddShowCharacterStepRequest(Guid.NewGuid(), new TransformRequest(0, 0, 512, 512, 1, 0, 0)));
+            new AddShowCharacterStepRequest(Guid.NewGuid(), Guid.NewGuid(), new TransformRequest(0, 0, 512, 512, 1, 0, 0)));
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
