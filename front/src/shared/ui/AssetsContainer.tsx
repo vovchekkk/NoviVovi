@@ -43,6 +43,9 @@ type Emotion = {
     id: string;
     name: string;
     fileUrl?: string;
+    image: {
+        id:string
+    }
 }
 
 interface AssetsProps {

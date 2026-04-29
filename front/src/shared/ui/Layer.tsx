@@ -66,12 +66,11 @@ export const BackgroundLayer = ({ imageId, transform, novelId }: { imageId: any,
     );
 };
 
-export const CharacterLayer = ({ characterId, stateId, transform, novelId  }: any) => {
-    const resourceId = stateId || characterId;
-
+export const CharacterLayer = ({ imageId, transform, novelId  }: any) => {
+   console.log(imageId);
     return (
         <Layer
-            id={resourceId}
+            id={imageId}
             transform={transform}
             novelId={novelId}
         />

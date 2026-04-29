@@ -8,9 +8,15 @@ interface PreviewProps {
     selectedStepIndex: number | null;
     control?: any;
     novelId: string;
+    characterOptions: any[];
 }
 
-export default function Preview({ steps, selectedStepIndex, control, novelId }: PreviewProps) {
+export default function Preview({ steps, selectedStepIndex, control, novelId, characterOptions }: PreviewProps) {
+    const getActualImageId = (charId: string, stateId: string) => {
+        const character = characterOptions?.find(c => c.id === charId);
+        const state = character?.states?.find((s: any) => s.id === stateId);
+        return state?.imageId;
+    };
     const historyIndex = selectedStepIndex !== null ? selectedStepIndex - 1 : null;
     const { background: hBackground, characters: hCharacters } = useSceneSnapshot(steps, historyIndex);
 
@@ -71,15 +77,20 @@ export default function Preview({ steps, selectedStepIndex, control, novelId }: 
             {activeCharacters
                 .filter((char: any) => !!char.characterId && !!char.characterStateId)
                 .sort((a: any, b: any) => (a.transform?.zIndex || 10) - (b.transform?.zIndex || 10))
-                .map((char: any, index: number) => (
-                    <CharacterLayer
-                        key={char.characterId || `char-${index}`}
-                        characterId={char.characterId}
-                        stateId={char.characterStateId}
-                        transform={char.transform}
-                        novelId={novelId}
-                    />
-                ))}
+                .map((char: any, index: number) => {
+                    const resolvedImageId = getActualImageId(char.characterId, char.characterStateId);
+
+                    if (!resolvedImageId) return null;
+
+                    return (
+                        <CharacterLayer
+                            key={char.characterId || `char-${index}`}
+                            imageId={resolvedImageId}
+                            transform={char.transform}
+                            novelId={novelId}
+                        />
+                    );
+                })}
 
             {!activeBackground?.imageId && (
                 <div className={css({

@@ -172,6 +172,13 @@ const normalizeIncomingStep = (step: any): Step => {
             type: 'choice',
         };
     }
+    if (step?.type === 'show_background') {
+        return {
+            ...step,
+            imageId: step.backgroundObject?.image?.id ?? step.imageId ?? '',
+            transform: step.transform || defaultBackgroundTransform,
+        }
+    }
     if (step?.type === 'show_replica') {
         return {
             ...step,
@@ -379,10 +386,15 @@ export const getImageDimensions = (file: File): Promise<{ width: number; height:
 
 function BackgroundStepForm({ control, errors, setValue, novelId }: StepFormProps) {
     const [isUploading, setIsUploading] = useState(false);
-    const currentImageId = useWatch({
+    const backgroundImageId = useWatch({
         control,
         name: 'background.imageId'
     });
+    const stepImageId = useWatch({
+        control,
+        name: 'imageId'
+    });
+    const currentImageId = backgroundImageId || stepImageId;
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -750,6 +762,7 @@ export default function Editor() {
                     states:ch.characterStates.map(st => ({
                         id: st.id,
                         name: st.name,
+                        imageId: st.image?.id || '',
                     })),
                 })))
             } catch (error) {
@@ -771,7 +784,7 @@ export default function Editor() {
                     imageId: currentStep.background?.imageId || currentStep.imageId || '',
                     transform: currentStep.background?.transform || currentStep.transform || defaultBackgroundTransform
                 },
-                transform: currentStep.transform || defaultTransform
+                transform: currentStep.transform || (currentStep.type === 'show_character' ? defaultTransform : defaultBackgroundTransform)
             };
             reset(dataForForm);
         }
@@ -793,9 +806,9 @@ export default function Editor() {
                         reset({
                             ...baseData,
                             state: data.state ?? defaultSceneState,
-                            characterId: data.characterId ?? '',
-                            characterStateId: data.characterStateId ?? '',
-                            transform: data.transform ?? defaultTransform,
+                            characterId: data.characterObject.id ?? '',
+                            characterStateId: data.state.id ?? '',
+                            transform: data.characterObject.transform ?? defaultTransform,
                         });
                         break;
 
@@ -811,9 +824,9 @@ export default function Editor() {
                         reset({
                             ...baseData,
                             state: data.state ?? defaultSceneState,
-                            imageId: data.backgroundObject.image.id,
+                            imageId: data.backgroundObject?.image?.id ?? data.imageId ?? '',
                             background: {
-                                imageId: data.imageId ?? '',
+                                imageId: data.backgroundObject?.image?.id ?? data.imageId ?? '',
                                 transform: data.transform ?? defaultBackgroundTransform,
                             },
                             transform: data.transform ?? defaultBackgroundTransform,
@@ -918,7 +931,17 @@ export default function Editor() {
             characters: data.state?.characters || defaultSceneState.characters,
         };
 
+        const { type, ...restData } = data;
+        const finalData = {
+            type,
+            ...restData,
+            state: finalState
+        };
+
         if (data.type === 'show_background' && data.background) {
+            finalData.transform = data.background.transform;
+            finalData.imageId = data.background.imageId;
+
             finalState.background = data.background;
         }
 
@@ -940,13 +963,6 @@ export default function Editor() {
                 .filter((ch: any) => ch.characterId !== data.characterId);
         }
 
-        const { type, ...restData } = data;
-        const finalData = {
-            type,
-            ...restData,
-            state: finalState
-        };
-
         if (finalData.type === 'menu' && finalData.menuRequest?.choices) {
             finalData.menuRequest = {
                 ...finalData.menuRequest,
@@ -958,6 +974,7 @@ export default function Editor() {
             };
         }
 
+        finalData.state = finalState
         console.log(finalData);
         try {
             let savedStep: Step;
@@ -997,6 +1014,10 @@ export default function Editor() {
 
         switch (type) {
             case 'show_background':
+                tempStep.background = {
+                    imageId: '',
+                    transform: { ...defaultBackgroundTransform }
+                };
                 tempStep.type = 'show_background';
                 tempStep.transform = { x: 0, y: 0, width: 100, height: 100, scale: 1, rotation: 0, zIndex: 0 };
                 break;
@@ -1285,7 +1306,13 @@ export default function Editor() {
                                     gap: '20px',
                                     flex: 4,
                                 })}>
-                                    <Preview steps={steps} selectedStepIndex={selectedStepIndex} control={control} novelId={novelId}></Preview>
+                                    <Preview
+                                        steps={steps}
+                                        selectedStepIndex={selectedStepIndex}
+                                        control={control}
+                                        novelId={novelId}
+                                        characterOptions={characterOptions}
+                                    ></Preview>
                                     <BlockPanel
                                         steps={steps}
                                         selectedStepIndex={selectedStepIndex}
