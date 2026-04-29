@@ -29,9 +29,9 @@ public class Transform : Entity
     public static Transform Create(
         Position? position,
         Size? size,
-        double scale = 1.0,
-        double rotation = 0.0,
-        int zIndex = 0
+        double? scale = 1.0,
+        double? rotation = 0.0,
+        int? zIndex = 0
     )
     {
         if (position is null)
@@ -39,8 +39,17 @@ public class Transform : Entity
 
         if (size is null)
             throw new DomainException("Size cannot be null");
+        
+        if (!scale.HasValue)
+            throw new DomainException("Scale cannot be null");
+        
+        if (!rotation.HasValue)
+            throw new DomainException("Rotation cannot be null");
+        
+        if (!zIndex.HasValue)
+            throw new DomainException("ZIndex cannot be null");
 
-        return new Transform(Guid.NewGuid(), position, size, scale, rotation, zIndex);
+        return new Transform(Guid.NewGuid(), position, size, scale.Value, rotation.Value, zIndex.Value);
     }
 
     public Transform ApplyPatch(TransformPatch patch)
