@@ -193,6 +193,8 @@ export const charactersApi = {
     api.put(url, file, {
       headers: { 'Content-Type': file.type }
     }),
+  getStepPreview: (novelId: string, labelId: string, stepId: string) =>
+    api.get(`/preview/novels/${novelId}/labels/${labelId}/steps/${stepId}`),
 };
 
 // ============================================================================

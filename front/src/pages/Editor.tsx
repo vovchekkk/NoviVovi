@@ -1418,8 +1418,8 @@ export default function Editor() {
                                     flex: 4,
                                 })}>
                                     <Preview
-                                        steps={steps}
-                                        selectedStepIndex={selectedStepIndex}
+                                        labelId={selectedLabelId}
+                                        stepId={selectedId}
                                         control={control}
                                         novelId={novelId}
                                         characterOptions={characterOptions}

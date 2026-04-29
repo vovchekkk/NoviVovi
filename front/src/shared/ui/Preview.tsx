@@ -4,21 +4,20 @@ import { useSceneSnapshot } from "./SceneSnapshot.tsx";
 import { useWatch } from "react-hook-form";
 
 interface PreviewProps {
-    steps: any[];
-    selectedStepIndex: number | null;
+    labelId: string;
+    stepId: string | null;
     control?: any;
     novelId: string;
     characterOptions: any[];
 }
 
-export default function Preview({ steps, selectedStepIndex, control, novelId, characterOptions }: PreviewProps) {
+export default function Preview({ labelId, stepId, control, novelId, characterOptions }: PreviewProps) {
     const getActualImageId = (charId: string, stateId: string) => {
         const character = characterOptions?.find(c => c.id === charId);
         const state = character?.states?.find((s: any) => s.id === stateId);
         return state?.imageId;
     };
-    const historyIndex = selectedStepIndex !== null ? selectedStepIndex - 1 : null;
-    const { background: hBackground, characters: hCharacters } = useSceneSnapshot(steps, historyIndex, characterOptions);
+    const { background: hBackground, characters: hCharacters } = useSceneSnapshot(novelId, labelId, stepId);
 
     const watched = useWatch({
         control,

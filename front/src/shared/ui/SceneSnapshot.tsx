@@ -1,64 +1,54 @@
-import {useMemo} from "react";
+import { useState, useEffect } from "react";
+import { charactersApi } from "../api/client";
 
-export const useSceneSnapshot = (steps: any[], currentIndex: number | null, characterOptions: any[]) => {
-    return useMemo(() => {
-        if (!steps || steps.length === 0) {
-            return { background: null, characters: [] };
+export const useSceneSnapshot = (novelId: string, labelId: string, stepId: string | null) => {
+    const [data, setData] = useState<{
+        background: any;
+        characters: any[];
+        replica: any;
+        loading: boolean;
+    }>({
+        background: null,
+        characters: [],
+        replica: null,
+        loading: false
+    });
+
+    useEffect(() => {
+        if (!novelId || !labelId || !stepId) {
+            return;
         }
 
-        const findImageId = (charId: string, stateId: string) => {
-            const character = characterOptions?.find(c => c.id === charId);
-            const state = character?.states?.find((s: any) => s.id === stateId);
-            return state?.imageId;
+        const fetchSnapshot = async () => {
+            setData(prev => ({ ...prev, loading: true }));
+            try {
+                const response = await charactersApi.getStepPreview(novelId, labelId, stepId);
+                const result = response.data;
+
+                setData({
+                    background: result.background ? {
+                        imageId: result.background.image?.id,
+                        url: result.background.image?.url,
+                        transform: result.background.transform || {}
+                    } : null,
+                    characters: (result.charactersOnScene || []).map((item: any) => ({
+                        characterId: item.character?.id,
+                        characterStateId: item.state?.id,
+                        imageId: item.state?.image?.id,
+                        url: item.state?.image?.url,
+                        transform: item.transform || { x: 50, y: 50, width: 40, height: 40, scale: 1, rotation: 0, zIndex: 10 }
+                    })),
+                    replica: result.replica,
+                    loading: false
+                });
+            } catch (error) {
+                console.error("Ошибка при получении превью сцены:", error);
+                setData(prev => ({ ...prev, loading: false }));
+            }
         };
-        const index = currentIndex !== null ? currentIndex : steps.length - 1;
-        const snapshotSteps = steps.slice(0, index + 1);
 
-        let background: any = null;
-        const charactersMap: Record<string, any> = {};
+        fetchSnapshot();
+    }, [novelId, labelId, stepId]);
 
-
-        for (const step of snapshotSteps) {
-            const state = step.state || step;
-
-            if (step.type === 'show_background') {
-                const data = step.state || step;
-                const id = data.background?.imageId || data.imageId;
-
-                if (id) {
-                    background = {
-                        imageId: id,
-                        transform: data.background?.transform || data.transform || {}
-                    };
-                }
-            }
-
-            if (step.type === 'show_character' && state.characterId && state.characterStateId) {
-                const charId = step.characterId || step.characterObject?.id;
-                const stateId = step.characterStateId || step.state?.id;
-
-                const transform = step.transform || step.characterObject?.transform;
-
-                if (charId && stateId) {
-                    const actualImageId = findImageId(charId, stateId);
-
-                    charactersMap[charId] = {
-                        characterId: charId,
-                        characterStateId: stateId,
-                        imageId: actualImageId,
-                        transform: transform || { x: 40, y: 30, width: 25, height: 70, scale: 1, rotation: 0, zIndex: 20 }
-                    };
-                }
-            }
-
-            if (step.type === 'hide_character' && state.characterId) {
-                delete charactersMap[state.characterId];
-            }
-        }
-
-        return {
-            background,
-            characters: Object.values(charactersMap)
-        };
-    }, [steps, currentIndex]);
+    return data;
 };

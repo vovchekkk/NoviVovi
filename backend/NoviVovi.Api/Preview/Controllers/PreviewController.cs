@@ -8,7 +8,7 @@ namespace NoviVovi.Api.Preview.Controllers;
 
 [ApiController]
 [Tags("Preview")]
-[Route("preview/novels/")]
+[Route("api/preview/novels/")]
 public class PreviewController(
     IMediator mediator,
     SceneStateResponseMapper sceneStateMapper
