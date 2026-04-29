@@ -19,8 +19,8 @@ public partial class TransformMapper
                 ? new Position((double)dbo.XPos.Value, (double)dbo.YPos.Value)
                 : new Position(),
             new Size(dbo.Width, dbo.Height),
-            dbo.Rotation == null ? 0 : (double)dbo.Rotation,
             dbo.Scale == null ? 1 : (double)dbo.Scale,
+            dbo.Rotation == null ? 0 : (double)dbo.Rotation,
             dbo.ZIndex ?? 0
         );
         return res;
@@ -33,8 +33,8 @@ public partial class TransformMapper
             Id = transform.Id,
             Height = transform.Size.Height,
             Width = transform.Size.Width,
-            Rotation = transform.Scale == 0 ? null : (decimal)transform.Rotation,
-            Scale = transform.Scale == 0 ? 1 : (decimal)transform.Scale,
+            Rotation = (decimal)transform.Rotation,
+            Scale = (decimal)transform.Scale,
             XPos = (decimal)transform.Position.X,
             YPos = (decimal)transform.Position.Y,
             ZIndex = transform.ZIndex

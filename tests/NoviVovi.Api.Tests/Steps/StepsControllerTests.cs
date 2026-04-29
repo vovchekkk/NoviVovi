@@ -194,6 +194,42 @@ public class StepsControllerTests(NoviVoviWebApplicationFactory factory) : Integ
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
+    [Fact]
+    public async Task AddShowCharacterStep_WithRotationZero_ShouldNotThrowDatabaseException()
+    {
+        // Arrange
+        var novelId = await CreateTestNovelAsync();
+        var labelId = await CreateTestLabelAsync(novelId);
+        var characterId = await CreateTestCharacterAsync(novelId);
+        var imageId = await CreateTestImageAsync(novelId, ImageTypeRequest.Character);
+        var stateId = await CreateTestCharacterStateAsync(novelId, characterId, imageId);
+
+        var request = new AddShowCharacterStepRequest(
+            characterId,
+            stateId,
+            new TransformRequest(0, 0, 512, 512, 1.0, 0.0, 0)
+        );
+
+        // Act
+        var response = await PostAsync<StepResponse>($"/api/novels/{novelId}/labels/{labelId}/steps", request);
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.NotEqual(Guid.Empty, response.Id);
+
+        // Verify transform in database has rotation = 0, not null
+        var dbTransform = await QuerySingleAsync<dynamic>(
+            @"SELECT t.* FROM ""Transforms"" t
+              JOIN ""StepCharacter"" sc ON sc.""transform_id"" = t.""id""
+              JOIN ""Steps"" s ON s.""character_id"" = sc.""id""
+              WHERE s.""id"" = @StepId",
+            new { StepId = response.Id });
+        
+        Assert.NotNull(dbTransform);
+        Assert.NotNull(dbTransform.rotation);
+        Assert.Equal(0m, (decimal)dbTransform.rotation);
+    }
+
     #endregion
 
     #region HideCharacter Tests
