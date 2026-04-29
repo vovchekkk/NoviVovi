@@ -123,7 +123,6 @@ const choiceStepSchema = z.object({
     id: z.string().nullable().optional(),
     type: z.literal('menu'),
     menuRequest: z.object({
-        id: z.string().optional(),
         choices: z.array(z.object({
             id: z.string().optional(),
             name: z.string().optional(),
@@ -173,15 +172,17 @@ type StepFormProps = {
 const normalizeIncomingStep = (step: any): Step => {
     // Преобразуем новые типы API в старую структуру для формы
     if (step.type === 'show_menu') {
+        // Проверяем оба варианта: step.choices и step.menu.choices
+        const choices = step.choices || step.menu?.choices || [];
+        
         return {
             ...step,
             type: 'menu',
             menuRequest: {
-                id: step.id || `temp-menu-${step.id}`,
-                choices: step.menu?.choices?.map((c: any) => ({
+                choices: choices.map((c: any) => ({
                     text: c.text || '',
-                    targetLabelId: c.transition?.targetLabelId || '',
-                })) || [],
+                    targetLabelId: c.targetLabelId || c.transition?.targetLabelId || '',
+                })),
             },
         };
     }
@@ -754,6 +755,7 @@ export default function Editor() {
         reset,
         control,
         setValue,
+        watch,
         formState: {errors},
     } = useForm<Step>({
         resolver: zodResolver(stepSchema),
@@ -764,7 +766,6 @@ export default function Editor() {
             text: currentStep?.text ?? '',
             characterStateId: '',
             menuRequest: {
-                id: 'temp-menu-default',
                 choices: [],
             },
             background: {
@@ -784,8 +785,6 @@ export default function Editor() {
     useEffect(() => {
         const fetchCharacterNames = async () => {
             try {
-                const {data} = await api.get<Character[]>(`novels/${novelId}/characters`);
-                setCharacterOptions(data?.map(ch => ({
                 const {data} = await charactersApi.getAll(novelId);
                 setCharacterOptions(data.map(ch => ({
                     id:ch.id,
@@ -1010,12 +1009,9 @@ export default function Editor() {
                     name: choice.name?.trim() || choice.text,
                 })),
             };
-        // Преобразуем данные под новое API
-        const finalData: any = {
-            type: data.type,
-        };
+        }
 
-        // Jump step: targetId -> targetLabelId
+        // Преобразуем данные под новое API
         if (data.type === 'jump' && data.targetId) {
             finalData.type = 'jump';
             finalData.targetLabelId = data.targetId;
@@ -1055,33 +1051,27 @@ export default function Editor() {
             finalData.transform = data.transform;
         }
 
-        finalData.state = finalState
+        finalData.state = finalState;
         console.log(finalData);
+        
         try {
             let savedStep: Step;
 
             console.log(data);
             if (data.id) {
-                const { data: updated } = await api.patch(`/novels/${novelId}/labels/${selectedLabelId}/steps/${data.id}`, finalData);
-                savedStep = normalizeIncomingStep(updated);
-            }
-            else {
-                const { data: newStep } = await api.post<Step>(
-                    `/novels/${novelId}/labels/${selectedLabelId}/steps`,
-                    finalData
-                );
-                savedStep = newStep;
                 const { data: updated } = await stepsApi.patch(novelId, selectedLabelId, data.id, finalData);
                 savedStep = normalizeIncomingStep(updated);
                 setSteps(prev => prev.map(s => s.id === savedStep.id ? savedStep : s));
+                setSelectedId(savedStep.id);
             } else {
                 const { data: newStep } = await stepsApi.create(novelId, selectedLabelId, finalData);
                 savedStep = normalizeIncomingStep(newStep);
                 setSteps(prev => [...prev, savedStep]);
-                setNewStepData(null); // Очищаем временный step
+                setNewStepData(null);
+                setSelectedId(null);
+                setSelectedStepIndex(-1);
             }
 
-            setSelectedId(savedStep.id);
             alert('Шаг сохранён');
         } catch (error) {
             console.error(error);
@@ -1089,6 +1079,30 @@ export default function Editor() {
         }
     };
     const addStep = (type: StepType) => {
+        // Проверяем ограничения на jump и menu
+        const hasJump = steps.some(s => s.type === 'jump');
+        const hasMenu = steps.some(s => s.type === 'menu' || s.type === 'show_menu');
+        
+        if (type === 'jump' && hasJump) {
+            alert('В сцене может быть только один шаг перехода (jump)');
+            return;
+        }
+        
+        if (type === 'menu' && hasMenu) {
+            alert('В сцене может быть только один шаг выбора (menu)');
+            return;
+        }
+        
+        if (type === 'jump' && hasMenu) {
+            alert('Нельзя добавить переход (jump), если уже есть выбор (menu)');
+            return;
+        }
+        
+        if (type === 'menu' && hasJump) {
+            alert('Нельзя добавить выбор (menu), если уже есть переход (jump)');
+            return;
+        }
+
         let tempStep: any = {
             id: '',
             type: '',
@@ -1133,7 +1147,6 @@ export default function Editor() {
                 tempStep.name = '';
                 tempStep.text = '';
                 tempStep.menuRequest = {
-                    id: 'temp-menu-default',
                     choices: [],
                 };
                 break;
@@ -1153,7 +1166,6 @@ export default function Editor() {
 
         try {
             await stepsApi.delete(novelId, selectedLabelId, stepToDelete.id);
-            await api.delete(`novels/${novelId}/labels/${selectedLabelId}/steps/${stepToDelete.id}`);
             const newSteps = steps.filter((_, i) => i !== index);
             setSteps(newSteps);
 
@@ -1170,22 +1182,47 @@ export default function Editor() {
             console.error(error);
             alert('Не удалось удалить шаг');
         }
-    }
-    const renderStepForm = () => {
-        if (!currentStep) return <div>Выберите шаг</div>;
+    };
 
-        const labelOptions = labels.map((label) => ({
+    const moveStep = (fromIndex: number, toIndex: number) => {
+        if (fromIndex === toIndex) return;
+        
+        const newSteps = [...steps];
+        const [movedStep] = newSteps.splice(fromIndex, 1);
+        newSteps.splice(toIndex, 0, movedStep);
+        
+        setSteps(newSteps);
+        
+        // Обновляем выбранный индекс
+        if (selectedStepIndex === fromIndex) {
+            setSelectedStepIndex(toIndex);
+        } else if (selectedStepIndex === toIndex) {
+            setSelectedStepIndex(fromIndex < toIndex ? toIndex - 1 : toIndex + 1);
+        }
+    };
+
+    const handleSelectStep = (index: number) => {
+        setSelectedStepIndex(index);
+        setSelectedId(steps[index]?.id ?? null);
+    };
+
+    const renderStepForm = () => {
+        if (!currentStep) return null;
+
+        const labelOptions = labels.map(label => ({
             value: label.id,
-            label: label.name,
+            label: label.name
         }));
+
         const formProps = {
+            register,
             control,
             errors,
-            register,
             setValue,
-            characterOptions: characterOptions,
-            labelOptions: labelOptions,
-            novelId:novelId,
+            watch,
+            labelOptions,
+            characterOptions,
+            novelId,
         };
 
         switch (currentStep.type) {
@@ -1204,11 +1241,6 @@ export default function Editor() {
             default:
                 return null;
         }
-    };
-
-    const handleSelectStep = (index: number) => {
-        setSelectedStepIndex(index);
-        setSelectedId(steps[index]?.id ?? null);
     };
 
     const changeLabel = (labelId) => {
@@ -1388,6 +1420,7 @@ export default function Editor() {
                                         onSelectStep={handleSelectStep}
                                         onAddClick={() => setIsOpen(true)}
                                         onDeleteStep={deleteStep}
+                                        onMoveStep={moveStep}
                                     />
                                 </div>
                             </div>

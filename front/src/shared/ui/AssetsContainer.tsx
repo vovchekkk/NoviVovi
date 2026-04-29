@@ -3,7 +3,7 @@ import {vstack} from '../../../styled-system/patterns';
 import EditorHeader from "./EditorHeader.tsx";
 import {useCallback, useEffect, useState} from "react";
 import EmotionBlock from "./EmotionBlock.tsx";
-import api from "../../api.tsx";
+import { charactersApi } from "../api/client";
 import {zodResolver} from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {useForm, useFieldArray, useWatch} from 'react-hook-form';
@@ -101,7 +101,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         const fetchCharacters = async () => {
             try {
                 setLoading(true);
-                const {data} = await api.get<Character[]>(`novels/${novelId}/characters`);
+                const {data} = await charactersApi.getAll(novelId);
                 setCharacters(data);
 
                 if (data.length > 0) {
@@ -117,20 +117,21 @@ export default function AssetsContainer({novelId}: AssetsProps) {
 
         fetchCharacters();
     }, [novelId]);
+    
     useEffect(() => {
         const loadCharacterData = async () => {
             if (!selectedId) return;
 
             try {
                 setLoading(true);
-                const [charRes, emotionsRes] = await Promise.all([
-                    api.get<Character>(`novels/${novelId}/characters/${selectedId}`),
-                    api.get<Emotion[]>(`novels/${novelId}/characters/${selectedId}/states`)
+                const [charRes, statesRes] = await Promise.all([
+                    charactersApi.getById(novelId, selectedId),
+                    charactersApi.getStates(novelId, selectedId)
                 ]);
                 reset({
                     name: charRes.data.name,
                     nameColor: charRes.data.nameColor || '#ffffff',
-                    emotions: emotionsRes.data || []
+                    emotions: statesRes.data || []
                 });
             } catch (e) {
                 console.error('Ошибка загрузки:', e);
@@ -147,7 +148,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         try {
             setSaving(true);
 
-            await api.patch(`novels/${novelId}/characters/${selectedId}`, {
+            await charactersApi.patch(novelId, selectedId, {
                 name: formData.name,
                 color: formData.nameColor,
             });
@@ -168,14 +169,12 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                         },
                     };
 
-                    const {data: uploadData} = await api.post(
-                        `novels/${novelId}/images/upload-url`,
+                    const {data: uploadData} = await charactersApi.uploadImage(
+                        novelId,
                         uploadRequest
                     );
 
-                    await api.put(uploadData.uploadUrl, file, {
-                        headers: {'Content-Type': file.type}
-                    });
+                    await charactersApi.uploadToUrl(uploadData.uploadUrl, file);
 
                     currentImageId = uploadData.imageId;
                 }
@@ -191,9 +190,9 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                 };
 
                 if (emotion.id) {
-                    return api.put(`novels/${novelId}/characters/${selectedId}/states/${emotion.id}`, statePayload);
+                    return charactersApi.updateState(novelId, selectedId, emotion.id, statePayload);
                 } else {
-                    return api.post(`novels/${novelId}/characters/${selectedId}/states`, statePayload);
+                    return charactersApi.createState(novelId, selectedId, statePayload);
                 }
             });
 
@@ -211,7 +210,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
     };
     const createCharacter = async () => {
         try {
-            const {data: newChar} = await api.post<Character>(`novels/${novelId}/characters`, {
+            const {data: newChar} = await charactersApi.create(novelId, {
                 name: 'Новый персонаж',
                 nameColor: '#ffffff',
             })
@@ -226,7 +225,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         if (!confirm('Удалить персонажа и все его эмоции?'))
             return;
         try {
-            await api.delete(`novels/${novelId}/characters/${id}`);
+            await charactersApi.delete(novelId, id);
             setCharacters(prev => prev.filter(c => c.id !== id));
             if (selectedId === id) {
                 setSelectedId(characters[0]?.id ?? null);

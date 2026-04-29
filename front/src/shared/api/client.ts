@@ -161,6 +161,38 @@ export const charactersApi = {
    */
   delete: (novelId: string, characterId: string) =>
     api.delete(`/novels/${novelId}/characters/${characterId}`),
+
+  /**
+   * Get character states
+   */
+  getStates: (novelId: string, characterId: string) =>
+    api.get(`/novels/${novelId}/characters/${characterId}/states`),
+
+  /**
+   * Create character state
+   */
+  createState: (novelId: string, characterId: string, data: any) =>
+    api.post(`/novels/${novelId}/characters/${characterId}/states`, data),
+
+  /**
+   * Update character state
+   */
+  updateState: (novelId: string, characterId: string, stateId: string, data: any) =>
+    api.put(`/novels/${novelId}/characters/${characterId}/states/${stateId}`, data),
+
+  /**
+   * Upload image for character
+   */
+  uploadImage: (novelId: string, data: any) =>
+    api.post(`/novels/${novelId}/images/upload-url`, data),
+
+  /**
+   * Upload file to URL
+   */
+  uploadToUrl: (url: string, file: File) =>
+    api.put(url, file, {
+      headers: { 'Content-Type': file.type }
+    }),
 };
 
 // ============================================================================
