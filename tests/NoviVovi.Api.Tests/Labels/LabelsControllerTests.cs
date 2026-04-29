@@ -238,16 +238,23 @@ public class LabelsControllerTests(NoviVoviWebApplicationFactory factory) : Inte
             new AddLabelRequest("label_with_steps"));
         Assert.NotNull(label);
 
+        // Create a character for the replica
+        var characterId = Guid.NewGuid();
+        await UnitOfWork.Connection.ExecuteAsync(@"
+            INSERT INTO ""Characters"" (""id"", ""novel_id"", ""name"", ""name_color"", ""description"")
+            VALUES (@CharacterId, @NovelId, 'TestCharacter', 'FF0000', NULL);
+        ", new { CharacterId = characterId, NovelId = novelId });
+
         // Create a step for this label
         var replicaId = Guid.NewGuid();
         var stepId = Guid.NewGuid();
         await UnitOfWork.Connection.ExecuteAsync(@"
             INSERT INTO ""Replicas"" (""id"", ""speaker_id"", ""text"")
-            VALUES (@ReplicaId, NULL, 'Test text');
+            VALUES (@ReplicaId, @CharacterId, 'Test text');
             
             INSERT INTO ""Steps"" (""id"", ""label_id"", ""replica_id"", ""step_order"", ""step_type"")
-            VALUES (@StepId, @LabelId, @ReplicaId, 1, 'replica');
-        ", new { StepId = stepId, LabelId = label.Id, ReplicaId = replicaId });
+            VALUES (@StepId, @LabelId, @ReplicaId, 1, 'show_replica');
+        ", new { StepId = stepId, LabelId = label.Id, ReplicaId = replicaId, CharacterId = characterId });
 
         // Act
         await DeleteAsync($"/api/novels/{novelId}/labels/{label.Id}");

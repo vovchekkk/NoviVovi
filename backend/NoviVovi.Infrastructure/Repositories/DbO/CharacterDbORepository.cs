@@ -147,12 +147,30 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
         if (exists)
         {
             await UpdateAsync(character);
+            
+            // Get existing state IDs from database
+            const string getExistingStatesSql = @"SELECT ""id"" FROM ""CharacterStates"" WHERE ""character_id"" = @CharacterId";
+            var existingStateIds = (await QueryAsync<Guid>(getExistingStatesSql, new { CharacterId = character.Id })).ToList();
+            
+            // Get new state IDs from domain model
+            var newStateIds = character.States.Select(s => s.Id).ToList();
+            
+            // Find states that need to be deleted (exist in DB but not in domain model)
+            var stateIdsToDelete = existingStateIds.Except(newStateIds).ToList();
+            
+            // Delete only the states that are no longer in the domain model
+            if (stateIdsToDelete.Any())
+            {
+                const string deleteSql = @"DELETE FROM ""CharacterStates"" WHERE ""id"" = ANY(@StateIds)";
+                await ExecuteAsync(deleteSql, new { StateIds = stateIdsToDelete.ToArray() });
+            }
         }
         else
         {
             await AddAsync(character);
         }
         
+        // Add or update all states from the domain model
         foreach (var state in character.States)
         {
             await AddOrUpdateStateAsync(state);
