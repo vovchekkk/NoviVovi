@@ -128,6 +128,27 @@ public class NovelDbORepository : BaseRepository, INovelDbORepository
 
     public async Task DeleteAsync(Guid id)
     {
+        // 1. Get all Characters for this Novel
+        const string getCharactersSql = "SELECT \"id\" FROM \"Characters\" WHERE \"novel_id\" = @NovelId";
+        var characterIds = (await QueryAsync<Guid>(getCharactersSql, new { NovelId = id })).ToList();
+        
+        // 2. Delete all Characters (this will cascade delete CharacterStates, Replicas, StepCharacters)
+        foreach (var characterId in characterIds)
+        {
+            await characterRepository.DeleteAsync(characterId);
+        }
+        
+        // 3. Get all Labels for this Novel
+        const string getLabelsSql = "SELECT \"id\" FROM \"Labels\" WHERE \"novel_id\" = @NovelId";
+        var labelIds = (await QueryAsync<Guid>(getLabelsSql, new { NovelId = id })).ToList();
+        
+        // 4. Delete all Labels (this will cascade delete Steps, Choices, JumpSteps, etc)
+        foreach (var labelId in labelIds)
+        {
+            await labelRepository.DeleteAsync(labelId);
+        }
+        
+        // 5. Delete the Novel itself
         const string sql = "DELETE FROM \"Novels\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }

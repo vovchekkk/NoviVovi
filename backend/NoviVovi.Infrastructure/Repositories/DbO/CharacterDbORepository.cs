@@ -126,6 +126,21 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
 
     public async Task DeleteAsync(Guid id)
     {
+        // 1. Get all CharacterStates for this Character
+        const string getStatesSql = "SELECT \"id\" FROM \"CharacterStates\" WHERE \"character_id\" = @CharacterId";
+        var stateIds = (await QueryAsync<Guid>(getStatesSql, new { CharacterId = id })).ToList();
+        
+        // 2. Delete all CharacterStates (this will cascade delete StepCharacters and Transforms)
+        foreach (var stateId in stateIds)
+        {
+            await DeleteStateAsync(stateId);
+        }
+        
+        // 3. Delete all Replicas where this Character is the Speaker
+        const string deleteReplicasSql = "DELETE FROM \"Replicas\" WHERE \"speaker_id\" = @CharacterId";
+        await ExecuteAsync(deleteReplicasSql, new { CharacterId = id });
+        
+        // 4. Delete the Character itself
         const string sql = "DELETE FROM \"Characters\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
@@ -161,8 +176,10 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
             // Delete only the states that are no longer in the domain model
             if (stateIdsToDelete.Any())
             {
-                const string deleteSql = @"DELETE FROM ""CharacterStates"" WHERE ""id"" = ANY(@StateIds)";
-                await ExecuteAsync(deleteSql, new { StateIds = stateIdsToDelete.ToArray() });
+                foreach (var stateId in stateIdsToDelete)
+                {
+                    await DeleteStateAsync(stateId);
+                }
             }
         }
         else
@@ -211,8 +228,47 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
 
     public async Task DeleteStateAsync(Guid id)
     {
+        // 1. Get all StepCharacters that use this CharacterState
+        const string getStepCharactersSql = @"
+            SELECT ""id"", ""transform_id"" 
+            FROM ""StepCharacter"" 
+            WHERE ""character_state_id"" = @StateId";
+        var stepCharacters = await QueryAsync<(Guid Id, Guid? TransformId)>(getStepCharactersSql, new { StateId = id });
+        
+        // 2. Delete all StepCharacters and their Transforms
+        foreach (var (stepCharId, stepTransformId) in stepCharacters)
+        {
+            // Delete StepCharacter
+            const string deleteStepCharSql = "DELETE FROM \"StepCharacter\" WHERE \"id\" = @Id";
+            await ExecuteAsync(deleteStepCharSql, new { Id = stepCharId });
+            
+            // Delete Transform if exists
+            if (stepTransformId.HasValue)
+            {
+                await imageDbORepository.DeleteTransformById(stepTransformId.Value);
+            }
+        }
+        
+        // 3. Delete all Steps that reference these StepCharacters
+        foreach (var (stepCharId, _) in stepCharacters)
+        {
+            const string deleteStepSql = "DELETE FROM \"Steps\" WHERE \"character_id\" = @CharacterId";
+            await ExecuteAsync(deleteStepSql, new { CharacterId = stepCharId });
+        }
+        
+        // 4. Get transform_id of the CharacterState itself
+        const string getTransformSql = "SELECT transform_id FROM \"CharacterStates\" WHERE id = @Id";
+        var transformId = await QueryFirstOrDefaultAsync<Guid?>(getTransformSql, new { Id = id });
+        
+        // 5. Delete the CharacterState
         const string sql = "DELETE FROM \"CharacterStates\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
+        
+        // 6. Delete the CharacterState's Transform if it exists
+        if (transformId.HasValue)
+        {
+            await imageDbORepository.DeleteTransformById(transformId.Value);
+        }
     }
 
     public async Task UpdateStateAsync(CharacterStateDbO state)

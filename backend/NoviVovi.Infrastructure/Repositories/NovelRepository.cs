@@ -7,7 +7,7 @@ using NoviVovi.Infrastructure.Repositories.DbO.Interfaces;
 
 namespace NoviVovi.Infrastructure.Repositories;
 
-public class NovelRepository(INovelDbORepository dbORepository, ICharacterDbORepository characterDbORepo, NovelMapper mapper, CharacterMapper characterMapper) : INovelRepository
+public class NovelRepository(INovelDbORepository dbORepository, NovelMapper mapper) : INovelRepository
 {
     public async Task<Novel?> GetByIdAsync(Guid id, CancellationToken ct)
     {
@@ -31,11 +31,5 @@ public class NovelRepository(INovelDbORepository dbORepository, ICharacterDbORep
     {
         var dbos = await dbORepository.GetAllFullAsync();
         return dbos.Select(dto => mapper.ToDomain(dto));
-    }
-    
-    public async Task<IEnumerable<Character>> GetAllCharactersAsync(Guid novelId, CancellationToken ct)
-    {
-        var dbos = await characterDbORepo.GetFullByNovelIdAsync(novelId);
-        return dbos.Where(dbo => dbo != null).Select(characterMapper.ToDomain);
     }
 }

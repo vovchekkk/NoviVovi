@@ -15,12 +15,12 @@ public partial class NovelMapper(
         if (dbo.StartLabel == null)
             throw new ArgumentException("Novel startLabel is null");
         
-        var result = new Novel(dbo.Id, dbo.Title, labelMapper.ToDomain(dbo.StartLabel, new MappingContext()));
+        var result = new Novel(dbo.Id, dbo.Title, labelMapper.ToDomain(dbo.StartLabel));
         foreach (var label in dbo.Labels)
         {
             if(label.Id == dbo.StartLabelId)
                 continue;
-            result.AddLabel(labelMapper.ToDomain(label, new MappingContext()));
+            result.AddLabel(labelMapper.ToDomain(label));
         }
         
         foreach (var character in dbo.Characters)
@@ -30,7 +30,6 @@ public partial class NovelMapper(
 
     public NovelDbO ToDbO(Novel domain)
     {
-        
         var result = new NovelDbO
         {
             Id = domain.Id,
@@ -38,8 +37,8 @@ public partial class NovelMapper(
             Title = domain.Title,
             IsPublic = true,
             Characters = domain.Characters.Select(c => characterMapper.ToDbO(c)).ToList(),
-            Labels = domain.Labels.Select(l => labelMapper.ToDbO(l, new MappingContext())).ToList(),
-            StartLabel = domain.StartLabel == null ? null : labelMapper.ToDbO(domain.StartLabel, new MappingContext())
+            Labels = domain.Labels.Select(l => labelMapper.ToDbO(l)).ToList(),
+            StartLabel = domain.StartLabel == null ? null : labelMapper.ToDbO(domain.StartLabel)
         };
         return result;
     }

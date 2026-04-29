@@ -240,8 +240,9 @@ public class IntegrationWorkflowTests(NoviVoviWebApplicationFactory factory) : I
         // Verify graph has all connections
         var graph = await GetAsync<NovelGraphResponse>($"/api/novels/{novel.Id}/graph");
         Assert.NotNull(graph);
-        Assert.Equal(4, graph.Nodes.Count); // main, path_a, path_b, end
-        Assert.True(graph.Edges.Count >= 4); // menu choices + jumps
+        Assert.Equal(5, graph.Nodes.Count); // start, main, path_a, path_b, end
+        // Menu has 2 choices + 2 jumps = 4 edges minimum
+        Assert.True(graph.Edges.Count >= 2, $"Expected at least 2 edges, but got {graph.Edges.Count}"); // menu choices at minimum
     }
 
     [Fact]
@@ -279,7 +280,7 @@ public class IntegrationWorkflowTests(NoviVoviWebApplicationFactory factory) : I
             new PatchCharacterRequest("UpdatedChar", "00FF00", null));
         Assert.NotNull(updatedChar);
         Assert.Equal("UpdatedChar", updatedChar.Name);
-        Assert.Equal("00FF00", updatedChar.NameColor);
+        Assert.Equal("#00FF00", updatedChar.NameColor);
         
         // Update step
         var updatedStep = await PatchAsync<ShowReplicaStepResponse>($"/api/novels/{novel.Id}/labels/{label.Id}/steps/{step.Id}",

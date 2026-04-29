@@ -7,51 +7,52 @@ namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
 public partial class MenuMapper(
-    Lazy<LabelMapper> labelMapper
+    Lazy<LabelMapper> labelMapper,
+    MappingContext ctx
 )
 {
-    public MenuDbO ToDbO(Menu stepMenu)
-    {
-        var res = new MenuDbO
-        {
-            Id = stepMenu.Id,
-            Choices = stepMenu.Choices.Select(choice => ToDbO(choice, stepMenu.Id, new MappingContext())).ToList(),
-        };
-        return res;
-    }
-
     public Menu ToDomain(MenuDbO menu)
     {
         var res = new Menu(menu.Id);
         foreach (var choice in menu.Choices)
         {
-            res.AddChoice(ToDomain(choice, new MappingContext()));
+            res.AddChoice(ToDomain(choice));
         }
 
         return res;
     }
 
-    private ChoiceDbO ToDbO(Choice choice, Guid menuId, MappingContext ctx)
+    public MenuDbO ToDbO(Menu stepMenu)
     {
-        return new ChoiceDbO
+        var res = new MenuDbO
         {
-            Id = choice.Id,
-            Text = choice.Text,
-            MenuId = menuId,
-            NextLabelId = choice.Transition.TargetLabel.Id,
-            NextLabel = labelMapper.Value.ToDbO(choice.Transition.TargetLabel, ctx)
+            Id = stepMenu.Id,
+            Choices = stepMenu.Choices.Select(choice => ToDbO(choice, stepMenu.Id)).ToList(),
         };
+        return res;
     }
 
-    private Choice ToDomain(ChoiceDbO choice, MappingContext ctx)
+    public Choice ToDomain(ChoiceDbO choice)
     {
         if (choice.NextLabel == null)
-            throw new ArgumentException("Unsupported choice");
+            throw new ArgumentException("NextLabel is null");
 
         return new Choice(
             choice.Id,
             choice.Text,
-            new ChoiceTransition(labelMapper.Value.ToDomain(choice.NextLabel, ctx))
+            new ChoiceTransition(labelMapper.Value.ToDomain(choice.NextLabel))
         );
+    }
+
+    public ChoiceDbO ToDbO(Choice choice, Guid menuId)
+    {
+        return new ChoiceDbO
+        {
+            Id = choice.Id,
+            MenuId = menuId,
+            Text = choice.Text,
+            NextLabelId = choice.Transition.TargetLabel.Id,
+            NextLabel = labelMapper.Value.ToDbO(choice.Transition.TargetLabel)
+        };
     }
 }

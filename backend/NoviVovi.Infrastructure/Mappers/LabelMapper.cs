@@ -6,10 +6,11 @@ namespace NoviVovi.Infrastructure.Mappers;
 
 [Mapper]
 public partial class LabelMapper(
-    Lazy<StepMapper> stepMapper
+    Lazy<StepMapper> stepMapper,
+    MappingContext ctx
 )
 {
-    public Label ToDomain(LabelDbO dbo, MappingContext ctx)
+    public Label ToDomain(LabelDbO dbo)
     {
         if (ctx.Labels.TryGetValue(dbo.Id, out var cached))
             return cached;
@@ -19,13 +20,13 @@ public partial class LabelMapper(
 
         foreach (var step in dbo.Steps)
         {
-            res.AddStep(stepMapper.Value.ToDomain(step, ctx));
+            res.AddStep(stepMapper.Value.ToDomain(step));
         }
 
         return res;
     }
 
-    public LabelDbO? ToDbO(Label label, MappingContext ctx)
+    public LabelDbO? ToDbO(Label label)
     {
         if(label == null)
             return null;
@@ -43,7 +44,7 @@ public partial class LabelMapper(
         ctx.LabelDbOs[label.Id] = res;
 
         res.Steps = label.Steps
-            .Select((step, i) => stepMapper.Value.ToDbO(step, label.Id, label.NovelId, i, ctx))
+            .Select((step, i) => stepMapper.Value.ToDbO(step, label.Id, label.NovelId, i))
             .ToList();
 
         return res;
