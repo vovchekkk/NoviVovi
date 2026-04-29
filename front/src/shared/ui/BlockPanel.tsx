@@ -7,9 +7,10 @@ interface BlockPanelProps {
     onSelectStep: (index: number) => void;
     onAddClick: () => void;
     onDeleteStep: (index: number) => void;
+    onMoveStep?: (fromIndex: number, toIndex: number) => void;
 }
 
-export default function BlockPanel({steps, selectedStepIndex, onSelectStep, onAddClick, onDeleteStep}: BlockPanelProps) {
+export default function BlockPanel({steps, selectedStepIndex, onSelectStep, onAddClick, onDeleteStep, onMoveStep}: BlockPanelProps) {
     return (
         <div className={css({
             width:'70%',
@@ -77,55 +78,87 @@ export default function BlockPanel({steps, selectedStepIndex, onSelectStep, onAd
                                     {index + 1}
                                 </div>
                                 <div className={css({
-                                    padding: '10px',
-                                    backgroundColor: 'white',
-                                    borderRadius: '12px',
-                                    flex:1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flex: 1,
+                                    paddingLeft: '8px',
                                 })}>
-                                    {stepDisplayNames[step.type as StepType]}
+                                    {stepDisplayNames[step.type as StepType] || step.type}
                                 </div>
                             </div>
-                            <button
-                                type="button"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    onDeleteStep(index);
-                                }}
-                                className={css({
-                                    width: '34px',
-                                    height: '34px',
-                                    marginLeft: '8px',
-                                    borderRadius: '8px',
-                                    border: '1px solid #dc2626',
-                                    color: '#dc2626',
-                                    backgroundColor: 'white',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    flexShrink: 0,
-                                    _hover: {
-                                        backgroundColor: '#fee2e2',
-                                    },
-                                })}
-                            >
-                                ✕
-                            </button>
+                            <div className={css({ display: 'flex', gap: '4px', alignItems: 'center' })}>
+                                {onMoveStep && index > 0 && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onMoveStep(index, index - 1);
+                                        }}
+                                        className={css({
+                                            backgroundColor: '#705661',
+                                            color: 'white',
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '8px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            _hover: { backgroundColor: '#8B7178' },
+                                        })}
+                                        title="Переместить вверх"
+                                    >
+                                        ↑
+                                    </button>
+                                )}
+                                {onMoveStep && index < steps.length - 1 && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onMoveStep(index, index + 1);
+                                        }}
+                                        className={css({
+                                            backgroundColor: '#705661',
+                                            color: 'white',
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '8px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            _hover: { backgroundColor: '#8B7178' },
+                                        })}
+                                        title="Переместить вниз"
+                                    >
+                                        ↓
+                                    </button>
+                                )}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDeleteStep(index);
+                                    }}
+                                    className={css({
+                                        backgroundColor: '#ef4444',
+                                        color: 'white',
+                                        width: '32px',
+                                        height: '32px',
+                                        borderRadius: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        _hover: { backgroundColor: '#dc2626' },
+                                    })}
+                                    title="Удалить"
+                                >
+                                    ×
+                                </button>
+                            </div>
                         </div>
                     );
                 })}
-
-                {steps.length === 0 && (
-                    <div
-                        className={css({
-                            textAlign: 'center',
-                            py: '40px',
-                            color: '#8A6A7A',
-                            fontStyle: 'italic',
-                        })}
-                    >
-                        Пока нет блоков. Добавьте первый блок!
-                    </div>
-                )}
             </div>
         </div>
-    )
+    );
 }

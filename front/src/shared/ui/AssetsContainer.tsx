@@ -3,7 +3,7 @@ import {vstack} from '../../../styled-system/patterns';
 import EditorHeader from "./EditorHeader.tsx";
 import {useCallback, useEffect, useState} from "react";
 import EmotionBlock from "./EmotionBlock.tsx";
-import api from "../../api.tsx";
+import { charactersApi } from "../api/client";
 import {zodResolver} from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {useForm, useFieldArray, useWatch} from 'react-hook-form';
@@ -101,7 +101,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         const fetchCharacters = async () => {
             try {
                 setLoading(true);
-                const {data} = await api.get<Character[]>(`novels/${novelId}/characters`);
+                const {data} = await charactersApi.getAll(novelId);
                 setCharacters(data);
 
                 if (data.length > 0) {
@@ -117,20 +117,21 @@ export default function AssetsContainer({novelId}: AssetsProps) {
 
         fetchCharacters();
     }, [novelId]);
+    
     useEffect(() => {
         const loadCharacterData = async () => {
             if (!selectedId) return;
 
             try {
                 setLoading(true);
-                const [charRes, emotionsRes] = await Promise.all([
-                    api.get<Character>(`novels/${novelId}/characters/${selectedId}`),
-                    api.get<Emotion[]>(`novels/${novelId}/characters/${selectedId}/states`)
+                const [charRes, statesRes] = await Promise.all([
+                    charactersApi.getById(novelId, selectedId),
+                    charactersApi.getStates(novelId, selectedId)
                 ]);
                 reset({
                     name: charRes.data.name,
                     nameColor: charRes.data.nameColor || '#ffffff',
-                    emotions: emotionsRes.data || []
+                    emotions: statesRes.data || []
                 });
             } catch (e) {
                 console.error('Ошибка загрузки:', e);
@@ -147,7 +148,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         try {
             setSaving(true);
 
-            await api.patch(`novels/${novelId}/characters/${selectedId}`, {
+            await charactersApi.patch(novelId, selectedId, {
                 name: formData.name,
                 color: formData.nameColor,
             });
@@ -168,14 +169,12 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                         },
                     };
 
-                    const {data: uploadData} = await api.post(
-                        `novels/${novelId}/images/upload-url`,
+                    const {data: uploadData} = await charactersApi.uploadImage(
+                        novelId,
                         uploadRequest
                     );
 
-                    await api.put(uploadData.uploadUrl, file, {
-                        headers: {'Content-Type': file.type}
-                    });
+                    await charactersApi.uploadToUrl(uploadData.uploadUrl, file);
 
                     currentImageId = uploadData.imageId;
                 }
@@ -191,9 +190,9 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                 };
 
                 if (emotion.id) {
-                    return api.put(`novels/${novelId}/characters/${selectedId}/states/${emotion.id}`, statePayload);
+                    return charactersApi.updateState(novelId, selectedId, emotion.id, statePayload);
                 } else {
-                    return api.post(`novels/${novelId}/characters/${selectedId}/states`, statePayload);
+                    return charactersApi.createState(novelId, selectedId, statePayload);
                 }
             });
 
@@ -211,7 +210,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
     };
     const createCharacter = async () => {
         try {
-            const {data: newChar} = await api.post<Character>(`novels/${novelId}/characters`, {
+            const {data: newChar} = await charactersApi.create(novelId, {
                 name: 'Новый персонаж',
                 nameColor: '#ffffff',
             })
@@ -226,7 +225,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         if (!confirm('Удалить персонажа и все его эмоции?'))
             return;
         try {
-            await api.delete(`novels/${novelId}/characters/${id}`);
+            await charactersApi.delete(novelId, id);
             setCharacters(prev => prev.filter(c => c.id !== id));
             if (selectedId === id) {
                 setSelectedId(characters[0]?.id ?? null);
@@ -258,44 +257,54 @@ export default function AssetsContainer({novelId}: AssetsProps) {
 
     return (
         <div className={css({
-            minHeight: '100vh',
+            height: '100vh',
             background: '#775D68',
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
-            gap: '0px',
-            flex: 1,
-            height: '100vh',
+            overflow: 'hidden',
         })}>
             <EditorHeader active="assets"/>
             <div className={css({
                 backgroundColor: 'white',
-                height: '100vh',
                 color: 'black',
                 width: '100%',
-                paddingTop: '20px',
+                padding: '20px',
                 display: 'flex',
                 flexDirection: 'row',
                 gap: '10px',
-                flex: 4,
-                overflow: 'hidden'
+                flex: 1,
+                overflow: 'hidden',
             })}>
                 <div className={css({
                     backgroundColor: '#DFC6D1',
                     color: 'black',
                     flex: 1,
                     minWidth: '400px',
+                    maxWidth: '400px',
                     borderRadius: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
                 })}>
                     <div className={css({
                         fontSize: '20px',
                         margin: '20px',
                         borderBottom: '1px solid black',
+                        flexShrink: 0,
                     })}>
                         Персонажи
                     </div>
                     {loading && <p>Загрузка...</p>}
-                    <div className={vstack({gap: '10px', alignItems: 'center'})}>
+                    <div className={css({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        alignItems: 'center',
+                        overflowY: 'auto',
+                        flex: 1,
+                        paddingBottom: '10px',
+                    })}>
                         {characters.map(character => (
                             <button
                                 key={character.id}
@@ -361,10 +370,9 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                 </div>
                 <div className={css({
                     flex: 5,
-                    maxWidth: '100%',
-                    height: 'full',
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    overflow: 'hidden',
                 })}>
                     {selectedCharacter ? (
                         <form onSubmit={handleSubmit(onSave)}
@@ -376,11 +384,13 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                   alignItems: 'start',
                                   flexDirection: 'column',
                                   flex: 1,
+                                  overflow: 'hidden',
                               })}>
                             <div className={css({
                                 display: 'flex',
                                 width: '100%',
-                                flex: 1
+                                flex: 1,
+                                overflow: 'hidden',
                             })}>
                                 <div className={css({
                                     display: 'flex',
@@ -388,6 +398,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                     borderRadius: '12px',
                                     padding: '5px',
                                     flex: 3,
+                                    overflow: 'auto',
                                 })}>
                                     <div className={css({
                                         backgroundColor: 'white',
@@ -438,23 +449,44 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                         padding: '10px',
                                         margin: '10px',
                                         flex: 3,
+                                        overflow: 'hidden',
                                     })}>
                                         <div className={css({
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: '10px',
+                                            flex: 1,
+                                            overflow: 'hidden',
                                         })}>
                                             <div className={css({
                                                 fontWeight: 'bold',
                                                 fontSize: '20px',
-                                                pl: '5px'
+                                                pl: '5px',
+                                                flexShrink: 0,
                                             })}>
                                                 Эмоции
                                             </div>
                                             <div className={css({
                                                 display: 'flex',
                                                 flexDirection: 'column',
-                                                gap: '15px'
+                                                gap: '15px',
+                                                overflowY: 'auto',
+                                                flex: 1,
+                                                paddingRight: '5px',
+                                                '&::-webkit-scrollbar': {
+                                                    width: '8px',
+                                                },
+                                                '&::-webkit-scrollbar-track': {
+                                                    background: '#f1f1f1',
+                                                    borderRadius: '4px',
+                                                },
+                                                '&::-webkit-scrollbar-thumb': {
+                                                    background: '#888',
+                                                    borderRadius: '4px',
+                                                },
+                                                '&::-webkit-scrollbar-thumb:hover': {
+                                                    background: '#555',
+                                                },
                                             })}>
                                                 {fields.map((field, index) => (
                                                     <EmotionBlock

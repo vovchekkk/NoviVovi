@@ -573,25 +573,82 @@ mock.onDelete(stepPattern).reply((config) => {
 // Images Endpoints
 // ============================================================================
 
-const uploadUrlPattern = /^\/images\/upload-url$/;
-const imagePattern = /^\/images\/([^/]+)$/;
+// Хранилище загруженных изображений
+const uploadedImages: Record<string, { url: string; data: any }> = {};
 
-mock.onPost(uploadUrlPattern).reply(() => {
+const uploadUrlPattern = /^\/novels\/([^/]+)\/images\/upload-url$/;
+const imagePattern = /^\/novels\/([^/]+)\/images\/([^/]+)$/;
+const confirmUploadPattern = /^\/novels\/([^/]+)\/images\/([^/]+)\/confirm$/;
+
+// Шаг 1: Получить URL для загрузки
+mock.onPost(uploadUrlPattern).reply((config) => {
+  const match = matchUrl(config.url, uploadUrlPattern);
+  if (!match) return [404, { message: 'Novel not found' }];
+  
+  const [, novelId] = match;
+  const payload = parseBody<any>(config.data);
   const imageId = nextId();
+  
+  // Создаем fake upload URL
+  const uploadUrl = `https://fake-cloud-storage.com/upload/${imageId}`;
+  const viewUrl = `https://placehold.co/1200x675?text=Image-${imageId}`;
+  
+  // Сохраняем информацию об изображении
+  uploadedImages[imageId] = {
+    url: viewUrl,
+    data: payload
+  };
+  
   return [200, {
     imageId,
-    uploadUrl: 'https://fake-cloud-storage.com/upload',
+    uploadUrl,
+    viewUrl
   }];
 });
 
-mock.onPut('https://fake-cloud-storage.com/upload').reply(200);
+// Шаг 2: Загрузка файла на fake URL
+mock.onPut(/https:\/\/fake-cloud-storage\.com\/upload\/(.+)/).reply((config) => {
+  // Просто возвращаем успех, файл "загружен"
+  return [200];
+});
 
+// Шаг 3: Подтверждение загрузки (опционально)
+mock.onPost(confirmUploadPattern).reply((config) => {
+  const match = matchUrl(config.url, confirmUploadPattern);
+  if (!match) return [404, { message: 'Image not found' }];
+  
+  const [, novelId, imageId] = match;
+  const imageData = uploadedImages[imageId];
+  
+  if (!imageData) return [404, { message: 'Image not found' }];
+  
+  return [200, {
+    id: imageId,
+    url: imageData.url,
+    status: 'Active'
+  }];
+});
+
+// Получить изображение по ID
 mock.onGet(imagePattern).reply((config) => {
   const match = matchUrl(config.url, imagePattern);
   if (!match) return [404, { message: 'Image not found' }];
   
-  const imageId = match[1];
-  return [200, { url: `https://placehold.co/1200x675?text=Image-${imageId}` }];
+  const [, novelId, imageId] = match;
+  const imageData = uploadedImages[imageId];
+  
+  if (!imageData) {
+    // Возвращаем placeholder если изображение не найдено
+    return [200, { 
+      id: imageId,
+      url: `https://placehold.co/1200x675?text=Image-${imageId}` 
+    }];
+  }
+  
+  return [200, { 
+    id: imageId,
+    url: imageData.url 
+  }];
 });
 
 export default mock;
