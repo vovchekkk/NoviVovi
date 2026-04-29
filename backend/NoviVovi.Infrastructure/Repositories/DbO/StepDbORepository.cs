@@ -35,6 +35,7 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
             menu_id AS MenuId,
             background_id AS BackgroundId,
             character_id AS CharacterId,
+            hide_character_id AS HideCharacterId,
             next_label_id AS NextLabelId,
             step_order AS StepOrder,
             step_type AS StepType
@@ -74,11 +75,12 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
                 {
                     step.Character = await characterRepository.GetCharacterObjectByCharacterIdAsync(step.CharacterId.Value);
                 }
-                // For HideCharacterStep - load just the Character
-                else if (step.StepType == StepType.HideCharacter.ToStepTypeString())
-                {
-                    step.HideCharacter = await characterRepository.GetFullCharacterByIdAsync(step.CharacterId.Value);
-                }
+            }
+            
+            // For HideCharacterStep - load just the Character
+            if (step.HideCharacterId.HasValue)
+            {
+                step.HideCharacter = await characterRepository.GetFullCharacterByIdAsync(step.HideCharacterId.Value);
             }
 
             // BACKGROUND
@@ -107,6 +109,7 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
                 menu_id AS MenuId,
                 bg_id AS BgId,
                 character_id AS CharacterId,
+                hide_character_id AS HideCharacterId,
                 next_label_id AS NextLabelId,
                 step_order AS StepOrder,
                 step_type AS StepType
@@ -142,6 +145,7 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
                label_id AS LabelId,
                replica_id AS ReplicaId,
                character_id AS CharacterId,
+               hide_character_id AS HideCharacterId,
                menu_id AS MenuId,
                background_id AS BackgroundId,
                next_label_id AS NextLabelId,
@@ -178,10 +182,10 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
         const string sql = @"
             INSERT INTO ""Steps"" (
                 id, label_id, replica_id, menu_id, background_id,
-                next_label_id, step_order, step_type, character_id
+                next_label_id, step_order, step_type, character_id, hide_character_id
             ) VALUES (
                 @Id, @LabelId, @ReplicaId, @MenuId, @BackgroundId,
-                @NextLabelId, @StepOrder, @StepType, @CharacterId
+                @NextLabelId, @StepOrder, @StepType, @CharacterId, @HideCharacterId
             )";
         
         await ExecuteAsync(sql, step);
@@ -197,6 +201,7 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
                 menu_id = @MenuId,
                 background_id = @BackgroundId,
                 character_id = @CharacterId,
+                hide_character_id = @HideCharacterId,
                 next_label_id = @NextLabelId,
                 step_order = @StepOrder,
                 step_type = @StepType
@@ -249,6 +254,13 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
         {
             await characterRepository.AddOrUpdateStepCharacterAsync(step.Character);
             step.CharacterId = step.Character.Id;
+        }
+        
+        // For HideCharacterStep - save the character reference
+        if (step.HideCharacter != null)
+        {
+            await characterRepository.AddOrUpdateFullAsync(step.HideCharacter);
+            step.HideCharacterId = step.HideCharacter.Id;
         }
 
         if (step.NextLabel != null)
