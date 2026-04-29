@@ -17,8 +17,12 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
         const state = character?.states?.find((s: any) => s.id === stateId);
         return state?.imageId;
     };
-    const { background: hBackground, characters: hCharacters } = useSceneSnapshot(novelId, labelId, stepId);
 
+    const { background: hBackground, characters: hCharacters, replica } = useSceneSnapshot(novelId, labelId, stepId);
+    const speaker = characterOptions?.find(c => c.id === replica?.speakerId);
+    const speakerName = speaker?.name || "";
+    const speakerColor = speaker?.nameColor || "#ffffff";
+    console.log('Текущий спикер:', speaker);
     const watched = useWatch({
         control,
         name: ["type", "characterId", "characterStateId", "transform", "imageId", "background"] as const,
@@ -90,6 +94,45 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
                         />
                     );
                 })}
+            {replica && replica.text && (
+                <div className={css({
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '25%',
+                    minHeight: '100px',
+                    background: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.7) 15%, rgba(0,0,0,0.7) 85%, transparent 100%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                    paddingLeft: '20%',
+                    paddingRight: '5%',
+                    zIndex: 100,
+                })}>
+                    <div className={css({
+                        fontSize: '24px',
+                        marginBottom: '4px',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
+                    })}
+                         style={{ color: speakerColor }}
+                    >
+                        {speakerName}
+                    </div>
+
+                    <div className={css({
+                        fontSize: '20px',
+                        marginLeft: '3%',
+                        color: 'white',
+                        textAlign: 'left',
+                        maxWidth: '80%',
+                        lineHeight: '1.2'
+                    })}>
+                        {replica.text}
+                    </div>
+                </div>
+            )}
 
             {!activeBackground?.imageId && (
                 <div className={css({

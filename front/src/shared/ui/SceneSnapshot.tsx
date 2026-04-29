@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { charactersApi } from "../api/client";
+import {formatTransformForFrontend} from "../../pages/Editor.tsx";
 
 export const useSceneSnapshot = (novelId: string, labelId: string, stepId: string | null) => {
     const [data, setData] = useState<{
@@ -29,14 +30,14 @@ export const useSceneSnapshot = (novelId: string, labelId: string, stepId: strin
                     background: result.background ? {
                         imageId: result.background.image?.id,
                         url: result.background.image?.url,
-                        transform: result.background.transform || {}
+                        transform: formatTransformForFrontend(result.background.transform) || {}
                     } : null,
                     characters: (result.charactersOnScene || []).map((item: any) => ({
                         characterId: item.character?.id,
                         characterStateId: item.state?.id,
                         imageId: item.state?.image?.id,
                         url: item.state?.image?.url,
-                        transform: item.transform || { x: 50, y: 50, width: 40, height: 40, scale: 1, rotation: 0, zIndex: 10 }
+                        transform: formatTransformForFrontend(item.transform) || { x: 50, y: 50, width: 40, height: 40, scale: 1, rotation: 0, zIndex: 10 }
                     })),
                     replica: result.replica,
                     loading: false

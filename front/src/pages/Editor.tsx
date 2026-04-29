@@ -18,6 +18,38 @@ import {LabelItem} from "../shared/ui/LabelItem.tsx";
 import type {Character} from "../shared/ui/AssetsContainer.tsx";
 import {setLastNovelId} from "../shared/lib/novelSession.ts";
 
+const DESIGN_RESOLUTION = { width: 1920, height: 1080 };
+
+export const formatTransformForBackend = (transform: any) => {
+    if (!transform) return null;
+
+    return {
+        ...transform,
+        x: Number((transform.x / 100).toFixed(4)),
+        y: Number((transform.y / 100).toFixed(4)),
+        width: Math.round((transform.width / 100) * DESIGN_RESOLUTION.width),
+        height: Math.round((transform.height / 100) * DESIGN_RESOLUTION.height),
+        scale: transform.scale ?? 1,
+        rotation: transform.rotation ?? 0,
+        zIndex: Math.round(transform.zIndex ?? 0)
+    };
+};
+
+export const formatTransformForFrontend = (backendTransform: any) => {
+    if (!backendTransform) return null;
+
+    return {
+        ...backendTransform,
+        x: Number((backendTransform.x * 100).toFixed(2)),
+        y: Number((backendTransform.y * 100).toFixed(2)),
+        width: Number(((backendTransform.width / DESIGN_RESOLUTION.width) * 100).toFixed(2)),
+        height: Number(((backendTransform.height / DESIGN_RESOLUTION.height) * 100).toFixed(2)),
+        scale: backendTransform.scale ?? 1,
+        rotation: backendTransform.rotation ?? 0,
+        zIndex: backendTransform.zIndex ?? 1
+    };
+};
+
 export enum StepType {
     BACKGROUND = 'show_background',
     SHOW = 'show_character',
@@ -799,6 +831,7 @@ export default function Editor() {
                 setCharacterOptions(data.map(ch => ({
                     id: ch.id,
                     name: ch.name,
+                    nameColor:ch.nameColor || '#ffffff',
                     states: ch.characterStates.map(st => ({
                         id: st.id,
                         name: st.name,
@@ -855,7 +888,7 @@ export default function Editor() {
                             state: data.state ?? defaultSceneState,
                             characterId: data.characterObject.id ?? '',
                             characterStateId: data.state.id ?? '',
-                            transform: data.characterObject.transform ?? defaultTransform,
+                            transform: formatTransformForFrontend(data.characterObject.transform) ?? defaultTransform,
                         });
                         break;
 
@@ -874,9 +907,9 @@ export default function Editor() {
                             imageId: data.backgroundObject?.image?.id ?? data.imageId ?? '',
                             background: {
                                 imageId: data.backgroundObject?.image?.id ?? data.imageId ?? '',
-                                transform: data.transform ?? defaultBackgroundTransform,
+                                transform: formatTransformForFrontend(data.backgroundObject?.transform) ?? defaultBackgroundTransform,
                             },
-                            transform: data.transform ?? defaultBackgroundTransform,
+                            transform: formatTransformForFrontend(data.transform) ?? defaultBackgroundTransform,
                         });
                         break;
 
@@ -1038,7 +1071,7 @@ export default function Editor() {
 
             // Replica step
             if (data.type === 'replica') {
-                finalData.type = 'show_replica';
+                finalData.type = 'replica';
                 finalData.speakerId = data.characterId || '';
                 finalData.text = data.text || '';
             }
@@ -1047,7 +1080,9 @@ export default function Editor() {
             if (data.type === 'show_character') {
                 finalData.characterId = data.characterId;
                 finalData.characterStateId = data.characterStateId;
-                finalData.transform = data.transform;
+                finalData.transform = formatTransformForBackend(
+                    data.transform || data.background?.transform || defaultBackgroundTransform
+                );
             }
 
             // Hide character step
@@ -1058,7 +1093,9 @@ export default function Editor() {
             // Background step
             if (data.type === 'show_background') {
                 finalData.imageId = data.imageId;
-                finalData.transform = data.transform;
+                finalData.transform = formatTransformForBackend(
+                    data.transform || data.background?.transform || defaultBackgroundTransform
+                );
             }
 
             finalData.state = finalState
