@@ -4,7 +4,7 @@ import { RouterProvider } from 'react-router-dom'
 
 
 import './index.css'
-import './mocks/api.mock'
+// import './mocks/api.mock'
 import { router } from './routes'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
