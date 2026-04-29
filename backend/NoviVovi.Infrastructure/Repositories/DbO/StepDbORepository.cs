@@ -293,6 +293,61 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
 
     public async Task DeleteStepAsync(Guid stepId)
     {
+        // Get step details to find related entities
+        const string getStepSql = @"
+            SELECT menu_id, replica_id, background_id, character_id 
+            FROM ""Steps"" 
+            WHERE id = @Id";
+        
+        var step = await QueryFirstOrDefaultAsync<dynamic>(getStepSql, new { Id = stepId });
+        
+        if (step != null)
+        {
+            // Delete related entities first (CASCADE won't work from Step to these)
+            if (step.menu_id != null)
+            {
+                // Delete choices first, then menu
+                await ExecuteAsync("DELETE FROM \"Choices\" WHERE menu_id = @MenuId", new { MenuId = (Guid)step.menu_id });
+                await ExecuteAsync("DELETE FROM \"Menus\" WHERE id = @MenuId", new { MenuId = (Guid)step.menu_id });
+            }
+            
+            if (step.replica_id != null)
+            {
+                await ExecuteAsync("DELETE FROM \"Replicas\" WHERE id = @ReplicaId", new { ReplicaId = (Guid)step.replica_id });
+            }
+            
+            if (step.background_id != null)
+            {
+                // Get transform_id before deleting background
+                var bgTransformId = await QueryFirstOrDefaultAsync<Guid?>(
+                    "SELECT transform_id FROM \"Backgrounds\" WHERE id = @BgId", 
+                    new { BgId = (Guid)step.background_id });
+                
+                await ExecuteAsync("DELETE FROM \"Backgrounds\" WHERE id = @BgId", new { BgId = (Guid)step.background_id });
+                
+                if (bgTransformId != null)
+                {
+                    await ExecuteAsync("DELETE FROM \"Transforms\" WHERE id = @TransformId", new { TransformId = bgTransformId });
+                }
+            }
+            
+            if (step.character_id != null)
+            {
+                // Get transform_id before deleting StepCharacter
+                var charTransformId = await QueryFirstOrDefaultAsync<Guid?>(
+                    "SELECT transform_id FROM \"StepCharacter\" WHERE id = @CharId", 
+                    new { CharId = (Guid)step.character_id });
+                
+                await ExecuteAsync("DELETE FROM \"StepCharacter\" WHERE id = @CharId", new { CharId = (Guid)step.character_id });
+                
+                if (charTransformId != null)
+                {
+                    await ExecuteAsync("DELETE FROM \"Transforms\" WHERE id = @TransformId", new { TransformId = charTransformId });
+                }
+            }
+        }
+        
+        // Finally delete the step itself
         const string sql = "DELETE FROM \"Steps\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = stepId });
     }

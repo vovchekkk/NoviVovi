@@ -1,12 +1,13 @@
-@host = http://localhost:5136
+@host = http://127.0.0.1:5136
 
 # Переменные для хранения ID (заполняй после каждого запроса)
-@novelId = 5267d736-1d98-4228-99ec-5442bf0f1ba0
-@labelId = 6cd4f7b4-28ec-4209-8136-d10dcb1dbe9b
-@characterId = 7756532e-17c0-49c8-958a-68f00d04ef48
+@novelId = afbf6384-5053-47ca-9d48-1f0643f55cae
+@labelId = ff383a58-8463-43c6-9f87-b12478e78f76
+@characterId = f0dff2b0-e2e3-4729-b8dd-c148c4586fdf
 @characterStateId = PUT_CHARACTER_STATE_ID_HERE
 @imageId = PUT_IMAGE_ID_HERE
 @stepId = PUT_STEP_ID_HERE
+@testFilePath = test/sample.txt
 
 ###############################################
 # 1. NOVELS - Управление новеллами
@@ -150,12 +151,11 @@ DELETE {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states/{{chara
 ###############################################
 
 ### Шаг 1: Инициировать загрузку изображения (получить presigned URL)
-POST {{host}}/api/images/upload-url
+POST {{host}}/api/novels/{{novelId}}/images/upload-url
 Content-Type: application/json
 
 {
   "name": "background.png",
-  "description": "Фон для первой сцены",
   "format": "png",
   "type": "Background",
   "size": {
@@ -165,22 +165,22 @@ Content-Type: application/json
 }
 
 ### Шаг 2: Подтвердить загрузку изображения (после PUT на presigned URL)
-POST {{host}}/api/images/{{imageId}}/confirm
+POST {{host}}/api/novels/{{novelId}}/images/{{imageId}}/confirm
 
 ### Получить изображение по ID
-GET {{host}}/api/images/{{imageId}}
+GET {{host}}/api/novels/{{novelId}}/images/{{imageId}}
 
 ### Обновить метаданные изображения
-PATCH {{host}}/api/images/{{imageId}}
+PATCH {{host}}/api/novels/{{novelId}}/images/{{imageId}}
 Content-Type: application/json
 
 {
   "name": "background_updated.png",
-  "description": "Обновленное описание"
+  "type": "Character"
 }
 
 ### Удалить изображение
-DELETE {{host}}/api/images/{{imageId}}
+DELETE {{host}}/api/novels/{{novelId}}/images/{{imageId}}
 
 ###############################################
 # 6. STEPS - Шаги (действия в сценах)
@@ -257,19 +257,14 @@ Content-Type: application/json
 
 {
   "type": "menu",
-  "name": "Выбор пути",
-  "description": "Важное решение",
-  "text": "Что делать дальше?",
   "choices": [
     {
-      "id": "00000000-0000-0000-0000-000000000001",
       "text": "Пойти налево",
       "transition": {
         "targetLabelId": "{{labelId}}"
       }
     },
     {
-      "id": "00000000-0000-0000-0000-000000000002",
       "text": "Пойти направо",
       "transition": {
         "targetLabelId": "{{labelId}}"
@@ -311,11 +306,85 @@ Content-Type: application/json
   }
 }
 
+### Обновить шаг: Показать меню
+PATCH {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+Content-Type: application/json
+
+{
+  "type": "menu",
+  "choices": [
+    {
+      "text": "Новый выбор 1",
+      "transition": {
+        "targetLabelId": "{{labelId}}"
+      }
+    },
+    {
+      "text": "Новый выбор 2",
+      "transition": {
+        "targetLabelId": "{{labelId}}"
+      }
+    }
+  ]
+}
+
+### Обновить шаг: Показать фон
+PATCH {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+Content-Type: application/json
+
+{
+  "type": "show_background",
+  "imageId": "{{imageId}}",
+  "transform": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": 1920,
+    "height": 1080,
+    "scale": 1.5,
+    "rotation": 0.0,
+    "zIndex": 0
+  }
+}
+
+### Обновить шаг: Скрыть персонажа
+PATCH {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+Content-Type: application/json
+
+{
+  "type": "hide_character",
+  "characterId": "{{characterId}}"
+}
+
+### Обновить шаг: Прыжок
+PATCH {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
+Content-Type: application/json
+
+{
+  "type": "jump",
+  "targetLabelId": "{{labelId}}"
+}
+
 ### Удалить шаг
 DELETE {{host}}/api/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
 
 ###############################################
-# 7. PREVIEW - Предпросмотр сцены
+# 7. TEST STORAGE - Тестирование хранилища
+###############################################
+
+### Получить URL для загрузки тестового файла
+GET {{host}}/api/test/upload-url?fileName=sample.txt
+
+### Получить URL для просмотра тестового файла
+GET {{host}}/api/test/view/{{testFilePath}}
+
+### Скачать тестовый файл
+GET {{host}}/api/test/download/{{testFilePath}}
+
+### Удалить тестовый файл
+DELETE {{host}}/api/test/delete/{{testFilePath}}
+
+###############################################
+# 8. PREVIEW - Предпросмотр сцены
 ###############################################
 
 ### Получить предпросмотр сцены на конкретном шаге
@@ -338,14 +407,14 @@ GET {{host}}/preview/novels/{{novelId}}/labels/{{labelId}}/steps/{{stepId}}
 # Скопируй characterId из ответа
 
 ### 4. Инициировать загрузку изображения
-# POST {{host}}/api/images/upload-url
+# POST {{host}}/api/novels/{{novelId}}/images/upload-url
 # Скопируй imageId и uploadUrl из ответа
 
 ### 5. Загрузить файл на presigned URL (через curl или Postman)
 # PUT <uploadUrl> с файлом
 
 ### 6. Подтвердить загрузку
-# POST {{host}}/api/images/{{imageId}}/confirm
+# POST {{host}}/api/novels/{{novelId}}/images/{{imageId}}/confirm
 
 ### 7. Создать состояние персонажа с изображением
 # POST {{host}}/api/novels/{{novelId}}/characters/{{characterId}}/states
