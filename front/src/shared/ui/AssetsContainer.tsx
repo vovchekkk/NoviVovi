@@ -9,6 +9,15 @@ import * as z from 'zod';
 import {useForm, useFieldArray, useWatch} from 'react-hook-form';
 import {getImageDimensions} from "../../pages/Editor.tsx";
 
+const DEFAULT_TRANSFORM = {
+    x: 50,
+    y: 50,
+    width: 40,
+    height: 40,
+    scale: 1,
+    rotation: 0,
+    zIndex: 1,
+};
 
 const emotionSchema = z.object({
     id: z.string().optional(),
@@ -23,7 +32,7 @@ const emotionSchema = z.object({
         scale: z.number().default(1),
         rotation: z.number().default(0),
         zIndex: z.number().default(1),
-    }).default({x: 50, y: 50, width: 40, height:40, scale: 1, rotation: 0, zIndex: 1})
+    }).default(DEFAULT_TRANSFORM)
 });
 const characterSchema = z.object({
     id: z.string().optional(),
@@ -87,6 +96,11 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         control,
         name: "emotions"
     });
+    const previewUrl = currentEmotion
+        ? currentEmotion.imageFile instanceof File
+            ? URL.createObjectURL(currentEmotion.imageFile)
+            : (currentEmotion.fileUrl || null) // null вместо ""
+        : null;
 
     useEffect(() => {
         if (selectedCharacter) {
@@ -128,10 +142,17 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                     charactersApi.getById(novelId, selectedId),
                     charactersApi.getStates(novelId, selectedId)
                 ]);
+                const mappedEmotions = (statesRes.data || []).map((state: any) => ({
+                    id: state.id,
+                    name: state.name,
+                    fileUrl: state.image?.url || "",
+                    imageId: state.image?.id || state.imageId,
+                    transform: state.localTransform || DEFAULT_TRANSFORM
+                }));
                 reset({
                     name: charRes.data.name,
                     nameColor: charRes.data.nameColor || '#ffffff',
-                    emotions: statesRes.data || []
+                    emotions: mappedEmotions
                 });
             } catch (e) {
                 console.error('Ошибка загрузки:', e);
@@ -150,7 +171,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
 
             await charactersApi.patch(novelId, selectedId, {
                 name: formData.name,
-                color: formData.nameColor,
+                nameColor: formData.nameColor,
             });
 
             const emotionPromises = formData.emotions.map(async (emotion, index) => {
@@ -183,10 +204,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                     name: emotion.name,
                     description: null,
                     imageId: currentImageId,
-                    localTransform: {
-                        x: 1, y: 1, width: 1, height: 1,
-                        scale: 1, rotation: 1, zIndex: 1
-                    }
+                    localTransform: emotion.transform || DEFAULT_TRANSFORM
                 };
 
                 if (emotion.id) {
@@ -296,15 +314,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                         Персонажи
                     </div>
                     {loading && <p>Загрузка...</p>}
-                    <div className={css({
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px',
-                        alignItems: 'center',
-                        overflowY: 'auto',
-                        flex: 1,
-                        paddingBottom: '10px',
-                    })}>
+                    <div className={vstack({gap: '10px', alignItems: 'center'})}>
                         {characters.map(character => (
                             <button
                                 key={character.id}
@@ -504,7 +514,11 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                             </div>
                                             <button
                                                 type="button"
-                                                onClick={() => append({name: '', imageFile: null})}
+                                                onClick={() => append({
+                                                    name: '',
+                                                    imageFile: null,
+                                                    transform:DEFAULT_TRANSFORM,
+                                                })}
                                                 className={css({
                                                     w: '30%',
                                                     py: '3',
@@ -565,26 +579,26 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                                 Превью: {currentEmotion.name || 'Без имени'}
                                             </div>
 
-                                            <img
-                                                src={
-                                                    currentEmotion.imageFile instanceof File
-                                                        ? URL.createObjectURL(currentEmotion.imageFile)
-                                                        : (currentEmotion.fileUrl || '')
-                                                }
-                                                alt="Preview"
-                                                style={{
-                                                    position: 'absolute',
-                                                    left: `${currentEmotion.transform?.x ?? 50}%`,
-                                                    top: `${currentEmotion.transform?.y ?? 50}%`,
-                                                    width: `${currentEmotion.transform?.width ?? 40}%`,
-                                                    height: `${currentEmotion.transform?.height ?? 40}%`,
-                                                    transform: `translate(-50%, -50%) 
-                                scale(${currentEmotion.transform?.scale ?? 1}) 
-                                rotate(${currentEmotion.transform?.rotation ?? 0}deg)`,
-                                                    zIndex: currentEmotion.transform?.zIndex ?? 1,
-                                                    objectFit: 'fill'
-                                                }}
-                                            />
+                                            {previewUrl ? (
+                                                <img
+                                                    src={previewUrl}
+                                                    alt="Preview"
+                                                    style={{
+                                                        position: 'absolute',
+                                                        left: `${currentEmotion.transform?.x ?? 50}%`,
+                                                        top: `${currentEmotion.transform?.y ?? 50}%`,
+                                                        width: `${currentEmotion.transform?.width ?? 40}%`,
+                                                        height: `${currentEmotion.transform?.height ?? 40}%`,
+                                                        transform: `translate(-50%, -50%) 
+                                    scale(${currentEmotion.transform?.scale ?? 1}) 
+                                    rotate(${currentEmotion.transform?.rotation ?? 0}deg)`,
+                                                        zIndex: currentEmotion.transform?.zIndex ?? 1,
+                                                        objectFit: 'fill'
+                                                    }}
+                                                />
+                                            ) : (
+                                                <div className={css({color: '#888'})}>Изображение не загружено</div>
+                                            )}
                                         </>
                                     ) : (
                                         <div className={css({color: '#888', fontSize: '14px'})}>

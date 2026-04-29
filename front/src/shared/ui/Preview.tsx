@@ -18,7 +18,7 @@ export default function Preview({ steps, selectedStepIndex, control, novelId, ch
         return state?.imageId;
     };
     const historyIndex = selectedStepIndex !== null ? selectedStepIndex - 1 : null;
-    const { background: hBackground, characters: hCharacters } = useSceneSnapshot(steps, historyIndex);
+    const { background: hBackground, characters: hCharacters } = useSceneSnapshot(steps, historyIndex, characterOptions);
 
     const watched = useWatch({
         control,
