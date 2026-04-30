@@ -241,7 +241,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                 fileUrl: state.image?.url || "",
                 imageId: state.image?.id || state.imageId,
                 imageFile: null,
-                transform: state.localTransform || DEFAULT_TRANSFORM
+                transform: formatTransformForFrontend(state.localTransform) || DEFAULT_TRANSFORM
             }));
             reset({
                 name: charRes.data.name,
