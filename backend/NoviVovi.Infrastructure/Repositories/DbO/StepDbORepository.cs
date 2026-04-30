@@ -325,6 +325,7 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
                 
                 await ExecuteAsync("DELETE FROM \"Backgrounds\" WHERE id = @BgId", new { BgId = (Guid)step.background_id });
                 
+                // Delete Transform manually (double CASCADE doesn't work reliably)
                 if (bgTransformId != null)
                 {
                     await ExecuteAsync("DELETE FROM \"Transforms\" WHERE id = @TransformId", new { TransformId = bgTransformId });
@@ -340,6 +341,7 @@ public class StepDbORepository : BaseRepository, IStepDbORepository
                 
                 await ExecuteAsync("DELETE FROM \"StepCharacter\" WHERE id = @CharId", new { CharId = (Guid)step.character_id });
                 
+                // Delete Transform manually (double CASCADE doesn't work reliably)
                 if (charTransformId != null)
                 {
                     await ExecuteAsync("DELETE FROM \"Transforms\" WHERE id = @TransformId", new { TransformId = charTransformId });
