@@ -102,7 +102,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
             return URL.createObjectURL(currentEmotion.imageFile);
         }
         return currentEmotion.fileUrl || null;
-    }, [currentEmotion]);
+    }, [currentEmotion?.imageFile, currentEmotion?.fileUrl, activeIndex]);
 
     useEffect(() => {
         if (selectedCharacter) {
