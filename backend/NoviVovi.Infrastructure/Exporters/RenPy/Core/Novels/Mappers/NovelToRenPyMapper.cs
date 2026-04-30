@@ -18,12 +18,15 @@ public class NovelToRenPyMapper(
 {
     public RenPyNovel Map(Novel novel)
     {
+        // Set start label ID so it gets mapped to "start" instead of "label_{guid}"
+        idGenerator.SetStartLabel(novel.StartLabel.Id);
+        
         return new RenPyNovel
         {
             Title = novel.Title,
             Characters = novel.Characters.Select(characterMapper.Map).ToList(),
             Labels = novel.Labels.Select(labelMapper.Map).ToList(),
-            StartLabelId = idGenerator.GenerateForLabel(novel.StartLabel.Id)
+            StartLabelId = idGenerator.GenerateForLabel(novel.StartLabel.Id) // Will return "start"
         };
     }
 }

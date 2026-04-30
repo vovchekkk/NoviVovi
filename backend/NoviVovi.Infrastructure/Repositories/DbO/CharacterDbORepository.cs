@@ -136,11 +136,15 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
             await DeleteStateAsync(stateId);
         }
         
-        // 3. Delete all Replicas where this Character is the Speaker
+        // 3. Delete all HideCharacterSteps that reference this Character
+        const string deleteHideStepsSql = "DELETE FROM \"Steps\" WHERE \"hide_character_id\" = @CharacterId";
+        await ExecuteAsync(deleteHideStepsSql, new { CharacterId = id });
+        
+        // 4. Delete all Replicas where this Character is the Speaker
         const string deleteReplicasSql = "DELETE FROM \"Replicas\" WHERE \"speaker_id\" = @CharacterId";
         await ExecuteAsync(deleteReplicasSql, new { CharacterId = id });
         
-        // 4. Delete the Character itself
+        // 5. Delete the Character itself
         const string sql = "DELETE FROM \"Characters\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }
@@ -235,25 +239,24 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
             WHERE ""character_state_id"" = @StateId";
         var stepCharacters = await QueryAsync<(Guid Id, Guid? TransformId)>(getStepCharactersSql, new { StateId = id });
         
-        // 2. Delete all StepCharacters and their Transforms
-        foreach (var (stepCharId, stepTransformId) in stepCharacters)
-        {
-            // Delete StepCharacter
-            const string deleteStepCharSql = "DELETE FROM \"StepCharacter\" WHERE \"id\" = @Id";
-            await ExecuteAsync(deleteStepCharSql, new { Id = stepCharId });
-            
-            // Delete Transform if exists
-            if (stepTransformId.HasValue)
-            {
-                await imageDbORepository.DeleteTransformById(stepTransformId.Value);
-            }
-        }
-        
-        // 3. Delete all Steps that reference these StepCharacters
+        // 2. Delete all Steps that reference these StepCharacters (BEFORE deleting StepCharacters)
         foreach (var (stepCharId, _) in stepCharacters)
         {
             const string deleteStepSql = "DELETE FROM \"Steps\" WHERE \"character_id\" = @CharacterId";
             await ExecuteAsync(deleteStepSql, new { CharacterId = stepCharId });
+        }
+        
+        // 3. Delete all StepCharacters and their Transforms
+        foreach (var (stepCharId, stepTransformId) in stepCharacters)
+        {
+            const string deleteStepCharSql = "DELETE FROM \"StepCharacter\" WHERE \"id\" = @Id";
+            await ExecuteAsync(deleteStepCharSql, new { Id = stepCharId });
+            
+            // Delete Transform manually (double CASCADE doesn't work reliably)
+            if (stepTransformId.HasValue)
+            {
+                await imageDbORepository.DeleteTransformById(stepTransformId.Value);
+            }
         }
         
         // 4. Get transform_id of the CharacterState itself
@@ -264,7 +267,7 @@ public class CharacterDbORepository : BaseRepository, ICharacterDbORepository
         const string sql = "DELETE FROM \"CharacterStates\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
         
-        // 6. Delete the CharacterState's Transform if it exists
+        // 6. Delete the CharacterState's Transform manually (double CASCADE doesn't work reliably)
         if (transformId.HasValue)
         {
             await imageDbORepository.DeleteTransformById(transformId.Value);

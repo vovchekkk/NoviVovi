@@ -17,8 +17,9 @@ public class ReplicaMapperTests
 
     public ReplicaMapperTests()
     {
+        var ctx = new MappingContext();
         _imageMapper = new ImageMapper(_transformMapper);
-        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper);
+        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper, ctx);
         _mapper = new ReplicaMapper(_characterMapper);
     }
 

@@ -438,6 +438,8 @@ public class StepRepoTest : IAsyncLifetime
     public async Task TestGetBackground()
     {
         var image = CreateImage();
+        await imageRepo.AddOrUpdateImageAsync(image);
+        
         var transform = CreateTransform();
         var bg = CreateBackground(image, transform);
         

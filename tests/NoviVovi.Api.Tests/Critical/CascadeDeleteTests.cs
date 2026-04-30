@@ -463,5 +463,88 @@ public class CascadeDeleteTests(NoviVoviWebApplicationFactory factory) : Integra
         Assert.Equal(0, labelsCount);
     }
     
+    [Fact]
+    public async Task DeleteCharacter_UsedInHideCharacterStep_DeletesStep()
+    {
+        // Arrange
+        var novel = await PostAsync<NovelResponse>("/api/novels", new CreateNovelRequest("Test"));
+        var character = await PostAsync<CharacterResponse>($"/api/novels/{novel.Id}/characters",
+            new AddCharacterRequest("Hero", "FF5733", null));
+        
+        // Создать HideCharacterStep
+        var step = await PostAsync<object>($"/api/novels/{novel.Id}/labels/{novel.StartLabelId}/steps",
+            new AddHideCharacterStepRequest(character.Id));
+        
+        // Получить ID шага
+        var stepId = await QuerySingleAsync<Guid>(
+            @"SELECT ""id"" FROM ""Steps"" WHERE ""hide_character_id"" = @CharacterId",
+            new { CharacterId = character.Id });
+        
+        // Act - удалить Character
+        await DeleteAsync($"/api/novels/{novel.Id}/characters/{character.Id}");
+        
+        // Assert - HideCharacterStep должен быть удален (CASCADE)
+        var stepExists = await QuerySingleAsync<bool>(
+            @"SELECT EXISTS(SELECT 1 FROM ""Steps"" WHERE ""id"" = @StepId)",
+            new { StepId = stepId });
+        Assert.False(stepExists);
+    }
+    
+    [Fact]
+    public async Task DeleteImage_UsedInCharacterState_DeletesState()
+    {
+        // Arrange
+        var novel = await PostAsync<NovelResponse>("/api/novels", new CreateNovelRequest("Test"));
+        var character = await PostAsync<CharacterResponse>($"/api/novels/{novel.Id}/characters",
+            new AddCharacterRequest("Hero", "FF5733", null));
+        
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novel.Id}/images/upload-url",
+            new InitiateUploadImageRequest("char.png", "png", ImageTypeRequest.Character, new SizeRequest(512, 512)));
+        await Client.PostAsync($"/api/novels/{novel.Id}/images/{uploadInfo.ImageId}/confirm", null);
+        
+        var state = await PostAsync<CharacterStateResponse>(
+            $"/api/novels/{novel.Id}/characters/{character.Id}/states",
+            new AddCharacterStateRequest("Happy", null, uploadInfo.ImageId, new TransformRequest(1, 0, 0, 100, 100, 0, 0)));
+        
+        // Act - удалить Image
+        await DeleteAsync($"/api/novels/{novel.Id}/images/{uploadInfo.ImageId}");
+        
+        // Assert - CharacterState должен быть удален (CASCADE)
+        var stateExists = await QuerySingleAsync<bool>(
+            @"SELECT EXISTS(SELECT 1 FROM ""CharacterStates"" WHERE ""id"" = @StateId)",
+            new { StateId = state.Id });
+        Assert.False(stateExists);
+    }
+    
+    [Fact]
+    public async Task DeleteImage_UsedInBackground_DeletesBackground()
+    {
+        // Arrange
+        var novel = await PostAsync<NovelResponse>("/api/novels", new CreateNovelRequest("Test"));
+        
+        var uploadInfo = await PostAsync<UploadInfoImageResponse>($"/api/novels/{novel.Id}/images/upload-url",
+            new InitiateUploadImageRequest("bg.png", "png", ImageTypeRequest.Background, new SizeRequest(1920, 1080)));
+        await Client.PostAsync($"/api/novels/{novel.Id}/images/{uploadInfo.ImageId}/confirm", null);
+        
+        // Создать ShowBackgroundStep
+        await PostAsync<object>($"/api/novels/{novel.Id}/labels/{novel.StartLabelId}/steps",
+            new AddShowBackgroundStepRequest(uploadInfo.ImageId, new TransformRequest(1, 0, 0, 1920, 1080, 0, 0)));
+        
+        // Получить background_id
+        var backgroundId = await QuerySingleAsync<Guid?>(
+            @"SELECT ""id"" FROM ""Backgrounds"" WHERE ""img"" = @ImageId",
+            new { ImageId = uploadInfo.ImageId });
+        Assert.NotNull(backgroundId);
+        
+        // Act - удалить Image
+        await DeleteAsync($"/api/novels/{novel.Id}/images/{uploadInfo.ImageId}");
+        
+        // Assert - Background должен быть удален (CASCADE)
+        var backgroundExists = await QuerySingleAsync<bool>(
+            @"SELECT EXISTS(SELECT 1 FROM ""Backgrounds"" WHERE ""id"" = @BackgroundId)",
+            new { BackgroundId = backgroundId.Value });
+        Assert.False(backgroundExists);
+    }
+    
     #endregion
 }

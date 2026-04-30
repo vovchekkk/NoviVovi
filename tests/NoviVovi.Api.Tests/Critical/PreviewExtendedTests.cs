@@ -40,7 +40,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{replicaStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{replicaStep.Id}");
         
         // Assert
         Assert.NotNull(preview);
@@ -71,7 +71,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{bgStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{bgStep.Id}");
         
         // Assert
         Assert.NotNull(preview);
@@ -122,7 +122,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{showCharStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{showCharStep.Id}");
         
         // Assert
         Assert.NotNull(preview);
@@ -201,7 +201,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{lastStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{lastStep.Id}");
         
         // Assert
         Assert.NotNull(preview);
@@ -235,7 +235,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{replicaStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{replicaStep.Id}");
         
         // Assert
         Assert.NotNull(preview);
@@ -273,7 +273,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{menuStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{menuStep.Id}");
         
         // Assert
         Assert.NotNull(preview);
@@ -327,7 +327,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{replicaStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{replicaStep.Id}");
         
         // Assert - проверить ВСЕ элементы сцены
         Assert.NotNull(preview);
@@ -368,7 +368,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var response = await GetRawAsync(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{nonExistentStepId}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{nonExistentStepId}");
         
         // Assert
         Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
@@ -403,7 +403,7 @@ public class PreviewExtendedTests(NoviVoviWebApplicationFactory factory) : Integ
         
         // Act
         var preview = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{hideStep.Id}");
+            $"/api/preview/novels/{novel.Id}/labels/{novel.StartLabelId}/steps/{hideStep.Id}");
         
         // Assert - персонаж должен быть скрыт
         Assert.NotNull(preview);

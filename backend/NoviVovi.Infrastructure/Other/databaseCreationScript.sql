@@ -151,30 +151,35 @@ CREATE TABLE "StepCharacter" (
 -- FOREIGN KEYS
 -- =========================
 
+-- Novel references (nullable fields - SET NULL is correct)
 ALTER TABLE "Novels"
     ADD FOREIGN KEY ("cover_image_id") REFERENCES "Images"("id") ON DELETE SET NULL;
 
 ALTER TABLE "Novels"
     ADD FOREIGN KEY ("start_label_id") REFERENCES "Labels"("id") ON DELETE SET NULL;
 
+-- Novel cascade deletes
 ALTER TABLE "Images"
 ADD FOREIGN KEY ("novel_id") REFERENCES "Novels"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Characters"
 ADD FOREIGN KEY ("novel_id") REFERENCES "Novels"("id") ON DELETE CASCADE;
 
+ALTER TABLE "Labels"
+ADD FOREIGN KEY ("novel_id") REFERENCES "Novels"("id") ON DELETE CASCADE;
+
+-- Character cascade deletes
 ALTER TABLE "CharacterStates"
 ADD FOREIGN KEY ("character_id") REFERENCES "Characters"("id") ON DELETE CASCADE;
 
 ALTER TABLE "CharacterStates"
 ADD FOREIGN KEY ("image_id") REFERENCES "Images"("id") ON DELETE CASCADE;
 
-ALTER TABLE "Labels"
-ADD FOREIGN KEY ("novel_id") REFERENCES "Novels"("id") ON DELETE CASCADE;
-
+-- Label cascade deletes
 ALTER TABLE "Steps"
 ADD FOREIGN KEY ("label_id") REFERENCES "Labels"("id") ON DELETE CASCADE;
 
+-- Step cascade deletes (all non-nullable in domain)
 ALTER TABLE "Steps"
 ADD FOREIGN KEY ("menu_id") REFERENCES "Menus"("id") ON DELETE CASCADE;
 
@@ -182,40 +187,45 @@ ALTER TABLE "Steps"
 ADD FOREIGN KEY ("replica_id") REFERENCES "Replicas"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Steps"
-ADD FOREIGN KEY ("background_id") REFERENCES "Backgrounds"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("background_id") REFERENCES "Backgrounds"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Steps"
-ADD FOREIGN KEY ("character_id") REFERENCES "StepCharacter"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("character_id") REFERENCES "StepCharacter"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Steps"
-    ADD FOREIGN KEY ("hide_character_id") REFERENCES "Characters"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("hide_character_id") REFERENCES "Characters"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Steps"
-ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE CASCADE;
 
+-- Menu cascade deletes
 ALTER TABLE "Choices"
 ADD FOREIGN KEY ("menu_id") REFERENCES "Menus"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Choices"
 ADD FOREIGN KEY ("next_label_id") REFERENCES "Labels"("id") ON DELETE CASCADE;
 
+-- Replica cascade delete (Speaker is not nullable in domain)
 ALTER TABLE "Replicas"
-ADD FOREIGN KEY ("speaker_id") REFERENCES "Characters"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("speaker_id") REFERENCES "Characters"("id") ON DELETE CASCADE;
 
+-- Background cascade deletes
 ALTER TABLE "Backgrounds"
 ADD FOREIGN KEY ("img") REFERENCES "Images"("id") ON DELETE CASCADE;
 
+-- StepCharacter cascade deletes
 ALTER TABLE "StepCharacter"
 ADD FOREIGN KEY ("character_state_id") REFERENCES "CharacterStates"("id") ON DELETE CASCADE;
 
+-- Transform cascade deletes (Transform is NOT nullable in domain)
 ALTER TABLE "CharacterStates"
-    ADD FOREIGN KEY ("transform_id") REFERENCES "Transforms"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("transform_id") REFERENCES "Transforms"("id") ON DELETE CASCADE;
 
 ALTER TABLE "Backgrounds"
-    ADD FOREIGN KEY ("transform_id") REFERENCES "Transforms"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("transform_id") REFERENCES "Transforms"("id") ON DELETE CASCADE;
 
 ALTER TABLE "StepCharacter"
-    ADD FOREIGN KEY ("transform_id") REFERENCES "Transforms"("id") ON DELETE SET NULL;
+ADD FOREIGN KEY ("transform_id") REFERENCES "Transforms"("id") ON DELETE CASCADE;
 
 -- =========================
 -- INDEXES (ускорение)

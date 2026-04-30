@@ -16,8 +16,9 @@ public class CharacterMapperTests
 
     public CharacterMapperTests()
     {
+        var ctx = new MappingContext();
         _imageMapper = new ImageMapper(_transformMapper);
-        _mapper = new CharacterMapper(_imageMapper, _transformMapper);
+        _mapper = new CharacterMapper(_imageMapper, _transformMapper, ctx);
     }
 
     [Fact]

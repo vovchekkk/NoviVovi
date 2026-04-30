@@ -19,8 +19,9 @@ public class MenuMapperTests
 
     public MenuMapperTests()
     {
+        var ctx = new MappingContext();
         _imageMapper = new ImageMapper(_transformMapper);
-        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper);
+        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper, ctx);
         _replicaMapper = new ReplicaMapper(_characterMapper);
         
         _stepMapper = new Lazy<StepMapper>(() => new StepMapper(
@@ -28,11 +29,12 @@ public class MenuMapperTests
             _imageMapper,
             _characterMapper,
             new Lazy<MenuMapper>(() => _mapper),
-            _replicaMapper
+            _replicaMapper,
+            ctx
         ));
         
-        _labelMapper = new Lazy<LabelMapper>(() => new LabelMapper(_stepMapper));
-        _mapper = new MenuMapper(_labelMapper);
+        _labelMapper = new Lazy<LabelMapper>(() => new LabelMapper(_stepMapper, ctx));
+        _mapper = new MenuMapper(_labelMapper, ctx);
     }
 
     [Fact]

@@ -21,7 +21,7 @@ public partial class CharacterObjectDtoMapper(
             source.Id,
             characterMapper.ToDto(source.Character),
             characterStateMapper.ToDto(source.State),
-            transformMapper.ToDto(source.FinalTransform)
+            transformMapper.ToDto(source.Transform)
         );
     }
 

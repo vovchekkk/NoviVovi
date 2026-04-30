@@ -133,17 +133,6 @@ public abstract class IntegrationTestBase : IClassFixture<NoviVoviWebApplication
     protected async Task ClearDatabaseAsync()
     {
         await UnitOfWork.Connection.ExecuteAsync(@"
-            TRUNCATE TABLE ""Steps"" CASCADE;
-            TRUNCATE TABLE ""Choices"" CASCADE;
-            TRUNCATE TABLE ""Menus"" CASCADE;
-            TRUNCATE TABLE ""Replicas"" CASCADE;
-            TRUNCATE TABLE ""Backgrounds"" CASCADE;
-            TRUNCATE TABLE ""StepCharacter"" CASCADE;
-            TRUNCATE TABLE ""CharacterStates"" CASCADE;
-            TRUNCATE TABLE ""Characters"" CASCADE;
-            TRUNCATE TABLE ""Labels"" CASCADE;
-            TRUNCATE TABLE ""Images"" CASCADE;
-            TRUNCATE TABLE ""Transforms"" CASCADE;
             TRUNCATE TABLE ""Novels"" CASCADE;
         ", transaction: UnitOfWork.Transaction);
     }

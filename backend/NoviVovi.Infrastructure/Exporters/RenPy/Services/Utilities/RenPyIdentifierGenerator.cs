@@ -7,17 +7,27 @@
 public class RenPyIdentifierGenerator
 {
     private readonly Dictionary<Guid, string> _cache = new();
+    private Guid? _startLabelId;
+
+    /// <summary>
+    /// Sets the start label ID. This label will be mapped to "start" instead of "label_{guid}".
+    /// </summary>
+    public void SetStartLabel(Guid startLabelId)
+    {
+        _startLabelId = startLabelId;
+    }
 
     /// <summary>
     /// Generates a unique identifier for a Label.
-    /// Format: label_{guid} (e.g., label_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6)
+    /// Format: "start" for start label, label_{guid} for others
     /// </summary>
     public string GenerateForLabel(Guid labelId)
     {
         if (_cache.TryGetValue(labelId, out var cached))
             return cached;
 
-        var identifier = $"label_{labelId:N}"; // N = no hyphens, 32 chars
+        // Special case: start label must be named "start" in Ren'Py
+        var identifier = labelId == _startLabelId ? "start" : $"label_{labelId:N}";
         _cache[labelId] = identifier;
         return identifier;
     }

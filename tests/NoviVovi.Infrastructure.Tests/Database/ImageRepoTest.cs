@@ -31,14 +31,18 @@ public class ImageRepoTest :  IAsyncLifetime
         var novelId = Guid.NewGuid();
 
         await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
         
-        const string insertNovelSql = @"Insert into ""Novels"" (id, is_Public, title) values (@Id, @IsPublic, @Title)";
+        const string insertNovelSql = @"INSERT INTO ""Novels"" (id, is_public, title, created_at, edited_at) 
+                                        VALUES (@Id, @IsPublic, @Title, @CreatedAt, @EditedAt)";
         
         var novel = new NovelDbO
         {
             Id = novelId,
             IsPublic = true,
-            Title = "abobiki"
+            Title = "abobiki",
+            CreatedAt = DateTime.UtcNow,
+            EditedAt = DateTime.UtcNow
         };
         await conn.ExecuteAsync(insertNovelSql, novel);
         novelIds.Add(novelId);
@@ -306,23 +310,24 @@ public class ImageRepoTest :  IAsyncLifetime
     {
         try
         {
-            var imgSql = "DELETE FROM \"Images\" WHERE id = @Id";
-            var transSql = "DELETE FROM \"Transforms\" WHERE id = @Id";
-            var novelSql = "DELETE FROM \"Novels\" WHERE id = @Id";
             await using var conn = new NpgsqlConnection(connectionString);
-            foreach (var trans in transformsIds)
+            
+            if (transformsIds.Any())
             {
-                await conn.ExecuteAsync(transSql, new { Id = trans });
+                const string transSql = "DELETE FROM \"Transforms\" WHERE id = ANY(@Ids)";
+                await conn.ExecuteAsync(transSql, new { Ids = transformsIds.ToArray() });
             }
 
-            foreach (var img in imageIds)
+            if (imageIds.Any())
             {
-                await conn.ExecuteAsync(imgSql, new { Id = img });
+                const string imgSql = "DELETE FROM \"Images\" WHERE id = ANY(@Ids)";
+                await conn.ExecuteAsync(imgSql, new { Ids = imageIds.ToArray() });
             }
 
-            foreach (var novel in novelIds)
+            if (novelIds.Any())
             {
-                await conn.ExecuteAsync(novelSql, new { Id = novel });
+                const string novelSql = "DELETE FROM \"Novels\" WHERE id = ANY(@Ids)";
+                await conn.ExecuteAsync(novelSql, new { Ids = novelIds.ToArray() });
             }
         }
         catch (Exception e)
