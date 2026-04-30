@@ -55,8 +55,6 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
         activeCharacters = activeCharacters.filter(c => c.characterId !== wCharId);
     }
 
-    console.log(wCharacterTransform)
-    console.log(`wtransform${wTransform}`)
     return (
         <div className={css({
             width: '100%',

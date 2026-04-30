@@ -87,52 +87,6 @@ export default function BlockPanel({steps, selectedStepIndex, onSelectStep, onAd
                                 </div>
                             </div>
                             <div className={css({ display: 'flex', gap: '4px', alignItems: 'center' })}>
-                                {onMoveStep && index > 0 && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onMoveStep(index, index - 1);
-                                        }}
-                                        className={css({
-                                            backgroundColor: '#705661',
-                                            color: 'white',
-                                            width: '32px',
-                                            height: '32px',
-                                            borderRadius: '8px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            _hover: { backgroundColor: '#8B7178' },
-                                        })}
-                                        title="Переместить вверх"
-                                    >
-                                        ↑
-                                    </button>
-                                )}
-                                {onMoveStep && index < steps.length - 1 && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onMoveStep(index, index + 1);
-                                        }}
-                                        className={css({
-                                            backgroundColor: '#705661',
-                                            color: 'white',
-                                            width: '32px',
-                                            height: '32px',
-                                            borderRadius: '8px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            _hover: { backgroundColor: '#8B7178' },
-                                        })}
-                                        title="Переместить вниз"
-                                    >
-                                        ↓
-                                    </button>
-                                )}
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
