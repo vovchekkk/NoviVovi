@@ -4,6 +4,7 @@
     <Project Path="backend/NoviVovi.Application/NoviVovi.Application.csproj" />
     <Project Path="backend/NoviVovi.Domain/NoviVovi.Domain.csproj" />
     <Project Path="backend/NoviVovi.Infrastructure/NoviVovi.Infrastructure.csproj" />
+    <File Path="backend\Dockerfile" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/NoviVovi.Api.Tests/NoviVovi.Api.Tests.csproj" />
