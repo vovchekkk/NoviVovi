@@ -1057,12 +1057,18 @@ export default function Editor() {
                 const { data: updated } = await stepsApi.patch(novelId, selectedLabelId, data.id, finalPayload);
                 const savedStep = normalizeIncomingStep(updated);
                 setSteps(prev => prev.map(s => s.id === savedStep.id ? savedStep : s));
+                setSelectedId(savedStep.id);
             } else {
                 const { data: newStep } = await stepsApi.create(novelId, selectedLabelId, finalPayload);
                 const savedStep = normalizeIncomingStep(newStep);
                 setSteps(prev => [...prev, savedStep]);
                 setNewStepData(null);
                 setSelectedId(savedStep.id);
+                setSteps(prev => {
+                    const newIndex = prev.length - 1;
+                    setSelectedStepIndex(newIndex);
+                    return prev;
+                });
             }
 
             alert('Сохранено успешно!');
