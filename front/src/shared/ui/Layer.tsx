@@ -67,7 +67,6 @@ export const BackgroundLayer = ({ imageId, transform, novelId }: { imageId: any,
 };
 
 export const CharacterLayer = ({ imageId, transform, novelId  }: any) => {
-   console.log(imageId);
     return (
         <Layer
             id={imageId}

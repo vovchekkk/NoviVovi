@@ -22,22 +22,21 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
     const speaker = characterOptions?.find(c => c.id === replica?.speakerId);
     const speakerName = speaker?.name || "";
     const speakerColor = speaker?.nameColor || "#ffffff";
-    console.log('Текущий спикер:', speaker);
     const watched = useWatch({
         control,
-        name: ["type", "characterId", "characterStateId", "transform", "imageId", "background"] as const,
+        name: ["type", "characterId", "characterStateId", "characterTransform", "transform", "imageId"] as const,
     });
 
-    const [wType, wCharId, wStateId, wTransform, wImageId, wBackground] = watched;
+    const [wType, wCharId, wStateId, wCharacterTransform, wTransform, wImageId] = watched;
 
     const isEditingShow = wType === 'show_character' && !!wCharId && !!wStateId;
     const isEditingHide = wType === 'hide_character' && !!wCharId;
-    const isEditingBG = wType === 'show_background' && (!!wImageId || !!wBackground?.imageId);
+    const isEditingBG = wType === 'show_background' && !!wImageId;
 
     const activeBackground = isEditingBG
         ? {
-            imageId: wBackground?.imageId || wImageId,
-            transform: wBackground?.transform || wTransform
+            imageId: wImageId,
+            transform: wTransform
         }
         : hBackground;
 
@@ -48,7 +47,7 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
         activeCharacters.push({
             characterId: wCharId,
             characterStateId: wStateId,
-            transform: wTransform
+            transform: wCharacterTransform
         });
     }
 
@@ -56,6 +55,8 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
         activeCharacters = activeCharacters.filter(c => c.characterId !== wCharId);
     }
 
+    console.log(wCharacterTransform)
+    console.log(`wtransform${wTransform}`)
     return (
         <div className={css({
             width: '100%',

@@ -136,7 +136,7 @@ const showStepSchema = baseStepSchema.extend({
     type: z.literal('show_character'),
     characterId: z.string().min(1),
     characterStateId: z.string().min(1),
-    transform: transformSchema,
+    characterTransform: transformSchema,
 });
 
 const backgroundStepSchema = baseStepSchema.extend({
@@ -200,6 +200,7 @@ type StepFormProps = {
     labelOptions: SelectorOption[];
     setValue: any;
     novelId: string;
+    currentLabelId: string | null;
 };
 
 const normalizeIncomingStep = (step: any): Step => {
@@ -239,16 +240,16 @@ const normalizeIncomingStep = (step: any): Step => {
         return {
             ...step,
             imageId: step.backgroundObject?.image?.id ?? step.imageId ?? '',
-            transform: step.transform || defaultBackgroundTransform,
+            transform: step.backgroundObject.transform,
         }
     }
-    if (step?.type === 'show_replica') {
+    if (step.type === 'show_character') {
         return {
             ...step,
-            type: 'replica',
-            characterId: step.replica?.speakerId ?? '',
-            text: step.replica?.text ?? '',
-        };
+            characterId: step.characterObject.character.id || step.characterObject?.id || '',
+            characterStateId: step.characterObject.state.id || step.state?.id || '',
+            characterTransform: step.characterObject?.transform,
+        }
     }
     return step as Step;
 };
@@ -372,17 +373,17 @@ function ShowStepForm({control, errors, characterOptions, setValue}: StepFormPro
                     gridTemplateColumns: '1fr 1fr',
                     gap: '8px 12px'
                 })}>
-                    <CompactInput label="X" name="transform.x" control={control}/>
-                    <CompactInput label="Y" name="transform.y" control={control}/>
+                    <CompactInput label="X" name="characterTransform.x" control={control}/>
+                    <CompactInput label="Y" name="characterTransform.y" control={control}/>
 
-                    <CompactInput label="W" name="transform.width" control={control}/>
-                    <CompactInput label="H" name="transform.height" control={control}/>
+                    <CompactInput label="W" name="characterTransform.width" control={control}/>
+                    <CompactInput label="H" name="characterTransform.height" control={control}/>
 
-                    <CompactInput label="Scale" name="transform.scale" control={control} step="0.1"/>
-                    <CompactInput label="Rot°" name="transform.rotation" control={control}/>
+                    <CompactInput label="Scale" name="characterTransform.scale" control={control} step="0.1"/>
+                    <CompactInput label="Rot°" name="characterTransform.rotation" control={control}/>
 
                     <div className={css({gridColumn: 'span 2'})}>
-                        <CompactInput label="Z-Index" name="transform.zIndex" control={control}/>
+                        <CompactInput label="Z-Index" name="characterTransform.zIndex" control={control}/>
                     </div>
                 </div>
             </div>
@@ -450,15 +451,10 @@ export const getImageDimensions = (file: File): Promise<{ width: number; height:
 
 function BackgroundStepForm({control, errors, setValue, novelId}: StepFormProps) {
     const [isUploading, setIsUploading] = useState(false);
-    const backgroundImageId = useWatch({
-        control,
-        name: 'background.imageId'
-    });
-    const stepImageId = useWatch({
+    const currentImageId = useWatch({
         control,
         name: 'imageId'
     });
-    const currentImageId = backgroundImageId || stepImageId;
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -492,7 +488,6 @@ function BackgroundStepForm({control, errors, setValue, novelId}: StepFormProps)
 
             if (imageId) {
                 setValue('imageId', imageId);
-                setValue('background.imageId', imageId);
                 alert('Изображение загружено и сохранено в облако!');
             }
 
@@ -572,14 +567,14 @@ function BackgroundStepForm({control, errors, setValue, novelId}: StepFormProps)
                 </div>
 
                 <div className={css({display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 12px'})}>
-                    <CompactInput label="X" name="background.transform.x" control={control}/>
-                    <CompactInput label="Y" name="background.transform.y" control={control}/>
-                    <CompactInput label="W" name="background.transform.width" control={control}/>
-                    <CompactInput label="H" name="background.transform.height" control={control}/>
-                    <CompactInput label="Scale" name="background.transform.scale" control={control} step="0.1"/>
-                    <CompactInput label="Rot°" name="background.transform.rotation" control={control}/>
+                    <CompactInput label="X" name="transform.x" control={control}/>
+                    <CompactInput label="Y" name="transform.y" control={control}/>
+                    <CompactInput label="W" name="transform.width" control={control}/>
+                    <CompactInput label="H" name="transform.height" control={control}/>
+                    <CompactInput label="Scale" name="transform.scale" control={control} step="0.1"/>
+                    <CompactInput label="Rot°" name="transform.rotation" control={control}/>
                     <div className={css({gridColumn: 'span 2'})}>
-                        <CompactInput label="Z-Index" name="background.transform.zIndex" control={control}/>
+                        <CompactInput label="Z-Index" name="transform.zIndex" control={control}/>
                     </div>
                 </div>
             </div>
@@ -814,7 +809,9 @@ export default function Editor() {
                 imageId: '',
                 transform: defaultBackgroundTransform
             },
-            characters: []
+            characters: [],
+            transform: defaultBackgroundTransform,
+            characterTransform: defaultTransform,
         }
     });
 
@@ -845,38 +842,39 @@ export default function Editor() {
         fetchCharacterNames();
     }, [novelId]);
 
-    useEffect(() => {
-        if (currentStep) {
-            const dataForForm = {
-                ...currentStep,
-                state: currentStep.state ?? defaultSceneState,
-                characterId: currentStep.characterId ?? '',
-                text: currentStep.text ?? '',
-                characterStateId: currentStep.characterStateId ?? '',
-                background: {
-                    imageId: currentStep.background?.imageId || currentStep.imageId || '',
-                    transform: currentStep.background?.transform || currentStep.transform || defaultBackgroundTransform
-                },
-                transform: currentStep.transform || (currentStep.type === 'show_character' ? defaultTransform : defaultBackgroundTransform)
-            };
-            reset(dataForForm);
-        }
-    }, [selectedStepIndex, currentStep, reset]);
+    // useEffect(() => {
+    //     if (currentStep) {
+    //         const dataForForm = {
+    //             ...currentStep,
+    //             state: currentStep.state ?? defaultSceneState,
+    //             characterId: currentStep.characterId ?? '',
+    //             text: currentStep.text ?? '',
+    //             characterStateId: currentStep.characterStateId ?? '',
+    //             background: {
+    //                 imageId: currentStep.background?.imageId || currentStep.imageId || '',
+    //                 transform: currentStep.background?.transform || currentStep.transform || defaultBackgroundTransform
+    //             },
+    //             transform: currentStep.transform || (currentStep.type === 'show_character' ? defaultTransform : defaultBackgroundTransform)
+    //         };
+    //         reset(dataForForm);
+    //     }
+    // }, [selectedStepIndex, currentStep, reset]);
     useEffect(() => {
         const loadStepData = async () => {
             if (!selectedId) return;
 
             try {
                 setLoading(true);
-                // Этот endpoint не используется - данные уже есть в steps
-                // const {data: rawStep} = await stepsApi.getById(novelId, selectedLabelId, selectedId);
-                // const data = normalizeIncomingStep(rawStep);
-
-                // Используем данные из локального состояния
                 const currentStep = steps.find(s => s.id === selectedId);
                 if (!currentStep) return;
 
                 const data = normalizeIncomingStep(currentStep);
+                const backendTransform = data.transform ||
+                    data.background?.transform ||
+                    data.characterObject?.transform ||
+                    defaultBackgroundTransform;
+
+                const frontendTransform = formatTransformForFrontend(backendTransform);
                 const baseData = ({
                     id: data.id,
                     type: data.type,
@@ -888,7 +886,10 @@ export default function Editor() {
                             state: data.state ?? defaultSceneState,
                             characterId: data.characterObject.id ?? '',
                             characterStateId: data.state.id ?? '',
-                            transform: formatTransformForFrontend(data.characterObject.transform) ?? defaultTransform,
+                            characterTransform: {
+                                ...defaultTransform,
+                                ...frontendTransform
+                            },
                         });
                         break;
 
@@ -903,13 +904,12 @@ export default function Editor() {
                     case 'show_background':
                         reset({
                             ...baseData,
-                            state: data.state ?? defaultSceneState,
-                            imageId: data.backgroundObject?.image?.id ?? data.imageId ?? '',
-                            background: {
-                                imageId: data.backgroundObject?.image?.id ?? data.imageId ?? '',
-                                transform: formatTransformForFrontend(data.backgroundObject?.transform) ?? defaultBackgroundTransform,
+                            type: 'show_background',
+                            imageId: data.imageId || data.background?.imageId || '',
+                            transform: {
+                                ...defaultBackgroundTransform,
+                                ...frontendTransform
                             },
-                            transform: formatTransformForFrontend(data.transform) ?? defaultBackgroundTransform,
                         });
                         break;
 
@@ -955,7 +955,7 @@ export default function Editor() {
         };
 
         loadStepData();
-    }, [selectedId, reset]);
+    }, [selectedId, reset, steps]);
     useEffect(() => {
         const fetchLabels = async () => {
             try {
@@ -1005,125 +1005,70 @@ export default function Editor() {
         fetchSteps();
     }, [selectedLabelId, novelId]);
     const onSave = async (data: any) => {
-        const finalState = {
-            ...defaultSceneState,
-            ...(data.state || {}),
-            characters: data.state?.characters || defaultSceneState.characters,
-        };
+        try {
+            // Создаем чистый объект запроса
+            let stepRequest: any = { type: "" };
 
-        const {type, ...restData} = data;
-        const finalData = {
-            type,
-            ...restData,
-            state: finalState
-        };
+            // Собираем данные в зависимости от типа
+            switch (data.type) {
+                case 'show_background':
+                    stepRequest.type = 'show_background';
+                    stepRequest.imageId = data.imageId || data.background?.imageId;
+                    stepRequest.transform = formatTransformForBackend(data.transform);
+                    break;
 
-        if (data.type === 'show_background' && data.background) {
-            finalData.transform = data.background.transform;
-            finalData.imageId = data.background.imageId;
+                case 'show_character':
+                    stepRequest.type = 'show_character';
+                    stepRequest.characterId = data.characterId;
+                    stepRequest.characterStateId = data.characterStateId;
+                    stepRequest.transform = formatTransformForBackend(
+                        data.characterTransform || defaultTransform
+                    );
+                    break;
 
-            finalState.background = data.background;
-        }
+                case 'replica':
+                    stepRequest.type = 'replica';
+                    stepRequest.speakerId = data.characterId || null;
+                    stepRequest.text = data.text || '';
+                    break;
 
-        if (data.type === 'show_character' && data.characterId) {
-            const newChar = {
-                characterId: data.characterId,
-                characterStateId: data.characterStateId || null,
-                transform: data.transform || {x: 40, y: 30, width: 25, height: 65, scale: 1, rotation: 0, zIndex: 20}
-            };
+                case 'jump':
+                    stepRequest.type = 'jump';
+                    stepRequest.targetLabelId = data.targetId;
+                    break;
 
-            finalState.characters = [
-                ...(finalState.characters || []).filter((ch: any) => ch.characterId !== data.characterId),
-                newChar
-            ];
-        }
+                case 'menu':
+                    stepRequest.type = 'menu';
+                    stepRequest.choices = data.menuRequest?.choices?.map((choice: any) => ({
+                        text: choice.text || choice.name || '',
+                        transition: { targetLabelId: choice.targetLabelId || '' }
+                    })) || [];
+                    break;
 
-        if (data.type === 'hide_character' && data.characterId) {
-            finalState.characters = (finalState.characters || [])
-                .filter((ch: any) => ch.characterId !== data.characterId);
-        }
-
-        if (finalData.type === 'menu' && finalData.menuRequest?.choices) {
-            finalData.menuRequest = {
-                ...finalData.menuRequest,
-                choices: finalData.menuRequest.choices.map((choice: any) => ({
-                    ...choice,
-                    id: choice.id || '',
-                    name: choice.name?.trim() || choice.text,
-                })),
-            };
-        }
-
-        // Преобразуем данные под новое API
-        if (data.type === 'jump' && data.targetId) {
-            finalData.type = 'jump';
-            finalData.targetLabelId = data.targetId;
-        }
-
-            // Menu step: menuRequest.choices -> choices
-            if (data.type === 'menu' && data.menuRequest?.choices) {
-                finalData.type = 'menu';
-                finalData.choices = data.menuRequest.choices.map((choice: any) => ({
-                    text: choice.text || choice.name || '',
-                    transition: {
-                        targetLabelId: choice.targetLabelId || '',
-                    }
-                }));
+                case 'hide_character':
+                    stepRequest.type = 'hide_character';
+                    stepRequest.characterId = data.characterId;
+                    break;
             }
 
-            // Replica step
-            if (data.type === 'replica') {
-                finalData.type = 'replica';
-                finalData.speakerId = data.characterId || '';
-                finalData.text = data.text || '';
-            }
+            const finalPayload = stepRequest;
 
-            // Show character step
-            if (data.type === 'show_character') {
-                finalData.characterId = data.characterId;
-                finalData.characterStateId = data.characterStateId;
-                finalData.transform = formatTransformForBackend(
-                    data.transform || data.background?.transform || defaultBackgroundTransform
-                );
-            }
-
-            // Hide character step
-            if (data.type === 'hide_character') {
-                finalData.characterId = data.characterId;
-            }
-
-            // Background step
-            if (data.type === 'show_background') {
-                finalData.imageId = data.imageId;
-                finalData.transform = formatTransformForBackend(
-                    data.transform || data.background?.transform || defaultBackgroundTransform
-                );
-            }
-
-            finalData.state = finalState
-            console.log(finalData);
-            try {
-                let savedStep: Step;
-
-            console.log(data);
             if (data.id) {
-                const { data: updated } = await stepsApi.patch(novelId, selectedLabelId, data.id, finalData);
-                savedStep = normalizeIncomingStep(updated);
+                const { data: updated } = await stepsApi.patch(novelId, selectedLabelId, data.id, finalPayload);
+                const savedStep = normalizeIncomingStep(updated);
                 setSteps(prev => prev.map(s => s.id === savedStep.id ? savedStep : s));
-                setSelectedId(savedStep.id);
             } else {
-                const { data: newStep } = await stepsApi.create(novelId, selectedLabelId, finalData);
-                savedStep = normalizeIncomingStep(newStep);
+                const { data: newStep } = await stepsApi.create(novelId, selectedLabelId, finalPayload);
+                const savedStep = normalizeIncomingStep(newStep);
                 setSteps(prev => [...prev, savedStep]);
                 setNewStepData(null);
-                setSelectedId(null);
-                setSelectedStepIndex(-1);
+                setSelectedId(savedStep.id);
             }
 
-            alert('Шаг сохранён');
+            alert('Сохранено успешно!');
         } catch (error) {
             console.error(error);
-            alert('Не удалось сохранить шаг');
+            alert('Ошибка сохранения');
         }
     };
     const addStep = (type: StepType) => {
@@ -1171,7 +1116,7 @@ export default function Editor() {
                 tempStep.type = 'show_character';
                 tempStep.characterId = '';
                 tempStep.characterStateId = '';
-                tempStep.transform = {x: 50, y: 50, width: 25, height: 60, scale: 1, rotation: 0, zIndex: 10};
+                tempStep.characterTransform  = { ...defaultTransform };
                 break;
 
             case 'hide_character':
@@ -1272,6 +1217,7 @@ export default function Editor() {
             labelOptions,
             characterOptions,
             novelId,
+            currentLabelId: selectedLabelId,
         };
 
         switch (currentStep.type) {
