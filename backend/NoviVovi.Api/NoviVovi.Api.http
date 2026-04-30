@@ -1,9 +1,9 @@
 @host = http://127.0.0.1:5136
 
 # Переменные для хранения ID (заполняй после каждого запроса)
-@novelId = afbf6384-5053-47ca-9d48-1f0643f55cae
-@labelId = ff383a58-8463-43c6-9f87-b12478e78f76
-@characterId = f0dff2b0-e2e3-4729-b8dd-c148c4586fdf
+@novelId = c0332fcf-7bdf-48ae-a110-51f3e5c9e7dd
+@labelId = 5a4c5467-2277-4d78-8b40-a1aa474cfa1c
+@characterId = 443fdead-daf9-449a-b85f-b2b8af40b091
 @characterStateId = PUT_CHARACTER_STATE_ID_HERE
 @imageId = PUT_IMAGE_ID_HERE
 @stepId = PUT_STEP_ID_HERE
