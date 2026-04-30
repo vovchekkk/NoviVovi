@@ -1062,10 +1062,12 @@ export default function Editor() {
 
             // Menu step: menuRequest.choices -> choices
             if (data.type === 'menu' && data.menuRequest?.choices) {
-                finalData.type = 'show_menu';
+                finalData.type = 'menu';
                 finalData.choices = data.menuRequest.choices.map((choice: any) => ({
                     text: choice.text || choice.name || '',
-                    targetLabelId: choice.targetLabelId || '',
+                    transition: {
+                        targetLabelId: choice.targetLabelId || '',
+                    }
                 }));
             }
 

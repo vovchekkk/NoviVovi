@@ -18,7 +18,7 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
         return state?.imageId;
     };
 
-    const { background: hBackground, characters: hCharacters, replica } = useSceneSnapshot(novelId, labelId, stepId);
+    const { background: hBackground, characters: hCharacters, replica, menu } = useSceneSnapshot(novelId, labelId, stepId);
     const speaker = characterOptions?.find(c => c.id === replica?.speakerId);
     const speakerName = speaker?.name || "";
     const speakerColor = speaker?.nameColor || "#ffffff";
@@ -131,6 +131,46 @@ export default function Preview({ labelId, stepId, control, novelId, characterOp
                     })}>
                         {replica.text}
                     </div>
+                </div>
+            )}
+
+            {menu && menu.choices && menu.choices.length > 0 && (
+                <div className={css({
+                    position: 'absolute',
+                    top: '35%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    alignItems: 'center',
+                    zIndex: 110,
+                })}>
+                    {menu.choices.map((choice: any, index: number) => (
+                        <div
+                            key={index}
+                            className={css({
+                                width: '100%',
+                                height: '5%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                background: 'linear-gradient(to right, transparent 0%, rgba(20, 20, 20, 0.85) 25%, rgba(20, 20, 20, 0.85) 75%, transparent 100%)',
+                                transition: 'all 0.2s',
+                            })}
+                        >
+                            <span className={css({
+                                color: '#c2c2c2',
+                                fontSize: '18px',
+                                fontWeight: 'normal',
+                                letterSpacing: '0.5px',
+                                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
+                            })}>
+                            {choice.text}
+                        </span>
+                        </div>
+                    ))}
                 </div>
             )}
 

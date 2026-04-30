@@ -7,11 +7,13 @@ export const useSceneSnapshot = (novelId: string, labelId: string, stepId: strin
         background: any;
         characters: any[];
         replica: any;
+        menu: any;
         loading: boolean;
     }>({
         background: null,
         characters: [],
         replica: null,
+        menu: null,
         loading: false
     });
 
@@ -40,6 +42,7 @@ export const useSceneSnapshot = (novelId: string, labelId: string, stepId: strin
                         transform: formatTransformForFrontend(item.transform) || { x: 50, y: 50, width: 40, height: 40, scale: 1, rotation: 0, zIndex: 10 }
                     })),
                     replica: result.replica,
+                    menu: result.menu,
                     loading: false
                 });
             } catch (error) {
