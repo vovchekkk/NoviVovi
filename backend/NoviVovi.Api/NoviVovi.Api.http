@@ -1,11 +1,11 @@
 @host = http://127.0.0.1:5136
 
 # Переменные для хранения ID (заполняй после каждого запроса)
-@novelId = c0332fcf-7bdf-48ae-a110-51f3e5c9e7dd
-@labelId = 5a4c5467-2277-4d78-8b40-a1aa474cfa1c
-@characterId = 443fdead-daf9-449a-b85f-b2b8af40b091
-@characterStateId = PUT_CHARACTER_STATE_ID_HERE
-@imageId = PUT_IMAGE_ID_HERE
+@novelId = 4d17f676-4172-410a-ba44-740315c66073
+@labelId = 5a6f48eb-85ea-4c8c-8369-d97110e7047e
+@characterId = 8b3eda5d-3e28-4b94-b382-088dd24df881
+@characterStateId = 949d052b-1dfe-438e-b35e-d6a56c87b5ac
+@imageId = 94b64bdd-37dc-432d-aeaf-8b795c7976c8
 @stepId = PUT_STEP_ID_HERE
 @testFilePath = test/sample.txt
 
