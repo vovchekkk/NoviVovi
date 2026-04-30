@@ -7,7 +7,7 @@ import { charactersApi } from "../api/client";
 import {zodResolver} from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {useForm, useFieldArray, useWatch} from 'react-hook-form';
-import {getImageDimensions} from "../../pages/Editor.tsx";
+import {formatTransformForBackend, formatTransformForFrontend, getImageDimensions} from "../../pages/Editor.tsx";
 
 const DEFAULT_TRANSFORM = {
     x: 50,
@@ -149,7 +149,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                     fileUrl: state.image?.url || "",
                     imageId: state.image?.id || state.imageId,
                     imageFile: null,
-                    transform: state.localTransform || DEFAULT_TRANSFORM
+                    transform: formatTransformForFrontend(state.localTransform || DEFAULT_TRANSFORM)
                 }));
                 reset({
                     name: charRes.data.name,
@@ -217,7 +217,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                     name: emotion.name,
                     description: null,
                     imageId: currentImageId,
-                    localTransform: emotion.transform || DEFAULT_TRANSFORM
+                    localTransform: formatTransformForBackend(emotion.transform) || DEFAULT_TRANSFORM
                 };
 
                 if (emotion.id) {
