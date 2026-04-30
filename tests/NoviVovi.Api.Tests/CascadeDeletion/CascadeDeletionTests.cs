@@ -297,7 +297,7 @@ public class CascadeDeletionTests(NoviVoviWebApplicationFactory factory) : Integ
     }
 
     [Fact]
-    public async Task DeleteCharacter_UsedInSteps_ReturnsError()
+    public async Task DeleteCharacter_UsedInSteps_DeletesCascade()
     {
         // Arrange
         var novelId = await CreateNovelAsync("Test Novel");
@@ -305,19 +305,27 @@ public class CascadeDeletionTests(NoviVoviWebApplicationFactory factory) : Integ
         var charId = await CreateCharacterAsync(novelId, "Character");
         var stepId = await CreateReplicaStepAsync(novelId, labelId, charId);
 
-        // Act - Try to delete character that is used in steps
+        // Get replica ID before deletion
+        var replicaId = await QuerySingleAsync<Guid?>(
+            @"SELECT ""replica_id"" FROM ""Steps"" WHERE ""id"" = @StepId",
+            new { StepId = stepId });
+        Assert.NotNull(replicaId);
+
+        // Act - Delete character that is used in steps (should cascade delete replicas)
         var response = await DeleteRawAsync($"/api/novels/{novelId}/characters/{charId}");
 
-        // Assert - Should return error (either 409 Conflict or 500 Internal Server Error)
-        // For MVP, it's acceptable that deletion fails when character is in use
-        Assert.True(
-            response.StatusCode == HttpStatusCode.Conflict || 
-            response.StatusCode == HttpStatusCode.InternalServerError,
-            $"Expected Conflict or InternalServerError when deleting character in use, got {response.StatusCode}");
+        // Assert - Should succeed with cascade deletion
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         
-        // Verify character still exists
-        var character = await GetAsync<CharacterResponse>($"/api/novels/{novelId}/characters/{charId}");
-        Assert.NotNull(character);
+        // Verify character is deleted
+        var characterResponse = await GetRawAsync($"/api/novels/{novelId}/characters/{charId}");
+        Assert.Equal(HttpStatusCode.NotFound, characterResponse.StatusCode);
+        
+        // Verify replica is deleted (cascade)
+        var dbReplica = await QuerySingleAsync<dynamic>(
+            @"SELECT * FROM ""Replicas"" WHERE ""id"" = @ReplicaId",
+            new { ReplicaId = replicaId.Value });
+        Assert.Null(dbReplica);
     }
 
     #endregion

@@ -26,21 +26,23 @@ public class LabelMapperTests
 
     public LabelMapperTests()
     {
+        var ctx = new MappingContext();
         _imageMapper = new ImageMapper(_transformMapper);
-        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper);
+        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper, ctx);
         _replicaMapper = new ReplicaMapper(_characterMapper);
         
         _labelMapper = new Lazy<LabelMapper>(() => _mapper);
-        _menuMapper = new Lazy<MenuMapper>(() => new MenuMapper(_labelMapper));
+        _menuMapper = new Lazy<MenuMapper>(() => new MenuMapper(_labelMapper, ctx));
         _stepMapper = new Lazy<StepMapper>(() => new StepMapper(
             _labelMapper,
             _imageMapper,
             _characterMapper,
             _menuMapper,
-            _replicaMapper
+            _replicaMapper,
+            ctx
         ));
         
-        _mapper = new LabelMapper(_stepMapper);
+        _mapper = new LabelMapper(_stepMapper, ctx);
     }
 
     [Fact]
@@ -61,7 +63,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDomain(dbo, ctx);
+        var result = _mapper.ToDomain(dbo);
 
         // Assert
         Assert.NotNull(result);
@@ -116,7 +118,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDomain(dbo, ctx);
+        var result = _mapper.ToDomain(dbo);
 
         // Assert
         Assert.NotNull(result);
@@ -140,8 +142,8 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result1 = _mapper.ToDomain(dbo, ctx);
-        var result2 = _mapper.ToDomain(dbo, ctx);
+        var result1 = _mapper.ToDomain(dbo);
+        var result2 = _mapper.ToDomain(dbo);
 
         // Assert
         Assert.Same(result1, result2);
@@ -155,7 +157,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDbO(label, ctx);
+        var result = _mapper.ToDbO(label);
 
         // Assert
         Assert.NotNull(result);
@@ -188,7 +190,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDbO(label, ctx);
+        var result = _mapper.ToDbO(label);
 
         // Assert
         Assert.NotNull(result);
@@ -232,7 +234,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDbO(label, ctx);
+        var result = _mapper.ToDbO(label);
 
         // Assert
         Assert.Equal(3, result.Steps.Count);
@@ -252,7 +254,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDbO(label, ctx);
+        var result = _mapper.ToDbO(label);
 
         // Assert
         Assert.Null(result);
@@ -266,8 +268,8 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result1 = _mapper.ToDbO(label, ctx);
-        var result2 = _mapper.ToDbO(label, ctx);
+        var result1 = _mapper.ToDbO(label);
+        var result2 = _mapper.ToDbO(label);
 
         // Assert
         Assert.Same(result1, result2);
@@ -281,8 +283,8 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var dbo = _mapper.ToDbO(original, ctx);
-        var result = _mapper.ToDomain(dbo!, new MappingContext());
+        var dbo = _mapper.ToDbO(original);
+        var result = _mapper.ToDomain(dbo!);
 
         // Assert
         Assert.Equal(original.Id, result.Id);
@@ -350,7 +352,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDomain(dbo, ctx);
+        var result = _mapper.ToDomain(dbo);
 
         // Assert
         Assert.NotNull(result);
@@ -395,7 +397,7 @@ public class LabelMapperTests
         var ctx = new MappingContext();
 
         // Act
-        var result = _mapper.ToDbO(label, ctx);
+        var result = _mapper.ToDbO(label);
 
         // Assert
         Assert.NotNull(result);

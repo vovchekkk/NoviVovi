@@ -36,9 +36,9 @@ public class DeleteCharacterHandler(
             
             novel.RemoveCharacterById(request.CharacterId);
             
-            await characterRepository.DeleteAsync(character, ct);
-            
             await novelRepository.AddOrUpdateAsync(novel, ct);
+            
+            await characterRepository.DeleteAsync(character, ct);
 
             await unitOfWork.CommitAsync(ct);
         }

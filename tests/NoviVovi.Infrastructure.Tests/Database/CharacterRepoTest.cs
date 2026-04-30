@@ -34,14 +34,18 @@ public class CharacterRepoTest : IAsyncLifetime
     {
         novelId = Guid.NewGuid();
         await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
         
-        const string insertNovelSql = @"Insert into ""Novels"" (id, is_Public, title) values (@Id, @IsPublic, @Title)";
+        const string insertNovelSql = @"INSERT INTO ""Novels"" (id, is_public, title, created_at, edited_at) 
+                                        VALUES (@Id, @IsPublic, @Title, @CreatedAt, @EditedAt)";
         
         var novel = new NovelDbO
         {
             Id = novelId,
             IsPublic = true,
-            Title = "abobiki"
+            Title = "abobiki",
+            CreatedAt = DateTime.UtcNow,
+            EditedAt = DateTime.UtcNow
         };
         await conn.ExecuteAsync(insertNovelSql, novel);
     }
@@ -63,12 +67,12 @@ public class CharacterRepoTest : IAsyncLifetime
     
     private async Task DeleteFromTableAsync(string tableName, IEnumerable<Guid> ids)
     {
-        var deleteSql = $"DELETE FROM \"{tableName}\" WHERE id = @Id";
+        var idList = ids.ToList();
+        if (!idList.Any()) return;
+        
+        var deleteSql = $"DELETE FROM \"{tableName}\" WHERE id = ANY(@Ids)";
         await using var conn = new NpgsqlConnection(connectionString);
-        foreach (var id in ids)
-        {
-            await conn.ExecuteAsync(deleteSql, new { Id = id });
-        }
+        await conn.ExecuteAsync(deleteSql, new { Ids = idList.ToArray() });
     }
     
     private ImageDbO CreateImage(Guid novelId)

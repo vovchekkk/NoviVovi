@@ -34,9 +34,7 @@ public class LabelMapperTests
 
         label.Steps.Add(step);
 
-        var ctx = new MappingContext();
-
-        var result = mapper.ToDomain(label, ctx);
+        var result = mapper.ToDomain(label);
 
         Assert.NotNull(result);
         Assert.Equal(labelId, result.Id);
@@ -102,7 +100,7 @@ public class StepMapperTests
             NextLabelId = label.Id
         };
 
-        var result = mapper.ToDomain(step, new MappingContext());
+        var result = mapper.ToDomain(step);
 
         Assert.NotNull(result);
         Assert.IsType<JumpStep>(result);
@@ -136,9 +134,7 @@ public class StepMapperTests
         label1.Steps = [step1];
         label2.Steps = [step2];
 
-        var ctx = new MappingContext();
-
-        var result = mapper.ToDomain(label1, ctx);
+        var result = mapper.ToDomain(label1);
 
         Assert.NotNull(result);
     }

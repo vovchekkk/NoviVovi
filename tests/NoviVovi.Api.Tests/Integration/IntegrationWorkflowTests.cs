@@ -174,7 +174,7 @@ public class IntegrationWorkflowTests(NoviVoviWebApplicationFactory factory) : I
         Assert.Equal(3, steps.Count);
         
         // Verify preview works
-        var preview = await GetAsync<SceneStateResponse>($"/preview/novels/{novel.Id}/labels/{label.Id}/steps/{replicaStep.Id}");
+        var preview = await GetAsync<SceneStateResponse>($"/api/preview/novels/{novel.Id}/labels/{label.Id}/steps/{replicaStep.Id}");
         Assert.NotNull(preview);
         Assert.NotNull(preview.Background);
         Assert.Single(preview.CharactersOnScene);

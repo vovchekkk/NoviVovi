@@ -119,8 +119,8 @@ public class NovelRepoTest : IAsyncLifetime
         Assert.Equal(novel.Id, result);
         
         const string sql = "SELECT title, description, is_public FROM \"Novels\" WHERE id = @Id";
-        var dbNovel = await _connection.QueryFirstOrDefaultAsync<(string title, string description, bool isPublic)>(sql, new { Id = novel.Id });
-        Assert.NotNull(dbNovel);
+        var dbNovel = await _connection.QueryFirstOrDefaultAsync<(string? title, string? description, bool isPublic)>(sql, new { Id = novel.Id });
+        Assert.NotNull(dbNovel.title);
         Assert.Equal("Brand New Novel", dbNovel.title);
         Assert.Equal("Test description", dbNovel.description);
         Assert.True(dbNovel.isPublic);

@@ -29,21 +29,23 @@ public class NovelMapperTests
 
     public NovelMapperTests()
     {
+        var ctx = new MappingContext();
         _imageMapper = new ImageMapper(_transformMapper);
-        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper);
+        _characterMapper = new CharacterMapper(_imageMapper, _transformMapper, ctx);
         _replicaMapper = new ReplicaMapper(_characterMapper);
         
         _labelMapper = new Lazy<LabelMapper>(() => _labelMapperInstance);
-        _menuMapper = new Lazy<MenuMapper>(() => new MenuMapper(_labelMapper));
+        _menuMapper = new Lazy<MenuMapper>(() => new MenuMapper(_labelMapper, ctx));
         _stepMapper = new Lazy<StepMapper>(() => new StepMapper(
             _labelMapper,
             _imageMapper,
             _characterMapper,
             _menuMapper,
-            _replicaMapper
+            _replicaMapper,
+            ctx
         ));
         
-        _labelMapperInstance = new LabelMapper(_stepMapper);
+        _labelMapperInstance = new LabelMapper(_stepMapper, ctx);
         _mapper = new NovelMapper(_characterMapper, _labelMapperInstance);
     }
 

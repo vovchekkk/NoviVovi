@@ -83,7 +83,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
 
         // Act
         var response = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novelId}/labels/{labelId}/steps/{step.Id}");
+            $"/api/preview/novels/{novelId}/labels/{labelId}/steps/{step.Id}");
 
         // Assert
         Assert.NotNull(response);
@@ -105,7 +105,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
 
         // Act
         var response = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novelId}/labels/{labelId}/steps/{step.Id}");
+            $"/api/preview/novels/{novelId}/labels/{labelId}/steps/{step.Id}");
 
         // Assert
         Assert.NotNull(response);
@@ -128,7 +128,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
 
         // Act
         var response = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novelId}/labels/{labelId}/steps/{step.Id}");
+            $"/api/preview/novels/{novelId}/labels/{labelId}/steps/{step.Id}");
 
         // Assert
         Assert.NotNull(response);
@@ -164,7 +164,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
 
         // Act - get preview at replica step (should include background and character)
         var response = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novelId}/labels/{labelId}/steps/{replicaStep.Id}");
+            $"/api/preview/novels/{novelId}/labels/{labelId}/steps/{replicaStep.Id}");
 
         // Assert
         Assert.NotNull(response);
@@ -196,7 +196,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
 
         // Act - get preview at hide step
         var response = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novelId}/labels/{labelId}/steps/{hideStep.Id}");
+            $"/api/preview/novels/{novelId}/labels/{labelId}/steps/{hideStep.Id}");
 
         // Assert
         Assert.NotNull(response);
@@ -213,7 +213,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
         var nonExistingStepId = Guid.NewGuid();
 
         // Act
-        var response = await GetRawAsync($"/preview/novels/{novelId}/labels/{labelId}/steps/{nonExistingStepId}");
+        var response = await GetRawAsync($"/api/preview/novels/{novelId}/labels/{labelId}/steps/{nonExistingStepId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -229,7 +229,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
 
         // Act
         var response = await GetRawAsync(
-            $"/preview/novels/{nonExistingNovelId}/labels/{nonExistingLabelId}/steps/{nonExistingStepId}");
+            $"/api/preview/novels/{nonExistingNovelId}/labels/{nonExistingLabelId}/steps/{nonExistingStepId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -268,7 +268,7 @@ public class PreviewControllerTests(NoviVoviWebApplicationFactory factory) : Int
 
         // Act
         var response = await GetAsync<SceneStateResponse>(
-            $"/preview/novels/{novelId}/labels/{labelId}/steps/{finalStep.Id}");
+            $"/api/preview/novels/{novelId}/labels/{labelId}/steps/{finalStep.Id}");
 
         // Assert
         Assert.NotNull(response);

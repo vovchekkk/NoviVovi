@@ -64,7 +64,7 @@ public class TestMapping(LabelMapper mapper)
         label1.Steps.Add(step1);
         label1.Steps.Add(step2);
         
-        var res = mapper.ToDomain(label1, new MappingContext());
+        var res = mapper.ToDomain(label1);
         Console.WriteLine(res);
     }
 }
