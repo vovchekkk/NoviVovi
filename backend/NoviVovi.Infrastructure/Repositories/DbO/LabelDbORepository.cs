@@ -158,14 +158,22 @@ public class LabelDbORepository : BaseRepository, ILabelDbORepository
 
     public async Task DeleteAsync(Guid id)
     {
-        // Delete all steps first (which will cascade delete Menu/Replica/etc)
+        // 1. Delete all Choices that reference this Label
+        const string deleteChoicesSql = "DELETE FROM \"Choices\" WHERE \"next_label_id\" = @LabelId";
+        await ExecuteAsync(deleteChoicesSql, new { LabelId = id });
+        
+        // 2. Delete all JumpSteps that reference this Label
+        const string deleteJumpStepsSql = "DELETE FROM \"Steps\" WHERE \"next_label_id\" = @LabelId";
+        await ExecuteAsync(deleteJumpStepsSql, new { LabelId = id });
+        
+        // 3. Delete all steps of this label (which will cascade delete Menu/Replica/etc)
         var stepIds = await stepRepo.Value.GetStepIdsByLabelIdAsync(id);
         foreach (var stepId in stepIds)
         {
             await stepRepo.Value.DeleteStepAsync(stepId);
         }
         
-        // Then delete the label
+        // 4. Delete the label itself
         const string sql = "DELETE FROM \"Labels\" WHERE id = @Id";
         await ExecuteAsync(sql, new { Id = id });
     }

@@ -13,7 +13,8 @@ public partial class StepMapper(
     ImageMapper imageMapper,
     CharacterMapper characterMapper,
     Lazy<MenuMapper> menuMapper,
-    ReplicaMapper replicaMapper
+    ReplicaMapper replicaMapper,
+    MappingContext ctx
 )
 {
     private StepDbO ToDbO(HideCharacterStep step, Guid labelId, int stepOrder)
@@ -31,7 +32,7 @@ public partial class StepMapper(
     
     
 
-    public StepDbO ToDbO(JumpStep step, Guid labelId, Guid novelId, int stepOrder, MappingContext ctx)
+    public StepDbO ToDbO(JumpStep step, Guid labelId, Guid novelId, int stepOrder)
     {
         var res = new StepDbO
         {
@@ -40,7 +41,7 @@ public partial class StepMapper(
             LabelId = labelId,
             StepOrder = stepOrder,
             NextLabelId = step.Transition.TargetLabel.Id,
-            NextLabel = labelMapper.Value.ToDbO(step.Transition.TargetLabel, ctx)
+            NextLabel = labelMapper.Value.ToDbO(step.Transition.TargetLabel)
         };
 
         return res;
@@ -117,14 +118,14 @@ public partial class StepMapper(
         return res;
     }
 
-    public JumpStep ToJumpStep(StepDbO step, MappingContext ctx)
+    public JumpStep ToJumpStep(StepDbO step)
     {
         if (step.NextLabel == null)
             throw new ArgumentException();
 
         return new JumpStep(
             step.Id,
-            new JumpTransition(labelMapper.Value.ToDomain(step.NextLabel, ctx))
+            new JumpTransition(labelMapper.Value.ToDomain(step.NextLabel))
         );
     }
 
@@ -176,7 +177,7 @@ public partial class StepMapper(
         );
     }
 
-    public Step ToDomain(StepDbO dbo, MappingContext ctx)
+    public Step ToDomain(StepDbO dbo)
     {
         var type = dbo.StepType.ToStepType();
         switch (type)
@@ -184,7 +185,7 @@ public partial class StepMapper(
             case StepType.HideCharacter:
                 return ToHideCharacterStep(dbo);
             case StepType.Jump:
-                return ToJumpStep(dbo, ctx);
+                return ToJumpStep(dbo);
             case StepType.ShowBackground:
                 return ToShowBackgroundStep(dbo);
             case StepType.ShowMenu:
@@ -198,13 +199,13 @@ public partial class StepMapper(
         }
     }
 
-    public StepDbO ToDbO(Step step, Guid labelId, Guid novelId, int stepOrder, MappingContext ctx)
+    public StepDbO ToDbO(Step step, Guid labelId, Guid novelId, int stepOrder)
     {
         var type = step.GetType();
         if (type == typeof(HideCharacterStep))
             return ToDbO((HideCharacterStep)step, labelId, stepOrder);
         if (type == typeof(JumpStep))
-            return ToDbO((JumpStep)step, labelId, novelId, stepOrder, ctx);
+            return ToDbO((JumpStep)step, labelId, novelId, stepOrder);
         if (type == typeof(ShowBackgroundStep))
             return ToDbO((ShowBackgroundStep)step, labelId, novelId, stepOrder);
         if (type == typeof(ShowMenuStep))

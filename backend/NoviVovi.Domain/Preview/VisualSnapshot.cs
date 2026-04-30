@@ -11,7 +11,8 @@ public class VisualSnapshot
     public Menu.Menu? Menu { get; private set; }
     private readonly Dictionary<Guid, CharacterObject> _characters = new();
     
-    public IReadOnlyCollection<CharacterObject> CharactersOnScene => _characters.Values;
+    public IReadOnlyCollection<CharacterObject> CharactersOnScene => 
+        _characters.Values.OrderBy(c => c.Transform.ZIndex).ToList();
     
     public void Apply(Step step)
     {

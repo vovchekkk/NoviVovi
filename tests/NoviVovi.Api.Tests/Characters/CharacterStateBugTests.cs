@@ -58,16 +58,16 @@ public class CharacterStateBugTests(NoviVoviWebApplicationFactory factory) : Int
         
         // Verify transform values are correct
         var transform = await QuerySingleAsync<dynamic>(
-            @"SELECT ""x"", ""y"", ""width"", ""height"", ""opacity"", ""rotation"", ""z_index"" 
+            @"SELECT ""x_pos"", ""y_pos"", ""width"", ""height"", ""scale"", ""rotation"", ""z_index"" 
               FROM ""Transforms"" WHERE ""id"" = @TransformId",
             new { TransformId = transformId.Value });
         
         Assert.NotNull(transform);
-        Assert.Equal(100, (int)transform.x);
-        Assert.Equal(200, (int)transform.y);
+        Assert.Equal(100, (int)transform.x_pos);
+        Assert.Equal(200, (int)transform.y_pos);
         Assert.Equal(512, (int)transform.width);
         Assert.Equal(512, (int)transform.height);
-        Assert.Equal(1.0, (double)transform.opacity);
+        Assert.Equal(1.0, (double)transform.scale);
         Assert.Equal(0, (int)transform.rotation);
         Assert.Equal(5, (int)transform.z_index);
     }
@@ -116,16 +116,16 @@ public class CharacterStateBugTests(NoviVoviWebApplicationFactory factory) : Int
         
         // Verify new transform values
         var transform = await QuerySingleAsync<dynamic>(
-            @"SELECT ""x"", ""y"", ""width"", ""height"", ""opacity"", ""rotation"", ""z_index"" 
+            @"SELECT ""x_pos"", ""y_pos"", ""width"", ""height"", ""scale"", ""rotation"", ""z_index"" 
               FROM ""Transforms"" WHERE ""id"" = @TransformId",
             new { TransformId = newTransformId.Value });
         
         Assert.NotNull(transform);
-        Assert.Equal(100, (int)transform.x);
-        Assert.Equal(100, (int)transform.y);
+        Assert.Equal(100, (int)transform.x_pos);
+        Assert.Equal(100, (int)transform.y_pos);
         Assert.Equal(600, (int)transform.width);
         Assert.Equal(600, (int)transform.height);
-        Assert.Equal(0.8, (double)transform.opacity, 2);
+        Assert.Equal(0.8, (double)transform.scale, 2);
         Assert.Equal(45, (int)transform.rotation);
         Assert.Equal(10, (int)transform.z_index);
     }
@@ -162,7 +162,7 @@ public class CharacterStateBugTests(NoviVoviWebApplicationFactory factory) : Int
         Assert.Equal(75, retrievedState.LocalTransform.Y);
         Assert.Equal(400, retrievedState.LocalTransform.Width);
         Assert.Equal(400, retrievedState.LocalTransform.Height);
-        Assert.Equal(0.9, retrievedState.LocalTransform.Opacity);
+        Assert.Equal(0.9, retrievedState.LocalTransform.Scale);
         Assert.Equal(15, retrievedState.LocalTransform.Rotation);
         Assert.Equal(3, retrievedState.LocalTransform.ZIndex);
     }

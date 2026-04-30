@@ -51,6 +51,9 @@ public static class DependencyInjection
 
         services.AddSingleton(new DatabaseOptions(connectionString));
         
+        // Register MappingContext as Scoped (one per request)
+        services.AddScoped<MappingContext>();
+        
         services.AddScoped<CharacterMapper>();
         services.AddScoped<ImageMapper>();
         services.AddScoped<LabelMapper>();
