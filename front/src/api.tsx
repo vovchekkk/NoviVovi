@@ -1,6 +1,16 @@
 import axios from "axios";
 import { useState, useEffect } from 'react';
-const API_BASE ='http://localhost:5136/api';
+
+const getApiBase = () => {
+    // Локальная разработка
+    if (import.meta.env.DEV) {  // Для Vite
+        return 'http://localhost:8080/api';
+    }
+    // Продакшен (API Gateway)
+    return 'https://api.novivovi.ru/api';
+};
+
+const API_BASE = getApiBase();
 
 export const api = axios.create({
     baseURL: API_BASE,

@@ -6,13 +6,22 @@ using NoviVovi.Infrastructure;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables();
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(port));
+});
+
+
+var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:5173";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // Укажите здесь URL вашего фронтенда
+            policy.WithOrigins(frontendUrl)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
@@ -77,17 +86,12 @@ if (app.Environment.IsDevelopment())
 {
     // Генерирует файл спецификации (по умолчанию доступен по адресу /openapi/v1.json)
     app.MapOpenApi();
-    
-    // Красивый UI
     app.MapScalarApiReference(); 
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.MapControllers();
-
-// Запускаем приложение
 await app.RunAsync();
 
-// Make Program accessible for integration tests
 public partial class Program { }
