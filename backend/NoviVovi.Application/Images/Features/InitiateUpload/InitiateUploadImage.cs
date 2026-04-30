@@ -50,11 +50,12 @@ public class InitiateUploadImageHandler(
 
             await imageRepository.AddOrUpdateAsync(image, ct);
             
-            await unitOfWork.CommitAsync(ct);
-            
-            // 3. Генерируем presigned URL для загрузки
+            // 3. Генерируем presigned URL для загрузки (до коммита, чтобы можно было откатить при ошибке)
             var uploadUrl = await storageService.GetPresignedUploadUrlAsync(storagePath, ct);
             var viewUrl = storageService.GetViewUrl(storagePath);
+
+            // 4. Коммитим транзакцию только после успешного получения URLs
+            await unitOfWork.CommitAsync(ct);
 
             var uploadInfo = new UploadInfoImage
             {
