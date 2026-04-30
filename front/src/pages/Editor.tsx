@@ -884,8 +884,8 @@ export default function Editor() {
                         reset({
                             ...baseData,
                             state: data.state ?? defaultSceneState,
-                            characterId: data.characterObject.id ?? '',
-                            characterStateId: data.state.id ?? '',
+                            characterId: data.characterId ?? '',
+                            characterStateId: data.characterStateId ?? '',
                             characterTransform: {
                                 ...defaultTransform,
                                 ...frontendTransform
@@ -1028,7 +1028,7 @@ export default function Editor() {
 
                 case 'replica':
                     stepRequest.type = 'replica';
-                    stepRequest.speakerId = data.characterId || null;
+                    stepRequest.characterId = data.characterId || null;
                     stepRequest.text = data.text || '';
                     break;
 
