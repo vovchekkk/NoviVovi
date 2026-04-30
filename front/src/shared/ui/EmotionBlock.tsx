@@ -1,12 +1,14 @@
 import {css} from '../../../styled-system/css'
 import {useEffect, useState} from "react";
 import { charactersApi } from "../api/client";
+import { Controller } from "react-hook-form";
 
 interface EmotionBlockProps {
     index: number;
     register: any;
     setValue: any;
     watch: any;
+    control: any;
     onRemove: () => void;
     errors?: any;
     isActive: boolean;
@@ -32,7 +34,7 @@ const CompactInput = ({ label, name, register, step = "1" }: any) => (
         />
     </div>
 );
-export default function EmotionBlock({index, register, setValue, watch, onRemove, errors, isActive, onSelect, emotionId, novelId, characterId}: EmotionBlockProps) {
+export default function EmotionBlock({index, register, setValue, watch, control, onRemove, errors, isActive, onSelect, emotionId, novelId, characterId}: EmotionBlockProps) {
     const imageFile = watch(`emotions.${index}.imageFile`);
     const fileUrl = watch(`emotions.${index}.fileUrl`);
 
@@ -116,7 +118,7 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
             <div className={css({ display: 'flex', gap: '20px' })}>
 
                 <div className={css({ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' })}>
-                    {/* Скрытые поля для сохранения данных */}
+                    {/* Скрытые поля для сохранения данных (НЕ включаем imageFile - File объекты нельзя хранить в input) */}
                     <input type="hidden" {...register(`emotions.${index}.id`)} />
                     <input type="hidden" {...register(`emotions.${index}.fileUrl`)} />
                     <input type="hidden" {...register(`emotions.${index}.imageId`)} />
@@ -143,17 +145,27 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
                         <CompactInput label="Rotate" name={`emotions.${index}.transform.rotation`} register={register} />
                     </div>
 
-                    <label className={css({ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' })}>
-                        <input type="file" className={css({ display: 'none' })} onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                                setValue(`emotions.${index}.imageFile`, file);
-                            }
-                        }} />
-                        <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
-                            Загрузить файл
-                        </div>
-                    </label>
+                    <Controller
+                        name={`emotions.${index}.imageFile`}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <label className={css({ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' })}>
+                                <input 
+                                    type="file" 
+                                    className={css({ display: 'none' })} 
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            onChange(file);
+                                        }
+                                    }} 
+                                />
+                                <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
+                                    Загрузить файл
+                                </div>
+                            </label>
+                        )}
+                    />
                 </div>
             </div>
         </div>

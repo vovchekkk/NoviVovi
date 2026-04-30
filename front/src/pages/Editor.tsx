@@ -318,8 +318,6 @@ function ShowStepForm({control, errors, characterOptions, setValue}: StepFormPro
     }, [selectedStateId, selectedCharacterId, setValue, selectedCharacter, stepId]);
 
 
-    console.log('Character Options:', options);
-    console.log('State Options:', stateOptions);
     return (
         <div className={css({display: 'flex', flexDirection: 'column', gap: '12px'})}>
             <div className={css({display: 'flex', flexDirection: 'column', gap: '8px'})}>
@@ -477,8 +475,6 @@ function BackgroundStepForm({control, errors, setValue, novelId}: StepFormProps)
 
             const response = await api.post(`novels/${novelId}/images/upload-url`, request);
             const {imageId, uploadUrl, viewUrl} = response.data;
-
-            console.log('imageId:', imageId);
 
             if (uploadUrl) {
                 await api.put(uploadUrl, file, {
@@ -837,7 +833,7 @@ export default function Editor() {
                     })),
                 })))
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
         fetchCharacterNames();
@@ -1000,7 +996,6 @@ export default function Editor() {
                 setLoading(false);
             }
         };
-        console.log(steps)
 
         fetchSteps();
     }, [selectedLabelId, novelId]);
@@ -1376,6 +1371,23 @@ export default function Editor() {
                                         width: '100%',
                                         alignItems: 'center',
                                         marginTop: '20px',
+                                        overflowY: 'auto',
+                                        flex: 1,
+                                        paddingRight: '5px',
+                                        '&::-webkit-scrollbar': {
+                                            width: '8px',
+                                        },
+                                        '&::-webkit-scrollbar-track': {
+                                            background: '#f1f1f1',
+                                            borderRadius: '10px',
+                                        },
+                                        '&::-webkit-scrollbar-thumb': {
+                                            background: '#888',
+                                            borderRadius: '10px',
+                                        },
+                                        '&::-webkit-scrollbar-thumb:hover': {
+                                            background: '#555',
+                                        },
                                     })}>
                                         {labels.map(label => (
                                             <LabelItem

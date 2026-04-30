@@ -86,16 +86,6 @@ export default function AssetsContainer({novelId}: AssetsProps) {
     const formEmotions = watch("emotions");
     const currentEmotion = formEmotions?.[activeIndex];
     
-    useEffect(() => {
-        console.log('=== After save debug ===');
-        console.log('activeIndex:', activeIndex);
-        console.log('formEmotions:', formEmotions);
-        console.log('currentEmotion:', currentEmotion);
-        console.log('previewUrl will be:', currentEmotion?.imageFile instanceof File 
-            ? 'File object URL' 
-            : currentEmotion?.fileUrl || 'null');
-    }, [activeIndex, formEmotions, currentEmotion]);
-    
     const getEmotionPreviewUrl = (emotion: any) => {
         if (!emotion) return null;
         if (emotion.imageFile instanceof File) return URL.createObjectURL(emotion.imageFile);
@@ -362,7 +352,29 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                         Персонажи
                     </div>
                     {loading && <p>Загрузка...</p>}
-                    <div className={vstack({gap: '10px', alignItems: 'center'})}>
+                    <div className={css({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        alignItems: 'center',
+                        flex: 1,
+                        overflowY: 'auto',
+                        padding: '10px 0',
+                        '&::-webkit-scrollbar': {
+                            width: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            background: '#f1f1f1',
+                            borderRadius: '10px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            background: '#888',
+                            borderRadius: '10px',
+                        },
+                        '&::-webkit-scrollbar-thumb:hover': {
+                            background: '#555',
+                        },
+                    })}>
                         {characters.map(character => (
                             <div
                                 key={character.id}
@@ -586,6 +598,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                                             register={register}
                                                             setValue={setValue}
                                                             watch={watch}
+                                                            control={control}
                                                             isActive={index === activeIndex}
                                                             onSelect={() => setActiveIndex(index)}
                                                             onRemove={() => remove(index)}
@@ -599,11 +612,15 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                             </div>
                                             <button
                                                 type="button"
-                                                onClick={() => append({
-                                                    name: '',
-                                                    imageFile: null,
-                                                    transform:DEFAULT_TRANSFORM,
-                                                })}
+                                                onClick={() => {
+                                                    append({
+                                                        name: '',
+                                                        imageFile: null,
+                                                        transform: DEFAULT_TRANSFORM,
+                                                    });
+                                                    // Переключаемся на новую эмоцию
+                                                    setActiveIndex(fields.length);
+                                                }}
                                                 className={css({
                                                     w: '30%',
                                                     py: '3',
