@@ -116,6 +116,11 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
             <div className={css({ display: 'flex', gap: '20px' })}>
 
                 <div className={css({ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' })}>
+                    {/* Скрытые поля для сохранения данных */}
+                    <input type="hidden" {...register(`emotions.${index}.id`)} />
+                    <input type="hidden" {...register(`emotions.${index}.fileUrl`)} />
+                    <input type="hidden" {...register(`emotions.${index}.imageId`)} />
+                    
                     <input
                         {...register(`emotions.${index}.name`)}
                         placeholder="Название (напр. Радость)"
@@ -138,39 +143,17 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
                         <CompactInput label="Rotate" name={`emotions.${index}.transform.rotation`} register={register} />
                     </div>
 
-                    <div className={css({ display: 'flex', gap: '10px', alignItems: 'center' })}>
-                        <label className={css({ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' })}>
-                            <input type="file" className={css({ display: 'none' })} onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                    setValue(`emotions.${index}.imageFile`, file);
-                                }
-                            }} />
-                            <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
-                                Загрузить файл
-                            </div>
-                        </label>
-                        
-                        {preview && (
-                            <a 
-                                href={preview} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className={css({ 
-                                    bg: '#775D68', 
-                                    color: 'white', 
-                                    px: '10px', 
-                                    py: '4px', 
-                                    borderRadius: '6px', 
-                                    fontSize: '12px',
-                                    textDecoration: 'none',
-                                    _hover: { bg: '#5a4650' }
-                                })}
-                            >
-                                Посмотреть текущую
-                            </a>
-                        )}
-                    </div>
+                    <label className={css({ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' })}>
+                        <input type="file" className={css({ display: 'none' })} onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                setValue(`emotions.${index}.imageFile`, file);
+                            }
+                        }} />
+                        <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
+                            Загрузить файл
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
