@@ -286,37 +286,30 @@ function JumpStepForm({control, errors, labelOptions}: StepFormProps) {
 
 function ShowStepForm({control, errors, characterOptions, setValue}: StepFormProps) {
     const selectedCharacterId = useWatch({control, name: 'characterId'});
-    const previousCharacterIdRef = useRef<string | undefined>();
+    const selectedStateId = useWatch({control, name: 'characterStateId'});
+
     const selectedCharacter = characterOptions.find(ch => ch.id === selectedCharacterId);
-    const options = characterOptions.map(ch => ({
-        value: ch.id,
-        label: ch.name
-    }));
+
+    const options = characterOptions.map(ch => ({ value: ch.id, label: ch.name }));
     const stateOptions = useMemo(() => {
-        if (!selectedCharacter || !Array.isArray(selectedCharacter.states)) {
-            return [];
-        }
-
-        return selectedCharacter.states.map(state => {
-            // Если state — это объект {id, name}, берем name. Если строка — берем её саму.
-            const label = typeof state === 'object' && state !== null ? (state.name || state.id) : state;
-            const value = typeof state === 'object' && state !== null ? (state.id || state.name) : state;
-
-            return {
-                value: String(value),
-                label: String(label)
-            };
-        });
+        if (!selectedCharacter) return [];
+        return selectedCharacter.states.map(st => ({ value: st.id, label: st.name }));
     }, [selectedCharacter]);
-    console.log(characterOptions)
 
     useEffect(() => {
-        if (previousCharacterIdRef.current !== undefined && previousCharacterIdRef.current !== selectedCharacterId) {
-            setValue('characterStateId', '');
-        }
+        if (selectedCharacterId && selectedStateId) {
+            const stateData = selectedCharacter?.states.find(s => s.id === selectedStateId);
 
-        previousCharacterIdRef.current = selectedCharacterId;
-    }, [selectedCharacterId, setValue]);
+            if (stateData && stateData.localTransform) {
+                const converted = formatTransformForFrontend(stateData.localTransform);
+                setValue('characterTransform', {
+                    ...defaultTransform,
+                    ...converted
+                });
+            }
+        }
+    }, [selectedStateId, selectedCharacterId, setValue, selectedCharacter]);
+
 
     console.log('Character Options:', options);
     console.log('State Options:', stateOptions);
@@ -833,6 +826,7 @@ export default function Editor() {
                         id: st.id,
                         name: st.name,
                         imageId: st.image?.id || '',
+                        localTransform:st.localTransform,
                     })),
                 })))
             } catch (error) {
