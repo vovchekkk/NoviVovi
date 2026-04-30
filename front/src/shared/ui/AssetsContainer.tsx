@@ -449,6 +449,9 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        py: '10px',
                     })}>
                         <button
                             onClick={createCharacter}
@@ -457,9 +460,13 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                 w: '90%',
                                 py: '3',
                                 bg: 'white',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
                                 _hover: {
-                                    bg: '#705661', color: 'white',
-                                    boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)'
+                                    bg: '#705661',
+                                    color: 'white',
+                                    boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)',
+                                    transform: 'translateY(-2px)'
                                 },
                                 borderRadius: '12px',
                                 fontWeight: 'medium',
