@@ -1,7 +1,7 @@
 ﻿import {css} from '../../../styled-system/css'
 import {vstack} from '../../../styled-system/patterns';
 import EditorHeader from "./EditorHeader.tsx";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useState, useMemo} from "react";
 import EmotionBlock from "./EmotionBlock.tsx";
 import { charactersApi } from "../api/client";
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -81,12 +81,21 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         resolver: zodResolver(characterSchema),
         defaultValues: {name: '', nameColor: '#ffffff', emotions: []}
     });
-    const watchedEmotions = useWatch({
-        control,
-        name: "emotions"
-    });
-
-    const currentEmotion = watchedEmotions?.[activeIndex];
+    
+    // Используем watch вместо useWatch для более надежного отслеживания
+    const formEmotions = watch("emotions");
+    const currentEmotion = formEmotions?.[activeIndex];
+    
+    useEffect(() => {
+        console.log('=== After save debug ===');
+        console.log('activeIndex:', activeIndex);
+        console.log('formEmotions:', formEmotions);
+        console.log('currentEmotion:', currentEmotion);
+        console.log('previewUrl will be:', currentEmotion?.imageFile instanceof File 
+            ? 'File object URL' 
+            : currentEmotion?.fileUrl || 'null');
+    }, [activeIndex, formEmotions, currentEmotion]);
+    
     const getEmotionPreviewUrl = (emotion: any) => {
         if (!emotion) return null;
         if (emotion.imageFile instanceof File) return URL.createObjectURL(emotion.imageFile);
@@ -96,11 +105,14 @@ export default function AssetsContainer({novelId}: AssetsProps) {
         control,
         name: "emotions"
     });
-    const previewUrl = currentEmotion
-        ? currentEmotion.imageFile instanceof File
-            ? URL.createObjectURL(currentEmotion.imageFile)
-            : (currentEmotion.fileUrl || null) // null вместо ""
-        : null;
+    
+    const previewUrl = useMemo(() => {
+        if (!currentEmotion) return null;
+        if (currentEmotion.imageFile instanceof File) {
+            return URL.createObjectURL(currentEmotion.imageFile);
+        }
+        return currentEmotion.fileUrl || null;
+    }, [currentEmotion]);
 
     useEffect(() => {
         if (selectedCharacter) {
@@ -142,7 +154,6 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                     charactersApi.getById(novelId, selectedId),
                     charactersApi.getStates(novelId, selectedId)
                 ]);
-                console.log('Character data from backend:', charRes.data);
                 const mappedEmotions = (statesRes.data || []).map((state: any) => ({
                     id: state.id,
                     name: state.name,
@@ -234,7 +245,6 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                 charactersApi.getById(novelId, selectedId),
                 charactersApi.getStates(novelId, selectedId)
             ]);
-            console.log('Character data after save:', charRes.data);
             const mappedEmotions = (statesRes.data || []).map((state: any) => ({
                 id: state.id,
                 name: state.name,
@@ -248,6 +258,11 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                 nameColor: charRes.data.nameColor || '#ffffff',
                 emotions: mappedEmotions
             });
+            
+            // Сбрасываем activeIndex, если он выходит за пределы массива
+            if (activeIndex >= mappedEmotions.length) {
+                setActiveIndex(Math.max(0, mappedEmotions.length - 1));
+            }
 
             alert('Все данные и изображения сохранены!');
             setCharacters(prev => prev.map(c => c.id === selectedId ? {...c, name: formData.name} : c));
@@ -563,7 +578,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                                 },
                                             })}>
                                                 {fields.map((field, index) => {
-                                                    const emotionData = watchedEmotions?.[index];
+                                                    const emotionData = formEmotions?.[index];
                                                     return (
                                                         <EmotionBlock
                                                             key={field.id}
