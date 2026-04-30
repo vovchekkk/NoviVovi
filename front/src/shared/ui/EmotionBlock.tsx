@@ -1,5 +1,6 @@
 import {css} from '../../../styled-system/css'
 import {useEffect, useState} from "react";
+import { charactersApi } from "../api/client";
 
 interface EmotionBlockProps {
     index: number;
@@ -10,7 +11,9 @@ interface EmotionBlockProps {
     errors?: any;
     isActive: boolean;
     onSelect: () => void;
-    // onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    emotionId?: string;
+    novelId: string;
+    characterId: string;
 }
 const CompactInput = ({ label, name, register, step = "1" }: any) => (
     <div className={css({ display: 'flex', flexDirection: 'column', gap: '2px' })}>
@@ -29,11 +32,32 @@ const CompactInput = ({ label, name, register, step = "1" }: any) => (
         />
     </div>
 );
-export default function EmotionBlock({index, register, setValue, watch, onRemove, errors, isActive, onSelect}: EmotionBlockProps) {
+export default function EmotionBlock({index, register, setValue, watch, onRemove, errors, isActive, onSelect, emotionId, novelId, characterId}: EmotionBlockProps) {
     const imageFile = watch(`emotions.${index}.imageFile`);
     const fileUrl = watch(`emotions.${index}.fileUrl`);
 
     const [preview, setPreview] = useState<string | null>(null);
+
+    const handleDelete = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        
+        if (!emotionId) {
+            // Новая эмоция, просто удаляем из формы
+            if (!confirm('Удалить эту эмоцию?')) return;
+            onRemove();
+            return;
+        }
+
+        if (!confirm('Удалить эту эмоцию?')) return;
+
+        try {
+            await charactersApi.deleteState(novelId, characterId, emotionId);
+            onRemove();
+        } catch (error) {
+            console.error('Ошибка при удалении эмоции:', error);
+            alert('Не удалось удалить эмоцию');
+        }
+    };
 
     useEffect(() => {
         if (imageFile && imageFile instanceof File) {
@@ -66,6 +90,28 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
                 transition: 'all 0.2s'
             })}
         >
+            <button
+                onClick={handleDelete}
+                className={css({
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    backgroundColor: '#ef4444',
+                    color: 'white',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 10,
+                    _hover: { backgroundColor: '#dc2626' },
+                })}
+                title="Удалить эмоцию"
+            >
+                ×
+            </button>
 
             <div className={css({ display: 'flex', gap: '20px' })}>
 
@@ -92,15 +138,39 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
                         <CompactInput label="Rotate" name={`emotions.${index}.transform.rotation`} register={register} />
                     </div>
 
-                    <label className={css({ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' })}>
-                        <input type="file" className={css({ display: 'none' })} onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) setValue(`emotions.${index}.imageFile`, file);
-                        }} />
-                        <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
-                            Загрузить файл
-                        </div>
-                    </label>
+                    <div className={css({ display: 'flex', gap: '10px', alignItems: 'center' })}>
+                        <label className={css({ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' })}>
+                            <input type="file" className={css({ display: 'none' })} onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    setValue(`emotions.${index}.imageFile`, file);
+                                }
+                            }} />
+                            <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
+                                Загрузить файл
+                            </div>
+                        </label>
+                        
+                        {preview && (
+                            <a 
+                                href={preview} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className={css({ 
+                                    bg: '#775D68', 
+                                    color: 'white', 
+                                    px: '10px', 
+                                    py: '4px', 
+                                    borderRadius: '6px', 
+                                    fontSize: '12px',
+                                    textDecoration: 'none',
+                                    _hover: { bg: '#5a4650' }
+                                })}
+                            >
+                                Посмотреть текущую
+                            </a>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
