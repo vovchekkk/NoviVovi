@@ -10,7 +10,7 @@ public class LocalStorageService : IStorageService
 {
     private readonly string _baseUrl;
 
-    public LocalStorageService(string baseUrl = "http://localhost:5136/storage")
+    public LocalStorageService(string baseUrl = "http://localhost:8080/storage")
     {
         _baseUrl = baseUrl;
     }
