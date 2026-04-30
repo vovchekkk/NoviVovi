@@ -124,7 +124,7 @@ export default function EmotionBlock({index, register, setValue, watch, onRemove
                     <input
                         {...register(`emotions.${index}.name`)}
                         placeholder="Название (напр. Радость)"
-                        className={css({ p: '8px', borderRadius: '8px', border: '1px solid #ccc' })}
+                        className={css({ p: '8px', borderRadius: '8px', border: '1px solid #ccc', width:'80%' })}
                     />
 
                     <div className={css({

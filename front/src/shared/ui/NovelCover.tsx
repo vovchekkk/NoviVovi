@@ -81,7 +81,7 @@ export function NovelCover({ novelId, labelId, title }: Props) {
                 letterSpacing: '2px',
                 marginBottom: '10px'
             })}>
-                Visual Novel
+                NoviVovi
             </span>
             <span className={css({
                 fontSize: '18px',

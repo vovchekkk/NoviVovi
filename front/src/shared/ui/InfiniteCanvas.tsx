@@ -17,6 +17,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import api, { labelsApi, stepsApi } from '../api/client';
 import type { LabelResponse, StepResponse } from '../api/types';
 import previewImage from '../../assets/img.png';
+import {formatTransformForFrontend} from "../../pages/Editor.tsx";
 
 type Label = {
     id: string;
@@ -66,6 +67,16 @@ type SceneNodeData = {
     }>;
 };
 
+const findPreviewData = (steps: Step[]) => {
+    const bgStep = steps.find(s => s.type === 'show_background');
+    if (!bgStep?.backgroundObject) return null;
+
+    return {
+        url: bgStep.backgroundObject.image?.url,
+        transform: bgStep.backgroundObject.transform
+    };
+};
+
 type SceneNode = Node<SceneNodeData>;
 type SceneEdgeData =
     | { kind: 'jump'; stepId: string; sourceLabelId: string }
@@ -94,100 +105,95 @@ const parseChoiceHandleId = (handleId: string): { stepId: string; choiceIndex: n
 };
 
 const SceneGraphNode = ({ data }: { data: SceneNodeData }) => {
+    // Вычисляем стили превью (теперь с трансформацией)
+    const previewStyles = useMemo(() => {
+        if (!data.preview?.transform) return null;
+        const t = formatTransformForFrontend(data.preview.transform);
+        return {
+            position: 'absolute' as const,
+            left: `${t.x}%`,
+            top: `${t.y}%`,
+            width: `${t.width}%`,
+            height: `${t.height}%`,
+            transform: `scale(${t.scale}) rotate(${t.rotation}deg)`,
+            zIndex: t.zIndex,
+            objectFit: 'fill' as const
+        };
+    }, [data.preview]);
+
     return (
         <div className={css({
-            width: '220px',
+            width: '240px', // Чуть шире для красоты
             border: `2px solid ${data.isStart ? '#f59e0b' : '#775D68'}`,
             borderRadius: '12px',
             backgroundColor: 'white',
             overflow: 'hidden',
-            boxShadow: 'md',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             position: 'relative',
         })}>
-            {data.isStart && (
-                <div className={css({
-                    position: 'absolute',
-                    top: '-10px',
-                    left: '-10px',
-                    backgroundColor: '#f59e0b',
-                    borderRadius: '50%',
-                    width: '24px',
-                    height: '24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                    zIndex: 10,
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                })}>
-                    🚀
-                </div>
-            )}
+            {/* ВХОД (Target) — общее для всех ребер, входящих в сцену */}
             <Handle
                 type="target"
                 position={Position.Left}
-                style={{ background: '#111', width: 10, height: 10 }}
+                style={{ background: '#775D68', width: 10, height: 10, left: -6 }}
             />
-            <Handle
-                type="source"
-                position={Position.Right}
-                id={JUMP_SOURCE_HANDLE_ID}
-                title="jump"
-                style={{ background: '#111', width: 10, height: 10, top: '24px' }}
-            />
-            <img
-                src={data.previewUrl}
-                alt={data.label}
-                className={css({
-                    width: '100%',
-                    height: '120px',
-                    objectFit: 'cover',
-                    borderBottom: '1px solid #e5e7eb',
-                })}
-            />
+
+            {/* ПРЕВЬЮ ФОНА */}
             <div className={css({
-                padding: '10px 12px',
-                fontWeight: '700',
+                height: '120px',
+                width: '100%',
+                backgroundColor: '#000',
+                position: 'relative',
+                overflow: 'hidden',
+                borderBottom: '1px solid #eee',
                 textAlign: 'center',
             })}>
+                {data.preview?.url ? (
+                    <img
+                        src={data.preview.url}
+                        style={previewStyles || { width: '100%', height: '100%' }}
+                        alt="Preview"
+                    />
+                ) : (
+                    <div className={css({ color: '#444', fontSize: '10px', display:'flex', justifyContent:'center' })}>НЕТ ФОНА</div>
+                )}
+            </div>
+
+            <div className={css({ padding: '8px', fontWeight: 'bold', textAlign: 'center' })}>
                 {data.label}
             </div>
+
+            {/* Входы для выбора (choices) */}
             {data.choices.length > 0 && (
                 <div className={css({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '6px',
-                    padding: '0 10px 10px 10px',
+                    display: 'flex', flexDirection: 'column', gap: '4px', padding: '0 8px 10px 8px',
                 })}>
                     {data.choices.map((choice) => (
-                        <div
-                            key={choice.handleId}
-                            className={css({
-                                position: 'relative',
-                                padding: '6px 12px',
-                                border: '1px solid #d1d5db',
-                                borderRadius: '8px',
-                                fontSize: '12px',
-                                backgroundColor: '#faf5ff',
-                            })}
-                        >
+                        <div key={choice.handleId} className={css({
+                            position: 'relative', padding: '4px 8px',
+                            border: '1px solid #e9d5ff', borderRadius: '6px',
+                            fontSize: '11px', backgroundColor: '#faf5ff',
+                        })}>
                             {choice.text}
                             <Handle
                                 type="source"
                                 position={Position.Right}
                                 id={choice.handleId}
-                                style={{
-                                    background: '#6b21a8',
-                                    width: 10,
-                                    height: 10,
-                                    right: -6,
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
-                                }}
+                                style={{ background: '#6b21a8', right: -12 }}
                             />
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* Общий выход для Jump (если нет выборов) */}
+            {data.choices.length === 0 && (
+                <Handle
+                    type="source"
+                    position={Position.Right}
+                    id={JUMP_SOURCE_HANDLE_ID}
+                    style={{ background: '#111', width: 8, height: 8 }}
+                />
             )}
         </div>
     );
@@ -288,25 +294,28 @@ const saveLayout = (novelId: string, nodes: SceneNode[]): void => {
 const buildNodes = (
     labels: Label[],
     stepsByLabelId: Record<string, Step[]>,
-    previewByLabelId: Record<string, string>,
     startLabelId?: string
 ): SceneNode[] => {
     const columns = Math.max(1, Math.ceil(Math.sqrt(labels.length)));
 
-    return labels.map((label, index) => ({
-        id: label.id,
-        type: 'scene',
-        position: {
-            x: (index % columns) * 320,
-            y: Math.floor(index / columns) * 180,
-        },
-        data: {
-            label: label.name,
-            previewUrl: previewByLabelId[label.id] ?? previewImage,
-            choices: collectChoiceHandles(stepsByLabelId[label.id] ?? []),
-            isStart: label.id === startLabelId,
-        },
-    }));
+    return labels.map((label, index) => {
+        const steps = stepsByLabelId[label.id] ?? [];
+        return {
+            id: label.id,
+            type: 'scene',
+            position: {
+                x: (index % columns) * 320,
+                y: Math.floor(index / columns) * 180,
+            },
+            // В buildNodes:
+            data: {
+                label: label.name,
+                preview: findPreviewData(steps), // Сохраняем объект целиком
+                choices: collectChoiceHandles(steps),
+                isStart: label.id === startLabelId,
+            },
+        };
+    });
 };
 
 const buildEdges = (
@@ -445,6 +454,7 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                 ...node,
                 data: {
                     ...node.data,
+                    preview: findPreviewData(nextMap[node.id] ?? []),
                     choices: collectChoiceHandles(nextMap[node.id] ?? []),
                 },
             }))
