@@ -178,7 +178,13 @@ export const charactersApi = {
    * Update character state
    */
   updateState: (novelId: string, characterId: string, stateId: string, data: any) =>
-    api.put(`/novels/${novelId}/characters/${characterId}/states/${stateId}`, data),
+    api.patch(`/novels/${novelId}/characters/${characterId}/states/${stateId}`, data),
+
+  /**
+   * Delete character state
+   */
+  deleteState: (novelId: string, characterId: string, stateId: string) =>
+    api.delete(`/novels/${novelId}/characters/${characterId}/states/${stateId}`),
 
   /**
    * Upload image for character

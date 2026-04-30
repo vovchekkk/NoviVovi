@@ -142,11 +142,13 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                     charactersApi.getById(novelId, selectedId),
                     charactersApi.getStates(novelId, selectedId)
                 ]);
+                console.log('Character data from backend:', charRes.data);
                 const mappedEmotions = (statesRes.data || []).map((state: any) => ({
                     id: state.id,
                     name: state.name,
                     fileUrl: state.image?.url || "",
                     imageId: state.image?.id || state.imageId,
+                    imageFile: null,
                     transform: state.localTransform || DEFAULT_TRANSFORM
                 }));
                 reset({
@@ -165,6 +167,17 @@ export default function AssetsContainer({novelId}: AssetsProps) {
     }, [selectedId, reset, novelId]);
     const onSave = async (formData: CharacterSchema) => {
         if (!selectedId) return;
+
+        // Проверяем, что у всех новых эмоций есть изображения
+        const newEmotionsWithoutImage = formData.emotions.filter(
+            emotion => !emotion.id && !emotion.imageFile && !(emotion as any).imageId
+        );
+
+        if (newEmotionsWithoutImage.length > 0) {
+            const names = newEmotionsWithoutImage.map(e => `"${e.name}"`).join(', ');
+            alert(`Невозможно сохранить новые эмоции без изображений: ${names}\n\nЗагрузите изображения для этих эмоций или удалите их.`);
+            return;
+        }
 
         try {
             setSaving(true);
@@ -215,6 +228,26 @@ export default function AssetsContainer({novelId}: AssetsProps) {
             });
 
             await Promise.all(emotionPromises);
+
+            // Перезагружаем данные персонажа с бэкенда, чтобы получить id для новых эмоций
+            const [charRes, statesRes] = await Promise.all([
+                charactersApi.getById(novelId, selectedId),
+                charactersApi.getStates(novelId, selectedId)
+            ]);
+            console.log('Character data after save:', charRes.data);
+            const mappedEmotions = (statesRes.data || []).map((state: any) => ({
+                id: state.id,
+                name: state.name,
+                fileUrl: state.image?.url || "",
+                imageId: state.image?.id || state.imageId,
+                imageFile: null,
+                transform: state.localTransform || DEFAULT_TRANSFORM
+            }));
+            reset({
+                name: charRes.data.name,
+                nameColor: charRes.data.nameColor || '#ffffff',
+                emotions: mappedEmotions
+            });
 
             alert('Все данные и изображения сохранены!');
             setCharacters(prev => prev.map(c => c.id === selectedId ? {...c, name: formData.name} : c));
@@ -316,42 +349,73 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                     {loading && <p>Загрузка...</p>}
                     <div className={vstack({gap: '10px', alignItems: 'center'})}>
                         {characters.map(character => (
-                            <button
+                            <div
                                 key={character.id}
-                                onClick={() => setSelectedId(character.id)}
                                 className={css({
                                     display: 'flex',
-                                    alignItems: 'stretch',
-                                    gap: '4px',
+                                    alignItems: 'center',
+                                    gap: '8px',
                                     width: '90%',
-                                    p: '4px',
-                                    borderRadius: '12px',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    backgroundColor: character.id === selectedId ? '#705661' : '#F8EDEB',
-                                    textAlign: 'left',
-                                    _hover: {
-                                        bg: '#775D68',
-                                        color: 'background',
-                                        borderColor: '#775D68',
-                                        transform: 'translateY(-2px)',
-                                        boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)',
-                                    },
-                                })}>
-                                <div className={vstack({gap: '1px', alignItems: 'stretch', flex: 1})}>
-                                    <p className={css({
-                                        fontWeight: 'bold',
-                                        minW: '0',
-                                        fontSize: '20px',
-                                        padding: '10px',
-                                        backgroundColor: 'white',
+                                })}
+                            >
+                                <button
+                                    onClick={() => setSelectedId(character.id)}
+                                    className={css({
+                                        display: 'flex',
+                                        alignItems: 'stretch',
+                                        gap: '4px',
+                                        flex: 1,
+                                        p: '4px',
                                         borderRadius: '12px',
-                                        w: 'full',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        backgroundColor: character.id === selectedId ? '#705661' : '#F8EDEB',
+                                        textAlign: 'left',
+                                        _hover: {
+                                            bg: '#775D68',
+                                            color: 'background',
+                                            borderColor: '#775D68',
+                                            transform: 'translateY(-2px)',
+                                            boxShadow: '0 0 40px rgba(119, 93, 104, 0.5)',
+                                        },
                                     })}>
-                                        {character.name}
-                                    </p>
-                                </div>
-                            </button>
+                                    <div className={vstack({gap: '1px', alignItems: 'stretch', flex: 1})}>
+                                        <p className={css({
+                                            fontWeight: 'bold',
+                                            minW: '0',
+                                            fontSize: '20px',
+                                            padding: '10px',
+                                            backgroundColor: 'white',
+                                            borderRadius: '12px',
+                                            w: 'full',
+                                        })}>
+                                            {character.name}
+                                        </p>
+                                    </div>
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteCharacter(character.id);
+                                    }}
+                                    className={css({
+                                        backgroundColor: '#ef4444',
+                                        color: 'white',
+                                        width: '32px',
+                                        height: '32px',
+                                        borderRadius: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        flexShrink: 0,
+                                        _hover: { backgroundColor: '#dc2626' },
+                                    })}
+                                    title="Удалить персонажа"
+                                >
+                                    ×
+                                </button>
+                            </div>
                         ))}
                     </div>
                     <div className={css({
@@ -498,19 +562,25 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                                     background: '#555',
                                                 },
                                             })}>
-                                                {fields.map((field, index) => (
-                                                    <EmotionBlock
-                                                        key={field.id}
-                                                        index={index}
-                                                        register={register}
-                                                        setValue={setValue}
-                                                        watch={watch}
-                                                        isActive={index === activeIndex}
-                                                        onSelect={() => setActiveIndex(index)}
-                                                        onRemove={() => remove(index)}
-                                                        errors={errors.emotions?.[index]}
-                                                    />
-                                                ))}
+                                                {fields.map((field, index) => {
+                                                    const emotionData = watchedEmotions?.[index];
+                                                    return (
+                                                        <EmotionBlock
+                                                            key={field.id}
+                                                            index={index}
+                                                            register={register}
+                                                            setValue={setValue}
+                                                            watch={watch}
+                                                            isActive={index === activeIndex}
+                                                            onSelect={() => setActiveIndex(index)}
+                                                            onRemove={() => remove(index)}
+                                                            errors={errors.emotions?.[index]}
+                                                            emotionId={emotionData?.id}
+                                                            novelId={novelId}
+                                                            characterId={selectedId}
+                                                        />
+                                                    );
+                                                })}
                                             </div>
                                             <button
                                                 type="button"

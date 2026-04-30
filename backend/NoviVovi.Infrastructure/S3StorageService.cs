@@ -17,10 +17,10 @@ public class S3StorageService : IStorageService
     {
         _bucketName = bucketName;
         
-        var accessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-        var secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+        var sharedCredentialsFile = new SharedCredentialsFile();
+        sharedCredentialsFile.TryGetProfile("default", out var profile);
         
-        var awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        var awsCredentials = profile.GetAWSCredentials(sharedCredentialsFile);
         
         var config = new AmazonS3Config
         {
