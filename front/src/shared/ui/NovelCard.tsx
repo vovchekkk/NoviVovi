@@ -1,42 +1,31 @@
 import {css} from '../../../styled-system/css'
 
 interface NovelCardProps {
-    image: string
     title: string
+    cover: React.ReactNode;
     description: string
 }
 
 export default function NovelCard({
-                                      image,
                                       title,
                                       description,
+                                      cover,
                                   }: NovelCardProps) {
     return (
         <div className={css({
             display: 'flex',
             gap: '40px',
+            height: '300px',
             alignItems: 'center',
             flexDirection: {base: 'column', md: 'row'},
         })}>
 
             <div className={css({
-                width: {base: '100%', md: '420px'},
-                flexShrink: 0,
-                borderRadius: 'card',
-                overflow: 'hidden',
-                boxShadow: 'card',
+                width: '531px', // Ширина высчитана под 16:9 (200px * 1.77)
+                height: '100%',
+                flexShrink: 0
             })}>
-                <img
-                    src={image}
-                    alt={title}
-                    className={css({
-                        width: '100%',
-                        height: 'auto',
-                        display: 'block',
-                        aspectRatio: '16 / 9',
-                        objectFit: 'cover',
-                    })}
-                />
+                {cover}
             </div>
 
             <div className={css({
