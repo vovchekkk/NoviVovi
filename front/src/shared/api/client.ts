@@ -15,7 +15,7 @@ import type {
   NovelGraphResponse,
 } from './types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5136/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://api.novivovi.ru/api';
 
 export const api = axios.create({
   baseURL: API_BASE,

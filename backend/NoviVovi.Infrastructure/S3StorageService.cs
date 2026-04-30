@@ -1,4 +1,5 @@
 ﻿using Amazon;
+using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -16,10 +17,10 @@ public class S3StorageService : IStorageService
     {
         _bucketName = bucketName;
         
-        var sharedCredentialsFile = new SharedCredentialsFile();
-        sharedCredentialsFile.TryGetProfile("default", out var profile);
+        var accessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+        var secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
         
-        var awsCredentials = profile.GetAWSCredentials(sharedCredentialsFile);
+        var awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         
         var config = new AmazonS3Config
         {
