@@ -251,6 +251,12 @@ const normalizeIncomingStep = (step: any): Step => {
             characterTransform: step.characterObject?.transform,
         }
     }
+    if (step.type === 'hide_character') {
+        return {
+            ...step,
+            characterId: step.character.id || '',
+        }
+    }
     return step as Step;
 };
 
@@ -287,6 +293,7 @@ function JumpStepForm({control, errors, labelOptions}: StepFormProps) {
 function ShowStepForm({control, errors, characterOptions, setValue}: StepFormProps) {
     const selectedCharacterId = useWatch({control, name: 'characterId'});
     const selectedStateId = useWatch({control, name: 'characterStateId'});
+    const stepId = useWatch({control, name: 'id'});
 
     const selectedCharacter = characterOptions.find(ch => ch.id === selectedCharacterId);
 
@@ -297,8 +304,8 @@ function ShowStepForm({control, errors, characterOptions, setValue}: StepFormPro
     }, [selectedCharacter]);
 
     useEffect(() => {
-        if (selectedCharacterId && selectedStateId) {
-            const stateData = selectedCharacter?.states.find(s => s.id === selectedStateId);
+        if (!stepId && selectedStateId && selectedCharacter) {
+            const stateData = selectedCharacter.states.find(s => s.id === selectedStateId);
 
             if (stateData && stateData.localTransform) {
                 const converted = formatTransformForFrontend(stateData.localTransform);
@@ -308,7 +315,7 @@ function ShowStepForm({control, errors, characterOptions, setValue}: StepFormPro
                 });
             }
         }
-    }, [selectedStateId, selectedCharacterId, setValue, selectedCharacter]);
+    }, [selectedStateId, selectedCharacterId, setValue, selectedCharacter, stepId]);
 
 
     console.log('Character Options:', options);
@@ -971,11 +978,10 @@ export default function Editor() {
     }, [novelId]);
     useEffect(() => {
         const fetchSteps = async () => {
-            if (!selectedLabelId || selectedLabelId === 'null') {
-                setSteps([]);
-                setSelectedId(null);
-                return;
-            }
+            setSelectedId(null);
+            setSteps([]);
+
+            if (!selectedLabelId) return;
             try {
                 setLoading(true);
                 const {data} = await stepsApi.getAll(novelId, selectedLabelId);
@@ -1234,6 +1240,16 @@ export default function Editor() {
 
     const changeLabel = (labelId) => {
         setSelectedLabelId(labelId);
+        setSelectedId(null);
+        setSelectedStepIndex(0);
+        setSteps([]);
+        reset({
+            type: null,
+            characterId: '',
+            characterTransform: defaultTransform,
+            transform: defaultBackgroundTransform,
+            imageId: ''
+        } as any);
     }
 
     const createLabel = async (e) => {
@@ -1397,8 +1413,9 @@ export default function Editor() {
                                     flex: 4,
                                 })}>
                                     <Preview
+                                        key={`${selectedLabelId}-${selectedId}`}
                                         labelId={selectedLabelId}
-                                        stepId={selectedId}
+                                        stepId={steps[selectedStepIndex]?.id || null}
                                         control={control}
                                         novelId={novelId}
                                         characterOptions={characterOptions}

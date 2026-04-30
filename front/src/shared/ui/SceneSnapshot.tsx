@@ -19,6 +19,13 @@ export const useSceneSnapshot = (novelId: string, labelId: string, stepId: strin
 
     useEffect(() => {
         if (!novelId || !labelId || !stepId) {
+            setData({
+                background: null,
+                characters: [],
+                replica: null,
+                menu: null,
+                loading: false
+            });
             return;
         }
 

@@ -280,7 +280,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
-            overflow: 'hidden',
+            overflow: 'visible',
         })}>
             <EditorHeader active="assets"/>
             <div className={css({
