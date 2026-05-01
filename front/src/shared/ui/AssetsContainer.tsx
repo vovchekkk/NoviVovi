@@ -538,7 +538,7 @@ export default function AssetsContainer({novelId}: AssetsProps) {
                                         </div>
                                         <div style={{padding: 20}}>
                                             <label>
-                                                Выберите цвет:{' '}
+                                                Выберите цвет имени:{' '}
                                                 <input
                                                     type="color"
                                                     {...register('nameColor')}
