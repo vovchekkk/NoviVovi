@@ -313,19 +313,19 @@ export default function AssetsContainer({novelId}: AssetsProps) {
 
     return (
         <div className={css({
-            height: '100vh',
+            height: '100%',
             background: '#775D68',
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
             overflow: 'visible',
         })}>
-            <EditorHeader active="assets"/>
+            <EditorHeader active="assets" novelId={novelId}/>
             <div className={css({
                 backgroundColor: 'white',
                 color: 'black',
                 width: '100%',
-                padding: '20px',
+                paddingTop: '20px',
                 display: 'flex',
                 flexDirection: 'row',
                 gap: '10px',

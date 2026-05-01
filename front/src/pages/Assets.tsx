@@ -16,11 +16,16 @@ export default function Assets() {
     return (
         <div className={css({
             bg: '#775D68',
-            minHeight: '100vh',
+            height: '100vh',
+            display: 'flex',
+            overflow: 'hidden',
+            flexDirection: 'column',
             color: 'text',
         })}>
             <Header active="editor" />
             <main className={css({
+                flex:1,
+                minHeight: 0,
                 pt: '90px',
                 pb: '0px',
                 px: '0px',

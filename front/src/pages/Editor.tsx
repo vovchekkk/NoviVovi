@@ -1307,17 +1307,23 @@ export default function Editor() {
     return (
         <div className={css({
             bg: '#775D68',
-            minHeight: '100vh',
+            height:'100vh',
             color: 'text',
+            display: 'flex',
+            flexDirection: 'column',
         })}>
             <Header active="editor"/>
             <main className={css({
                 pt: '90px',
                 pb: '0px',
                 px: '0px',
+                display: 'flex',
+                flexDirection: 'column',
+                flex:1,
+                minHeight: '0',
             })}>
                 <div className={css({
-                    minHeight: '100vh',
+                    flex:1,
                     background: '#775D68',
                     display: 'flex',
                     flexDirection: 'column',
@@ -1336,18 +1342,19 @@ export default function Editor() {
                             flexDirection: 'column',
                             width: '100%',
                             gap: '0px',
+                            flex:3,
                         })}>
                             <EditorHeader active="editor"/>
                             <div className={css({
                                 backgroundColor: 'white',
                                 color: 'black',
                                 width: '100%',
-                                height: '100%',
                                 paddingTop: '20px',
                                 display: 'flex',
                                 flexDirection: 'row',
                                 gap: '20px',
-                                flex: 4,
+                                minHeight: '0',
+                                flex: 1,
                             })}>
                                 <div className={css({
                                     backgroundColor: '#DFC6D1',

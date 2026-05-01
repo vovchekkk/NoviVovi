@@ -325,8 +325,6 @@ const buildEdges = (
     const labelIds = new Set(labels.map((label) => label.id));
     const edges: SceneEdge[] = [];
 
-    console.log('buildEdges called with:', { labels: labels.length, stepsByLabelId });
-
     for (const label of labels) {
         const steps = stepsByLabelId[label.id] ?? [];
 
@@ -334,9 +332,7 @@ const buildEdges = (
             // Jump step - проверяем все варианты
             if (step.type === 'jump') {
                 const targetId = (step.targetId || step.targetLabelId || step.transition?.targetLabelId)?.trim();
-                console.log('Processing jump step:', { stepId: step.id, targetId, step });
                 if (!targetId || !labelIds.has(targetId)) {
-                    console.log('Skipping jump - no target or target not found');
                     continue;
                 }
 
@@ -361,7 +357,6 @@ const buildEdges = (
                         sourceLabelId: label.id,
                     },
                 });
-                console.log('Added jump edge');
                 continue;
             }
 
@@ -371,12 +366,9 @@ const buildEdges = (
             }
 
             const choices = extractStepChoices(step);
-            console.log('Processing menu step:', { stepId: step.id, type: step.type, choices });
             choices.forEach((choice, index) => {
                 const targetId = extractChoiceTarget(choice);
-                console.log('Processing choice:', { index, targetId, choice });
                 if (!targetId || !labelIds.has(targetId)) {
-                    console.log('Skipping choice - no target or target not found');
                     return;
                 }
 
@@ -411,12 +403,10 @@ const buildEdges = (
                         sourceLabelId: label.id,
                     },
                 });
-                console.log('Added choice edge');
             });
         }
     }
 
-    console.log('buildEdges result:', edges.length, 'edges');
     return edges;
 };
 
@@ -488,7 +478,6 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
             nextSteps[index] = normalizedStep;
             nextMap[labelId] = nextSteps;
         }
-        console.log('upsertStep result:', { labelId, step: normalizedStep, nextMap });
         return nextMap;
     }, [cloneStepsMap]);
 
@@ -562,8 +551,6 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                 return;
             }
 
-            console.log('onConnect called:', { sourceLabelId, targetLabelId, sourceHandle: connection.sourceHandle });
-
             try {
                 let nextMap = cloneStepsMap(stepsByLabelId);
 
@@ -583,7 +570,6 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                                     transition: { targetLabelId: targetLabelId }
                                 }],
                             });
-                            console.log('Created new menu step:', newStep);
                             step = newStep;
                             nextMap = upsertStep(nextMap, sourceLabelId, step);
                             choices = extractStepChoices(step);
@@ -599,7 +585,6 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                                 type: 'menu',
                                 choices: updatedChoices,
                             });
-                            console.log('Updated menu step:', updatedStep);
                             nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
                         } else {
                             choices = extractStepChoices(step);
@@ -648,7 +633,6 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                                 type: 'jump',
                                 targetLabelId: targetLabelId,
                             });
-                            console.log('Created jump step:', createdStep);
                             nextMap = upsertStep(nextMap, sourceLabelId, createdStep);
                         }
                     }
@@ -660,22 +644,18 @@ export default function InfiniteCanvas({ novelId }: InfiniteCanvasProps) {
                             type: 'jump',
                             targetLabelId: targetLabelId,
                         });
-                        console.log('Updated jump step:', updatedStep);
                         nextMap = upsertStep(nextMap, sourceLabelId, updatedStep);
                     } else {
                         const { data: createdStep } = await stepsApi.create(novelId, sourceLabelId, {
                             type: 'jump',
                             targetLabelId: targetLabelId,
                         });
-                        console.log('Created jump step:', createdStep);
                         nextMap = upsertStep(nextMap, sourceLabelId, createdStep);
                     }
                 }
 
-                console.log('Applying steps map:', nextMap);
                 applyStepsMap(nextMap);
             } catch (connectError) {
-                console.error(connectError);
                 alert('Не удалось сохранить связь между сценами');
             }
         },
