@@ -50,7 +50,7 @@ public class S3StorageService : IStorageService
     {
         if (string.IsNullOrEmpty(storagePath)) return string.Empty;
         var decodedPath = Uri.UnescapeDataString(storagePath);
-        return $"https://{_bucketName}.storage.yandexcloud.net/{decodedPath}";
+        return $"https://{_bucketName}/{decodedPath}";
     }
     
     public async Task DeleteFileAsync(string storagePath, CancellationToken ct)
