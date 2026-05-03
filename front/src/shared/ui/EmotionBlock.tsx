@@ -161,7 +161,7 @@ export default function EmotionBlock({index, register, setValue, watch, control,
                                     }} 
                                 />
                                 <div className={css({ bg: '#775D68', color: 'white', px: '10px', py: '4px', borderRadius: '6px', fontSize: '12px' })}>
-                                    Загрузить файл
+                                    Загрузить изображение
                                 </div>
                             </label>
                         )}

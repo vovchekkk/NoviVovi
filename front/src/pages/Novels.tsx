@@ -59,7 +59,7 @@ export default function Novels() {
                     {loading ? (
                         <p className={css({ textAlign: 'center', opacity: 0.5 })}>Загрузка...</p>
                     ) : (
-                        novels.map((novel) => (
+                        novels.reverse().map((novel) => (
                             <NovelCard
                                 key={novel.id}
                                 id={novel.id}
@@ -75,7 +75,7 @@ export default function Novels() {
                     )}
 
                     {!loading && novels.length === 0 && (
-                        <p className={css({ textAlign: 'center', opacity: 0.5 })}>У вас пока нет созданных новелл.</p>
+                        <p className={css({ textAlign: 'center', opacity: 0.5 })}>Пока нет созданных новелл.</p>
                     )}
                 </div>
             </main>

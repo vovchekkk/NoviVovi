@@ -513,7 +513,7 @@ function BackgroundStepForm({control, errors, setValue, novelId}: StepFormProps)
                 })}>
                     {currentImageId ? (
                         <div className={css({ fontSize: '12px', color: '#28a745' })}>
-                            ✅ ID в базе: {currentImageId}
+                            Фон загружен
                         </div>
                     ) : (
                         <div className={css({ fontSize: '12px', color: '#666' })}>
@@ -530,7 +530,7 @@ function BackgroundStepForm({control, errors, setValue, novelId}: StepFormProps)
                         cursor: isUploading ? 'not-allowed' : 'pointer',
                         '&:hover': {backgroundColor: '#000'}
                     })}>
-                        {isUploading ? 'Загрузка...' : 'Выбрать и загрузить'}
+                        {isUploading ? 'Загрузка...' : 'Выбрать изображение'}
                         <input
                             type="file"
                             accept="image/*"
