@@ -1,4 +1,5 @@
 import { css } from '../../../styled-system/css'
+import promoVideo from '../../assets/video.mp4'
 export default function VideoContainer() {
     return (
         <div className={css({
@@ -6,28 +7,26 @@ export default function VideoContainer() {
             maxWidth: '1180px',
             margin: '0 auto',
             position: 'relative',
-            aspectRatio: '16 / 9',
             borderRadius: '24px',
             overflow: 'hidden',
-            backgroundColor: 'card',        // ← твой цвет
+            backgroundColor: 'card',
             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.45)',
+            // aspectRatio удаляем!
         })}>
 
             <video
-                controls
                 autoPlay
                 muted
                 loop
                 playsInline
                 className={css({
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
+                    width: '100%', // Оставляем только ширину
+                    height: 'auto', // Высота подстроится сама
                     display: 'block',
                 })}
             >
                 <source
-                    src="https://assets.mixkit.co/videos/preview/754/754-large.mp4"
+                    src={promoVideo}
                     type="video/mp4"
                 />
                 Ваш браузер не поддерживает видео.
@@ -38,7 +37,6 @@ export default function VideoContainer() {
                 insetX: 0,
                 top: 0,
                 height: '120px',
-                background: 'linear-gradient(to bottom, #1a1a1a 35%, transparent)',
                 pointerEvents: 'none',
             })} />
 
@@ -47,7 +45,6 @@ export default function VideoContainer() {
                 insetX: 0,
                 bottom: 0,
                 height: '140px',
-                background: 'linear-gradient(to top, #1a1a1a 40%, transparent)',
                 pointerEvents: 'none',
             })} />
         </div>
